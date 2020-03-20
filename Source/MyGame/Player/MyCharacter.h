@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
 #include "MyCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -20,6 +21,14 @@ class AMyCharacter : public ACharacter
 	class UCameraComponent* FollowCamera;
 public:
 	AMyCharacter();
+
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void GiveAbility(TSubclassOf<class UGameplayAbility> Ability);
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
+	class UAbilitySystemComponent* AbilitySystem;
+	UPROPERTY()
+	class UMyAttributeSet* AttributeSetBase;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
