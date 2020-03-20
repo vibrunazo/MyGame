@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
+#include "../MyBlueprintFunctionLibrary.h"
 #include "MyCharacter.generated.h"
 
 UCLASS(config=Game)
@@ -22,13 +23,24 @@ class AMyCharacter : public ACharacter
 public:
 	AMyCharacter();
 
+	void Tick(float DeltaSeconds) override;
+
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void GiveAbility(TSubclassOf<class UGameplayAbility> Ability);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool GetAbilityKeyDown(uint8 Index);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void ActivateAbilityByInput(uint8 Index);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	class UAbilitySystemComponent* AbilitySystem;
 	UPROPERTY()
 	class UMyAttributeSet* AttributeSetBase;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	TArray<struct FAbilityStruct> Abilities;
+	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

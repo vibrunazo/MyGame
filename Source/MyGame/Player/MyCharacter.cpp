@@ -136,6 +136,15 @@ void AMyCharacter::MoveRight(float Value)
 	}
 }
 
+void AMyCharacter::Tick(float DeltaSeconds)
+{
+	Super::Tick(DeltaSeconds);
+	if (!InputEnabled()) return;
+	if (GetAbilityKeyDown(0)) ActivateAbilityByInput(0);
+	// AbilitySystem->TryActivateAbilityByClass(Abilities[0].Ability, true);
+}
+
+
 void AMyCharacter::GiveAbility(TSubclassOf<class UGameplayAbility> Ability)
 {
 	if (HasAuthority() && Ability)
@@ -143,4 +152,31 @@ void AMyCharacter::GiveAbility(TSubclassOf<class UGameplayAbility> Ability)
 		AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0));
 	}
 	AbilitySystem->InitAbilityActorInfo(this, this);
+}
+
+bool AMyCharacter::GetAbilityKeyDown(uint8 Index)
+{
+	if (Index >= IsAbilityKeyDown.Num()) return false;
+	return IsAbilityKeyDown[Index];
+}
+
+void AMyCharacter::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
+{
+	if (Index >= IsAbilityKeyDown.Num()) return;
+	IsAbilityKeyDown[Index] = IsKeyDown;
+}
+
+void AMyCharacter::ActivateAbilityByInput(uint8 Index)
+{
+	for (auto &&Ability : Abilities)
+	{
+		if (Ability.Input == Index)
+		{
+			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
+			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
+			{
+				AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
+			}
+		}
+	}
 }
