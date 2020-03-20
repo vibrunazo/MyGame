@@ -4,10 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include "MyGameCharacter.generated.h"
+#include "MyCharacter.generated.h"
 
 UCLASS(config=Game)
-class AMyGameCharacter : public ACharacter
+class AMyCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -19,7 +19,7 @@ class AMyGameCharacter : public ACharacter
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	class UCameraComponent* FollowCamera;
 public:
-	AMyGameCharacter();
+	AMyCharacter();
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

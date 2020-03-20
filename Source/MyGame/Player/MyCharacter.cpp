@@ -1,6 +1,6 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
-#include "MyGameCharacter.h"
+#include "MyCharacter.h"
 #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
 
-AMyGameCharacter::AMyGameCharacter()
+AMyCharacter::AMyCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
@@ -50,61 +50,61 @@ AMyGameCharacter::AMyGameCharacter()
 //////////////////////////////////////////////////////////////////////////
 // Input
 
-void AMyGameCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
+void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMyGameCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMyGameCharacter::MoveRight);
+	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
 
 	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
 	// "turn" handles devices that provide an absolute delta, such as a mouse.
 	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
 	PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("TurnRate", this, &AMyGameCharacter::TurnAtRate);
+	PlayerInputComponent->BindAxis("TurnRate", this, &AMyCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	PlayerInputComponent->BindAxis("LookUpRate", this, &AMyGameCharacter::LookUpAtRate);
+	PlayerInputComponent->BindAxis("LookUpRate", this, &AMyCharacter::LookUpAtRate);
 
 	// handle touch devices
-	PlayerInputComponent->BindTouch(IE_Pressed, this, &AMyGameCharacter::TouchStarted);
-	PlayerInputComponent->BindTouch(IE_Released, this, &AMyGameCharacter::TouchStopped);
+	PlayerInputComponent->BindTouch(IE_Pressed, this, &AMyCharacter::TouchStarted);
+	PlayerInputComponent->BindTouch(IE_Released, this, &AMyCharacter::TouchStopped);
 
 	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMyGameCharacter::OnResetVR);
+	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMyCharacter::OnResetVR);
 }
 
 
-void AMyGameCharacter::OnResetVR()
+void AMyCharacter::OnResetVR()
 {
 	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
-void AMyGameCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
+void AMyCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		Jump();
 }
 
-void AMyGameCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
+void AMyCharacter::TouchStopped(ETouchIndex::Type FingerIndex, FVector Location)
 {
 		StopJumping();
 }
 
-void AMyGameCharacter::TurnAtRate(float Rate)
+void AMyCharacter::TurnAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerYawInput(Rate * BaseTurnRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AMyGameCharacter::LookUpAtRate(float Rate)
+void AMyCharacter::LookUpAtRate(float Rate)
 {
 	// calculate delta for this frame from the rate information
 	AddControllerPitchInput(Rate * BaseLookUpRate * GetWorld()->GetDeltaSeconds());
 }
 
-void AMyGameCharacter::MoveForward(float Value)
+void AMyCharacter::MoveForward(float Value)
 {
 	if ((Controller != NULL) && (Value != 0.0f))
 	{
@@ -118,7 +118,7 @@ void AMyGameCharacter::MoveForward(float Value)
 	}
 }
 
-void AMyGameCharacter::MoveRight(float Value)
+void AMyCharacter::MoveRight(float Value)
 {
 	if ( (Controller != NULL) && (Value != 0.0f) )
 	{
