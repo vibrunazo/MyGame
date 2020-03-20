@@ -75,14 +75,6 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AMyCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AMyCharacter::TouchStopped);
 
-	// VR headset functionality
-	PlayerInputComponent->BindAction("ResetVR", IE_Pressed, this, &AMyCharacter::OnResetVR);
-}
-
-
-void AMyCharacter::OnResetVR()
-{
-	UHeadMountedDisplayFunctionLibrary::ResetOrientationAndPosition();
 }
 
 void AMyCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
@@ -135,6 +127,20 @@ void AMyCharacter::MoveRight(float Value)
 		AddMovementInput(Direction, Value);
 	}
 }
+
+void AMyCharacter::BeginPlay()
+{
+	if(AbilitySystem)
+	{
+    	for (auto &&Ability : Abilities)
+		{
+			GiveAbility(Ability.AbilityClass);
+		}
+	}
+	// SetupStatsFromGameInstance();
+	Super::BeginPlay();
+}
+
 
 void AMyCharacter::Tick(float DeltaSeconds)
 {
