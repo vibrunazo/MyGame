@@ -7,8 +7,8 @@
 
 void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Activate Ability from cpp"));
-    // CommitAbility(Handle, ActorInfo, ActivationInfo);
+    // UE_LOG(LogTemp, Warning, TEXT("Activate Ability from cpp"));
+    CommitAbility(Handle, ActorInfo, ActivationInfo);
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontageToPlay, 1.0f, NAME_None, true, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
@@ -18,6 +18,6 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 void UMyGameplayAbility::OnMontageComplete()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Montage Complete"));
+    // UE_LOG(LogTemp, Warning, TEXT("Montage Complete"));
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }
