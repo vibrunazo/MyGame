@@ -135,6 +135,11 @@ void AMyCharacter::MoveRight(float Value)
 	}
 }
 
+UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
+{
+	return AbilitySystem;
+};
+
 void AMyCharacter::BeginPlay()
 {
 	if(AbilitySystem)

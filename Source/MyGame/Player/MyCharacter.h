@@ -9,7 +9,7 @@
 #include "MyCharacter.generated.h"
 
 UCLASS(config=Game)
-class AMyCharacter : public ACharacter
+class AMyCharacter : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()
 
@@ -34,6 +34,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ActivateAbilityByInput(uint8 Index);
 
+	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	class UAbilitySystemComponent* AbilitySystem;
 	UPROPERTY()

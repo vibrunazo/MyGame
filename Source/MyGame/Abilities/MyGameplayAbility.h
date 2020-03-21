@@ -25,5 +25,7 @@ protected:
 		const FGameplayEventData * TriggerEventData);
 	UFUNCTION()
 	void OnMontageComplete();
+	UFUNCTION()
+	void OnHitStart(const FGameplayEventData Payload);
 	
 };
