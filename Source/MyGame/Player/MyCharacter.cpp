@@ -154,6 +154,7 @@ void AMyCharacter::BeginPlay()
 		}
 	}
 	// SetupStatsFromGameInstance();
+	UpdateHealthBar();
 	Super::BeginPlay();
 }
 
@@ -201,4 +202,11 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 			}
 		}
 	}
+}
+
+void AMyCharacter::UpdateHealthBar()
+{
+	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
+	OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
+	UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }

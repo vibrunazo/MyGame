@@ -8,6 +8,8 @@
 #include "../MyBlueprintFunctionLibrary.h"
 #include "MyCharacter.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
+
 UCLASS(config=Game)
 class AMyCharacter : public ACharacter, public IAbilitySystemInterface
 {
@@ -33,11 +35,15 @@ public:
 	bool GetAbilityKeyDown(uint8 Index);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ActivateAbilityByInput(uint8 Index);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void UpdateHealthBar();
+	UPROPERTY(BlueprintAssignable, Category="Abilities")
+	FHealthUpdateSignature OnUpdatedHealth;
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	class UAbilitySystemComponent* AbilitySystem;
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category = Abilities)
 	class UMyAttributeSet* AttributeSetBase;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
