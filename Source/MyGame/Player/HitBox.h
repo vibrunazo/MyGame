@@ -15,6 +15,10 @@ public:
 	// Sets default values for this actor's properties
 	AHitBox();
 	virtual void Tick(float DeltaTime) override;
+	UFUNCTION()
+	void OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
+
+	void AddComponentsToBones(TArray<FName> Bones);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USceneComponent* MyRoot;

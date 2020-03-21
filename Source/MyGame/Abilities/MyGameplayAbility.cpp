@@ -8,6 +8,7 @@
 #include "GameplayTagContainer.h"
 #include "UObject/ConstructorHelpers.h"
 #include "../Player/HitBox.h"
+#include "../Player/HitboxSettings.h"
 
 UMyGameplayAbility::UMyGameplayAbility()
 {
@@ -47,7 +48,23 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
     UE_LOG(LogTemp, Warning, TEXT("Hit start"));
     FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
-    AHitBox* NewActor = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator);  
+    FActorSpawnParameters params;
+    params.bNoFail = true;
+    params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
+    params.Owner = GetAvatarActorFromActorInfo();
+    AHitBox* NewActor = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
+    NewActor->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
+    const UObject* OO = Payload.OptionalObject;
+    if (OO) {
+        UE_LOG(LogTemp, Warning, TEXT("is valid"));
+        UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
+        if (!ensure(Settings != nullptr)) return;
+        NewActor->AddComponentsToBones(Settings->BoneNames);
+    } else {
+        UE_LOG(LogTemp, Warning, TEXT("isn't"));
+    }
+
     HitBoxRef = NewActor;
 }
 
