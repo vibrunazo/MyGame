@@ -56,5 +56,9 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 
 void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Overlapped: %s"), *OtherActor->GetName());
+	if (!ensure(GetInstigator() != nullptr)) return;
+	if (GetInstigator() != OtherActor)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *GetInstigator()->GetName(), *OtherActor->GetName());
+	}
 }

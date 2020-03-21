@@ -42,6 +42,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
 	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	// TSubclassOf<class UUserWidget> HealthBarWidget;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
+	class UWidgetComponent* HealthBarComp;
+
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

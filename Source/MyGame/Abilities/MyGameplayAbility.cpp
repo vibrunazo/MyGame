@@ -18,7 +18,6 @@ UMyGameplayAbility::UMyGameplayAbility()
 
 void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Activate Ability from cpp"));
     CommitAbility(Handle, ActorInfo, ActivationInfo);
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontageToPlay, 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
@@ -40,13 +39,11 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 void UMyGameplayAbility::OnMontageComplete()
 {
-    // UE_LOG(LogTemp, Warning, TEXT("Montage Complete"));
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Hit start"));
     FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
     FActorSpawnParameters params;
     params.bNoFail = true;
@@ -57,12 +54,10 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
     const UObject* OO = Payload.OptionalObject;
     if (OO) {
-        UE_LOG(LogTemp, Warning, TEXT("is valid"));
         UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
         if (!ensure(Settings != nullptr)) return;
         NewActor->AddComponentsToBones(Settings->BoneNames);
     } else {
-        UE_LOG(LogTemp, Warning, TEXT("isn't"));
     }
 
     HitBoxRef = NewActor;
@@ -70,6 +65,5 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Hit end"));
     HitBoxRef->Destroy();
 }
