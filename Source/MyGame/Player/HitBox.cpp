@@ -2,6 +2,7 @@
 
 
 #include "Components/SphereComponent.h"
+#include "Components/SceneComponent.h"
 #include "HitBox.h"
 
 // Sets default values
@@ -9,6 +10,8 @@ AHitBox::AHitBox()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
+	MyRoot = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComponent = MyRoot;
 	MySphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
 	MySphere->SetupAttachment(RootComponent);
 	// MySphere->SetSphereRadius

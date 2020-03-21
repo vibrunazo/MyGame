@@ -17,6 +17,8 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class USceneComponent* MyRoot;
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USphereComponent* MySphere;
 
 protected:

@@ -15,6 +15,7 @@ class MYGAME_API UMyGameplayAbility : public UGameplayAbility
 	GENERATED_BODY()
 
 public:
+	UMyGameplayAbility();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	UAnimMontage *MontageToPlay;
 
@@ -27,5 +28,10 @@ protected:
 	void OnMontageComplete();
 	UFUNCTION()
 	void OnHitStart(const FGameplayEventData Payload);
+	UFUNCTION()
+	void OnHitEnd(const FGameplayEventData Payload);
+
+	TSubclassOf<class AHitBox> HitBoxClass;
+	class AHitBox* HitBoxRef;
 	
 };
