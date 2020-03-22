@@ -1,7 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "MyCharacter.h"
-#include "HeadMountedDisplayFunctionLibrary.h"
+// #include "HeadMountedDisplayFunctionLibrary.h"
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -12,6 +12,9 @@
 #include "Blueprint/UserWidget.h"
 #include "../Abilities/MyAttributeSet.h"
 #include "../UI/MyHealthBar.h"
+#include "MyAnimInstance.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -59,6 +62,12 @@ AMyCharacter::AMyCharacter()
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
 
+	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
+	if (MyAnim) 
+	{
+		GetHitMontage = MyAnim->GetHitMontage;
+	} 
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -224,10 +233,30 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
 
 void AMyCharacter::OnDamaged(AActor* SourceActor)
 {
+	// if (!ensure(GetHitMontage != nullptr)) return;
+	if (!GetHitMontage)
+	{
+		UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+		UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
+		if (!ensure(MyAnim != nullptr)) return;
+		GetHitMontage = MyAnim->GetHitMontage;
+	}
 	UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
+	PlayAnimMontage(GetHitMontage);
+	
 }
 
 void AMyCharacter::OnDie()
 {
 	UE_LOG(LogTemp, Warning, TEXT("I died"));
+	UWorld* World = GetWorld();
+	// FTimerManager TM = FTimerManager::FTimerManager;
+	FTimerHandle Handle;
+	// FTimerManager::SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 1.0f, false);
+	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 1.0f, false);
+}
+
+void AMyCharacter::OnDelayedDeath()
+{
+	Destroy();
 }
