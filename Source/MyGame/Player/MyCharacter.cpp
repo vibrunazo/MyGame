@@ -68,6 +68,9 @@ AMyCharacter::AMyCharacter()
 	{
 		GetHitMontage = MyAnim->GetHitMontage;
 	} 
+
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -253,7 +256,12 @@ void AMyCharacter::OnDie()
 	// FTimerManager TM = FTimerManager::FTimerManager;
 	FTimerHandle Handle;
 	// FTimerManager::SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 1.0f, false);
-	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 1.0f, false);
+	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 5.0f, false);
+
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	GetMesh()->AddForce(FVector(-80000.0f, 0.0f, 200000.0f), NAME_None, true);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 }
 
 void AMyCharacter::OnDelayedDeath()
