@@ -20,7 +20,13 @@ UMyGameplayAbility::UMyGameplayAbility()
 void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
 {
     CommitAbility(Handle, ActorInfo, ActivationInfo);
-    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontageToPlay, 1.0f, NAME_None, false, 1.0f);
+    if (MontagesToPlay.Num() == 0)
+    {
+        UE_LOG(LogTemp, Error, TEXT("No Montages in Ability"));
+        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+        return;
+    }
+    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
 
@@ -78,6 +84,7 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
     UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+    IncComboCount();
 }
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
@@ -89,4 +96,10 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
         Result.Add(NewHandle);
     }
     return Result;
+}
+
+void UMyGameplayAbility::IncComboCount()
+{
+    if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
+    else CurrentComboCount = 0;
 }

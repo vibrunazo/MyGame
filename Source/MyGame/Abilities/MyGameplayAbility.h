@@ -17,9 +17,13 @@ class MYGAME_API UMyGameplayAbility : public UGameplayAbility
 public:
 	UMyGameplayAbility();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	UAnimMontage *MontageToPlay;
+	TArray<UAnimMontage*> MontagesToPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
+	bool bHasHitConnected = false
+	bool bCanCancelIntoCombo = false;
+	uint8 CurrentComboCount = 0;
+private:
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -35,6 +39,7 @@ protected:
 	UFUNCTION()
 	void OnHitConnect(const FGameplayEventData Payload);
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
+	void IncComboCount();
 
 	TSubclassOf<class AHitBox> HitBoxClass;
 	class AHitBox* HitBoxRef;
