@@ -255,7 +255,6 @@ void AMyCharacter::OnDie()
 	UWorld* World = GetWorld();
 	// FTimerManager TM = FTimerManager::FTimerManager;
 	FTimerHandle Handle;
-	// FTimerManager::SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 1.0f, false);
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 5.0f, false);
 
 	GetMesh()->SetSimulatePhysics(true);

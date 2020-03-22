@@ -4,12 +4,15 @@
 #include "MyGameplayAbility.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "Animation/AnimMontage.h"
 #include "GameplayTagContainer.h"
 #include "UObject/ConstructorHelpers.h"
 #include "GameplayEffect.h"
 #include "../Player/HitBox.h"
 #include "../Player/HitboxSettings.h"
+#include "Engine/World.h"
+#include "TimerManager.h"
 
 UMyGameplayAbility::UMyGameplayAbility()
 {
@@ -26,6 +29,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
         return;
     }
+    UpdateCombo();
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
@@ -84,6 +88,7 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
     UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+    LastComboTime = GetWorld()->GetTimeSeconds();
     IncComboCount();
 }
 
@@ -101,5 +106,16 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 void UMyGameplayAbility::IncComboCount()
 {
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
-    else CurrentComboCount = 0;
+    else ResetCombo();
+}
+
+void UMyGameplayAbility::ResetCombo()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Combo resetted"));
+    CurrentComboCount = 0;
+
+}
+void UMyGameplayAbility::UpdateCombo()
+{
+    if (GetWorld()->GetTimeSeconds() > LastComboTime + 3.0f) ResetCombo();
 }
