@@ -11,6 +11,7 @@
 #include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"
 #include "../Abilities/MyAttributeSet.h"
+#include "../UI/MyHealthBar.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -147,6 +148,7 @@ UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
 
 void AMyCharacter::BeginPlay()
 {
+	Super::BeginPlay();
 	if(AbilitySystem)
 	{
     	for (auto &&Ability : Abilities)
@@ -156,7 +158,6 @@ void AMyCharacter::BeginPlay()
 	}
 	// SetupStatsFromGameInstance();
 	UpdateHealthBar();
-	Super::BeginPlay();
 }
 
 
@@ -207,7 +208,9 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 
 void AMyCharacter::UpdateHealthBar()
 {
-	// UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
+	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
+	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
+	if (HealthBar) HealthBar->SetHealth(AttributeSetBase->GetHealth());
 	OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
 	UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }
