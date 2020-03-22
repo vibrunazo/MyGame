@@ -60,6 +60,7 @@ void UMyGameplayAbility::OnMontageComplete()
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
+    bHasHitConnected = false;
     FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
     FActorSpawnParameters params;
     params.bNoFail = true;
@@ -88,6 +89,7 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
     UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+    bHasHitConnected = true;
     LastComboTime = GetWorld()->GetTimeSeconds();
     IncComboCount();
 }
@@ -117,5 +119,5 @@ void UMyGameplayAbility::ResetCombo()
 }
 void UMyGameplayAbility::UpdateCombo()
 {
-    if (GetWorld()->GetTimeSeconds() > LastComboTime + 3.0f) ResetCombo();
+    if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + 3.0f) ResetCombo();
 }
