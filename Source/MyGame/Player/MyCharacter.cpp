@@ -221,3 +221,13 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	UpdateHealthBar();
 }
+
+void AMyCharacter::OnDamaged(AActor* SourceActor)
+{
+	UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
+}
+
+void AMyCharacter::OnDie()
+{
+	UE_LOG(LogTemp, Warning, TEXT("I died"));
+}

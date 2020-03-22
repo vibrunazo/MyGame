@@ -3,7 +3,7 @@
 
 #include "MyAttributeSet.h"
 #include "GameplayEffectExtension.h"
-// #include "IGetHit.h"
+#include "GetHit.h"
 
 UMyAttributeSet::UMyAttributeSet()
     : Health(100.0f)
@@ -60,14 +60,14 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
         // Handle other health changes such as from healing or direct modifiers
 		// First clamp it
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-        // IIGetHit* HeWhoGetsHit = Cast<IIGetHit>(TargetActor);
-        // if (HeWhoGetsHit)
-        // {
-        //     HeWhoGetsHit->Execute_OnDamaged (TargetActor, SourceActor);
-        //     if (GetHealth() == 0)
-        //     {
-        //         HeWhoGetsHit->Execute_OnDie (TargetActor);
-        //     }
-        // }
+        IGetHit* HeWhoGetsHit = Cast<IGetHit>(TargetActor);
+        if (HeWhoGetsHit)
+        {
+            HeWhoGetsHit->OnDamaged(SourceActor);
+            if (GetHealth() == 0)
+            {
+                HeWhoGetsHit->OnDie();
+            }
+        }
     }
 }
