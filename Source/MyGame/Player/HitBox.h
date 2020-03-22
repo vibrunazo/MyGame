@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayEffectTypes.h"
 #include "HitBox.generated.h"
 
 UCLASS()
@@ -24,10 +25,13 @@ public:
 	class USceneComponent* MyRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USphereComponent* MySphere;
+	TArray<FGameplayEffectSpecHandle> EffectsToApply;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void ApplyAllEffects(class IGetHit* Target);
+	void ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target);
 
 };

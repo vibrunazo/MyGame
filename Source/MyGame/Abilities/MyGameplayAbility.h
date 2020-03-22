@@ -18,6 +18,8 @@ public:
 	UMyGameplayAbility();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	UAnimMontage *MontageToPlay;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
 
 protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle,
@@ -30,8 +32,12 @@ protected:
 	void OnHitStart(const FGameplayEventData Payload);
 	UFUNCTION()
 	void OnHitEnd(const FGameplayEventData Payload);
+	UFUNCTION()
+	void OnHitConnect(const FGameplayEventData Payload);
+	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
 
 	TSubclassOf<class AHitBox> HitBoxClass;
 	class AHitBox* HitBoxRef;
+
 	
 };

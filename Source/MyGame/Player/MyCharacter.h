@@ -6,12 +6,14 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "../MyBlueprintFunctionLibrary.h"
+#include "../Abilities/GetHit.h"
+#include "GameplayEffectTypes.h"
 #include "MyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
 
 UCLASS(config=Game)
-class AMyCharacter : public ACharacter, public IAbilitySystemInterface
+class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit
 {
 	GENERATED_BODY()
 
@@ -39,6 +41,8 @@ public:
 	void UpdateHealthBar();
 	UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FHealthUpdateSignature OnUpdatedHealth;
+
+	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))

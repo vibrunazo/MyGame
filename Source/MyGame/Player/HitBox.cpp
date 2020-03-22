@@ -5,6 +5,9 @@
 #include "Components/SceneComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "HitBox.h"
+#include "../Abilities/GetHit.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "GameplayEffectTypes.h"
 
 // Sets default values
 AHitBox::AHitBox()
@@ -54,11 +57,34 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 	
 }
 
+// Instigator is the PLAYER PAWN
+// Owner is the Actor who spawned the Hitbox (either player or a projectile)
+
 void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
+	IGetHit *Target = Cast<IGetHit>(OtherActor);
+	if (!Target) return;
 	if (!ensure(GetInstigator() != nullptr)) return;
 	if (GetInstigator() != OtherActor)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *GetInstigator()->GetName(), *OtherActor->GetName());
+		FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), HitConnectTag, FGameplayEventData());
+		ApplyAllEffects(Target);
 	}
+}
+
+void AHitBox::ApplyAllEffects(class IGetHit* Target)
+{
+	for (auto &&Effect : EffectsToApply)
+	{
+		ApplyOneEffect(Effect, Target);
+	}
+	
+}
+
+void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
+{
+	// FGameplayEffectSpecHandle *Handle =  FGameplayEffectSpecHandle(Effect);
+	Target->OnGetHitByEffect(Effect);
 }

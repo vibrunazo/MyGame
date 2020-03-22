@@ -7,6 +7,7 @@
 #include "Animation/AnimMontage.h"
 #include "GameplayTagContainer.h"
 #include "UObject/ConstructorHelpers.h"
+#include "GameplayEffect.h"
 #include "../Player/HitBox.h"
 #include "../Player/HitboxSettings.h"
 
@@ -25,6 +26,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
     FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));;
     FGameplayTag HitEndTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.end"));
+    FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
 
     UAbilityTask_WaitGameplayEvent* HitStartTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitStartTag);
     HitStartTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitStart);
@@ -33,6 +35,10 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     UAbilityTask_WaitGameplayEvent* HitEndTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitEndTag);
     HitEndTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitEnd);
     HitEndTask->ReadyForActivation();
+
+    UAbilityTask_WaitGameplayEvent* HitConnectTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitConnectTag);
+    HitConnectTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitConnect);
+    HitConnectTask->ReadyForActivation();
     
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
@@ -51,6 +57,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     params.Owner = GetAvatarActorFromActorInfo();
     AHitBox* NewActor = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
     NewActor->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    NewActor->EffectsToApply = MakeSpecHandles();
     // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
     const UObject* OO = Payload.OptionalObject;
     if (OO) {
@@ -66,4 +73,20 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
     HitBoxRef->Destroy();
+}
+
+void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+}
+
+TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
+{
+    TArray<FGameplayEffectSpecHandle> Result = {};
+    for (auto &&Effect : EffectsToApply)
+    {
+        FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
+        Result.Add(NewHandle);
+    }
+    return Result;
 }

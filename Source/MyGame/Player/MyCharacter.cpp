@@ -53,6 +53,7 @@ AMyCharacter::AMyCharacter()
 
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComponent"));
 	HealthBarComp->SetupAttachment(RootComponent);
+	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 	// Our ability system component.
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
@@ -206,7 +207,14 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 
 void AMyCharacter::UpdateHealthBar()
 {
-	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
+	// UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
 	UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
+}
+
+void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
+	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
+	UpdateHealthBar();
 }
