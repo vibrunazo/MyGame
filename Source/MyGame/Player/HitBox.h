@@ -26,6 +26,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USphereComponent* MySphere;
 	TArray<FGameplayEffectSpecHandle> EffectsToApply;
+	TArray<AActor*> ActorsHit;
 
 protected:
 	// Called when the game starts or when spawned

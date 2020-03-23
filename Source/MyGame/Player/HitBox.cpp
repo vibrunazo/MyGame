@@ -65,9 +65,10 @@ void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	IGetHit *Target = Cast<IGetHit>(OtherActor);
 	if (!Target) return;
 	if (!ensure(GetInstigator() != nullptr)) return;
-	if (GetInstigator() != OtherActor && Target->IsAlive())
+	if (GetInstigator() != OtherActor && Target->IsAlive() && !ActorsHit.Contains(OtherActor))
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *GetInstigator()->GetName(), *OtherActor->GetName());
+		ActorsHit.Add(OtherActor);
 		FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), HitConnectTag, FGameplayEventData());
 		ApplyAllEffects(Target);
