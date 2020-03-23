@@ -224,12 +224,12 @@ void AMyCharacter::UpdateHealthBar()
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar) HealthBar->SetHealth(AttributeSetBase->GetHealth());
 	OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
-	UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
+	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }
 
 void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
+	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	UpdateHealthBar();
 }
@@ -244,13 +244,13 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 		if (!ensure(MyAnim != nullptr)) return;
 		GetHitMontage = MyAnim->GetHitMontage;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
+	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
 }
 
 void AMyCharacter::OnDie()
 {
-	UE_LOG(LogTemp, Warning, TEXT("I died"));
+	// UE_LOG(LogTemp, Warning, TEXT("I died"));
 	UWorld* World = GetWorld();
 	// FTimerManager TM = FTimerManager::FTimerManager;
 	FTimerHandle Handle;
@@ -270,4 +270,16 @@ void AMyCharacter::OnDelayedDeath()
 bool AMyCharacter::IsAlive()
 {
 	return AttributeSetBase->GetHealth() > 0;
+}
+
+void AMyCharacter::OnHitPause(float Duration)
+{
+	CustomTimeDilation = 0.01f;
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnHitPauseEnd, Duration, false);
+}
+
+void AMyCharacter::OnHitPauseEnd()
+{
+	CustomTimeDilation = 1.0f;
 }

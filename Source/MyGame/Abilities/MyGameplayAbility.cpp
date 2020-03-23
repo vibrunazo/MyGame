@@ -11,6 +11,7 @@
 #include "GameplayEffect.h"
 #include "../Player/HitBox.h"
 #include "../Player/HitboxSettings.h"
+#include "GetHit.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "AbilitySystemComponent.h"
@@ -104,6 +105,10 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
     IncComboCount();
     LastComboTime = GetWorld()->GetTimeSeconds();
     bHasHitConnected = true;
+    IGetHit *Source = Cast<IGetHit>(GetAvatarActorFromActorInfo());
+	if (!Source) return;
+    Source->OnHitPause(HitPause);
+    
 }
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
@@ -122,6 +127,7 @@ void UMyGameplayAbility::IncComboCount()
     if (bHasHitConnected) return;
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
     else ResetCombo();
+    UE_LOG(LogTemp, Warning, TEXT("Increased combo to %d"), CurrentComboCount);
 }
 
 void UMyGameplayAbility::ResetCombo()
@@ -133,4 +139,5 @@ void UMyGameplayAbility::ResetCombo()
 void UMyGameplayAbility::UpdateCombo()
 {
     if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
+    UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
 }

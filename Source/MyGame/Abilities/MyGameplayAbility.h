@@ -24,6 +24,8 @@ public:
 	float HitToComboDelay = 0.05f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float ComboResetDelay = 2.00f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	float HitPause = 0.50f;
 	bool bHasHitConnected = false;
 	uint8 CurrentComboCount = 0;
 private:

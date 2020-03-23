@@ -27,4 +27,5 @@ public:
 	virtual void OnDamaged(AActor* SourceActor) = 0;
 	virtual void OnDie() = 0;
 	virtual bool IsAlive() = 0;
+	virtual void OnHitPause(float Duration) = 0;
 };

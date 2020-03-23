@@ -46,6 +46,9 @@ public:
 	void OnDamaged(AActor* SourceActor) override;
 	void OnDie() override;
 	bool IsAlive() override;
+	void OnHitPause(float Duration) override;
+
+	void OnHitPauseEnd();
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
