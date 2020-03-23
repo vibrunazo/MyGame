@@ -246,7 +246,6 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	}
 	UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
-	
 }
 
 void AMyCharacter::OnDie()

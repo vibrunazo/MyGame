@@ -13,11 +13,23 @@
 #include "../Player/HitboxSettings.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "AbilitySystemComponent.h"
 
 UMyGameplayAbility::UMyGameplayAbility()
 {
     static ConstructorHelpers::FClassFinder<AActor> HitBoxClassFinder(TEXT("/Game/Blueprints/BP_HitBox"));
     HitBoxClass = HitBoxClassFinder.Class;
+}
+
+bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const
+{
+    FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
+    if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
+    {
+        if (bHasHitConnected) return true;
+        return false;
+    }
+    return true;
 }
 
 void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
@@ -30,6 +42,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         return;
     }
     UpdateCombo();
+    bHasHitConnected = false;
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
@@ -60,7 +73,6 @@ void UMyGameplayAbility::OnMontageComplete()
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
-    bHasHitConnected = false;
     FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
     FActorSpawnParameters params;
     params.bNoFail = true;
@@ -89,9 +101,9 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
     UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+    IncComboCount();
     bHasHitConnected = true;
     LastComboTime = GetWorld()->GetTimeSeconds();
-    IncComboCount();
 }
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
