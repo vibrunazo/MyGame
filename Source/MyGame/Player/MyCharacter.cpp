@@ -15,6 +15,7 @@
 #include "MyAnimInstance.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -246,6 +247,8 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
+	UGameplayStatics::PlayWorldCameraShake(GetWorld(), CamShakeClass, GetActorLocation(), 0.0f, CamShakeRange);
+
 }
 
 void AMyCharacter::OnDie()

@@ -57,6 +57,10 @@ public:
 	class UMyAttributeSet* AttributeSetBase;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	TSubclassOf<class UCameraShake> CamShakeClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float CamShakeRange = 2000.0f;
 	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TSubclassOf<class UUserWidget> HealthBarWidget;
