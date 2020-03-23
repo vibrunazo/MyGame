@@ -26,7 +26,7 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
     FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
-        if (bHasHitConnected) return true;
+        if (bCanCancelIntoCombo) return true;
         return false;
     }
     return true;
@@ -43,6 +43,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     }
     UpdateCombo();
     bHasHitConnected = false;
+    bCanCancelIntoCombo = false;
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
@@ -95,6 +96,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
+    if (bHasHitConnected) bCanCancelIntoCombo = true;
     HitBoxRef->Destroy();
 }
 
