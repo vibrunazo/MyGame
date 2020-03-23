@@ -26,7 +26,7 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
     FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
-        if (bCanCancelIntoCombo) return true;
+        if (bHasHitConnected && GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay) return true;
         return false;
     }
     return true;
@@ -43,7 +43,6 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     }
     UpdateCombo();
     bHasHitConnected = false;
-    bCanCancelIntoCombo = false;
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
@@ -96,7 +95,6 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
-    if (bHasHitConnected) bCanCancelIntoCombo = true;
     HitBoxRef->Destroy();
 }
 
@@ -104,8 +102,8 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
     UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
     IncComboCount();
-    bHasHitConnected = true;
     LastComboTime = GetWorld()->GetTimeSeconds();
+    bHasHitConnected = true;
 }
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
@@ -121,6 +119,7 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 
 void UMyGameplayAbility::IncComboCount()
 {
+    if (bHasHitConnected) return;
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
     else ResetCombo();
 }
@@ -133,5 +132,5 @@ void UMyGameplayAbility::ResetCombo()
 }
 void UMyGameplayAbility::UpdateCombo()
 {
-    if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + 3.0f) ResetCombo();
+    if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
 }

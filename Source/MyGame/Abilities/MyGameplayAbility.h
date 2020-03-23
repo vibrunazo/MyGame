@@ -20,8 +20,11 @@ public:
 	TArray<UAnimMontage*> MontagesToPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	float HitToComboDelay = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	float ComboResetDelay = 2.00f;
 	bool bHasHitConnected = false;
-	bool bCanCancelIntoCombo = false;
 	uint8 CurrentComboCount = 0;
 private:
 	void ResetCombo();

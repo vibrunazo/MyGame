@@ -26,4 +26,5 @@ public:
 	virtual void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) = 0;
 	virtual void OnDamaged(AActor* SourceActor) = 0;
 	virtual void OnDie() = 0;
+	virtual bool IsAlive() = 0;
 };

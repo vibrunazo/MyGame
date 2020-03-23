@@ -266,3 +266,8 @@ void AMyCharacter::OnDelayedDeath()
 {
 	Destroy();
 }
+
+bool AMyCharacter::IsAlive()
+{
+	return AttributeSetBase->GetHealth() > 0;
+}

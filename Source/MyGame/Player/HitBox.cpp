@@ -46,7 +46,7 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 		USphereComponent* NewSphere = NewObject<USphereComponent>(this);
 		// NewSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		NewSphere->RegisterComponent();
-		NewSphere->SetSphereRadius(50.0f);
+		NewSphere->SetSphereRadius(30.0f);
 		// NewSphere->bGenerateOverlapEvents = true;
 		if (!ensure(GetInstigator() != nullptr)) return;
 		if (!ensure(GetOwner() != nullptr)) return;
@@ -65,7 +65,7 @@ void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	IGetHit *Target = Cast<IGetHit>(OtherActor);
 	if (!Target) return;
 	if (!ensure(GetInstigator() != nullptr)) return;
-	if (GetInstigator() != OtherActor)
+	if (GetInstigator() != OtherActor && Target->IsAlive())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *GetInstigator()->GetName(), *OtherActor->GetName());
 		FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));

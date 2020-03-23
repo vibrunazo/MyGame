@@ -45,6 +45,7 @@ public:
 	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
 	void OnDamaged(AActor* SourceActor) override;
 	void OnDie() override;
+	bool IsAlive() override;
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
