@@ -47,6 +47,7 @@ public:
 	void OnDie() override;
 	bool IsAlive() override;
 	void OnHitPause(float Duration) override;
+	uint8 GetTeam() override;
 
 	void OnHitPauseEnd();
 
@@ -68,8 +69,9 @@ public:
 	class UWidgetComponent* HealthBarComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UPawnSensingComponent* PawnSenseComp;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	uint8 Team;
 	
-
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

@@ -63,9 +63,10 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
 	IGetHit *Target = Cast<IGetHit>(OtherActor);
-	if (!Target) return;
+	IGetHit *Source = Cast<IGetHit>(GetInstigator());
+	if (!Target || ! Source) return;
 	if (!ensure(GetInstigator() != nullptr)) return;
-	if (GetInstigator() != OtherActor && Target->IsAlive() && !ActorsHit.Contains(OtherActor))
+	if (GetInstigator() != OtherActor && Target->IsAlive() && !ActorsHit.Contains(OtherActor) && Source->GetTeam() != Target->GetTeam())
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *GetInstigator()->GetName(), *OtherActor->GetName());
 		ActorsHit.Add(OtherActor);

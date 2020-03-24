@@ -28,4 +28,5 @@ public:
 	virtual void OnDie() = 0;
 	virtual bool IsAlive() = 0;
 	virtual void OnHitPause(float Duration) = 0;
+	virtual uint8 GetTeam() = 0;
 };

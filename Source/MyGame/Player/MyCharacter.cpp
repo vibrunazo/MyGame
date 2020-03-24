@@ -175,6 +175,8 @@ void AMyCharacter::BeginPlay()
 	}
 	// SetupStatsFromGameInstance();
 	UpdateHealthBar();
+	if (IsPlayerControlled()) Team = 1;
+	else Team = 0;
 }
 
 
@@ -290,3 +292,11 @@ void AMyCharacter::OnHitPauseEnd()
 {
 	CustomTimeDilation = 1.0f;
 }
+
+uint8 AMyCharacter::GetTeam()
+{
+	return Team;
+}
+
+
+
