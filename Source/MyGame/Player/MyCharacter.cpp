@@ -310,6 +310,11 @@ uint8 AMyCharacter::GetTeam()
 
 bool AMyCharacter::HasControl()
 {
+	FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
+    if(AbilitySystem->HasMatchingGameplayTag(HitStunTag))
+	{
+		return false;
+	}
 	return bHasControl;
 }
 
