@@ -314,10 +314,10 @@ void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
 	{
 		AAIController* AiCont = Cast<AAIController>(GetController());
 		if (!ensure(AiCont != nullptr)) return;
-		auto MyBB = AiCont->GetBlackboardComponent();
+		UBlackboardComponent* MyBB = AiCont->GetBlackboardComponent();
 		if (!ensure(MyBB != nullptr)) return;
 		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), SeenPawn);
-		UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
+		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
 	}
 }
 
