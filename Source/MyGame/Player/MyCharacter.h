@@ -66,6 +66,9 @@ public:
 	// TSubclassOf<class UUserWidget> HealthBarWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UWidgetComponent* HealthBarComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
+	class UPawnSensingComponent* PawnSenseComp;
+	
 
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
