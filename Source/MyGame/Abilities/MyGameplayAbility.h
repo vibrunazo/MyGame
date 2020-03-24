@@ -25,7 +25,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float ComboResetDelay = 2.00f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	float HitPause = 0.50f;
+	float Damage = 15.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	float HitStun = 0.6f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	float HitPause = 0.5f;
 	uint8 CurrentComboCount = 0;
 	bool bHasHitConnected = false;
 private:

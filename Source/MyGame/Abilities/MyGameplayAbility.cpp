@@ -135,10 +135,26 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 {
+    FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
+    FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(TEXT("data.damage"));
     TArray<FGameplayEffectSpecHandle> Result = {};
     for (auto &&Effect : EffectsToApply)
     {
         FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
+        FGameplayTagContainer EffectTags;
+        NewHandle.Data.Get()->GetAllAssetTags(EffectTags);
+        if (EffectTags.HasTag(HitStunTag))
+        {
+            NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
+        }
+        if (EffectTags.HasTag(DamageTag))
+        {
+            NewHandle.Data.Get()->SetSetByCallerMagnitude(DamageTag, -Damage);
+        }
+        // EffectTags.HasTag(HitStunTag);
+        // UE_LOG(LogTemp, Warning, TEXT("Effect: %s, tags: %s, has hitstun: %d"), *Effect.Get()->GetName(), *Container.ToString(), Container.HasTag(HitStunTag));
+        // NewHandle.Data.Get()->GetAllAssetTags();
+        // NewHandle.Data.Get()->SetSetByCallerMagnitude();
         Result.Add(NewHandle);
     }
     return Result;
