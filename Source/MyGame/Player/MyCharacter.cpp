@@ -85,7 +85,7 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
-	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
+	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
@@ -129,7 +129,7 @@ void AMyCharacter::LookUpAtRate(float Rate)
 
 void AMyCharacter::MoveForward(float Value)
 {
-	if ((Controller != NULL) && (Value != 0.0f))
+	if ((Controller != NULL) && (Value != 0.0f) && HasControl())
 	{
 		// find out which way is forward
 		// const FRotator Rotation = Controller->GetControlRotation();
@@ -144,7 +144,7 @@ void AMyCharacter::MoveForward(float Value)
 
 void AMyCharacter::MoveRight(float Value)
 {
-	if ( (Controller != NULL) && (Value != 0.0f) )
+	if ( (Controller != NULL) && (Value != 0.0f)  && HasControl())
 	{
 		// find out which way is right
 		// const FRotator Rotation = Controller->GetControlRotation();
@@ -188,6 +188,12 @@ void AMyCharacter::Tick(float DeltaSeconds)
 	// AbilitySystem->TryActivateAbilityByClass(Abilities[0].Ability, true);
 }
 
+void AMyCharacter::Jump()
+{
+	if (!HasControl()) return;
+	Super::Jump();
+}
+
 
 void AMyCharacter::GiveAbility(TSubclassOf<class UGameplayAbility> Ability)
 {
@@ -212,6 +218,7 @@ void AMyCharacter::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
 
 void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 {
+	if (!HasControl()) return;
 	for (auto &&Ability : Abilities)
 	{
 		if (Ability.Input == Index)
@@ -269,6 +276,9 @@ void AMyCharacter::OnDie()
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->AddForce(FVector(-80000.0f, 0.0f, 200000.0f), NAME_None, true);
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	bHasControl = false;
+	DisableInput(nullptr);
+	DetachFromControllerPendingDestroy();
 }
 
 void AMyCharacter::OnDelayedDeath()
@@ -298,5 +308,9 @@ uint8 AMyCharacter::GetTeam()
 	return Team;
 }
 
+bool AMyCharacter::HasControl()
+{
+	return bHasControl;
+}
 
 

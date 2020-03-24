@@ -28,6 +28,7 @@ public:
 	AMyCharacter();
 
 	void Tick(float DeltaSeconds) override;
+	void Jump() override;
 
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void GiveAbility(TSubclassOf<class UGameplayAbility> Ability);
@@ -83,6 +84,8 @@ public:
 private:
 	UFUNCTION()
 	void OnDelayedDeath();
+	bool HasControl();
+	bool bHasControl = true;
 	UAnimMontage *GetHitMontage;
 
 protected:
