@@ -26,12 +26,13 @@ public:
 	float ComboResetDelay = 2.00f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float HitPause = 0.50f;
-	bool bHasHitConnected = false;
 	uint8 CurrentComboCount = 0;
+	bool bHasHitConnected = false;
 private:
 	void ResetCombo();
 	void UpdateCombo();
 	float LastComboTime = 0.0f;
+	bool bHasHitStarted = false;
 
 protected:
 /** Returns true if this ability can be activated right now. Has no side effects */
@@ -50,7 +51,8 @@ protected:
 	void OnHitConnect(const FGameplayEventData Payload);
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
 	void IncComboCount();
-
+	void ResetHitBoxes();
+;
 	TSubclassOf<class AHitBox> HitBoxClass;
 	class AHitBox* HitBoxRef;
 

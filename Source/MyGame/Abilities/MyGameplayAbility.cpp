@@ -42,11 +42,14 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
         return;
     }
+    ResetHitBoxes();
     UpdateCombo();
     bHasHitConnected = false;
+    bHasHitStarted = false;
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
+    // UE_LOG(LogTemp, Warning, TEXT("Should be playing %s"), *MontagesToPlay[CurrentComboCount]->GetName());
 
     FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));;
     FGameplayTag HitEndTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.end"));
@@ -74,6 +77,9 @@ void UMyGameplayAbility::OnMontageComplete()
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
+    ResetHitBoxes();
+    bHasHitStarted = true;
+    // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
     FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
     FActorSpawnParameters params;
     params.bNoFail = true;
@@ -96,12 +102,18 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
-    HitBoxRef->Destroy();
+    bHasHitStarted = false;
+    ResetHitBoxes();
+    // UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
 }
 
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+    // UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+    if (!bHasHitStarted) {
+        // UE_LOG(LogTemp, Warning, TEXT("But has not started"));
+        return;
+    }
     IncComboCount();
     LastComboTime = GetWorld()->GetTimeSeconds();
     bHasHitConnected = true;
@@ -127,17 +139,24 @@ void UMyGameplayAbility::IncComboCount()
     if (bHasHitConnected) return;
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
     else ResetCombo();
-    UE_LOG(LogTemp, Warning, TEXT("Increased combo to %d"), CurrentComboCount);
+    // UE_LOG(LogTemp, Warning, TEXT("Increased combo to %d"), CurrentComboCount);
 }
 
 void UMyGameplayAbility::ResetCombo()
 {
-    UE_LOG(LogTemp, Warning, TEXT("Combo resetted"));
+    // UE_LOG(LogTemp, Warning, TEXT("Combo resetted"));
     CurrentComboCount = 0;
 
 }
+
 void UMyGameplayAbility::UpdateCombo()
 {
     if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
-    UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
+    // UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
+}
+
+void UMyGameplayAbility::ResetHitBoxes()
+{
+    if (!HitBoxRef) return;
+    HitBoxRef->Destroy();
 }
