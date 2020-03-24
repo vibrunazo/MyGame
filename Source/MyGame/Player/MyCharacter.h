@@ -42,6 +42,8 @@ public:
 	void UpdateHealthBar();
 	UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FHealthUpdateSignature OnUpdatedHealth;
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void OnPawnSeen(APawn* SeenPawn);
 
 	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
 	void OnDamaged(AActor* SourceActor) override;
@@ -71,7 +73,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UPawnSensingComponent* PawnSenseComp;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	uint8 Team;
+	uint8 Team = 0;
 	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */

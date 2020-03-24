@@ -17,6 +17,8 @@
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "Perception/PawnSensingComponent.h"
+#include "AIController.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -62,6 +64,7 @@ AMyCharacter::AMyCharacter()
 	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 	
 	PawnSenseComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
+	PawnSenseComp->OnSeePawn.AddDynamic(this, &AMyCharacter::OnPawnSeen);
 
 	// Our ability system component.
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
@@ -173,9 +176,11 @@ void AMyCharacter::BeginPlay()
 			GiveAbility(Ability.AbilityClass);
 		}
 	}
-	// SetupStatsFromGameInstance();
 	UpdateHealthBar();
-	if (IsPlayerControlled()) Team = 1;
+	if (IsPlayerControlled()) 
+	{
+		Team = 1;
+	}
 	else Team = 0;
 }
 
@@ -301,6 +306,19 @@ void AMyCharacter::OnHitPause(float Duration)
 void AMyCharacter::OnHitPauseEnd()
 {
 	CustomTimeDilation = 1.0f;
+}
+
+void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
+{
+	if (SeenPawn->IsPlayerControlled())
+	{
+		AAIController* AiCont = Cast<AAIController>(GetController());
+		if (!ensure(AiCont != nullptr)) return;
+		auto MyBB = AiCont->GetBlackboardComponent();
+		if (!ensure(MyBB != nullptr)) return;
+		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), SeenPawn);
+		UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
+	}
 }
 
 uint8 AMyCharacter::GetTeam()
