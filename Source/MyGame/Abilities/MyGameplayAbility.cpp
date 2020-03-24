@@ -27,10 +27,13 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
     FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
-        if (bHasHitConnected && GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay) return true;
+        if (bHasHitConnected && GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay) 
+        {
+            return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+        }
         return false;
     }
-    return true;
+    return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
 }
 
 void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
@@ -49,6 +52,8 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnInterrupted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
+    Task->OnCancelled.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
+    Task->OnBlendOut.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
 
     FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));;
@@ -72,6 +77,9 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 void UMyGameplayAbility::OnMontageComplete()
 {
+    bHasHitConnected = false;
+    bHasHitStarted = false;
+    ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }
 
@@ -80,6 +88,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     ResetHitBoxes();
     bHasHitStarted = true;
     // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
+    // TODO might crash if I'm dead?
     FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
     FActorSpawnParameters params;
     params.bNoFail = true;
@@ -94,8 +103,9 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
         UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
         if (!ensure(Settings != nullptr)) return;
         NewActor->AddComponentsToBones(Settings->BoneNames);
-    } else {
     }
+    // else {
+    // }
 
     HitBoxRef = NewActor;
 }
