@@ -112,9 +112,10 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
+    // UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
+    if (!bHasHitConnected && bHasHitStarted) ResetCombo();
     bHasHitStarted = false;
     ResetHitBoxes();
-    // UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
 }
 
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
