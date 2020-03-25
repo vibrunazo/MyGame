@@ -6,14 +6,15 @@
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "../MyBlueprintFunctionLibrary.h"
-#include "../Abilities/GetHit.h"
+#include "../Abilities/IGetHit.h"
+#include "../Abilities/ICastProjectile.h"
 #include "GameplayEffectTypes.h"
 #include "MyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
 
 UCLASS(config=Game)
-class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit
+class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit, public ICastProjectile
 {
 	GENERATED_BODY()
 
@@ -51,6 +52,7 @@ public:
 	bool IsAlive() override;
 	void OnHitPause(float Duration) override;
 	uint8 GetTeam() override;
+	FTransform GetProjectileSpawn() override;
 
 	void OnHitPauseEnd();
 

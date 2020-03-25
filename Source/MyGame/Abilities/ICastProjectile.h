@@ -4,12 +4,11 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
-#include "GameplayEffectTypes.h"
-#include "GetHit.generated.h"
+#include "ICastProjectile.generated.h"
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
-class UGetHit : public UInterface
+class UCastProjectile : public UInterface
 {
 	GENERATED_BODY()
 };
@@ -17,16 +16,12 @@ class UGetHit : public UInterface
 /**
  * 
  */
-class MYGAME_API IGetHit
+class MYGAME_API ICastProjectile
 {
 	GENERATED_BODY()
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) = 0;
-	virtual void OnDamaged(AActor* SourceActor) = 0;
-	virtual void OnDie() = 0;
-	virtual bool IsAlive() = 0;
-	virtual void OnHitPause(float Duration) = 0;
-	virtual uint8 GetTeam() = 0;
+	// virtual void OnCastProjectile() = 0;
+	virtual FTransform GetProjectileSpawn() = 0;
 };

@@ -3,7 +3,7 @@
 
 #include "MyAttributeSet.h"
 #include "GameplayEffectExtension.h"
-#include "GetHit.h"
+#include "IGetHit.h"
 
 UMyAttributeSet::UMyAttributeSet()
     : Health(100.0f)

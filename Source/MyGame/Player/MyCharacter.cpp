@@ -192,6 +192,7 @@ void AMyCharacter::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 	if (!InputEnabled()) return;
 	if (GetAbilityKeyDown(0)) ActivateAbilityByInput(0);
+	if (GetAbilityKeyDown(1)) ActivateAbilityByInput(1);
 	// AbilitySystem->TryActivateAbilityByClass(Abilities[0].Ability, true);
 }
 
@@ -233,7 +234,15 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
 			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
 			{
-				AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
+				try
+				{
+					AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
+				}
+				catch(const std::exception& e)
+				{
+					UE_LOG(LogTemp, Error, TEXT("Error trying to activate ability: "), *e.what());
+				}
+				
 			}
 		}
 	}
@@ -321,6 +330,12 @@ void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
 uint8 AMyCharacter::GetTeam()
 {
 	return Team;
+}
+
+FTransform AMyCharacter::GetProjectileSpawn()
+{
+	return GetActorTransform();
+	// UE_LOG(LogTemp, Warning, TEXT("Char casting projectile"));
 }
 
 bool AMyCharacter::HasControl()
