@@ -46,7 +46,7 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 		USphereComponent* NewSphere = NewObject<USphereComponent>(this);
 		// NewSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 		NewSphere->RegisterComponent();
-		NewSphere->SetSphereRadius(30.0f);
+		NewSphere->SetSphereRadius(SphereRadius);
 		// NewSphere->bGenerateOverlapEvents = true;
 		if (!ensure(GetInstigator() != nullptr)) return;
 		if (!ensure(GetOwner() != nullptr)) return;

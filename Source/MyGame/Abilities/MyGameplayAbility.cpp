@@ -177,7 +177,8 @@ void UMyGameplayAbility::ResetCombo()
 
 void UMyGameplayAbility::UpdateCombo()
 {
-    if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
+    if (GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
+    // if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
     // UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
 }
 

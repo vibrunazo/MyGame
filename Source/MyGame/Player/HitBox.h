@@ -25,6 +25,8 @@ public:
 	class USceneComponent* MyRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USphereComponent* MySphere;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	float SphereRadius = 40.0f;
 	TArray<FGameplayEffectSpecHandle> EffectsToApply;
 	TArray<AActor*> ActorsHit;
 
