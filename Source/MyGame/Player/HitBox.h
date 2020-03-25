@@ -20,6 +20,7 @@ public:
 	void OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
 
 	void AddComponentsToBones(TArray<FName> Bones);
+	class USphereComponent* AddHitSphere();
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USceneComponent* MyRoot;

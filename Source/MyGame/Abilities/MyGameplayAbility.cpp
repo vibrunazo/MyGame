@@ -94,20 +94,20 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     params.bNoFail = true;
     params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
     params.Owner = GetAvatarActorFromActorInfo();
-    AHitBox* NewActor = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
-    NewActor->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-    NewActor->EffectsToApply = MakeSpecHandles();
+    AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
+    NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    NewHB->EffectsToApply = MakeSpecHandles();
     // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
     const UObject* OO = Payload.OptionalObject;
     if (OO) {
         UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
         if (!ensure(Settings != nullptr)) return;
-        NewActor->AddComponentsToBones(Settings->BoneNames);
+        NewHB->AddComponentsToBones(Settings->BoneNames);
     }
     // else {
     // }
 
-    HitBoxRef = NewActor;
+    HitBoxRef = NewHB;
 }
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)

@@ -43,10 +43,7 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 {
 	for (auto &&Bone : Bones)
 	{
-		USphereComponent* NewSphere = NewObject<USphereComponent>(this);
-		// NewSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-		NewSphere->RegisterComponent();
-		NewSphere->SetSphereRadius(SphereRadius);
+		USphereComponent* NewSphere = AddHitSphere();
 		// NewSphere->bGenerateOverlapEvents = true;
 		if (!ensure(GetInstigator() != nullptr)) return;
 		if (!ensure(GetOwner() != nullptr)) return;
@@ -55,6 +52,15 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 		
 	}
 	
+}
+
+USphereComponent* AHitBox::AddHitSphere()
+{
+	USphereComponent* NewSphere = NewObject<USphereComponent>(this);
+	NewSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	NewSphere->RegisterComponent();
+	NewSphere->SetSphereRadius(SphereRadius);
+	return NewSphere;
 }
 
 // Instigator is the PLAYER PAWN

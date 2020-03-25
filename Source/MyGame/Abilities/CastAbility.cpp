@@ -5,6 +5,7 @@
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "ICastProjectile.h"
 #include "../Player/MyProjectile.h"
+#include "../Player/HitBox.h"
 
 void UCastAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
 {
@@ -28,5 +29,15 @@ void UCastAbility::OnCast(const FGameplayEventData Payload)
     params.bNoFail = true;
     params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
     params.Owner = GetAvatarActorFromActorInfo();
-    AMyProjectile* NewActor = GetWorld()->SpawnActor<AMyProjectile>(ProjectileToSpawn, Trans.GetLocation(), Trans.GetRotation().Rotator(), params);
+    AMyProjectile* NewProj = GetWorld()->SpawnActor<AMyProjectile>(ProjectileToSpawn, Trans.GetLocation(), Trans.GetRotation().Rotator(), params);
+
+    FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
+    FActorSpawnParameters hbparams;
+    hbparams.bNoFail = true;
+    hbparams.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
+    hbparams.Owner = NewProj;
+    AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, hbparams);
+    NewHB->AttachToActor(NewProj, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    NewHB->EffectsToApply = MakeSpecHandles();
+    NewHB->AddHitSphere();
 }
