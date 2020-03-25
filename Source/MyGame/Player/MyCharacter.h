@@ -85,6 +85,7 @@ public:
 	float BaseLookUpRate;
 private:
 	UFUNCTION()
+	void SetAggroTarget(APawn* NewTarget);
 	void OnDelayedDeath();
 	bool HasControl();
 	bool bHasControl = true;

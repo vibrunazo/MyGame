@@ -268,6 +268,9 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
 	UGameplayStatics::PlayWorldCameraShake(GetWorld(), CamShakeClass, GetActorLocation(), 0.0f, CamShakeRange);
+	APawn* SeenPawn = Cast<APawn>(SourceActor);
+	if (!SeenPawn) return;
+	SetAggroTarget(SeenPawn);
 
 }
 
@@ -312,15 +315,7 @@ void AMyCharacter::OnHitPauseEnd()
 
 void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
 {
-	if (SeenPawn->IsPlayerControlled())
-	{
-		AAIController* AiCont = Cast<AAIController>(GetController());
-		if (!ensure(AiCont != nullptr)) return;
-		UBlackboardComponent* MyBB = AiCont->GetBlackboardComponent();
-		if (!ensure(MyBB != nullptr)) return;
-		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), SeenPawn);
-		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
-	}
+	SetAggroTarget(SeenPawn);
 }
 
 uint8 AMyCharacter::GetTeam()
@@ -339,3 +334,15 @@ bool AMyCharacter::HasControl()
 }
 
 
+void AMyCharacter::SetAggroTarget(APawn* NewTarget)
+{
+	if (NewTarget->IsPlayerControlled())
+	{
+		AAIController* AiCont = Cast<AAIController>(GetController());
+		if (!ensure(AiCont != nullptr)) return;
+		UBlackboardComponent* MyBB = AiCont->GetBlackboardComponent();
+		if (!ensure(MyBB != nullptr)) return;
+		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), NewTarget);
+		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
+	}
+}
