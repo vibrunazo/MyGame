@@ -13,7 +13,12 @@ AMyProjectile::AMyProjectile()
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	RootComponent = Mesh;
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Mesh->SetCollisionObjectType(ECollisionChannel::ECC_WorldDynamic);
+	Mesh->SetGenerateOverlapEvents(false);
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
+	MovementComp->InitialSpeed = 800.0f;
+	MovementComp->ProjectileGravityScale = 0.0f;
 
 
 }

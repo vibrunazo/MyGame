@@ -19,6 +19,7 @@
 #include "Perception/PawnSensingComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Components/ArrowComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -62,6 +63,11 @@ AMyCharacter::AMyCharacter()
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComponent"));
 	HealthBarComp->SetupAttachment(RootComponent);
 	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
+
+	SpawnArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn Arrow"));
+	SpawnArrow->SetupAttachment(RootComponent);
+	SpawnArrow->SetRelativeLocation(FVector(50.0f, 0.0f, 10.0f));
+	SpawnArrow->bTreatAsASprite = true;
 	
 	PawnSenseComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
 	PawnSenseComp->OnSeePawn.AddDynamic(this, &AMyCharacter::OnPawnSeen);
@@ -334,7 +340,7 @@ uint8 AMyCharacter::GetTeam()
 
 FTransform AMyCharacter::GetProjectileSpawn()
 {
-	return GetActorTransform();
+	return SpawnArrow->GetComponentTransform();
 	// UE_LOG(LogTemp, Warning, TEXT("Char casting projectile"));
 }
 

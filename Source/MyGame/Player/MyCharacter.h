@@ -74,6 +74,8 @@ public:
 	class UWidgetComponent* HealthBarComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UPawnSensingComponent* PawnSenseComp;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
+	class UArrowComponent* SpawnArrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	uint8 Team = 0;
 	
