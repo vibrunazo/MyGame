@@ -85,29 +85,39 @@ void UMyGameplayAbility::OnMontageComplete()
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
-    ResetHitBoxes();
-    bHasHitStarted = true;
-    // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
-    // TODO might crash if I'm dead?
-    FVector Loc = CurrentActorInfo->AvatarActor->GetActorLocation();
-    FActorSpawnParameters params;
-    params.bNoFail = true;
-    params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
-    params.Owner = GetAvatarActorFromActorInfo();
-    AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
-    NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-    NewHB->EffectsToApply = MakeSpecHandles();
-    // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
-    const UObject* OO = Payload.OptionalObject;
-    if (OO) {
-        UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
-        if (!ensure(Settings != nullptr)) return;
-        NewHB->AddComponentsToBones(Settings->BoneNames);
-    }
-    // else {
-    // }
+    try
+    {
+        ResetHitBoxes();
+        bHasHitStarted = true;
+        // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
+        // TODO might crash if I'm dead?
+        FVector Loc = GetAvatarActorFromActorInfo()->GetActorLocation();
+        FActorSpawnParameters params;
+        params.bNoFail = true;
+        params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
+        params.Owner = GetAvatarActorFromActorInfo();
+        AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
+        NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+        NewHB->EffectsToApply = MakeSpecHandles();
+        // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
+        const UObject* OO = Payload.OptionalObject;
+        if (OO) {
+            UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
+            if (!ensure(Settings != nullptr)) return;
+            NewHB->AddComponentsToBones(Settings->BoneNames);
+        }
+        // else {
+        // }
 
-    HitBoxRef = NewHB;
+        HitBoxRef = NewHB;
+    }
+    catch(const std::exception& e)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ERROR On Hit Start: %s"), *e.what());
+        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+    }
+    
+    
 }
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
@@ -185,6 +195,6 @@ void UMyGameplayAbility::UpdateCombo()
 
 void UMyGameplayAbility::ResetHitBoxes()
 {
-    if (!HitBoxRef) return;
+    if (!IsValid(HitBoxRef)) return;
     HitBoxRef->Destroy();
 }

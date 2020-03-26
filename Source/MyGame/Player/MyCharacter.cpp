@@ -10,7 +10,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"
-#include "../Abilities/MyAttributeSet.h"
+// #include "../Abilities/MyAttributeSet.h"
 #include "../UI/MyHealthBar.h"
 #include "MyAnimInstance.h"
 #include "Engine/World.h"
@@ -75,6 +75,15 @@ AMyCharacter::AMyCharacter()
 	// Our ability system component.
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
+
+	if (AttributeSetBase)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Constructor: AttributeSet CREATED on %s"), *GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Constructor: AttributeSet NOT created on %s"), *GetName());
+	}
 
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
@@ -176,20 +185,28 @@ UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
 
 void AMyCharacter::BeginPlay()
 {
-	Super::BeginPlay();
-	if(AbilitySystem)
+	try
 	{
-    	for (auto &&Ability : Abilities)
+		Super::BeginPlay();
+		if(AbilitySystem)
 		{
-			GiveAbility(Ability.AbilityClass);
+			for (auto &&Ability : Abilities)
+			{
+				GiveAbility(Ability.AbilityClass);
+			}
 		}
+		UpdateHealthBar();
+		// if (IsPlayerControlled()) 
+		// {
+		// 	Team = 1;
+		// }
+		// else Team = 0;
 	}
-	UpdateHealthBar();
-	if (IsPlayerControlled()) 
+	catch(const std::exception& e)
 	{
-		Team = 1;
+		UE_LOG(LogTemp, Error, TEXT("ERROR ON BEGINPLAY: %s"), *e.what());
 	}
-	else Team = 0;
+	
 }
 
 
@@ -256,11 +273,22 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 
 void AMyCharacter::UpdateHealthBar()
 {
+	if (!ensure(HealthBarComp != nullptr)) return;
+	// if (!ensure(AttributeSetBase != nullptr)) return;
+	if (AttributeSetBase)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet CREATED on %s"), *GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet NOT created on %s"), *GetName());
+		return;
+	}
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar) HealthBar->SetHealth(AttributeSetBase->GetHealth());
-	OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
-	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
+	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
+	UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }
 
 void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)

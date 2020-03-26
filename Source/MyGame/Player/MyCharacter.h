@@ -9,6 +9,7 @@
 #include "../Abilities/IGetHit.h"
 #include "../Abilities/ICastProjectile.h"
 #include "GameplayEffectTypes.h"
+#include "../Abilities/MyAttributeSet.h"
 #include "MyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
@@ -59,8 +60,8 @@ public:
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	class UAbilitySystemComponent* AbilitySystem;
-	UPROPERTY(BlueprintReadOnly, Category = Abilities)
-	class UMyAttributeSet* AttributeSetBase;
+	// UPROPERTY(BlueprintReadOnly, Category = Abilities)
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
@@ -110,6 +111,9 @@ protected:
 	void TouchStarted(ETouchIndex::Type FingerIndex, FVector Location);
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
+
+	UPROPERTY()
+	UMyAttributeSet* AttributeSetBase;
 
 protected:
 	// APawn interface
