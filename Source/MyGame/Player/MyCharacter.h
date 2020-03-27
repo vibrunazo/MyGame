@@ -32,7 +32,7 @@ public:
 	void Tick(float DeltaSeconds) override;
 	void Jump() override;
 
-	void SetDefaultProperties();
+	virtual void SetDefaultProperties();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void GiveAbility(TSubclassOf<class UGameplayAbility> Ability);
 	UFUNCTION(BlueprintCallable, Category = Abilities)

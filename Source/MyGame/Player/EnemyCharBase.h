@@ -13,5 +13,6 @@ UCLASS()
 class MYGAME_API AEnemyCharBase : public AMyCharacter
 {
 	GENERATED_BODY()
-	
+public:
+	void SetDefaultProperties() override;
 };

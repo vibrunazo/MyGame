@@ -9,7 +9,7 @@
 
 void UCastAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Cast ability Activated"));
+    // UE_LOG(LogTemp, Warning, TEXT("Cast ability Activated"));
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
     FGameplayTag CastTag = FGameplayTag::RequestGameplayTag(TEXT("notify.projectile.cast"));
@@ -20,7 +20,7 @@ void UCastAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
 
 void UCastAbility::OnCast(const FGameplayEventData Payload)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Cast Projectile here"));
+    // UE_LOG(LogTemp, Warning, TEXT("Cast Projectile here"));
     ICastProjectile* HeWhoCasts = Cast<ICastProjectile>(GetAvatarActorFromActorInfo());
     if (!HeWhoCasts) return;
     FTransform Trans = HeWhoCasts->GetProjectileSpawn();

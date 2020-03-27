@@ -106,20 +106,7 @@ void AMyCharacter::SetDefaultProperties()
 	static ConstructorHelpers::FClassFinder<AController> AIClassFinder(TEXT("/Game/Blueprints/AI/BP_AIController"));
     TSubclassOf<AController> AIClass = AIClassFinder.Class;
 	AIControllerClass = AIClass;
-	// Blueprint'/Game/Blueprints/BP_MyGI.BP_MyGI'
-// D:/ue/424/MyGame/Content/FX/CamShake/Shake_Hit1.uasset
-	// static ConstructorHelpers::FClassFinder<AController> CamShakeFinder(TEXT("/Game/FX/CamShake/Shake_Hit1"));
-	// if (GetWorld())
-	// {
-	// 	UGameInstance* GI = GetGameInstance();
-	// 	if (!ensure(GI != nullptr)) return;
-	// 	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
-	// 	if (MyGI) {
-	// 		CamShakeClass = MyGI->CamShakeClass;
-	// 	}
-	// }
-
-    // CamShakeClass = UMyBlueprintFunctionLibrary::GetCamShakeClass();
+	Team = 0;
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -3,3 +3,9 @@
 
 #include "EnemyCharBase.h"
 
+void AEnemyCharBase::SetDefaultProperties()
+{
+    Super::SetDefaultProperties();
+    bUseControllerRotationYaw = true;
+    Team = 1;
+}
