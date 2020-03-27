@@ -308,7 +308,7 @@ void AMyCharacter::UpdateHealthBar()
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());
 	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
-	UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
+	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }
 
 void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
