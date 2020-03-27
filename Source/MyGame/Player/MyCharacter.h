@@ -58,6 +58,7 @@ public:
 	FTransform GetProjectileSpawn() override;
 
 	void OnHitPauseEnd();
+	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))

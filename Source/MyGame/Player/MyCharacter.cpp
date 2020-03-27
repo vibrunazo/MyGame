@@ -116,6 +116,7 @@ void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputC
 {
 	// Set up gameplay key bindings
 	check(PlayerInputComponent);
+	// PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
@@ -232,8 +233,10 @@ void AMyCharacter::Tick(float DeltaSeconds)
 
 void AMyCharacter::Jump()
 {
+	UE_LOG(LogTemp, Warning, TEXT("on jump"));
 	if (!HasControl()) return;
 	Super::Jump();
+	UE_LOG(LogTemp, Warning, TEXT("jump end"));
 }
 
 
@@ -381,6 +384,22 @@ void AMyCharacter::OnHitPauseEnd()
 void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
 {
 	SetAggroTarget(SeenPawn);
+}
+
+void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode)
+{
+	Super::OnMovementModeChanged(PrevMovementMode, PrevCustomMode);
+	FGameplayTag FlyingTag = FGameplayTag::RequestGameplayTag(TEXT("activate.flyingattack"));
+	FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(FlyingTag);
+	if (!GetMovementComponent()->IsFalling())
+	{
+		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);
+		AbilitySystem->CancelAbilities(&FlyingTagContainer);
+	}
+	else
+	{
+		AbilitySystem->UnBlockAbilitiesWithTags(FlyingTagContainer);
+	}
 }
 
 uint8 AMyCharacter::GetTeam()
