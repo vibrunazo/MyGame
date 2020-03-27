@@ -2,3 +2,10 @@
 
 
 #include "MyBlueprintFunctionLibrary.h"
+// #include "Camera/CameraShake.h"
+
+
+// TSubclassOf<class UCameraShake> UMyBlueprintFunctionLibrary::GetCamShakeClass()
+// {
+//     return nullptr;
+// }

@@ -29,9 +29,15 @@ struct FAbilityStruct
 /**
  * 
  */
-UCLASS()
+UCLASS(Blueprintable)
 class MYGAME_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 {
 	GENERATED_BODY()
 	
+public:
+	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
+	// static TSubclassOf<class UCameraShake> GetCamShakeClass();
+
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	// static TSubclassOf<class UCameraShake> CamShakeClass;
 };

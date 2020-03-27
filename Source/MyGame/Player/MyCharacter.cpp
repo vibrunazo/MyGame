@@ -20,6 +20,8 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/ArrowComponent.h"
+#include "UObject/ConstructorHelpers.h"
+#include "../MyGameInstance.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -62,7 +64,6 @@ AMyCharacter::AMyCharacter()
 
 	HealthBarComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("HealthBarComponent"));
 	HealthBarComp->SetupAttachment(RootComponent);
-	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 
 	SpawnArrow = CreateDefaultSubobject<UArrowComponent>(TEXT("Spawn Arrow"));
 	SpawnArrow->SetupAttachment(RootComponent);
@@ -76,26 +77,49 @@ AMyCharacter::AMyCharacter()
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
 
-	if (AttributeSetBase)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Constructor: AttributeSet CREATED on %s"), *GetName());
-	}
-	else
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Constructor: AttributeSet NOT created on %s"), *GetName());
-	}
+	SetDefaultProperties();
+}
+
+void AMyCharacter::SetDefaultProperties()
+{
+	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
+	GetMesh()->SetGenerateOverlapEvents(true);
+	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -97.0f));
+	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+
+	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
+	HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
 
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+	if (!Anim)
+	{
+		static ConstructorHelpers::FClassFinder<UMyAnimInstance> AnimClassFinder(TEXT("/Game/Anims/ABP_CharAnim"));
+    	TSubclassOf<UMyAnimInstance> AnimClass = AnimClassFinder.Class;
+		GetMesh()->SetAnimInstanceClass(AnimClass);
+	}
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
 	if (MyAnim) 
 	{
 		GetHitMontage = MyAnim->GetHitMontage;
 	} 
+	static ConstructorHelpers::FClassFinder<AController> AIClassFinder(TEXT("/Game/Blueprints/AI/BP_AIController"));
+    TSubclassOf<AController> AIClass = AIClassFinder.Class;
+	AIControllerClass = AIClass;
+	// Blueprint'/Game/Blueprints/BP_MyGI.BP_MyGI'
+// D:/ue/424/MyGame/Content/FX/CamShake/Shake_Hit1.uasset
+	// static ConstructorHelpers::FClassFinder<AController> CamShakeFinder(TEXT("/Game/FX/CamShake/Shake_Hit1"));
+	// if (GetWorld())
+	// {
+	// 	UGameInstance* GI = GetGameInstance();
+	// 	if (!ensure(GI != nullptr)) return;
+	// 	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
+	// 	if (MyGI) {
+	// 		CamShakeClass = MyGI->CamShakeClass;
+	// 	}
+	// }
 
-	// GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
-	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
-	GetMesh()->SetGenerateOverlapEvents(true);
+    // CamShakeClass = UMyBlueprintFunctionLibrary::GetCamShakeClass();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -275,18 +299,14 @@ void AMyCharacter::UpdateHealthBar()
 {
 	if (!ensure(HealthBarComp != nullptr)) return;
 	// if (!ensure(AttributeSetBase != nullptr)) return;
-	if (AttributeSetBase)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet CREATED on %s"), *GetName());
-	}
-	else
+	if (!AttributeSetBase)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet NOT created on %s"), *GetName());
 		return;
 	}
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
-	if (HealthBar) HealthBar->SetHealth(AttributeSetBase->GetHealth());
+	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());
 	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
 	UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }
@@ -310,7 +330,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
-	UGameplayStatics::PlayWorldCameraShake(GetWorld(), CamShakeClass, GetActorLocation(), 0.0f, CamShakeRange);
+	UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
 	APawn* SeenPawn = Cast<APawn>(SourceActor);
 	if (!SeenPawn) return;
 	SetAggroTarget(SeenPawn);
@@ -349,6 +369,21 @@ void AMyCharacter::OnHitPause(float Duration)
 	CustomTimeDilation = 0.01f;
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnHitPauseEnd, Duration, false);
+}
+
+TSubclassOf<UCameraShake> AMyCharacter::GetCamShake()	
+{
+	if (!CamShakeClass)
+	{
+		if (!ensure(GetWorld() != nullptr)) return nullptr;
+		UGameInstance* GI = GetGameInstance();
+		if (!ensure(GI != nullptr)) return nullptr;
+		UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
+		if (MyGI) {
+			CamShakeClass = MyGI->CamShakeClass;
+		}
+	}
+	return CamShakeClass;
 }
 
 void AMyCharacter::OnHitPauseEnd()

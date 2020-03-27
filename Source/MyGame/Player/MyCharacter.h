@@ -32,6 +32,7 @@ public:
 	void Tick(float DeltaSeconds) override;
 	void Jump() override;
 
+	void SetDefaultProperties();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void GiveAbility(TSubclassOf<class UGameplayAbility> Ability);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -46,6 +47,7 @@ public:
 	FHealthUpdateSignature OnUpdatedHealth;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void OnPawnSeen(APawn* SeenPawn);
+	TSubclassOf<class UCameraShake> GetCamShake();
 
 	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
 	void OnDamaged(AActor* SourceActor) override;
@@ -64,10 +66,10 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TSubclassOf<class UCameraShake> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	float CamShakeRange = 2000.0f;
+	float CamShakeRange = 1500.0f;
 	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TSubclassOf<class UUserWidget> HealthBarWidget;
@@ -113,6 +115,7 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 	UPROPERTY()
+	// UPROPERTY(Category=Attributes, VisibleAnywhere, BlueprintReadOnly)
 	UMyAttributeSet* AttributeSetBase;
 
 protected:
