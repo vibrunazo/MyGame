@@ -17,5 +17,7 @@ class MYGAME_API UHitboxSettings : public UObject
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	TArray<FName> BoneNames;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	float SphereRadius = 40.0f;
 	
 };

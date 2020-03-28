@@ -29,7 +29,7 @@
 AMyCharacter::AMyCharacter()
 {
 	// Set size for collision capsule
-	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
+	GetCapsuleComponent()->InitCapsuleSize(36.f, 96.0f);
 
 	// set our turn rates for input
 	BaseTurnRate = 45.f;
@@ -233,10 +233,8 @@ void AMyCharacter::Tick(float DeltaSeconds)
 
 void AMyCharacter::Jump()
 {
-	UE_LOG(LogTemp, Warning, TEXT("on jump"));
 	if (!HasControl()) return;
 	Super::Jump();
-	UE_LOG(LogTemp, Warning, TEXT("jump end"));
 }
 
 
@@ -395,10 +393,12 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 	{
 		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);
 		AbilitySystem->CancelAbilities(&FlyingTagContainer);
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	}
 	else
 	{
 		AbilitySystem->UnBlockAbilitiesWithTags(FlyingTagContainer);
+		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	}
 }
 
