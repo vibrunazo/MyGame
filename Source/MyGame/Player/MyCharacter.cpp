@@ -22,6 +22,7 @@
 #include "Components/ArrowComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "../MyGameInstance.h"
+#include "MyPlayerController.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -339,11 +340,21 @@ void AMyCharacter::OnDie()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	bHasControl = false;
 	DisableInput(nullptr);
-	DetachFromControllerPendingDestroy();
+	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+	if (MyCont)
+	{
+		MyCont->OnCharDies(this);
+	}
+	else DetachFromControllerPendingDestroy();
 }
 
 void AMyCharacter::OnDelayedDeath()
 {
+	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+	if (MyCont)
+	{
+		MyCont->OnDelayedCharDies(this);
+	}
 	Destroy();
 }
 
