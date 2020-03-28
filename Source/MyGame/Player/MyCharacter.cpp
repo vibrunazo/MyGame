@@ -57,6 +57,7 @@ AMyCharacter::AMyCharacter()
 	CameraBoom->bInheritPitch = false;
 	CameraBoom->bInheritRoll = false;
 	CameraBoom->bDoCollisionTest = false;
+	CameraBoom->bEnableCameraLag = true;
 
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -400,15 +401,20 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 	Super::OnMovementModeChanged(PrevMovementMode, PrevCustomMode);
 	FGameplayTag FlyingTag = FGameplayTag::RequestGameplayTag(TEXT("activate.flyingattack"));
 	FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(FlyingTag);
+	FGameplayTag GroundTag = FGameplayTag::RequestGameplayTag(TEXT("activate.groundattack"));
+	FGameplayTagContainer GroundTagContainer = FGameplayTagContainer(GroundTag);
 	if (!GetMovementComponent()->IsFalling())
 	{
 		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);
+		AbilitySystem->UnBlockAbilitiesWithTags(GroundTagContainer);
 		AbilitySystem->CancelAbilities(&FlyingTagContainer);
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	}
 	else
 	{
+		AbilitySystem->BlockAbilitiesWithTags(GroundTagContainer);
 		AbilitySystem->UnBlockAbilitiesWithTags(FlyingTagContainer);
+		AbilitySystem->CancelAbilities(&GroundTagContainer);
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	}
 }

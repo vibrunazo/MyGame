@@ -45,6 +45,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
         return;
     }
+    if (!IsValid(GetAvatarActorFromActorInfo())) return;
     ResetHitBoxes();
     UpdateCombo();
     bHasHitConnected = false;
@@ -79,6 +80,7 @@ void UMyGameplayAbility::OnMontageComplete()
 {
     bHasHitConnected = false;
     bHasHitStarted = false;
+    if (!IsValid(GetAvatarActorFromActorInfo())) return;
     ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }
@@ -87,6 +89,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
     try
     {
+        if (!IsValid(GetAvatarActorFromActorInfo())) return;
         ResetHitBoxes();
         bHasHitStarted = true;
         // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
@@ -124,6 +127,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
     // UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
+    if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitConnected && bHasHitStarted) ResetCombo();
     bHasHitStarted = false;
     ResetHitBoxes();
@@ -132,6 +136,7 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
     // UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+    if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitStarted) {
         // UE_LOG(LogTemp, Warning, TEXT("But has not started"));
         return;

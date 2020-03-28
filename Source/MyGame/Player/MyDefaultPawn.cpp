@@ -13,7 +13,7 @@ AMyDefaultPawn::AMyDefaultPawn()
 	PrimaryActorTick.bCanEverTick = true;
 
 	
-	SceneRoot = CreateDefaultSubobject<USpringArmComponent>(TEXT("SceneRoot"));
+	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
 	RootComponent = SceneRoot;
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -24,7 +24,7 @@ AMyDefaultPawn::AMyDefaultPawn()
 	CameraBoom->bInheritPitch = false;
 	CameraBoom->bInheritRoll = false;
 	CameraBoom->bDoCollisionTest = false;
-
+	
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
@@ -43,6 +43,7 @@ void AMyDefaultPawn::BeginPlay()
 void AMyDefaultPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UE_LOG(LogTemp, Warning, TEXT("I'm a default pawn and Collision Test is %d"), CameraBoom->bDoCollisionTest);
 
 }
 
