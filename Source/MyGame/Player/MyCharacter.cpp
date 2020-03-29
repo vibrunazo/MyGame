@@ -59,8 +59,8 @@ AMyCharacter::AMyCharacter()
 	CameraBoom->bInheritRoll = false;
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->bEnableCameraLag = true;
-	CameraBoom->CameraLagSpeed = 0.5f;
-	CameraBoom->CameraLagMaxDistance = 210.0f;
+	CameraBoom->CameraLagSpeed = 0.4f;
+	CameraBoom->CameraLagMaxDistance = 200.0f;
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
