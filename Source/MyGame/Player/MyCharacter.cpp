@@ -53,14 +53,14 @@ AMyCharacter::AMyCharacter()
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->TargetArmLength = 600.0f; // The camera follows at this distance behind the character	
 	// CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-	CameraBoom->SetWorldRotation(FRotator(-45.0f, 0.0f, 0.0f));
+	CameraBoom->SetWorldRotation(FRotator(-30.0f, 0.0f, 0.0f));
 	CameraBoom->bInheritYaw = false;
 	CameraBoom->bInheritPitch = false;
 	CameraBoom->bInheritRoll = false;
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->bEnableCameraLag = true;
 	CameraBoom->CameraLagSpeed = 0.5f;
-	CameraBoom->CameraLagMaxDistance = 230.0f;
+	CameraBoom->CameraLagMaxDistance = 210.0f;
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
