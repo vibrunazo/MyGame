@@ -14,7 +14,7 @@ class MYGAME_API AMyDefaultPawn : public APawn
 public:
 	// Sets default values for this pawn's properties
 	AMyDefaultPawn();
-	virtual void Tick(float DeltaTime) override;
+	// virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

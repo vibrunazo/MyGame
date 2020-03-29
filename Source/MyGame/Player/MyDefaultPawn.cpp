@@ -10,7 +10,7 @@
 AMyDefaultPawn::AMyDefaultPawn()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
 	
 	SceneRoot = CreateDefaultSubobject<USceneComponent>(TEXT("SceneRoot"));
@@ -40,12 +40,11 @@ void AMyDefaultPawn::BeginPlay()
 }
 
 // Called every frame
-void AMyDefaultPawn::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	UE_LOG(LogTemp, Warning, TEXT("I'm a default pawn and Collision Test is %d"), CameraBoom->bDoCollisionTest);
+// void AMyDefaultPawn::Tick(float DeltaTime)
+// {
+// 	Super::Tick(DeltaTime);
 
-}
+// }
 
 // Called to bind functionality to input
 void AMyDefaultPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
