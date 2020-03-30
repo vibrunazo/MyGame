@@ -78,11 +78,20 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
 
 void UMyGameplayAbility::OnMontageComplete()
 {
-    bHasHitConnected = false;
-    bHasHitStarted = false;
-    if (!IsValid(GetAvatarActorFromActorInfo())) return;
-    ResetHitBoxes();
-    EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+    try
+    {
+        bHasHitConnected = false;
+        bHasHitStarted = false;
+        if (!IsValid(GetAvatarActorFromActorInfo())) return;
+        ResetHitBoxes();
+        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+    }
+    catch(const std::exception& e)
+    {
+        UE_LOG(LogTemp, Error, TEXT("ERROR OnMontageComplete: %s"), *e.what());
+        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+    }
+    
 }
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
