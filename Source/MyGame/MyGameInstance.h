@@ -20,5 +20,5 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
 	TSubclassOf<class UCameraShake> CamShakeClass;
-	
+
 };

@@ -6,6 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "LevelBuilder.generated.h"
 
+UENUM(BlueprintType)
+enum class EWallPos : uint8
+{
+	Left,
+	Right,
+	Bottom,
+	Top
+};
+
 UCLASS()
 class MYGAME_API ALevelBuilder : public AActor
 {
@@ -23,11 +32,17 @@ public:
 	TArray<FAssetData> AssetDataList;
 	TArray<class URoomDataAsset*> RoomList;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
+	class UStaticMesh* WallMesh;
+
 private:
 	void GenerateLevels();
 	class ULevelStreaming* GenerateRoom();
 	void SetAssetListFromRegistry();
+	void SetupExternalReferences();
 	class URoomDataAsset* GetRandomRoom();
+	class AStaticMeshActor* GenerateWall(FTransform Where);
+	class AStaticMeshActor* GenerateWall(FTransform Where, EWallPos Pos);
 
 protected:
 	// Called when the game starts or when spawned
