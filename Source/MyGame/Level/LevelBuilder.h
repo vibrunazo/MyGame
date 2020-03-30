@@ -18,12 +18,16 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
 
-UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* BBComp;
+	TArray<FAssetData> AssetDataList;
+	TArray<class URoomDataAsset*> RoomList;
 
 private:
 	void GenerateLevels();
 	class ULevelStreaming* GenerateRoom();
+	void SetAssetListFromRegistry();
+	class URoomDataAsset* GetRandomRoom();
 
 protected:
 	// Called when the game starts or when spawned

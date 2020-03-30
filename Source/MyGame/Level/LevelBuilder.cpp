@@ -4,6 +4,8 @@
 #include "LevelBuilder.h"
 #include "Components/BillboardComponent.h"
 #include "Engine/LevelStreaming.h"
+#include "AssetRegistryModule.h"
+#include "RoomDataAsset.h"
 
 // Sets default values
 ALevelBuilder::ALevelBuilder()
@@ -23,6 +25,7 @@ void ALevelBuilder::BeginPlay()
 	Super::BeginPlay();
 	// ULevelStreaming* NewLevel = OnBPCreateLevelByName(NewRoom->LevelAddress);
 
+	SetAssetListFromRegistry();
 	GenerateLevels();
 	// GenerateRoom();
 }
@@ -52,5 +55,35 @@ void ALevelBuilder::GenerateLevels()
 
 ULevelStreaming* ALevelBuilder::GenerateRoom()
 {
-	return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
+	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
+	return OnBPCreateLevelByName(GetRandomRoom()->LevelAddress);
 }
+
+void ALevelBuilder::SetAssetListFromRegistry()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Looking for assets"));
+	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
+	TArray<FAssetData> OutAssets;
+	const UClass* RoomClass = URoomDataAsset::StaticClass();
+	AssetRegistryModule.Get().GetAssetsByClass(RoomClass->GetFName(), OutAssets);
+	AssetDataList = OutAssets;
+	UE_LOG(LogTemp, Warning, TEXT("Found %d"), AssetDataList.Num());
+	for (auto &&AssetData : AssetDataList)
+	{
+		URoomDataAsset* NewRoom = Cast<URoomDataAsset>(AssetData.GetAsset());
+		if (NewRoom)
+		{
+			RoomList.Add(NewRoom);
+			UE_LOG(LogTemp, Warning, TEXT("Found Room %s"), *NewRoom->LevelAddress.ToString());
+		}
+	}
+}
+
+
+URoomDataAsset* ALevelBuilder::GetRandomRoom()
+{
+	if (AssetDataList.Num() == 0) return nullptr;
+	int32 Index = FMath::RandRange(0, AssetDataList.Num() - 1);
+	return RoomList[Index];
+}
+
