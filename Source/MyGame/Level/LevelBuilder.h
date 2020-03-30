@@ -37,7 +37,7 @@ public:
 
 private:
 	void GenerateLevels();
-	class ULevelStreaming* GenerateRoom();
+	class ULevelStreaming* GenerateRoom(FTransform Where);
 	void SetAssetListFromRegistry();
 	void SetupExternalReferences();
 	class URoomDataAsset* GetRandomRoom();

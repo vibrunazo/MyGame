@@ -39,17 +39,9 @@ void ALevelBuilder::GenerateLevels()
 	GenerateWall(RoomLoc, EWallPos::Left);
 	for (uint16 i = 0; i < 4; i++)
 	{
-		ULevelStreaming* NewRoom = GenerateRoom();
-		if (NewRoom)
-		{
-			RoomLoc.SetLocation(FVector(0.0f, 2000.0f * i, 0.0f));
-			NewRoom->LevelTransform = RoomLoc;
-			// FVector Loc = RoomLoc.GetLocation(); Loc.Y += 1000.0f; Loc.Z += 100.0f;
-			// AStaticMeshActor* NewWall = GenerateWall(RoomLoc);
-			AStaticMeshActor* NewWall1 = GenerateWall(RoomLoc, EWallPos::Top);
-			AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Bottom);
-		}
-		else
+		RoomLoc.SetLocation(FVector(0.0f, 2000.0f * i, 0.0f));
+		ULevelStreaming* NewRoom = GenerateRoom(RoomLoc);
+		if (!NewRoom)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Room failed"));
 		}
@@ -58,14 +50,23 @@ void ALevelBuilder::GenerateLevels()
 	
 }
 
-ULevelStreaming* ALevelBuilder::GenerateRoom()
+ULevelStreaming* ALevelBuilder::GenerateRoom(FTransform Where)
 {
 	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
-	ULevelStreaming* NewRoom = OnBPCreateLevelByName(GetRandomRoom()->LevelAddress);
+	URoomDataAsset* NewRoomType = GetRandomRoom();
+	ULevelStreaming* NewRoom = OnBPCreateLevelByName(NewRoomType->LevelAddress);
 	if (NewRoom)
 	{
+		NewRoom->LevelTransform = Where;
 		NewRoom->SetShouldBeVisible(true);
 		NewRoom->SetShouldBeLoaded(true);
+		AStaticMeshActor* NewWall1 = GenerateWall(Where, EWallPos::Top);
+		AStaticMeshActor* NewWall2 = GenerateWall(Where, EWallPos::Bottom);
+		if (NewRoomType->bIsWalled)
+		{
+			AStaticMeshActor* NewWall3 = GenerateWall(Where, EWallPos::Left);
+			AStaticMeshActor* NewWall4 = GenerateWall(Where, EWallPos::Right);
+		}
 	}
 
 	return NewRoom;
