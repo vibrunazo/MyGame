@@ -35,16 +35,15 @@ void ALevelBuilder::BeginPlay()
 
 void ALevelBuilder::GenerateLevels()
 {
+	FTransform RoomLoc = FTransform();
+	GenerateWall(RoomLoc, EWallPos::Left);
 	for (uint16 i = 0; i < 4; i++)
 	{
 		ULevelStreaming* NewRoom = GenerateRoom();
 		if (NewRoom)
 		{
-			FTransform RoomLoc = FTransform();
 			RoomLoc.SetLocation(FVector(0.0f, 2000.0f * i, 0.0f));
 			NewRoom->LevelTransform = RoomLoc;
-			NewRoom->SetShouldBeVisible(true);
-			NewRoom->SetShouldBeLoaded(true);
 			// FVector Loc = RoomLoc.GetLocation(); Loc.Y += 1000.0f; Loc.Z += 100.0f;
 			// AStaticMeshActor* NewWall = GenerateWall(RoomLoc);
 			AStaticMeshActor* NewWall1 = GenerateWall(RoomLoc, EWallPos::Top);
@@ -54,34 +53,49 @@ void ALevelBuilder::GenerateLevels()
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Room failed"));
 		}
-		
 	}
+	GenerateWall(RoomLoc, EWallPos::Right);
 	
 }
 
 ULevelStreaming* ALevelBuilder::GenerateRoom()
 {
 	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
-	return OnBPCreateLevelByName(GetRandomRoom()->LevelAddress);
+	ULevelStreaming* NewRoom = OnBPCreateLevelByName(GetRandomRoom()->LevelAddress);
+	if (NewRoom)
+	{
+		NewRoom->SetShouldBeVisible(true);
+		NewRoom->SetShouldBeLoaded(true);
+	}
+
+	return NewRoom;
 }
 
 AStaticMeshActor* ALevelBuilder::GenerateWall(FTransform Where, EWallPos Pos)
 {
-	FVector Loc;
+	FVector Loc = Where.GetLocation();
+	FRotator Rot = Where.Rotator();
 	switch (Pos)
 	{
 	case EWallPos::Top:
-		Loc = Where.GetLocation(); Loc.X += 1000.0f; Loc.Z += 100.0f;
+		Loc.X += 1000.0f; Loc.Z += 100.0f;
 		break;
 
 	case EWallPos::Bottom:
-		Loc = Where.GetLocation(); Loc.X -= 1000.0f; Loc.Z += 100.0f;
+		Loc.X -= 1000.0f; Loc.Z += 100.0f;
 		break;
 	
-	default:
-		Loc = Where.GetLocation();
+	case EWallPos::Left:
+		Loc.Y -= 1000.0f; Loc.Z += 100.0f;
+		Rot.Yaw = 90.0f;
+		break;
+	
+	case EWallPos::Right:
+		Loc.Y += 1000.0f; Loc.Z += 100.0f;
+		Rot.Yaw = 90.0f;
+		break;
 	}
-	return GenerateWall(FTransform(Where.GetRotation().Rotator(), Loc));
+	return GenerateWall(FTransform(Rot, Loc));
 }
 
 AStaticMeshActor* ALevelBuilder::GenerateWall(FTransform Where)
@@ -91,7 +105,7 @@ AStaticMeshActor* ALevelBuilder::GenerateWall(FTransform Where)
 	// Loc.Y += 1000.0f; Loc.Z += 100.0f;
 	FActorSpawnParameters params;
 	params.bNoFail = true;
-	AStaticMeshActor* NewWall = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), Loc, FRotator::ZeroRotator, params);
+	AStaticMeshActor* NewWall = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), Loc, Where.Rotator(), params);
 	NewWall->GetStaticMeshComponent()->SetStaticMesh(WallMesh);
 	return NewWall;
 }
