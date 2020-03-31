@@ -35,10 +35,10 @@ USTRUCT()
 struct FCoord
 {
 	GENERATED_BODY()
+	// FString ID;
+	int32 ID = 0;
 	int16 X = 0;
 	int16 Y = 0;
-
-	FString ID;
 	// bool operator== (const FCoord& Other)
 	// {
 	// 	// return ID == Other.ID;
@@ -53,13 +53,13 @@ struct FCoord
 		return GetTypeHash(Other.ID);
 	}
 	explicit FCoord(int16 NewX, int16 NewY)
-        : ID (FGuid::NewGuid().ToString())
+        : ID (NewX * 100000 + NewY)
         , X(NewX)
         , Y(NewY)
     {
     }
 	explicit FCoord()
-        : ID (FGuid::NewGuid().ToString())
+        : ID(0)
         , X(0)
         , Y(0)
     {
@@ -93,11 +93,13 @@ public:
 private:
 	void GenerateLevels();
 	void BuildGrid();
+	void BuildWalls(TPair<FCoord, FGridStruct> Tile);
 	class ULevelStreaming* GenerateRoom(FTransform Where);
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class AStaticMeshActor* GenerateWall(FTransform Where);
 	class AStaticMeshActor* GenerateWall(FTransform Where, EWallPos Pos);
+	FVector GetLocFromGrid(FCoord Coord);
 
 protected:
 	// Called when the game starts or when spawned

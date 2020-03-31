@@ -42,6 +42,7 @@ void ALevelBuilder::GenerateLevels()
 		RoomLoc.SetLocation(FVector(2000.0f * (float)Tile.Key.X, 2000.0f * (float)Tile.Key.Y, 0.0f));
 		ULevelStreaming* NewRoom = GenerateRoom(RoomLoc);
 		UE_LOG(LogTemp, Warning, TEXT("created room at %s"), *RoomLoc.GetLocation().ToString());
+		BuildWalls(Tile);
 	}
 	
 }
@@ -153,17 +154,54 @@ void ALevelBuilder::BuildGrid()
 {
 	int16 x = 0;
 	int16 y = 0;
-	for (uint8 i = 0; i < 6; i++)
+	for (uint8 i = 0; i < 9; i++)
 	{
 		// FCoord Coord = {x, y};
 		FCoord Coord = FCoord(x, y);
 		FGridStruct Content; Content.RoomType = GetRandomRoom();
 		Grid.Add(Coord, Content);
-		UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
+		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
 		
-		if (FMath::RandBool()) x++;
+		if (FMath::RandRange(0, 3) == 0) x++;
 		else y++;
 	
 	}
 }
 
+void ALevelBuilder::BuildWalls(TPair<FCoord, FGridStruct> Tile)
+{
+	FTransform RoomLoc = FTransform();
+	FCoord SideCoord = FCoord(Tile.Key.X - 1, Tile.Key.Y);
+	FGridStruct* Side = Grid.Find(SideCoord);
+	if (!Side)
+	{
+		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
+		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Bottom);
+	}
+	SideCoord = FCoord(Tile.Key.X, Tile.Key.Y - 1);
+	Side = Grid.Find(SideCoord);
+	if (!Side)
+	{
+		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
+		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Left);
+	}
+	SideCoord = FCoord(Tile.Key.X + 1, Tile.Key.Y);
+	Side = Grid.Find(SideCoord);
+	if (!Side)
+	{
+		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
+		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Top);
+	}
+	SideCoord = FCoord(Tile.Key.X, Tile.Key.Y + 1);
+	Side = Grid.Find(SideCoord);
+	if (!Side)
+	{
+		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
+		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Right);
+	}
+}
+
+FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
+{
+	return FVector(2000.0f * (float)Coord.X, 2000.0f * (float)Coord.Y, 0.0f);
+}
