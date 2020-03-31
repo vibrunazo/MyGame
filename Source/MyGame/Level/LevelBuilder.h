@@ -15,7 +15,6 @@ enum class EWallPos : uint8
 	Top
 };
 
-
 USTRUCT(BlueprintType)
 struct FGridStruct
 {
@@ -64,6 +63,7 @@ struct FCoord
         , Y(0)
     {
     }
+	FString ToString() { return FString::Printf(TEXT("%d,%d"), X, Y);}
 };
 
 
@@ -94,11 +94,13 @@ private:
 	void GenerateLevels();
 	void BuildGrid();
 	void BuildWalls(TPair<FCoord, FGridStruct> Tile);
-	class ULevelStreaming* GenerateRoom(FTransform Where);
+	class ULevelStreaming* GenerateRandomRoom(FTransform Where);
+	class ULevelStreaming* GenerateRoom(FCoord Where, class URoomDataAsset* RoomType);
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class AStaticMeshActor* GenerateWall(FTransform Where);
-	class AStaticMeshActor* GenerateWall(FTransform Where, EWallPos Pos);
+	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos);
+	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos);
 	FVector GetLocFromGrid(FCoord Coord);
 
 protected:

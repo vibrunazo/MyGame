@@ -10,6 +10,21 @@
 #include "Components/StaticMeshComponent.h"
 
 
+TArray<EWallPos> ALLDIRECTIONS = {EWallPos::Left, EWallPos::Right, EWallPos::Bottom, EWallPos::Top};
+int8 GetXFromDir(EWallPos Dir)
+{
+	if (Dir == EWallPos::Top) return 1;
+	if (Dir == EWallPos::Bottom) return -1;
+	return 0;
+}
+int8 GetYFromDir(EWallPos Dir)
+{
+	if (Dir == EWallPos::Right) return 1;
+	if (Dir == EWallPos::Left) return -1;
+	return 0;
+}
+
+
 // Sets default values
 ALevelBuilder::ALevelBuilder()
 {
@@ -39,30 +54,14 @@ void ALevelBuilder::GenerateLevels()
 	FTransform RoomLoc = FTransform();
 	for (auto &&Tile : Grid)
 	{
-		RoomLoc.SetLocation(FVector(2000.0f * (float)Tile.Key.X, 2000.0f * (float)Tile.Key.Y, 0.0f));
-		ULevelStreaming* NewRoom = GenerateRoom(RoomLoc);
-		UE_LOG(LogTemp, Warning, TEXT("created room at %s"), *RoomLoc.GetLocation().ToString());
+		ULevelStreaming* NewRoom = GenerateRoom(Tile.Key, Tile.Value.RoomType);
+		UE_LOG(LogTemp, Warning, TEXT("created %s room at %s"), *Tile.Value.RoomType->LevelAddress.ToString(), *Tile.Key.ToString());
 		BuildWalls(Tile);
 	}
 	
 }
-// void ALevelBuilder::GenerateLevels()
-// {
-// 	FTransform RoomLoc = FTransform();
-// 	GenerateWall(RoomLoc, EWallPos::Left);
-// 	for (uint16 i = 0; i < 4; i++)
-// 	{
-// 		RoomLoc.SetLocation(FVector(0.0f, 2000.0f * i, 0.0f));
-// 		ULevelStreaming* NewRoom = GenerateRoom(RoomLoc);
-// 		if (!NewRoom)
-// 		{
-// 			UE_LOG(LogTemp, Warning, TEXT("Room failed"));
-// 		}
-// 	}
-// 	GenerateWall(RoomLoc, EWallPos::Right);
-// }
 
-ULevelStreaming* ALevelBuilder::GenerateRoom(FTransform Where)
+ULevelStreaming* ALevelBuilder::GenerateRandomRoom(FTransform Where)
 {
 	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
 	URoomDataAsset* NewRoomType = GetRandomRoom();
@@ -72,19 +71,36 @@ ULevelStreaming* ALevelBuilder::GenerateRoom(FTransform Where)
 		NewRoom->LevelTransform = Where;
 		NewRoom->SetShouldBeVisible(true);
 		NewRoom->SetShouldBeLoaded(true);
-		// AStaticMeshActor* NewWall1 = GenerateWall(Where, EWallPos::Top);
-		// AStaticMeshActor* NewWall2 = GenerateWall(Where, EWallPos::Bottom);
-		// if (NewRoomType->bIsWalled)
-		// {
-		// 	AStaticMeshActor* NewWall3 = GenerateWall(Where, EWallPos::Left);
-		// 	AStaticMeshActor* NewWall4 = GenerateWall(Where, EWallPos::Right);
-		// }
 	}
-
 	return NewRoom;
 }
 
-AStaticMeshActor* ALevelBuilder::GenerateWall(FTransform Where, EWallPos Pos)
+ULevelStreaming* ALevelBuilder::GenerateRoom(FCoord Where, class URoomDataAsset* RoomType)
+{
+	ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->LevelAddress);
+	if (NewRoom)
+	{
+		NewRoom->LevelTransform.SetLocation(GetLocFromGrid(Where));
+		NewRoom->SetShouldBeVisible(true);
+		NewRoom->SetShouldBeLoaded(true);
+	}
+	return NewRoom;
+}
+
+AStaticMeshActor* ALevelBuilder::GenerateWallAtGrid(FCoord Where, EWallPos Pos)
+{
+	FTransform RoomLoc = FTransform();
+	FCoord SideCoord = FCoord(Where.X + GetXFromDir(Pos), Where.Y + GetYFromDir(Pos));
+	FGridStruct* Side = Grid.Find(SideCoord);
+	if (!Side)
+	{
+		RoomLoc.SetLocation(GetLocFromGrid(Where));
+		AStaticMeshActor* NewWall = GenerateWallAtLoc(RoomLoc, Pos);
+		return NewWall;
+	}
+	return nullptr;
+}
+AStaticMeshActor* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Pos)
 {
 	FVector Loc = Where.GetLocation();
 	FRotator Rot = Where.Rotator();
@@ -170,34 +186,9 @@ void ALevelBuilder::BuildGrid()
 
 void ALevelBuilder::BuildWalls(TPair<FCoord, FGridStruct> Tile)
 {
-	FTransform RoomLoc = FTransform();
-	FCoord SideCoord = FCoord(Tile.Key.X - 1, Tile.Key.Y);
-	FGridStruct* Side = Grid.Find(SideCoord);
-	if (!Side)
+	for (auto &&Dir : ALLDIRECTIONS)
 	{
-		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
-		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Bottom);
-	}
-	SideCoord = FCoord(Tile.Key.X, Tile.Key.Y - 1);
-	Side = Grid.Find(SideCoord);
-	if (!Side)
-	{
-		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
-		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Left);
-	}
-	SideCoord = FCoord(Tile.Key.X + 1, Tile.Key.Y);
-	Side = Grid.Find(SideCoord);
-	if (!Side)
-	{
-		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
-		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Top);
-	}
-	SideCoord = FCoord(Tile.Key.X, Tile.Key.Y + 1);
-	Side = Grid.Find(SideCoord);
-	if (!Side)
-	{
-		RoomLoc.SetLocation(GetLocFromGrid(Tile.Key));
-		AStaticMeshActor* NewWall2 = GenerateWall(RoomLoc, EWallPos::Right);
+		GenerateWallAtGrid(Tile.Key, Dir);
 	}
 }
 
@@ -205,3 +196,5 @@ FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
 {
 	return FVector(2000.0f * (float)Coord.X, 2000.0f * (float)Coord.Y, 0.0f);
 }
+
+

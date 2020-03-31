@@ -265,7 +265,7 @@ void AMyCharacter::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
 
 void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 {
-	if (!HasControl()) return;
+	if (!HasControl() || !AbilitySystem) return;
 	for (auto &&Ability : Abilities)
 	{
 		if (Ability.Input == Index)
