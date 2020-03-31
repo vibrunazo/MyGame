@@ -29,6 +29,7 @@ void ALevelBuilder::BeginPlay()
 	// ULevelStreaming* NewLevel = OnBPCreateLevelByName(NewRoom->LevelAddress);
 
 	SetAssetListFromRegistry();
+	BuildGrid();
 	GenerateLevels();
 	// GenerateRoom();
 }
@@ -36,19 +37,29 @@ void ALevelBuilder::BeginPlay()
 void ALevelBuilder::GenerateLevels()
 {
 	FTransform RoomLoc = FTransform();
-	GenerateWall(RoomLoc, EWallPos::Left);
-	for (uint16 i = 0; i < 4; i++)
+	for (auto &&Tile : Grid)
 	{
-		RoomLoc.SetLocation(FVector(0.0f, 2000.0f * i, 0.0f));
+		RoomLoc.SetLocation(FVector(2000.0f * (float)Tile.Key.X, 2000.0f * (float)Tile.Key.Y, 0.0f));
 		ULevelStreaming* NewRoom = GenerateRoom(RoomLoc);
-		if (!NewRoom)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Room failed"));
-		}
+		UE_LOG(LogTemp, Warning, TEXT("created room at %s"), *RoomLoc.GetLocation().ToString());
 	}
-	GenerateWall(RoomLoc, EWallPos::Right);
 	
 }
+// void ALevelBuilder::GenerateLevels()
+// {
+// 	FTransform RoomLoc = FTransform();
+// 	GenerateWall(RoomLoc, EWallPos::Left);
+// 	for (uint16 i = 0; i < 4; i++)
+// 	{
+// 		RoomLoc.SetLocation(FVector(0.0f, 2000.0f * i, 0.0f));
+// 		ULevelStreaming* NewRoom = GenerateRoom(RoomLoc);
+// 		if (!NewRoom)
+// 		{
+// 			UE_LOG(LogTemp, Warning, TEXT("Room failed"));
+// 		}
+// 	}
+// 	GenerateWall(RoomLoc, EWallPos::Right);
+// }
 
 ULevelStreaming* ALevelBuilder::GenerateRoom(FTransform Where)
 {
@@ -60,13 +71,13 @@ ULevelStreaming* ALevelBuilder::GenerateRoom(FTransform Where)
 		NewRoom->LevelTransform = Where;
 		NewRoom->SetShouldBeVisible(true);
 		NewRoom->SetShouldBeLoaded(true);
-		AStaticMeshActor* NewWall1 = GenerateWall(Where, EWallPos::Top);
-		AStaticMeshActor* NewWall2 = GenerateWall(Where, EWallPos::Bottom);
-		if (NewRoomType->bIsWalled)
-		{
-			AStaticMeshActor* NewWall3 = GenerateWall(Where, EWallPos::Left);
-			AStaticMeshActor* NewWall4 = GenerateWall(Where, EWallPos::Right);
-		}
+		// AStaticMeshActor* NewWall1 = GenerateWall(Where, EWallPos::Top);
+		// AStaticMeshActor* NewWall2 = GenerateWall(Where, EWallPos::Bottom);
+		// if (NewRoomType->bIsWalled)
+		// {
+		// 	AStaticMeshActor* NewWall3 = GenerateWall(Where, EWallPos::Left);
+		// 	AStaticMeshActor* NewWall4 = GenerateWall(Where, EWallPos::Right);
+		// }
 	}
 
 	return NewRoom;
@@ -138,9 +149,21 @@ URoomDataAsset* ALevelBuilder::GetRandomRoom()
 	return RoomList[Index];
 }
 
-void ALevelBuilder::SetupExternalReferences()
+void ALevelBuilder::BuildGrid()
 {
+	int16 x = 0;
+	int16 y = 0;
+	for (uint8 i = 0; i < 6; i++)
+	{
+		// FCoord Coord = {x, y};
+		FCoord Coord = FCoord(x, y);
+		FGridStruct Content; Content.RoomType = GetRandomRoom();
+		Grid.Add(Coord, Content);
+		UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
+		
+		if (FMath::RandBool()) x++;
+		else y++;
 	
-
+	}
 }
 
