@@ -21,6 +21,8 @@ public:
 
 	void AddComponentsToBones(TArray<FName> Bones);
 	class USphereComponent* AddHitSphere();
+	UFUNCTION()
+	void OnOwnerDestroyed(AActor* DestroyedActor);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USceneComponent* MyRoot;

@@ -22,7 +22,6 @@ AHitBox::AHitBox()
 	// MySphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
 	// MySphere->SetupAttachment(RootComponent);
 	// MySphere->SetSphereRadius
-
 }
 
 // Called when the game starts or when spawned
@@ -30,6 +29,16 @@ void AHitBox::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	if (GetOwner())	{
+		UE_LOG(LogTemp, Warning, TEXT("I am hitbox and %s is my daddy"), *GetOwner()->GetName());
+		GetOwner()->OnDestroyed.AddDynamic(this, &AHitBox::OnOwnerDestroyed);
+	}
+	else {UE_LOG(LogTemp, Warning, TEXT("I am hitbox and I has no daddy"));}
+}
+
+void AHitBox::OnOwnerDestroyed(AActor* DestroyedActor)
+{
+	Destroy();
 }
 
 // Called every frame

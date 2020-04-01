@@ -19,6 +19,7 @@ AMyProjectile::AMyProjectile()
 	MovementComp = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movement"));
 	MovementComp->InitialSpeed = 800.0f;
 	MovementComp->ProjectileGravityScale = 0.0f;
+	InitialLifeSpan = 2.0f;
 
 
 }
