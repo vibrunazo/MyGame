@@ -92,11 +92,11 @@ ULevelStreaming* ALevelBuilder::GenerateRoom(FCoord Where, class URoomDataAsset*
 	return NewRoom;
 }
 
-AStaticMeshActor* ALevelBuilder::GenerateWallAtGrid(FCoord Where, EWallPos Pos)
+AStaticMeshActor* ALevelBuilder::GenerateWallAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What)
 {
 	FTransform RoomLoc = FTransform();
 	RoomLoc.SetLocation(GetLocFromGrid(Where));
-	AStaticMeshActor* NewWall = GenerateWallAtLoc(RoomLoc, Pos);
+	AStaticMeshActor* NewWall = GenerateWallAtLoc(RoomLoc, Pos, What);
 	FString ID = GetWallID(Where, Pos);
 	AllWalls.Add(ID, NewWall);
 	return NewWall;
@@ -113,42 +113,43 @@ AStaticMeshActor* ALevelBuilder::GenerateEdgeWallAtGrid(FCoord Where, EWallPos P
 	return nullptr;
 }
 
-AStaticMeshActor* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Pos)
+AStaticMeshActor* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What)
 {
 	FVector Loc = Where.GetLocation();
 	FRotator Rot = Where.Rotator();
 	switch (Pos)
 	{
 	case EWallPos::Top:
-		Loc.X += 1000.0f; Loc.Z += 100.0f;
+		Loc.X += 1000.0f;
 		break;
 
 	case EWallPos::Bottom:
-		Loc.X -= 1000.0f; Loc.Z += 100.0f;
+		Loc.X -= 1000.0f;
 		break;
 	
 	case EWallPos::Left:
-		Loc.Y -= 1000.0f; Loc.Z += 100.0f;
+		Loc.Y -= 1000.0f;
 		Rot.Yaw = 90.0f;
 		break;
 	
 	case EWallPos::Right:
-		Loc.Y += 1000.0f; Loc.Z += 100.0f;
+		Loc.Y += 1000.0f;
 		Rot.Yaw = 90.0f;
 		break;
 	}
-	return GenerateWall(FTransform(Rot, Loc));
+	return GenerateWall(FTransform(Rot, Loc), What);
 }
 
-AStaticMeshActor* ALevelBuilder::GenerateWall(FTransform Where)
+AStaticMeshActor* ALevelBuilder::GenerateWall(FTransform Where, UStaticMesh* What)
 {
 	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
+	if (What == nullptr) What = WallMesh;
 	FVector Loc = Where.GetLocation();
 	// Loc.Y += 1000.0f; Loc.Z += 100.0f;
 	FActorSpawnParameters params;
 	params.bNoFail = true;
 	AStaticMeshActor* NewWall = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), Loc, Where.Rotator(), params);
-	NewWall->GetStaticMeshComponent()->SetStaticMesh(WallMesh);
+	NewWall->GetStaticMeshComponent()->SetStaticMesh(What);
 	return NewWall;
 }
 
@@ -208,7 +209,7 @@ void ALevelBuilder::BuildWalls(TPair<FCoord, FGridStruct> Tile)
 	{
 		for (auto &&Dir : ALLDIRECTIONS)
 		{
-			GenerateWallAtGrid(Tile.Key, Dir);
+			GenerateWallAtGrid(Tile.Key, Dir, WallDooredMesh);
 		}
 	}
 	

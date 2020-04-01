@@ -87,6 +87,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
 	class UStaticMesh* WallMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
+	class UStaticMesh* WallDooredMesh;
 	TMap<FCoord, FGridStruct> Grid;
 	TMap<FString, class AStaticMeshActor*> AllWalls;
 	
@@ -99,9 +101,9 @@ private:
 	class ULevelStreaming* GenerateRoom(FCoord Where, class URoomDataAsset* RoomType);
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
-	class AStaticMeshActor* GenerateWall(FTransform Where);
-	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos);
-	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos);
+	class AStaticMeshActor* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
+	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
+	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
 	FVector GetLocFromGrid(FCoord Coord);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
