@@ -59,6 +59,11 @@ void ALevelBuilder::GenerateLevels()
 		BuildWalls(Tile);
 	}
 	
+	for (auto &&Wall : AllWalls)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Wall: %s"), *Wall.Key);
+	}
+	
 }
 
 ULevelStreaming* ALevelBuilder::GenerateRandomRoom(FTransform Where)
@@ -90,16 +95,24 @@ ULevelStreaming* ALevelBuilder::GenerateRoom(FCoord Where, class URoomDataAsset*
 AStaticMeshActor* ALevelBuilder::GenerateWallAtGrid(FCoord Where, EWallPos Pos)
 {
 	FTransform RoomLoc = FTransform();
-	FCoord SideCoord = FCoord(Where.X + GetXFromDir(Pos), Where.Y + GetYFromDir(Pos));
+	RoomLoc.SetLocation(GetLocFromGrid(Where));
+	AStaticMeshActor* NewWall = GenerateWallAtLoc(RoomLoc, Pos);
+	FString ID = GetWallID(Where, Pos);
+	AllWalls.Add(ID, NewWall);
+	return NewWall;
+}
+
+AStaticMeshActor* ALevelBuilder::GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos)
+{
+	FCoord SideCoord = GetNeighbor(Where, Pos);
 	FGridStruct* Side = Grid.Find(SideCoord);
 	if (!Side)
 	{
-		RoomLoc.SetLocation(GetLocFromGrid(Where));
-		AStaticMeshActor* NewWall = GenerateWallAtLoc(RoomLoc, Pos);
-		return NewWall;
+		GenerateWallAtGrid(Where, Pos);
 	}
 	return nullptr;
 }
+
 AStaticMeshActor* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Pos)
 {
 	FVector Loc = Where.GetLocation();
@@ -180,21 +193,51 @@ void ALevelBuilder::BuildGrid()
 		
 		if (FMath::RandRange(0, 3) == 0) x++;
 		else y++;
-	
 	}
 }
 
 void ALevelBuilder::BuildWalls(TPair<FCoord, FGridStruct> Tile)
 {
+	// edge of world walls
 	for (auto &&Dir : ALLDIRECTIONS)
 	{
-		GenerateWallAtGrid(Tile.Key, Dir);
+		GenerateEdgeWallAtGrid(Tile.Key, Dir);
 	}
+	// room type walls
+	if (Tile.Value.RoomType->bIsWalled)
+	{
+		for (auto &&Dir : ALLDIRECTIONS)
+		{
+			GenerateWallAtGrid(Tile.Key, Dir);
+		}
+	}
+	
 }
 
 FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
 {
 	return FVector(2000.0f * (float)Coord.X, 2000.0f * (float)Coord.Y, 0.0f);
 }
+
+FString ALevelBuilder::GetWallID(FCoord Coord1, FCoord Coord2)
+{
+	FString s1 = Coord1.ToString();
+	FString s2 = Coord2.ToString();
+	if (s1 < s2) return s1 + 'x' + s2;
+	else return s2 + 'x' + s1;
+
+	return FString();
+}
+
+FString ALevelBuilder::GetWallID(FCoord Coord, EWallPos Dir)
+{
+	return GetWallID(Coord, GetNeighbor(Coord, Dir));
+}
+
+FCoord ALevelBuilder::GetNeighbor(FCoord From, EWallPos To)
+{
+	return FCoord(From.X + GetXFromDir(To), From.Y + GetYFromDir(To));
+}
+
 
 

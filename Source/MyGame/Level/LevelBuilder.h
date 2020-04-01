@@ -88,6 +88,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
 	class UStaticMesh* WallMesh;
 	TMap<FCoord, FGridStruct> Grid;
+	TMap<FString, class AStaticMeshActor*> AllWalls;
 	
 
 private:
@@ -101,7 +102,11 @@ private:
 	class AStaticMeshActor* GenerateWall(FTransform Where);
 	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos);
 	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos);
+	class AStaticMeshActor* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
 	FVector GetLocFromGrid(FCoord Coord);
+	FString GetWallID(FCoord Coord1, FCoord Coord2);
+	FString GetWallID(FCoord Coord, EWallPos Dir);
+	FCoord GetNeighbor(FCoord From, EWallPos To);
 
 protected:
 	// Called when the game starts or when spawned
