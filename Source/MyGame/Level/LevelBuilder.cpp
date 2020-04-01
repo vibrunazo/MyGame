@@ -55,14 +55,14 @@ void ALevelBuilder::GenerateLevels()
 	for (auto &&Tile : Grid)
 	{
 		ULevelStreaming* NewRoom = GenerateRoom(Tile.Key, Tile.Value.RoomType);
-		UE_LOG(LogTemp, Warning, TEXT("created %s room at %s"), *Tile.Value.RoomType->LevelAddress.ToString(), *Tile.Key.ToString());
+		// UE_LOG(LogTemp, Warning, TEXT("created %s room at %s"), *Tile.Value.RoomType->LevelAddress.ToString(), *Tile.Key.ToString());
 		BuildWalls(Tile);
 	}
 	
-	for (auto &&Wall : AllWalls)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Wall: %s"), *Wall.Key);
-	}
+	// for (auto &&Wall : AllWalls)
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("Wall: %s"), *Wall.Key);
+	// }
 	
 }
 
@@ -94,11 +94,17 @@ ULevelStreaming* ALevelBuilder::GenerateRoom(FCoord Where, class URoomDataAsset*
 
 AStaticMeshActor* ALevelBuilder::GenerateWallAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What)
 {
+	FString ID = GetWallID(Where, Pos);
+	AStaticMeshActor** Existing = AllWalls.Find(ID);
+	if (Existing) {
+		// UE_LOG(LogTemp, Warning, TEXT("Wall of ID: %s, already exists"), *ID);
+		return nullptr;
+	}
 	FTransform RoomLoc = FTransform();
 	RoomLoc.SetLocation(GetLocFromGrid(Where));
 	AStaticMeshActor* NewWall = GenerateWallAtLoc(RoomLoc, Pos, What);
-	FString ID = GetWallID(Where, Pos);
 	AllWalls.Add(ID, NewWall);
+	// UE_LOG(LogTemp, Warning, TEXT("Generated wall of ID: %s, total %d walls"), *ID, AllWalls.Num());
 	return NewWall;
 }
 
