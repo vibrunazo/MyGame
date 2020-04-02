@@ -118,6 +118,7 @@ private:
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EWallPos Dir);
 	FCoord GetNeighbor(FCoord From, EWallPos To);
+	class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 
 	TArray<class AStaticMeshActor*> HiddenWalls;
 	FCoord LastHiddenWallCoord = FCoord(-67, 9390);

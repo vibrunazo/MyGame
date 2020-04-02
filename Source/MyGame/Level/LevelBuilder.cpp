@@ -307,10 +307,20 @@ void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 		CappedWalls = {};
 		FTransform Loc = FTransform();
 		Loc.SetLocation(SM->GetActorLocation());
-		AStaticMeshActor* CappedWall = GenerateWall(Loc, WallCappedMesh);
+		AStaticMeshActor* CappedWall = GenerateWall(Loc, GetWallTypeAtTiles(Coord, GetNeighbor(Coord, EWallPos::Bottom), true));
 		CappedWalls.Add(CappedWall);
 	}
 }
+
+UStaticMesh* ALevelBuilder::GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap)
+{
+	FGridStruct* Tile1 = Grid.Find(Coord1);
+	FGridStruct* Tile2 = Grid.Find(Coord2);
+	if (!Tile1 || !Tile2) return Cap? WallCappedMesh : WallMesh;
+	if (Tile1->RoomType->bIsWalled || Tile1->RoomType->bIsWalled) return Cap? WallDooredCappedMesh : WallDooredMesh;
+	return nullptr;
+}
+
 
 
 
