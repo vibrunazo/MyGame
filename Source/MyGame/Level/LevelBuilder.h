@@ -79,6 +79,8 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
+	class AStaticMeshActor* GetBottomWallFromLoc(FVector Location);
+	class AStaticMeshActor* GetWallRefFromCoordAndDir(FCoord Coord1, EWallPos Dir);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* BBComp;
@@ -106,6 +108,7 @@ private:
 	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
 	FVector GetLocFromGrid(FCoord Coord);
+	FCoord GetGridFromLoc(FVector Location);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EWallPos Dir);
 	FCoord GetNeighbor(FCoord From, EWallPos To);

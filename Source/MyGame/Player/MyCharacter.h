@@ -95,6 +95,7 @@ private:
 	UFUNCTION()
 	void SetAggroTarget(APawn* NewTarget);
 	void OnDelayedDeath();
+	void CheckWalls();
 	bool HasControl();
 	bool bHasControl = true;
 	UAnimMontage *GetHitMontage;

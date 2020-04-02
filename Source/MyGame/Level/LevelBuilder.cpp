@@ -8,7 +8,7 @@
 #include "RoomDataAsset.h"
 #include "Engine/StaticMeshActor.h"
 #include "Components/StaticMeshComponent.h"
-
+#include "../MyGameInstance.h"
 
 TArray<EWallPos> ALLDIRECTIONS = {EWallPos::Left, EWallPos::Right, EWallPos::Bottom, EWallPos::Top};
 int8 GetXFromDir(EWallPos Dir)
@@ -176,6 +176,12 @@ void ALevelBuilder::SetAssetListFromRegistry()
 			// UE_LOG(LogTemp, Warning, TEXT("Found Room %s"), *NewRoom->LevelAddress.ToString());
 		}
 	}
+
+	UGameInstance* GI = GetGameInstance();
+	if (!GI) return;
+	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
+	if (!MyGI) return;
+	MyGI->SetLevelBuilderRef(this);
 }
 
 
@@ -226,6 +232,13 @@ FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
 	return FVector(2000.0f * (float)Coord.X, 2000.0f * (float)Coord.Y, 0.0f);
 }
 
+FCoord ALevelBuilder::GetGridFromLoc(FVector Location)
+{
+	int16 NewX = ((int16)Location.X+1000)/2000;
+	int16 NewY = ((int16)Location.Y+1000)/2000;
+	return FCoord(NewX, NewY);
+}
+
 FString ALevelBuilder::GetWallID(FCoord Coord1, FCoord Coord2)
 {
 	FString s1 = Coord1.ToString();
@@ -245,6 +258,21 @@ FCoord ALevelBuilder::GetNeighbor(FCoord From, EWallPos To)
 {
 	return FCoord(From.X + GetXFromDir(To), From.Y + GetYFromDir(To));
 }
+
+AStaticMeshActor* ALevelBuilder::GetBottomWallFromLoc(FVector Location)
+{
+	return GetWallRefFromCoordAndDir(GetGridFromLoc(Location), EWallPos::Bottom);
+}
+	
+AStaticMeshActor* ALevelBuilder::GetWallRefFromCoordAndDir(FCoord Coord, EWallPos Dir)
+{
+	// UE_LOG(LogTemp, Warning, TEXT("Requested wall on %s"), *Coord.ToString());
+	FString ID = GetWallID(Coord, Dir);
+	AStaticMeshActor** Wall = AllWalls.Find(ID);
+	if (Wall) return *Wall;
+	return nullptr;
+}
+
 
 
 

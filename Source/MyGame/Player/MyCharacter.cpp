@@ -23,6 +23,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "../MyGameInstance.h"
 #include "MyPlayerController.h"
+#include "../Level/LevelBuilder.h"
+#include "Engine/StaticMeshActor.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -229,9 +231,15 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-	if (!InputEnabled()) return;
-	if (GetAbilityKeyDown(0)) ActivateAbilityByInput(0);
-	if (GetAbilityKeyDown(1)) ActivateAbilityByInput(1);
+	if (InputEnabled())
+	{
+		if (GetAbilityKeyDown(0)) ActivateAbilityByInput(0);
+		if (GetAbilityKeyDown(1)) ActivateAbilityByInput(1);
+	}
+	if (IsPlayerControlled())
+	{
+		CheckWalls();
+	}
 	// AbilitySystem->TryActivateAbilityByClass(Abilities[0].Ability, true);
 }
 
@@ -455,3 +463,26 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
 	}
 }
+
+void AMyCharacter::CheckWalls()
+{
+	UGameInstance* GI = GetGameInstance();
+	if (!GI) return;
+	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
+	if (!MyGI) return;
+	ALevelBuilder* Builder = MyGI->GetLevelBuilder();
+	if (!Builder) return;
+	AStaticMeshActor* SM = Builder->GetBottomWallFromLoc(GetActorLocation());
+	if (SM && SM->GetStaticMeshComponent())
+	{
+		// UE_LOG(LogTemp, Warning, TEXT("wall is %s"), *SM->GetName());
+		SM->GetStaticMeshComponent()->SetVisibility(false);
+	}
+	else
+	{
+		// UE_LOG(LogTemp, Warning, TEXT("no wall"));
+	}
+
+}
+
+

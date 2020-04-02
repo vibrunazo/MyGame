@@ -210,6 +210,7 @@ void UMyGameplayAbility::UpdateCombo()
 
 void UMyGameplayAbility::ResetHitBoxes()
 {
-    if (!IsValid(HitBoxRef)) return;
+    if (!HitBoxRef || !HitBoxRef->IsValidLowLevel()) return;
+    // if (!IsValid(HitBoxRef)) return;
     HitBoxRef->Destroy();
 }
