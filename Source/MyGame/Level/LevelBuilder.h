@@ -89,10 +89,14 @@ public:
 	TArray<FAssetData> AssetDataList;
 	TArray<class URoomDataAsset*> RoomList;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* WallMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* WallDooredMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	class UStaticMesh* WallCappedMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	class UStaticMesh* WallDooredCappedMesh;
 	TMap<FCoord, FGridStruct> Grid;
 	TMap<FString, class AStaticMeshActor*> AllWalls;
 	
@@ -117,6 +121,7 @@ private:
 
 	TArray<class AStaticMeshActor*> HiddenWalls;
 	FCoord LastHiddenWallCoord = FCoord(-67, 9390);
+	TArray<class AStaticMeshActor*> CappedWalls;
 
 protected:
 	// Called when the game starts or when spawned

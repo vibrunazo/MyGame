@@ -155,7 +155,9 @@ AStaticMeshActor* ALevelBuilder::GenerateWall(FTransform Where, UStaticMesh* Wha
 	FActorSpawnParameters params;
 	params.bNoFail = true;
 	AStaticMeshActor* NewWall = GetWorld()->SpawnActor<AStaticMeshActor>(AStaticMeshActor::StaticClass(), Loc, Where.Rotator(), params);
+	NewWall->GetStaticMeshComponent()->SetMobility(EComponentMobility::Stationary);
 	NewWall->GetStaticMeshComponent()->SetStaticMesh(What);
+	// NewWall->GetStaticMeshComponent()->SetMobility(EComponentMobility::Stationary);
 	return NewWall;
 }
 
@@ -297,6 +299,16 @@ void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 		HiddenWalls.Add(SM);
 		LastHiddenWallCoord = Coord;
 		// UE_LOG(LogTemp, Warning, TEXT("Hidding wall on %s"), *Coord.ToString());
+
+		for (auto &&Wall : CappedWalls)
+		{
+			Wall->Destroy();
+		}
+		CappedWalls = {};
+		FTransform Loc = FTransform();
+		Loc.SetLocation(SM->GetActorLocation());
+		AStaticMeshActor* CappedWall = GenerateWall(Loc, WallCappedMesh);
+		CappedWalls.Add(CappedWall);
 	}
 }
 
