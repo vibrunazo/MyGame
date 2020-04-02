@@ -189,20 +189,38 @@ void ALevelBuilder::SetAssetListFromRegistry()
 
 URoomDataAsset* ALevelBuilder::GetRandomRoom()
 {
-	if (AssetDataList.Num() == 0) return nullptr;
-	int32 Index = FMath::RandRange(0, AssetDataList.Num() - 1);
+	if (RoomList.Num() == 0) return nullptr;
+	int32 Index = FMath::RandRange(0, RoomList.Num() - 1);
 	return RoomList[Index];
+}
+
+URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty)
+{
+	if (RoomList.Num() == 0) return nullptr;
+	TArray<URoomDataAsset *> FilteredRooms = {};
+	for (auto &&Room : RoomList)
+	{
+		if (Room->RoomDifficulty == Difficulty)
+		{
+			FilteredRooms.Add(Room);
+		}
+	}
+	if (FilteredRooms.Num() == 0) return nullptr;
+	int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
+	return FilteredRooms[Index];
 }
 
 void ALevelBuilder::BuildGrid()
 {
 	int16 x = 0;
 	int16 y = 0;
+	int32 Difficulty = 0;
 	for (uint8 i = 0; i < 9; i++)
 	{
 		// FCoord Coord = {x, y};
 		FCoord Coord = FCoord(x, y);
-		FGridStruct Content; Content.RoomType = GetRandomRoom();
+		if (i > 2) Difficulty = 1;
+		FGridStruct Content; Content.RoomType = GetRandomRoom(Difficulty);
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
 		

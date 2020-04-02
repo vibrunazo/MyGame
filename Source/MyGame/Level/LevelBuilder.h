@@ -109,6 +109,7 @@ private:
 	class ULevelStreaming* GenerateRoom(FCoord Where, class URoomDataAsset* RoomType);
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
+	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
 	class AStaticMeshActor* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
