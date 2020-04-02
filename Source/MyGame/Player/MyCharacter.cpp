@@ -61,7 +61,7 @@ AMyCharacter::AMyCharacter()
 	CameraBoom->bInheritRoll = false;
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->bEnableCameraLag = true;
-	CameraBoom->CameraLagSpeed = 0.4f;
+	CameraBoom->CameraLagSpeed = 2f;
 	CameraBoom->CameraLagMaxDistance = 200.0f;
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
@@ -467,21 +467,21 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 void AMyCharacter::CheckWalls()
 {
 	UGameInstance* GI = GetGameInstance();
-	if (!GI) return;
 	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
 	if (!MyGI) return;
 	ALevelBuilder* Builder = MyGI->GetLevelBuilder();
 	if (!Builder) return;
-	AStaticMeshActor* SM = Builder->GetBottomWallFromLoc(GetActorLocation());
-	if (SM && SM->GetStaticMeshComponent())
-	{
-		// UE_LOG(LogTemp, Warning, TEXT("wall is %s"), *SM->GetName());
-		SM->GetStaticMeshComponent()->SetVisibility(false);
-	}
-	else
-	{
-		// UE_LOG(LogTemp, Warning, TEXT("no wall"));
-	}
+	Builder->HideWall(GetActorLocation());
+	// AStaticMeshActor* SM = Builder->GetBottomWallFromLoc(GetActorLocation());
+	// if (SM && SM->GetStaticMeshComponent())
+	// {
+	// 	// UE_LOG(LogTemp, Warning, TEXT("wall is %s"), *SM->GetName());
+	// 	SM->GetStaticMeshComponent()->SetVisibility(false);
+	// }
+	// else
+	// {
+	// 	// UE_LOG(LogTemp, Warning, TEXT("no wall"));
+	// }
 
 }
 

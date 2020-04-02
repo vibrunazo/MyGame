@@ -80,7 +80,9 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
 	class AStaticMeshActor* GetBottomWallFromLoc(FVector Location);
-	class AStaticMeshActor* GetWallRefFromCoordAndDir(FCoord Coord1, EWallPos Dir);
+	class AStaticMeshActor* GetWallRefFromCoordAndDir(FCoord Coord, EWallPos Dir);
+	void HideWall(FVector Location, EWallPos Dir=EWallPos::Bottom);
+	void HideWall(FCoord Coord, EWallPos Dir=EWallPos::Bottom);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* BBComp;
@@ -112,6 +114,8 @@ private:
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EWallPos Dir);
 	FCoord GetNeighbor(FCoord From, EWallPos To);
+
+	TArray<class AStaticMeshActor*> HiddenWalls;
 
 protected:
 	// Called when the game starts or when spawned

@@ -273,6 +273,31 @@ AStaticMeshActor* ALevelBuilder::GetWallRefFromCoordAndDir(FCoord Coord, EWallPo
 	return nullptr;
 }
 
+void ALevelBuilder::HideWall(FVector Location, EWallPos Dir)
+{
+	HideWall(GetGridFromLoc(Location), Dir);
+}
+
+void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
+{
+	AStaticMeshActor* SM =  GetWallRefFromCoordAndDir(Coord, Dir);
+	if (SM && SM->GetStaticMeshComponent())
+	{
+		for (auto &&Wall : HiddenWalls)
+		{
+			if (Wall && Wall->GetStaticMeshComponent())
+			{
+				Wall->GetStaticMeshComponent()->SetVisibility(true);
+			}
+		}
+		HiddenWalls = {};
+		
+		SM->GetStaticMeshComponent()->SetVisibility(false);
+		HiddenWalls.Add(SM);
+	}
+}
+
+
 
 
 
