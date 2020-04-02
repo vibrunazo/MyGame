@@ -224,8 +224,19 @@ void ALevelBuilder::BuildGrid()
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
 		
-		if (FMath::RandRange(0, 3) == 0) x++;
-		else y++;
+		if (FMath::RandRange(0, 3) < 2) y++;
+		else if(FMath::RandBool())
+		{
+			if(Grid.Find(GetNeighbor(Coord, EWallPos::Top))) x--;
+			else x++;
+		}
+		else 
+		{
+			if(Grid.Find(GetNeighbor(Coord, EWallPos::Bottom))) x++;
+			else x--;
+		}
+
+		// else x--;
 	}
 }
 
@@ -254,8 +265,8 @@ FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
 
 FCoord ALevelBuilder::GetGridFromLoc(FVector Location)
 {
-	int16 NewX = ((int16)Location.X+1000)/2000;
-	int16 NewY = ((int16)Location.Y+1000)/2000;
+	int16 NewX = FMath::DivideAndRoundNearest(Location.X, 2000.0f);
+	int16 NewY = FMath::DivideAndRoundNearest(Location.Y, 2000.0f);
 	return FCoord(NewX, NewY);
 }
 
@@ -301,31 +312,34 @@ void ALevelBuilder::HideWall(FVector Location, EWallPos Dir)
 void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 {
 	if (Coord == LastHiddenWallCoord) return;
-	AStaticMeshActor* SM =  GetWallRefFromCoordAndDir(Coord, Dir);
+	LastHiddenWallCoord = Coord;
+	// Unhide all Walls
+	for (auto &&Wall : HiddenWalls)
+	{
+		if (Wall && Wall->GetStaticMeshComponent())
+		{
+			Wall->GetStaticMeshComponent()->SetVisibility(true);
+		}
+	}
+	HiddenWalls = {};
+	// remove all capped walls
+	for (auto &&Wall : CappedWalls)
+	{
+		Wall->Destroy();
+	}
+	CappedWalls = {};
+	AStaticMeshActor* SM = GetWallRefFromCoordAndDir(Coord, Dir);
 	if (SM && SM->GetStaticMeshComponent())
 	{
-		for (auto &&Wall : HiddenWalls)
-		{
-			if (Wall && Wall->GetStaticMeshComponent())
-			{
-				Wall->GetStaticMeshComponent()->SetVisibility(true);
-			}
-		}
-		HiddenWalls = {};
-		
+		// then hide it
 		SM->GetStaticMeshComponent()->SetVisibility(false);
 		HiddenWalls.Add(SM);
-		LastHiddenWallCoord = Coord;
 		// UE_LOG(LogTemp, Warning, TEXT("Hidding wall on %s"), *Coord.ToString());
-
-		for (auto &&Wall : CappedWalls)
-		{
-			Wall->Destroy();
-		}
-		CappedWalls = {};
+		// and add a capped wall in its place
 		FTransform Loc = FTransform();
 		Loc.SetLocation(SM->GetActorLocation());
-		AStaticMeshActor* CappedWall = GenerateWall(Loc, GetWallTypeAtTiles(Coord, GetNeighbor(Coord, EWallPos::Bottom), true));
+		AStaticMeshActor* CappedWall = GenerateWall(Loc, GetWallTypeAtTiles(Coord, GetNeighbor(Coord, Dir), true));
+		// UE_LOG(LogTemp, Warning, TEXT("Wallcap between %s and %s is %s"), *Coord.ToString(), *GetNeighbor(Coord, Dir).ToString(), *CappedWall->GetName());
 		CappedWalls.Add(CappedWall);
 	}
 }
@@ -335,7 +349,7 @@ UStaticMesh* ALevelBuilder::GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, boo
 	FGridStruct* Tile1 = Grid.Find(Coord1);
 	FGridStruct* Tile2 = Grid.Find(Coord2);
 	if (!Tile1 || !Tile2) return Cap? WallCappedMesh : WallMesh;
-	if (Tile1->RoomType->bIsWalled || Tile1->RoomType->bIsWalled) return Cap? WallDooredCappedMesh : WallDooredMesh;
+	if (Tile1->RoomType->bIsWalled || Tile2->RoomType->bIsWalled) return Cap? WallDooredCappedMesh : WallDooredMesh;
 	return nullptr;
 }
 
