@@ -61,7 +61,7 @@ AMyCharacter::AMyCharacter()
 	CameraBoom->bInheritRoll = false;
 	CameraBoom->bDoCollisionTest = false;
 	CameraBoom->bEnableCameraLag = true;
-	CameraBoom->CameraLagSpeed = 2f;
+	CameraBoom->CameraLagSpeed = 2.0f;
 	CameraBoom->CameraLagMaxDistance = 200.0f;
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));

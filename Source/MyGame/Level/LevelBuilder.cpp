@@ -280,6 +280,7 @@ void ALevelBuilder::HideWall(FVector Location, EWallPos Dir)
 
 void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 {
+	if (Coord == LastHiddenWallCoord) return;
 	AStaticMeshActor* SM =  GetWallRefFromCoordAndDir(Coord, Dir);
 	if (SM && SM->GetStaticMeshComponent())
 	{
@@ -294,6 +295,8 @@ void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 		
 		SM->GetStaticMeshComponent()->SetVisibility(false);
 		HiddenWalls.Add(SM);
+		LastHiddenWallCoord = Coord;
+		// UE_LOG(LogTemp, Warning, TEXT("Hidding wall on %s"), *Coord.ToString());
 	}
 }
 

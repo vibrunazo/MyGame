@@ -116,6 +116,7 @@ private:
 	FCoord GetNeighbor(FCoord From, EWallPos To);
 
 	TArray<class AStaticMeshActor*> HiddenWalls;
+	FCoord LastHiddenWallCoord = FCoord(-67, 9390);
 
 protected:
 	// Called when the game starts or when spawned
