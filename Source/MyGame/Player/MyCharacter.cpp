@@ -318,6 +318,15 @@ void AMyCharacter::UpdateHealthBar()
 void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
+	FGameplayTagContainer EffectTags;
+	NewEffect.Data->GetAllGrantedTags(EffectTags);
+	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
+	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
+	if (EffectTags.HasTag(HitstunTag) && StunImmune) 
+	{
+		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag of %f s"), NewEffect.Data->GetDuration());
+		return;
+	}
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	UpdateHealthBar();
 }

@@ -84,6 +84,8 @@ public:
 	class UArrowComponent* SpawnArrow;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	uint8 Team = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	bool StunImmune = false;
 	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
