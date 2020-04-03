@@ -203,6 +203,7 @@ URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty)
 	TArray<URoomDataAsset *> FilteredRooms = {};
 	for (auto &&Room : RoomList)
 	{
+		// UE_LOG(LogTemp, Warning, TEXT("Room Difficulty: %d, Need: %d"), Room->RoomDifficulty, Difficulty);
 		if (Room->RoomDifficulty == Difficulty)
 		{
 			FilteredRooms.Add(Room);
@@ -225,10 +226,11 @@ void ALevelBuilder::BuildGrid()
 		FCoord Coord = FCoord(x, y);
 		if (i > 1) Difficulty = 1;
 		if (i > 3) Difficulty = 2;
-		if (i == NumRooms) ChanceOfGoingRight = 100;
+		if (i == NumRooms - 2) {ChanceOfGoingRight = 100;}
+		if (i == NumRooms - 1) {Difficulty = 9;}
 		FGridStruct Content; Content.RoomType = GetRandomRoom(Difficulty);
 		Grid.Add(Coord, Content);
-		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
+		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d for i: %d"), Coord.X, Coord.Y, Grid.Num(), i);
 		// y++;
 		// UE_LOG(LogTemp, Warning, TEXT("Chance of Going Right: %d%"), ChanceOfGoingRight);
 		if (FMath::RandRange(1, 100) <= ChanceOfGoingRight)
