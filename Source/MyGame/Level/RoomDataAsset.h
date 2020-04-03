@@ -24,6 +24,8 @@ class MYGAME_API URoomDataAsset : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
+	FName GetAutoLevelAddress();
+
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	FName LevelAddress = "Game/Maps/Rooms/Room01";
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

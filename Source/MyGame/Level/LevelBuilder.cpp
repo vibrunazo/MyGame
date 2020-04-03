@@ -82,7 +82,10 @@ ULevelStreaming* ALevelBuilder::GenerateRandomRoom(FTransform Where)
 
 ULevelStreaming* ALevelBuilder::GenerateRoom(FCoord Where, class URoomDataAsset* RoomType)
 {
-	ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->LevelAddress);
+	ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->GetAutoLevelAddress());
+	// UE_LOG(LogTemp, Warning, TEXT("AddressO: %s"), *RoomType->LevelAddress.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("AddressA: %s"), *RoomType->GetAutoLevelAddress().ToString());
+	// ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->LevelAddress);
 	if (NewRoom)
 	{
 		NewRoom->LevelTransform.SetLocation(GetLocFromGrid(Where));
@@ -219,7 +222,8 @@ void ALevelBuilder::BuildGrid()
 	{
 		// FCoord Coord = {x, y};
 		FCoord Coord = FCoord(x, y);
-		if (i > 2) Difficulty = 1;
+		if (i > 1) Difficulty = 1;
+		if (i > 3) Difficulty = 2;
 		FGridStruct Content; Content.RoomType = GetRandomRoom(Difficulty);
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
