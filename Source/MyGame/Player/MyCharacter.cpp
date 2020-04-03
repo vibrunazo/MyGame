@@ -53,9 +53,9 @@ AMyCharacter::AMyCharacter()
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 600.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 700.0f; // The camera follows at this distance behind the character	
 	// CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
-	CameraBoom->SetWorldRotation(FRotator(-30.0f, 0.0f, 0.0f));
+	CameraBoom->SetWorldRotation(FRotator(-40.0f, 0.0f, 0.0f));
 	CameraBoom->bInheritYaw = false;
 	CameraBoom->bInheritPitch = false;
 	CameraBoom->bInheritRoll = false;
@@ -310,6 +310,7 @@ void AMyCharacter::UpdateHealthBar()
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());
+	else {UE_LOG(LogTemp, Warning, TEXT("UpdateHealthbar: Failed on %s"), *GetName());}
 	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
 	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }

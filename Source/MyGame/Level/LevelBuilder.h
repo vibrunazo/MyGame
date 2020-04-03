@@ -90,6 +90,14 @@ public:
 	TArray<class URoomDataAsset*> RoomList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	int32 NumRooms = 8;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	int32 InitialChanceOfGoingRight = 100;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	int32 DecWhenChoseRight = 50;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	int32 IncWhenChoseVert = 35;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* WallMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* WallDooredMesh;

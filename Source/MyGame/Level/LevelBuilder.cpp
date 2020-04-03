@@ -218,26 +218,38 @@ void ALevelBuilder::BuildGrid()
 	int16 x = 0;
 	int16 y = 0;
 	int32 Difficulty = 0;
-	for (uint8 i = 0; i < 9; i++)
+	int16 ChanceOfGoingRight = InitialChanceOfGoingRight;
+	for (uint8 i = 0; i < NumRooms; i++)
 	{
 		// FCoord Coord = {x, y};
 		FCoord Coord = FCoord(x, y);
 		if (i > 1) Difficulty = 1;
 		if (i > 3) Difficulty = 2;
+		if (i == NumRooms) ChanceOfGoingRight = 100;
 		FGridStruct Content; Content.RoomType = GetRandomRoom(Difficulty);
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
 		// y++;
-		if (FMath::RandRange(0, 3) < 2) y++;
-		else if(FMath::RandBool())
+		// UE_LOG(LogTemp, Warning, TEXT("Chance of Going Right: %d%"), ChanceOfGoingRight);
+		if (FMath::RandRange(1, 100) <= ChanceOfGoingRight)
 		{
-			if(Grid.Find(GetNeighbor(Coord, EWallPos::Top))) x--;
-			else x++;
+			// UE_LOG(LogTemp, Warning, TEXT("Chose Right"));
+			y++; ChanceOfGoingRight -= DecWhenChoseRight;
 		}
 		else 
 		{
-			if(Grid.Find(GetNeighbor(Coord, EWallPos::Bottom))) x++;
-			else x--;
+			// UE_LOG(LogTemp, Warning, TEXT("Chose Vert"));
+			ChanceOfGoingRight += IncWhenChoseVert;
+			if(FMath::RandBool())
+			{
+				if(Grid.Find(GetNeighbor(Coord, EWallPos::Top))) x--;
+				else x++;
+			}
+			else 
+			{
+				if(Grid.Find(GetNeighbor(Coord, EWallPos::Bottom))) x++;
+				else x--;
+			}
 		}
 
 		// else x--;
