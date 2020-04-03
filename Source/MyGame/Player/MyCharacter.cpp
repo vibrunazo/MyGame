@@ -213,6 +213,9 @@ void AMyCharacter::BeginPlay()
 				GiveAbility(Ability.AbilityClass);
 			}
 		}
+		if (!ensure(AttributeSetBase != nullptr)) return;
+		AttributeSetBase->SetMaxHealth(MaxHealth);
+		AttributeSetBase->SetHealth(MaxHealth);
 		UpdateHealthBar();
 		// if (IsPlayerControlled()) 
 		// {

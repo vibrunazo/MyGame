@@ -71,6 +71,8 @@ public:
 	TSubclassOf<class UCameraShake> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float CamShakeRange = 1500.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float MaxHealth = 100.0f;
 	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TSubclassOf<class UUserWidget> HealthBarWidget;
