@@ -227,7 +227,7 @@ void ALevelBuilder::BuildGrid()
 		FGridStruct Content; Content.RoomType = GetRandomRoom(Difficulty);
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d"), Coord.X, Coord.Y, Grid.Num());
-		
+		// y++;
 		if (FMath::RandRange(0, 3) < 2) y++;
 		else if(FMath::RandBool())
 		{

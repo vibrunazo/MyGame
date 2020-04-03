@@ -3,6 +3,7 @@
 
 #include "EnemyCharBase.h"
 #include "Perception/PawnSensingComponent.h"
+#include "Components/WidgetComponent.h"
 
 void AEnemyCharBase::SetDefaultProperties()
 {
@@ -12,4 +13,5 @@ void AEnemyCharBase::SetDefaultProperties()
     PawnSenseComp->SightRadius = 1000.0f;
     PawnSenseComp->HearingThreshold = 500.0f;
     PawnSenseComp->LOSHearingThreshold = 500.0f;
+    HealthBarComp->SetVisibility(false);
 }
