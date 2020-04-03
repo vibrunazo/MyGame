@@ -14,5 +14,9 @@ class MYGAME_API AEnemyCharBase : public AMyCharacter
 {
 	GENERATED_BODY()
 public:
+	AEnemyCharBase();
 	void SetDefaultProperties() override;
+	void BeginPlay() override;
+
+	void OnDamaged(AActor* SourceActor) override;
 };

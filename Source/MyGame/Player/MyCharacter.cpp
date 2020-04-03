@@ -344,7 +344,7 @@ void AMyCharacter::OnDie()
 	// FTimerManager TM = FTimerManager::FTimerManager;
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 5.0f, false);
-
+	HealthBarComp->SetVisibility(false);
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	GetMesh()->AddForce(FVector(-80000.0f, 0.0f, 200000.0f), NAME_None, true);
