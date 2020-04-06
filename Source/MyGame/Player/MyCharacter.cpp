@@ -322,13 +322,22 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
 	NewEffect.Data->GetAllGrantedTags(EffectTags);
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
 	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
-	if (EffectTags.HasTag(HitstunTag) && StunImmune) 
+	if (EffectTags.HasTag(HitstunTag)) 
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag of %f s"), NewEffect.Data->GetDuration());
-		return;
+		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
+		if (StunImmune && GetWorld()->GetTimeSeconds() < LastHitstunTime + StunImmuneCooldown) return;
+		else IncrementHitStunCount();
 	}
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	UpdateHealthBar();
+}
+
+void AMyCharacter::IncrementHitStunCount()
+{
+	if (StunImmune || GetWorld()->GetTimeSeconds() > LastHitstunTime + StunImmuneCooldown) {HitStunCount = 0; StunImmune = false;}
+	HitStunCount++;
+	LastHitstunTime = GetWorld()->GetTimeSeconds();
+	if (MaxStuns > 0 && HitStunCount >= MaxStuns) StunImmune = true;
 }
 
 void AMyCharacter::OnDamaged(AActor* SourceActor)

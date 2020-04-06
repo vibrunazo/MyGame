@@ -86,6 +86,12 @@ public:
 	uint8 Team = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	bool StunImmune = false;
+	uint8 HitStunCount = 0;
+	float LastHitstunTime = -990.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	uint8 MaxStuns = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float StunImmuneCooldown = 5.0f;
 	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -100,6 +106,7 @@ private:
 	void SetAggroTarget(APawn* NewTarget);
 	void OnDelayedDeath();
 	void CheckWalls();
+	void IncrementHitStunCount();
 	bool HasControl();
 	bool bHasControl = true;
 	UAnimMontage *GetHitMontage;
