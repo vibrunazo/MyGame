@@ -49,6 +49,7 @@ AMyCharacter::AMyCharacter()
 	GetCharacterMovement()->JumpZVelocity = 400.f;
 	GetCharacterMovement()->AirControl = 0.2f;
 	GetCharacterMovement()->MaxWalkSpeed = 350.0f;
+	GetCharacterMovement()->GroundFriction = 0.0f;
 
 	// Create a camera boom (pulls in towards the player if there is a collision)
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -356,7 +357,10 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	APawn* SeenPawn = Cast<APawn>(SourceActor);
 	if (!SeenPawn) return;
 	SetAggroTarget(SeenPawn);
-
+	
+	FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
+	GetMovementComponent()->Velocity = KnockBackVector;
+	OnDamagedBP(SourceActor);
 }
 
 void AMyCharacter::OnDie()

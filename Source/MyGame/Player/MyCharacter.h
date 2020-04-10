@@ -50,7 +50,10 @@ public:
 	TSubclassOf<class UCameraShake> GetCamShake();
 
 	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
+	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
+	void OnDamagedBP(AActor* SourceActor);
 	void OnDamaged(AActor* SourceActor) override;
+	// UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDie() override;
 	bool IsAlive() override;
 	void OnHitPause(float Duration) override;
