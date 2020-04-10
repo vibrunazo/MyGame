@@ -467,19 +467,23 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 	FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(FlyingTag);
 	FGameplayTag GroundTag = FGameplayTag::RequestGameplayTag(TEXT("activate.groundattack"));
 	FGameplayTagContainer GroundTagContainer = FGameplayTagContainer(GroundTag);
-	if (!GetMovementComponent()->IsFalling())
+	if (!GetMovementComponent()->IsFalling()) // I'm on ground
 	{
 		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);
 		AbilitySystem->UnBlockAbilitiesWithTags(GroundTagContainer);
 		AbilitySystem->CancelAbilities(&FlyingTagContainer);
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+		GetCapsuleComponent()->SetGenerateOverlapEvents(true);
+		GetMesh()->SetGenerateOverlapEvents(false);
 	}
-	else
+	else									// I'm falling
 	{
 		AbilitySystem->BlockAbilitiesWithTags(GroundTagContainer);
 		AbilitySystem->UnBlockAbilitiesWithTags(FlyingTagContainer);
 		AbilitySystem->CancelAbilities(&GroundTagContainer);
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+		GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+		GetMesh()->SetGenerateOverlapEvents(true);
 	}
 }
 
