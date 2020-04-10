@@ -48,6 +48,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void OnPawnSeen(APawn* SeenPawn);
 	TSubclassOf<class UCameraShake> GetCamShake();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool HasControl();
 
 	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
@@ -108,9 +110,11 @@ private:
 	UFUNCTION()
 	void SetAggroTarget(APawn* NewTarget);
 	void OnDelayedDeath();
+	void StartBackslide(FVector Dir);
+	void OnBackslide();
+	FVector KnockBackVector;
 	void CheckWalls();
 	void IncrementHitStunCount();
-	bool HasControl();
 	bool bHasControl = true;
 	UAnimMontage *GetHitMontage;
 

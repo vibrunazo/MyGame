@@ -55,7 +55,7 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 		USphereComponent* NewSphere = AddHitSphere();
 		// NewSphere->bGenerateOverlapEvents = true;
 		if (!ensure(GetInstigator() != nullptr)) return;
-		if (!ensure(GetOwner() != nullptr)) return;
+		// if (!ensure(GetOwner() != nullptr)) return;
 		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
 		

@@ -244,6 +244,16 @@ void AMyCharacter::Tick(float DeltaSeconds)
 	{
 		CheckWalls();
 	}
+
+	// if (!HasControl())
+	// {
+	// 	DisableInput(nullptr);
+	// }
+	// else
+	// {
+	// 	EnableInput(nullptr);
+	// }
+	
 	// AbilitySystem->TryActivateAbilityByClass(Abilities[0].Ability, true);
 }
 
@@ -357,10 +367,28 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	APawn* SeenPawn = Cast<APawn>(SourceActor);
 	if (!SeenPawn) return;
 	SetAggroTarget(SeenPawn);
+	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
+	FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
+	KnockBackVector = (A - B).GetSafeNormal() * 400.0f;
+	// FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
+	// GetMovementComponent()->Velocity = KnockBackVector;
+	StartBackslide(KnockBackVector);
 	
-	FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
-	GetMovementComponent()->Velocity = KnockBackVector;
 	OnDamagedBP(SourceActor);
+}
+
+void AMyCharacter::StartBackslide(FVector Dir)
+{
+	for (uint8 i = 0; i < 10; i++)
+	{
+		FTimerHandle Handle;
+		GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnBackslide, i*0.01f, false);
+	}
+}
+
+void AMyCharacter::OnBackslide()
+{
+	AddActorWorldOffset(KnockBackVector*0.01f, true);
 }
 
 void AMyCharacter::OnDie()
