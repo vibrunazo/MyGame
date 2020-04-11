@@ -239,6 +239,8 @@ void AMyCharacter::Tick(float DeltaSeconds)
 	{
 		if (GetAbilityKeyDown(0)) ActivateAbilityByInput(0);
 		if (GetAbilityKeyDown(1)) ActivateAbilityByInput(1);
+		if (GetAbilityKeyDown(2)) ActivateAbilityByInput(2);
+		if (GetAbilityKeyDown(3)) ActivateAbilityByInput(3);
 	}
 	if (IsPlayerControlled())
 	{
@@ -467,7 +469,7 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 	FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(FlyingTag);
 	FGameplayTag GroundTag = FGameplayTag::RequestGameplayTag(TEXT("activate.groundattack"));
 	FGameplayTagContainer GroundTagContainer = FGameplayTagContainer(GroundTag);
-	if (!GetMovementComponent()->IsFalling()) // I'm on ground
+	if (!GetMovementComponent()->IsFalling())	// I'm on ground
 	{
 		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);
 		AbilitySystem->UnBlockAbilitiesWithTags(GroundTagContainer);
@@ -476,7 +478,7 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 		GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 		GetMesh()->SetGenerateOverlapEvents(false);
 	}
-	else									// I'm falling
+	else										// I'm falling
 	{
 		AbilitySystem->BlockAbilitiesWithTags(GroundTagContainer);
 		AbilitySystem->UnBlockAbilitiesWithTags(FlyingTagContainer);
@@ -501,7 +503,8 @@ FTransform AMyCharacter::GetProjectileSpawn()
 bool AMyCharacter::HasControl()
 {
 	FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
-    if(AbilitySystem->HasMatchingGameplayTag(HitStunTag))
+	FGameplayTag NoControlTag = FGameplayTag::RequestGameplayTag(TEXT("status.nocontrol"));
+    if(AbilitySystem->HasMatchingGameplayTag(HitStunTag) || AbilitySystem->HasMatchingGameplayTag(NoControlTag))
 	{
 		return false;
 	}
