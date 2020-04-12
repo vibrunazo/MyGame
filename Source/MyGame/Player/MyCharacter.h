@@ -42,6 +42,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ActivateAbilityByInput(uint8 Index);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void ActivateAbilityByEvent(FString EventName);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void UpdateHealthBar();
 	UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FHealthUpdateSignature OnUpdatedHealth;
@@ -115,8 +117,17 @@ private:
 	FVector KnockBackVector;
 	void CheckWalls();
 	void IncrementHitStunCount();
+	void CalculateDash();
+	float GetInputAngle();
+	
 	bool bHasControl = true;
 	UAnimMontage *GetHitMontage;
+	float ForwardAxis = 0.0f;
+	float RightAxis = 0.0f;
+	float LastInputApexTime = -990.0f;
+	float LastInputZeroTime = -990.0f;
+	FVector LastInputVector = FVector(0.0f, 0.0f, 0.0f);
+	// float LastInputAngle = 0.0f;
 
 protected:
 

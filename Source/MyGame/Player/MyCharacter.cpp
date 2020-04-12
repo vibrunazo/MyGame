@@ -25,6 +25,7 @@
 #include "MyPlayerController.h"
 #include "../Level/LevelBuilder.h"
 #include "Engine/StaticMeshActor.h"
+#include "Kismet/KismetMathLibrary.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -168,6 +169,7 @@ void AMyCharacter::LookUpAtRate(float Rate)
 
 void AMyCharacter::MoveForward(float Value)
 {
+	ForwardAxis = Value;
 	if ((Controller != NULL) && (Value != 0.0f) && HasControl())
 	{
 		// find out which way is forward
@@ -183,6 +185,7 @@ void AMyCharacter::MoveForward(float Value)
 
 void AMyCharacter::MoveRight(float Value)
 {
+	RightAxis = Value;
 	if ( (Controller != NULL) && (Value != 0.0f)  && HasControl())
 	{
 		// find out which way is right
@@ -245,18 +248,46 @@ void AMyCharacter::Tick(float DeltaSeconds)
 	if (IsPlayerControlled())
 	{
 		CheckWalls();
+		CalculateDash();
 	}
 
-	// if (!HasControl())
-	// {
-	// 	DisableInput(nullptr);
-	// }
-	// else
-	// {
-	// 	EnableInput(nullptr);
-	// }
-	
-	// AbilitySystem->TryActivateAbilityByClass(Abilities[0].Ability, true);
+}
+
+void AMyCharacter::CalculateDash()
+{
+	float length = 0.0f;
+	length = FMath::Abs(RightAxis)*FMath::Abs(RightAxis) + FMath::Abs(ForwardAxis)*FMath::Abs(ForwardAxis);
+	length = FMath::Sqrt(length);
+	if (length >= 0.89f)
+	{
+		// float CurAngle = GetInputAngle();
+		// float Delta = FMath::FindDeltaAngleDegrees(CurAngle, 45.0f);
+		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
+		if (GetWorld()->GetTimeSeconds() - LastInputApexTime < 0.5f && LastInputZeroTime > LastInputApexTime)
+		{
+			float cos = CurVector.CosineAngle2D(LastInputVector);
+			float acos = UKismetMathLibrary::DegAcos(cos);
+			// UE_LOG(LogTemp, Warning, TEXT("Forward: %f, Right: %f, len: %f, angle: %f"), ForwardAxis, RightAxis, length, acos);
+			if (acos <= 20)
+			{
+				// UE_LOG(LogTemp, Warning, TEXT("Yes dash"));
+				ActivateAbilityByEvent("dash");
+			}
+		}
+		LastInputVector = CurVector;
+		LastInputApexTime = GetWorld()->GetTimeSeconds();
+	}
+	else
+	{
+		LastInputZeroTime = GetWorld()->GetTimeSeconds();
+	}
+
+}
+float AMyCharacter::GetInputAngle()
+{
+	// UKismetMathLibrary::DegAtan2
+	return UKismetMathLibrary::DegAtan2(ForwardAxis, RightAxis);
+	// return FVector(ForwardAxis, RightAxis, 0.0f);
 }
 
 void AMyCharacter::Jump()
@@ -292,7 +323,7 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	if (!HasControl() || !AbilitySystem) return;
 	for (auto &&Ability : Abilities)
 	{
-		if (Ability.Input == Index)
+		if (Ability.Input == Index && Ability.EventName == "")
 		{
 			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
 			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
@@ -306,6 +337,22 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 					UE_LOG(LogTemp, Error, TEXT("Error trying to activate ability: "), *e.what());
 				}
 				
+			}
+		}
+	}
+}
+
+void AMyCharacter::ActivateAbilityByEvent(FString EventName)
+{
+	if (!HasControl() || !AbilitySystem) return;
+	for (auto &&Ability : Abilities)
+	{
+		if (Ability.EventName == EventName)
+		{
+			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
+			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
+			{
+				AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
 			}
 		}
 	}

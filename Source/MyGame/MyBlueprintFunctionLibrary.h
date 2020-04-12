@@ -19,6 +19,9 @@ struct FAbilityStruct
 	uint8 Input;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FString EventName = "";
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanUseOnGround = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
