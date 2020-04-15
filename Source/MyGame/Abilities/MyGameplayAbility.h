@@ -30,6 +30,8 @@ public:
 	float HitStun = 0.6f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float HitPause = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	float KnockBack = 500.f;
 	uint8 CurrentComboCount = 0;
 	bool bHasHitConnected = false;
 private:

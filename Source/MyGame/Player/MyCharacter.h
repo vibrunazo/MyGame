@@ -53,7 +53,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool HasControl();
 
-	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
+	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDamagedBP(AActor* SourceActor);
 	void OnDamaged(AActor* SourceActor) override;
@@ -64,6 +64,7 @@ public:
 	uint8 GetTeam() override;
 	FTransform GetProjectileSpawn() override;
 
+	void ApplyKnockBack(AActor* SourceActor, float Power);
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 
@@ -99,6 +100,8 @@ public:
 	uint8 MaxStuns = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float StunImmuneCooldown = 5.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float DoubleTapDelay = 0.1f;
 	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */

@@ -96,41 +96,29 @@ void UMyGameplayAbility::OnMontageComplete()
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 {
-    try
-    {
-        if (!IsValid(GetAvatarActorFromActorInfo())) return;
-        ResetHitBoxes();
-        bHasHitStarted = true;
-        // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
-        // TODO might crash if I'm dead?
-        FVector Loc = GetAvatarActorFromActorInfo()->GetActorLocation();
-        FActorSpawnParameters params;
-        params.bNoFail = true;
-        params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
-        params.Owner = GetAvatarActorFromActorInfo();
-        AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
-        NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
-        NewHB->EffectsToApply = MakeSpecHandles();
-        // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
-        const UObject* OO = Payload.OptionalObject;
-        if (OO) {
-            UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
-            if (!ensure(Settings != nullptr)) return;
-            NewHB->SphereRadius = Settings->SphereRadius;
-            NewHB->AddComponentsToBones(Settings->BoneNames);
-        }
-        // else {
-        // }
+    if (!IsValid(GetAvatarActorFromActorInfo())) return;
+    ResetHitBoxes();
+    bHasHitStarted = true;
+    // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
+    // TODO might crash if I'm dead?
+    FVector Loc = GetAvatarActorFromActorInfo()->GetActorLocation();
+    FActorSpawnParameters params;
+    params.bNoFail = true;
+    params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
+    params.Owner = GetAvatarActorFromActorInfo();
+    AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
+    NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    NewHB->EffectsToApply = MakeSpecHandles();
+    // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
+    const UObject* OO = Payload.OptionalObject;
+    if (OO) {
+        UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
+        if (!ensure(Settings != nullptr)) return;
+        NewHB->SphereRadius = Settings->SphereRadius;
+        NewHB->AddComponentsToBones(Settings->BoneNames);
+    }
 
-        HitBoxRef = NewHB;
-    }
-    catch(const std::exception& e)
-    {
-        UE_LOG(LogTemp, Error, TEXT("ERROR On Hit Start: %s"), *e.what());
-        EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
-    }
-    
-    
+    HitBoxRef = NewHB;
 }
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
@@ -163,6 +151,7 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 {
     FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
     FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(TEXT("data.damage"));
+    FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
     TArray<FGameplayEffectSpecHandle> Result = {};
     for (auto &&Effect : EffectsToApply)
     {
@@ -176,6 +165,10 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
         if (EffectTags.HasTag(DamageTag))
         {
             NewHandle.Data.Get()->SetSetByCallerMagnitude(DamageTag, -Damage);
+        }
+        if (EffectTags.HasTag(KnockbackTag))
+        {
+            NewHandle.Data.Get()->SetSetByCallerMagnitude(KnockbackTag, KnockBack);
         }
         // EffectTags.HasTag(HitStunTag);
         // UE_LOG(LogTemp, Warning, TEXT("Effect: %s, tags: %s, has hitstun: %d"), *Effect.Get()->GetName(), *Container.ToString(), Container.HasTag(HitStunTag));

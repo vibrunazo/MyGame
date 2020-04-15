@@ -23,10 +23,11 @@ class MYGAME_API IGetHit
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) = 0;
+	virtual void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) = 0;
 	virtual void OnDamaged(AActor* SourceActor) = 0;
 	virtual void OnDie() = 0;
 	virtual bool IsAlive() = 0;
 	virtual void OnHitPause(float Duration) = 0;
 	virtual uint8 GetTeam() = 0;
+	// virtual void ApplyKnockBack(FVector Dir) = 0;
 };

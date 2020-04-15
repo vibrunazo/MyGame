@@ -45,7 +45,6 @@ void AHitBox::OnOwnerDestroyed(AActor* DestroyedActor)
 void AHitBox::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 void AHitBox::AddComponentsToBones(TArray<FName> Bones)
@@ -58,9 +57,7 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 		// if (!ensure(GetOwner() != nullptr)) return;
 		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
-		
 	}
-	
 }
 
 USphereComponent* AHitBox::AddHitSphere()
@@ -103,5 +100,5 @@ void AHitBox::ApplyAllEffects(class IGetHit* Target)
 void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
 {
 	// FGameplayEffectSpecHandle *Handle =  FGameplayEffectSpecHandle(Effect);
-	Target->OnGetHitByEffect(Effect);
+	Target->OnGetHitByEffect(Effect, GetOwner());
 }

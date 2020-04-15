@@ -263,7 +263,7 @@ void AMyCharacter::CalculateDash()
 		// float CurAngle = GetInputAngle();
 		// float Delta = FMath::FindDeltaAngleDegrees(CurAngle, 45.0f);
 		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
-		if (GetWorld()->GetTimeSeconds() - LastInputApexTime < 0.5f && LastInputZeroTime > LastInputApexTime)
+		if (GetWorld()->GetTimeSeconds() - LastInputApexTime < DoubleTapDelay && LastInputZeroTime > LastInputApexTime)
 		{
 			float cos = CurVector.CosineAngle2D(LastInputVector);
 			float acos = UKismetMathLibrary::DegAcos(cos);
@@ -375,18 +375,30 @@ void AMyCharacter::UpdateHealthBar()
 	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 }
 
-void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
+void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
 	FGameplayTagContainer EffectTags;
-	NewEffect.Data->GetAllGrantedTags(EffectTags);
+	// NewEffect.Data->GetAllGrantedTags(EffectTags);
+	NewEffect.Data->GetAllAssetTags(EffectTags);
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
-	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
+	// FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
+	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
+	FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback")); 
+	// {{TagName="data.knockback" },500.000000}
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
 		if (StunImmune && GetWorld()->GetTimeSeconds() < LastHitstunTime + StunImmuneCooldown) return;
 		else IncrementHitStunCount();
+	}
+	if (EffectTags.HasTag(KnockbackTag)) 
+	{
+		float Knockback = NewEffect.Data.Get()->GetSetByCallerMagnitude(KnockbackTag);
+		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
+		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
+		// UE_LOG(LogTemp, Warning, TEXT("Has KnockbackTag, Knockback: %f"), Knockback);
+		ApplyKnockBack(SourceActor, Knockback);
 	}
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	UpdateHealthBar();
@@ -416,12 +428,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	APawn* SeenPawn = Cast<APawn>(SourceActor);
 	if (!SeenPawn) return;
 	SetAggroTarget(SeenPawn);
-	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
-	FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
-	KnockBackVector = (A - B).GetSafeNormal() * 400.0f;
-	// FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
-	// GetMovementComponent()->Velocity = KnockBackVector;
-	StartBackslide(KnockBackVector);
+	
 	
 	OnDamagedBP(SourceActor);
 }
@@ -539,6 +546,16 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 uint8 AMyCharacter::GetTeam()
 {
 	return Team;
+}
+
+void AMyCharacter::ApplyKnockBack(AActor* SourceActor, float Power)
+{
+	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
+	FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
+	KnockBackVector = (A - B).GetSafeNormal() * Power;
+	// FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
+	// GetMovementComponent()->Velocity = KnockBackVector;
+	StartBackslide(KnockBackVector);
 }
 
 FTransform AMyCharacter::GetProjectileSpawn()
