@@ -65,6 +65,7 @@ public:
 	FTransform GetProjectileSpawn() override;
 
 	void ApplyKnockBack(AActor* SourceActor, float Power);
+	void ApplyLaunchBack(AActor* SourceActor, FVector Power);
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 

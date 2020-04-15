@@ -385,6 +385,10 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 	// FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
 	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
 	FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback")); 
+	FGameplayTag LaunchTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch")); 
+	FGameplayTag LaunchXTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.x")); 
+	FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y")); 
+	FGameplayTag LaunchZTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.z")); 
 	// {{TagName="data.knockback" },500.000000}
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
@@ -399,6 +403,17 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
 		// UE_LOG(LogTemp, Warning, TEXT("Has KnockbackTag, Knockback: %f"), Knockback);
 		ApplyKnockBack(SourceActor, Knockback);
+	}
+	if (EffectTags.HasTag(LaunchTag)) 
+	{
+		float LaunchX = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchXTag);
+		float LaunchY = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchYTag);
+		float LaunchZ = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchZTag);
+		FVector LaunchVector = FVector(LaunchX, LaunchY, LaunchZ);
+		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
+		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
+		// UE_LOG(LogTemp, Warning, TEXT("Has KnockbackTag, Knockback: %f"), Knockback);
+		ApplyLaunchBack(SourceActor, LaunchVector);
 	}
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	UpdateHealthBar();
@@ -556,6 +571,20 @@ void AMyCharacter::ApplyKnockBack(AActor* SourceActor, float Power)
 	// FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
 	// GetMovementComponent()->Velocity = KnockBackVector;
 	StartBackslide(KnockBackVector);
+}
+
+void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
+{
+	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
+	FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
+	FVector LaunchDir = (A - B).GetSafeNormal();
+	FRotator DRot = LaunchDir.Rotation();
+	FRotator PRot = Power.Rotation();
+	float Angle = DRot.Yaw - PRot.Yaw;
+	Power = Power.RotateAngleAxis(Angle, FVector(0.f, 0.f, 1.f));
+	// LaunchDir.Z = Power.Z;
+	LaunchCharacter(Power, true, true);
+	UE_LOG(LogTemp, Warning, TEXT("Applying Launch: %s"), *Power.ToString());
 }
 
 FTransform AMyCharacter::GetProjectileSpawn()

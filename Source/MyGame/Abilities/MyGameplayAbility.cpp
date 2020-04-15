@@ -152,12 +152,17 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
     FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
     FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(TEXT("data.damage"));
     FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
+    FGameplayTag LaunchTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch"));
+    FGameplayTag LaunchXTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.x"));
+    FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y"));
+    FGameplayTag LaunchZTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.z"));
     TArray<FGameplayEffectSpecHandle> Result = {};
     for (auto &&Effect : EffectsToApply)
     {
         FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
         FGameplayTagContainer EffectTags;
         NewHandle.Data.Get()->GetAllAssetTags(EffectTags);
+        // TODO? Set Caller crashes if the tag does not exists. Maybe check first?
         if (EffectTags.HasTag(HitStunTag))
         {
             NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
@@ -169,6 +174,12 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
         if (EffectTags.HasTag(KnockbackTag))
         {
             NewHandle.Data.Get()->SetSetByCallerMagnitude(KnockbackTag, KnockBack);
+        }
+        if (EffectTags.HasTag(LaunchTag))
+        {
+            NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchXTag, LaunchVector.X);
+            NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchYTag, LaunchVector.Y);
+            NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchZTag, LaunchVector.Z);
         }
         // EffectTags.HasTag(HitStunTag);
         // UE_LOG(LogTemp, Warning, TEXT("Effect: %s, tags: %s, has hitstun: %d"), *Effect.Get()->GetName(), *Container.ToString(), Container.HasTag(HitStunTag));

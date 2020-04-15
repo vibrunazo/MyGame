@@ -32,6 +32,8 @@ public:
 	float HitPause = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float KnockBack = 500.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	FVector LaunchVector = FVector(200.0f, 0.0f, 300.0f);
 	uint8 CurrentComboCount = 0;
 	bool bHasHitConnected = false;
 private:
