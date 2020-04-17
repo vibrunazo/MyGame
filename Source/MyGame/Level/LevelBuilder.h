@@ -105,6 +105,8 @@ public:
 	class UStaticMesh* WallCappedMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* WallDooredCappedMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	TSubclassOf<class ADoor> DoorActor;
 	TMap<FCoord, FGridStruct> Grid;
 	TMap<FString, class AStaticMeshActor*> AllWalls;
 	
@@ -118,11 +120,14 @@ private:
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
+	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
 	class AStaticMeshActor* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
-	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
+	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos, bool Doored);
+	class AStaticMeshActor* GenerateWallMeshAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
 	FVector GetLocFromGrid(FCoord Coord);
+	FTransform GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir);
 	FCoord GetGridFromLoc(FVector Location);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EWallPos Dir);
