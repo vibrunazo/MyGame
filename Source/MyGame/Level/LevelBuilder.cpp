@@ -317,7 +317,7 @@ FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
 FTransform ALevelBuilder::GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir)
 {
 	FVector Loc = GetLocFromGrid(Coord);
-	FRotator Rot = FRotator();
+	FRotator Rot = FRotator::ZeroRotator;
 	switch (Dir)
 	{
 	case EWallPos::Top:
