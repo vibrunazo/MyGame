@@ -15,20 +15,23 @@ public:
 	// Sets default values for this actor's properties
 	ADoor();
 
+	UFUNCTION(BlueprintCallable, Category = Door)
 	void OpenDoor();
 	UFUNCTION(BlueprintImplementableEvent, Category = Door)
 	void OnOpenDoorBP();
+	UFUNCTION(BlueprintCallable, Category = Door)
 	void CloseDoor();
 	UFUNCTION(BlueprintImplementableEvent, Category = Door)
 	void OnCloseDoorBP();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Door")
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
 	class USceneComponent* MyRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
 	class UBoxComponent* BoxCollision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
 	class UStaticMeshComponent* DoorMesh;
 
+	bool bIsDoorOpen = false;
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

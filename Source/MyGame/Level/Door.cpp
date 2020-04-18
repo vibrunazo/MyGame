@@ -16,8 +16,9 @@ ADoor::ADoor()
 	RootComponent = MyRoot;
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	BoxCollision->SetupAttachment(RootComponent);
-	BoxCollision->SetBoxExtent(FVector(50.0f, 50.0f, 100.0f));
+	BoxCollision->SetBoxExtent(FVector(20.0f, 100.0f, 100.0f));
 	BoxCollision->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
+	BoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door Mesh"));
 	DoorMesh->SetupAttachment(RootComponent);
 	DoorMesh->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
@@ -29,6 +30,7 @@ ADoor::ADoor()
 void ADoor::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
 }
 
@@ -41,12 +43,21 @@ void ADoor::Tick(float DeltaTime)
 
 void ADoor::OpenDoor()
 {
+	if (bIsDoorOpen) return;
+	bIsDoorOpen = true;
 	BoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DoorMesh->AddLocalOffset(FVector(0.f, 0.f, 150.f));
 	OnOpenDoorBP();
+	UE_LOG(LogTemp, Warning, TEXT("Opening Door"));
 }
 
 void ADoor::CloseDoor()
 {
+	if (!bIsDoorOpen) return;
+	bIsDoorOpen = false;
+	UE_LOG(LogTemp, Warning, TEXT("Closing Door"));
+	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	DoorMesh->AddLocalOffset(FVector(0.f, 0.f, -150.f));
+
 	OnCloseDoorBP();
 }

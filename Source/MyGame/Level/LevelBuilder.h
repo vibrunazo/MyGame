@@ -79,15 +79,19 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
+	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
 	class AStaticMeshActor* GetBottomWallFromLoc(FVector Location);
 	class AStaticMeshActor* GetWallRefFromCoordAndDir(FCoord Coord, EWallPos Dir);
 	void HideWall(FVector Location, EWallPos Dir=EWallPos::Bottom);
 	void HideWall(FCoord Coord, EWallPos Dir=EWallPos::Bottom);
+	void OpenDoors();
+	void CloseDoors();
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* BBComp;
 	TArray<FAssetData> AssetDataList;
 	TArray<class URoomDataAsset*> RoomList;
+	TArray<class ADoor*> DoorList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	int32 NumRooms = 8;

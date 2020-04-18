@@ -30,7 +30,7 @@ int8 GetYFromDir(EWallPos Dir)
 ALevelBuilder::ALevelBuilder()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	// PrimaryActorTick.bCanEverTick = true;
 
 	BBComp = CreateDefaultSubobject<UBillboardComponent>(TEXT("Dino"));
 	RootComponent = BBComp;
@@ -192,6 +192,7 @@ ADoor* ALevelBuilder::SpawnDoor(FCoord Where, EWallPos Dir)
 	params.bNoFail = true;
 	ADoor* NewDoor = GetWorld()->SpawnActor<ADoor>(DoorActor, Loc, DoorTran.Rotator(), params);
 	NewDoor->OpenDoor();
+	DoorList.Add(NewDoor);
 	return NewDoor;
 }
 
@@ -368,6 +369,12 @@ FCoord ALevelBuilder::GetNeighbor(FCoord From, EWallPos To)
 	return FCoord(From.X + GetXFromDir(To), From.Y + GetYFromDir(To));
 }
 
+URoomDataAsset* ALevelBuilder::GetRoomFromCoord(FCoord Coord)
+{
+	FGridStruct* GS = Grid.Find(Coord);
+	return GS->RoomType;
+}
+
 AStaticMeshActor* ALevelBuilder::GetBottomWallFromLoc(FVector Location)
 {
 	return GetWallRefFromCoordAndDir(GetGridFromLoc(Location), EWallPos::Bottom);
@@ -394,6 +401,11 @@ void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 {
 	if (Coord == LastHiddenWallCoord) return;
 	LastHiddenWallCoord = Coord;
+	URoomDataAsset* Room = GetRoomFromCoord(Coord);
+	if (Room->bIsDoored)
+	{
+		CloseDoors();
+	}
 	// Unhide all Walls
 	for (auto &&Wall : HiddenWalls)
 	{
@@ -434,8 +446,21 @@ UStaticMesh* ALevelBuilder::GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, boo
 	return nullptr;
 }
 
+void ALevelBuilder::OpenDoors()
+{
+	for (auto &&Door : DoorList)
+	{
+		Door->OpenDoor();
+	}
+}
 
-
+void ALevelBuilder::CloseDoors()
+{
+	for (auto &&Door : DoorList)
+	{
+		Door->CloseDoor();
+	}
+}
 
 
 
