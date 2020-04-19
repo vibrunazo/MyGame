@@ -18,6 +18,8 @@ ADoor::ADoor()
 	BoxCollision->SetBoxExtent(FVector(20.0f, 100.0f, 100.0f));
 	BoxCollision->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
 	BoxCollision->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	BoxCollision->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 	DoorMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door Mesh"));
 	DoorMesh->SetupAttachment(RootComponent);
 	DoorMesh->SetRelativeLocation(FVector(0.f, 0.f, 100.f));

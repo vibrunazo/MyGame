@@ -371,6 +371,7 @@ FCoord ALevelBuilder::GetNeighbor(FCoord From, EWallPos To)
 
 FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)
 {
+	// if (!Grid) return nullptr;
 	FRoomState* GS = Grid.Find(Coord);
 	return GS;
 }

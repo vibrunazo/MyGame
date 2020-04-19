@@ -4,6 +4,8 @@
 #include "Goal.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "../Abilities/IGetHit.h"
+#include "Engine/World.h"
 
 // Sets default values
 AGoal::AGoal()
@@ -20,14 +22,14 @@ AGoal::AGoal()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	BoxCollision->SetupAttachment(RootComponent);
 	BoxCollision->SetBoxExtent(FVector(50.f, 50.f, 50.f));
-	
-
+	OnActorBeginOverlap.AddDynamic(this, &AGoal::OnGoalBeginOverlap);
 }
 
 // Called when the game starts or when spawned
 void AGoal::BeginPlay()
 {
 	Super::BeginPlay();
+	EnableGoal(false);
 	
 }
 
@@ -38,3 +40,23 @@ void AGoal::Tick(float DeltaTime)
 
 }
 
+void AGoal::EnableGoal(bool IsEnabled)
+{
+	PoleMesh->SetVisibility(IsEnabled);
+	FlagMesh->SetVisibility(IsEnabled);
+	bIsEnabled = IsEnabled;
+}
+
+
+void AGoal::OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
+{
+	if (!bIsEnabled) return;
+	IGetHit *Target = Cast<IGetHit>(OtherActor);
+	if (Target && Target->IsAlive())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
+		UWorld* LeMundi = GetWorld();
+		if (!LeMundi) return;
+		LeMundi->ServerTravel(NextMapUrl);
+	}
+}

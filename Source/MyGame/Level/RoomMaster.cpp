@@ -6,6 +6,7 @@
 #include "../Player/MyCharacter.h"
 #include "../MyGameInstance.h"
 #include "LevelBuilder.h"
+#include "Goal.h"
 
 // Sets default values
 ARoomMaster::ARoomMaster()
@@ -31,8 +32,12 @@ void ARoomMaster::BeginPlay()
 		AMyCharacter* Char = Cast<AMyCharacter>(Actor);
 		if (Char)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Found Char: %s"), *Actor->GetName());
 			CharsToKill.Add(Char);
+		}
+		AGoal* NewGoal = Cast<AGoal>(Actor);
+		if (NewGoal)
+		{
+			Goals.Add(NewGoal);
 		}
 
 	}
@@ -53,17 +58,25 @@ void ARoomMaster::Tick(float DeltaTime)
 	{
 		if (!ensure(LevelBuilderRef != nullptr)) return;
 		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());
+		EnableGoals();
 		bIsDoorOpen = true;
 	}
-
 }
 
 bool ARoomMaster::AreAllCharsDead()
 {
 	for (auto &&Char : CharsToKill)
 	{
-
 		if (Char && Char->IsAlive()) return false;
 	}
 	return true;
+}
+
+void ARoomMaster::EnableGoals()
+{
+	for (auto &&Goal : Goals)
+	{
+		Goal->EnableGoal(true);
+	}
+	
 }

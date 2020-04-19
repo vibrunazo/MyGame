@@ -90,7 +90,8 @@ AMyCharacter::AMyCharacter()
 
 void AMyCharacter::SetDefaultProperties()
 {
-	GetCapsuleComponent()->SetGenerateOverlapEvents(false);
+	GetCapsuleComponent()->SetGenerateOverlapEvents(true);
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -97.0f));

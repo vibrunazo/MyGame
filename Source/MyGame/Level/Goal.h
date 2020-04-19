@@ -15,6 +15,12 @@ public:
 	// Sets default values for this actor's properties
 	AGoal();
 
+	UFUNCTION(BlueprintCallable, Category = Goal)
+	void EnableGoal(bool IsEnabled);
+
+	UFUNCTION()
+	void OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Goal)
 	class USceneComponent* RootComp;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Goal)
@@ -23,6 +29,11 @@ public:
 	class UStaticMeshComponent* FlagMesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Goal)
 	class UBoxComponent* BoxCollision;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Goal)
+	FString NextMapUrl = "";
+private:
+	bool bIsEnabled = false;
 
 protected:
 	// Called when the game starts or when spawned

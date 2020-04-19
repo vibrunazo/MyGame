@@ -21,9 +21,13 @@ public:
 	class UBillboardComponent* Billboard;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
 	TArray<class AMyCharacter*> CharsToKill;
+	TArray<class AGoal*> Goals;
 
 	bool bIsDoorOpen = true;
 	class ALevelBuilder* LevelBuilderRef = nullptr;
+
+private:
+	void EnableGoals();
 
 protected:
 	// Called when the game starts or when spawned
