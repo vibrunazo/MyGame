@@ -4,7 +4,6 @@
 #include "Door.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
-#include "Components/SceneComponent.h"
 
 // Sets default values
 ADoor::ADoor()
