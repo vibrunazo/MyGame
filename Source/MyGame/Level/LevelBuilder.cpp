@@ -135,7 +135,7 @@ AStaticMeshActor* ALevelBuilder::GenerateWallMeshAtGrid(FCoord Where, EWallPos D
 AStaticMeshActor* ALevelBuilder::GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos)
 {
 	FCoord SideCoord = GetNeighbor(Where, Pos);
-	FGridStruct* Side = Grid.Find(SideCoord);
+	FRoomState* Side = Grid.Find(SideCoord);
 	if (!Side)
 	{
 		GenerateWallMeshAtGrid(Where, Pos);
@@ -260,7 +260,7 @@ void ALevelBuilder::BuildGrid()
 		if (i > 3) Difficulty = 2;
 		if (i == NumRooms - 2) {ChanceOfGoingRight = 100;}
 		if (i == NumRooms - 1) {Difficulty = 9;}
-		FGridStruct Content; Content.RoomType = GetRandomRoom(Difficulty);
+		FRoomState Content; Content.RoomType = GetRandomRoom(Difficulty);
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d for i: %d"), Coord.X, Coord.Y, Grid.Num(), i);
 		// y++;
@@ -290,7 +290,7 @@ void ALevelBuilder::BuildGrid()
 	}
 }
 
-void ALevelBuilder::BuildWalls(TPair<FCoord, FGridStruct> Tile)
+void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> Tile)
 {
 	// edge of world walls
 	for (auto &&Dir : ALLDIRECTIONS)
@@ -369,9 +369,15 @@ FCoord ALevelBuilder::GetNeighbor(FCoord From, EWallPos To)
 	return FCoord(From.X + GetXFromDir(To), From.Y + GetYFromDir(To));
 }
 
+FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)
+{
+	FRoomState* GS = Grid.Find(Coord);
+	return GS;
+}
+
 URoomDataAsset* ALevelBuilder::GetRoomFromCoord(FCoord Coord)
 {
-	FGridStruct* GS = Grid.Find(Coord);
+	FRoomState* GS = Grid.Find(Coord);
 	return GS->RoomType;
 }
 
@@ -391,21 +397,22 @@ AStaticMeshActor* ALevelBuilder::GetWallRefFromCoordAndDir(FCoord Coord, EWallPo
 
 // Try to hide walls on the Grid at this Location
 // Called from the Character Every tick with the Actor location
-void ALevelBuilder::HideWall(FVector Location, EWallPos Dir)
+void ALevelBuilder::OnUpdateCharCoord(FVector Location, EWallPos Dir)
 {
-	HideWall(GetGridFromLoc(Location), Dir);
+	FCoord Coord = GetGridFromLoc(Location);
+	if (Coord == LastEnteredRoomCoord) return;
+	LastEnteredRoomCoord = Coord;
+	FRoomState* Room = GetRoomStateFromCoord(Coord);
+	if (Room && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
+	{
+		CloseDoors();
+	}
+	HideWall(Coord, Dir);
 }
 
 // Try to Hide walls on this Grid Tile
 void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 {
-	if (Coord == LastHiddenWallCoord) return;
-	LastHiddenWallCoord = Coord;
-	URoomDataAsset* Room = GetRoomFromCoord(Coord);
-	if (Room->bIsDoored)
-	{
-		CloseDoors();
-	}
 	// Unhide all Walls
 	for (auto &&Wall : HiddenWalls)
 	{
@@ -439,11 +446,21 @@ void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 
 UStaticMesh* ALevelBuilder::GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap)
 {
-	FGridStruct* Tile1 = Grid.Find(Coord1);
-	FGridStruct* Tile2 = Grid.Find(Coord2);
+	FRoomState* Tile1 = Grid.Find(Coord1);
+	FRoomState* Tile2 = Grid.Find(Coord2);
 	if (!Tile1 || !Tile2) return Cap? WallCappedMesh : WallMesh;
 	if (Tile1->RoomType->bIsWalled || Tile2->RoomType->bIsWalled) return Cap? WallDooredCappedMesh : WallDooredMesh;
 	return nullptr;
+}
+
+void ALevelBuilder::SetRoomClearedAtLoc(FVector Location)
+{
+	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
+	if (Room)
+	{
+		Room->bIsRoomCleared = true;
+	}
+	OpenDoors();
 }
 
 void ALevelBuilder::OpenDoors()

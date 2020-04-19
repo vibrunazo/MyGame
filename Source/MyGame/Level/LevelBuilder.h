@@ -16,7 +16,7 @@ enum class EWallPos : uint8
 };
 
 USTRUCT(BlueprintType)
-struct FGridStruct
+struct FRoomState
 {
 	GENERATED_BODY()
 
@@ -28,6 +28,9 @@ struct FGridStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<EWallPos> Walls = {};
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsRoomCleared = false;
 };
 
 USTRUCT()
@@ -80,10 +83,12 @@ public:
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
+	FRoomState* GetRoomStateFromCoord(FCoord Coord);
 	class AStaticMeshActor* GetBottomWallFromLoc(FVector Location);
 	class AStaticMeshActor* GetWallRefFromCoordAndDir(FCoord Coord, EWallPos Dir);
-	void HideWall(FVector Location, EWallPos Dir=EWallPos::Bottom);
+	void OnUpdateCharCoord(FVector Location, EWallPos Dir=EWallPos::Bottom);
 	void HideWall(FCoord Coord, EWallPos Dir=EWallPos::Bottom);
+	void SetRoomClearedAtLoc(FVector Location);
 	void OpenDoors();
 	void CloseDoors();
 
@@ -111,14 +116,14 @@ public:
 	class UStaticMesh* WallDooredCappedMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	TSubclassOf<class ADoor> DoorActor;
-	TMap<FCoord, FGridStruct> Grid;
+	TMap<FCoord, FRoomState> Grid;
 	TMap<FString, class AStaticMeshActor*> AllWalls;
 	
 
 private:
 	void GenerateLevels();
 	void BuildGrid();
-	void BuildWalls(TPair<FCoord, FGridStruct> Tile);
+	void BuildWalls(TPair<FCoord, FRoomState> Tile);
 	class ULevelStreaming* GenerateRandomRoom(FTransform Where);
 	class ULevelStreaming* GenerateRoom(FCoord Where, class URoomDataAsset* RoomType);
 	void SetAssetListFromRegistry();
@@ -139,7 +144,7 @@ private:
 	class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 
 	TArray<class AStaticMeshActor*> HiddenWalls;
-	FCoord LastHiddenWallCoord = FCoord(-67, 9390);
+	FCoord LastEnteredRoomCoord = FCoord(-67, 9390);
 	TArray<class AStaticMeshActor*> CappedWalls;
 
 protected:

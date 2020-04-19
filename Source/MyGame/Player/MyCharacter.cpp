@@ -625,7 +625,7 @@ void AMyCharacter::CheckWalls()
 	if (!MyGI) return;
 	ALevelBuilder* Builder = MyGI->GetLevelBuilder();
 	if (!Builder) return;
-	Builder->HideWall(GetActorLocation());
+	Builder->OnUpdateCharCoord(GetActorLocation());
 	// AStaticMeshActor* SM = Builder->GetBottomWallFromLoc(GetActorLocation());
 	// if (SM && SM->GetStaticMeshComponent())
 	// {
