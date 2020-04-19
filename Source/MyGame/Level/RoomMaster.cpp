@@ -51,6 +51,7 @@ void ARoomMaster::Tick(float DeltaTime)
 	// UE_LOG(LogTemp, Warning, TEXT("are all chars dead: %d"), AreAllCharsDead());
 	if (!bIsDoorOpen && AreAllCharsDead())
 	{
+		if (!ensure(LevelBuilderRef != nullptr)) return;
 		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());
 		bIsDoorOpen = true;
 	}
@@ -61,7 +62,8 @@ bool ARoomMaster::AreAllCharsDead()
 {
 	for (auto &&Char : CharsToKill)
 	{
-		if (Char->IsAlive()) return false;
+
+		if (Char && Char->IsAlive()) return false;
 	}
 	return true;
 }
