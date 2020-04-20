@@ -10,6 +10,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "../MyGameInstance.h"
 #include "Door.h"
+#include "../MyGameInstance.h"
 
 TArray<EWallPos> ALLDIRECTIONS = {EWallPos::Left, EWallPos::Right, EWallPos::Bottom, EWallPos::Top};
 int8 GetXFromDir(EWallPos Dir)
@@ -252,6 +253,12 @@ void ALevelBuilder::BuildGrid()
 	int16 y = 0;
 	int32 Difficulty = 0;
 	int16 ChanceOfGoingRight = InitialChanceOfGoingRight;
+	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+	if (GI)
+	{
+		uint8 GIDifficulty = GI->LevelDifficulty;
+		NumRooms = 3 + GIDifficulty;
+	}
 	for (uint8 i = 0; i < NumRooms; i++)
 	{
 		// FCoord Coord = {x, y};

@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "../Abilities/IGetHit.h"
 #include "Engine/World.h"
+#include "../MyGameInstance.h"
 
 // Sets default values
 AGoal::AGoal()
@@ -58,5 +59,10 @@ void AGoal::OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 		UWorld* LeMundi = GetWorld();
 		if (!LeMundi) return;
 		LeMundi->ServerTravel(NextMapUrl);
+		UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+		if (GI)
+		{
+			GI->LevelDifficulty++;
+		}
 	}
 }

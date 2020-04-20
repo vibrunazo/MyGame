@@ -23,6 +23,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
 	TSubclassOf<class UCameraShake> CamShakeClass;
 
+	uint8 LevelDifficulty = 1;
+
 private:
 	class ALevelBuilder* LevelBuilderRef = nullptr;
 

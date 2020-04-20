@@ -99,7 +99,7 @@ public:
 	TArray<class ADoor*> DoorList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
-	int32 NumRooms = 8;
+	int32 NumRooms = 7;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	int32 InitialChanceOfGoingRight = 100;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
