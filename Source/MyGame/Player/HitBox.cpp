@@ -90,6 +90,7 @@ void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 
 void AHitBox::ApplyAllEffects(class IGetHit* Target)
 {
+	if (!Target) return;
 	for (auto &&Effect : EffectsToApply)
 	{
 		ApplyOneEffect(Effect, Target);
@@ -100,5 +101,6 @@ void AHitBox::ApplyAllEffects(class IGetHit* Target)
 void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
 {
 	// FGameplayEffectSpecHandle *Handle =  FGameplayEffectSpecHandle(Effect);
+	if (!Target) return;
 	Target->OnGetHitByEffect(Effect, GetOwner());
 }

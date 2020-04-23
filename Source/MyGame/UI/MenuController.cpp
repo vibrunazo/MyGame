@@ -3,3 +3,9 @@
 
 #include "MenuController.h"
 
+void AMenuController::BeginPlay()
+{
+    Super::BeginPlay();
+    SetInputMode(FInputModeUIOnly());
+    bShowMouseCursor = true;
+}

@@ -20,9 +20,10 @@ public:
 	class ALevelBuilder* GetLevelBuilder();
 	void SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder);
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyLibrary)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShake> CamShakeClass;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	uint8 LevelDifficulty = 1;
 
 private:

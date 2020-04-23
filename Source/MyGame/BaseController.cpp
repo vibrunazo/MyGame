@@ -12,6 +12,4 @@ void ABaseController::BeginPlay()
     if (!InitialWidget) return;
     InitialWidgetRef = CreateWidget<UMyUserWidget>(this, InitialWidget);
     InitialWidgetRef->AddToViewport();
-    SetInputMode(FInputModeUIOnly());
-    bShowMouseCursor = true;
 }

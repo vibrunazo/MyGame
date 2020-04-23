@@ -13,5 +13,8 @@ UCLASS()
 class MYGAME_API AMenuController : public ABaseController
 {
 	GENERATED_BODY()
+
+public:
+	void BeginPlay() override;
 	
 };
