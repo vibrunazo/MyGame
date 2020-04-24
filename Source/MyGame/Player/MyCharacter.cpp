@@ -393,11 +393,11 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 	// {{TagName="data.knockback" },500.000000}
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
-		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
+		UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
 		if (StunImmune && GetWorld()->GetTimeSeconds() < LastHitstunTime + StunImmuneCooldown) return;
 		else IncrementHitStunCount();
 	}
-	if (EffectTags.HasTag(KnockbackTag)) 
+	if (EffectTags.HasTag(KnockbackTag) && !StunImmune) 
 	{
 		float Knockback = NewEffect.Data.Get()->GetSetByCallerMagnitude(KnockbackTag);
 		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
@@ -405,7 +405,7 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 		// UE_LOG(LogTemp, Warning, TEXT("Has KnockbackTag, Knockback: %f"), Knockback);
 		ApplyKnockBack(SourceActor, Knockback);
 	}
-	if (EffectTags.HasTag(LaunchTag)) 
+	if (EffectTags.HasTag(LaunchTag) && !StunImmune) 
 	{
 		float LaunchX = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchXTag);
 		float LaunchY = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchYTag);
@@ -413,7 +413,7 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 		FVector LaunchVector = FVector(LaunchX, LaunchY, LaunchZ);
 		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
 		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
-		// UE_LOG(LogTemp, Warning, TEXT("Has KnockbackTag, Knockback: %f"), Knockback);
+		UE_LOG(LogTemp, Warning, TEXT("Has Launchtag, Knockback: %s"), *LaunchVector.ToString());
 		ApplyLaunchBack(SourceActor, LaunchVector);
 	}
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
@@ -425,7 +425,11 @@ void AMyCharacter::IncrementHitStunCount()
 	if (StunImmune || GetWorld()->GetTimeSeconds() > LastHitstunTime + StunImmuneCooldown) {HitStunCount = 0; StunImmune = false;}
 	HitStunCount++;
 	LastHitstunTime = GetWorld()->GetTimeSeconds();
-	if (MaxStuns > 0 && HitStunCount >= MaxStuns) StunImmune = true;
+	if (MaxStuns > 0 && HitStunCount >= MaxStuns)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("%s is Stunimmune"), *GetName());
+		StunImmune = true;
+	}
 }
 
 void AMyCharacter::OnDamaged(AActor* SourceActor)
@@ -583,9 +587,18 @@ void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
 	FRotator PRot = Power.Rotation();
 	float Angle = DRot.Yaw - PRot.Yaw;
 	Power = Power.RotateAngleAxis(Angle, FVector(0.f, 0.f, 1.f));
+	// Power = FVector(0.f, 600.f, 300.f);
+	LastLaunchBack = Power;
 	// LaunchDir.Z = Power.Z;
-	LaunchCharacter(Power, true, true);
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedLaunch, 0.05f, false);
 	UE_LOG(LogTemp, Warning, TEXT("Applying Launch: %s"), *Power.ToString());
+}
+
+void AMyCharacter::OnDelayedLaunch()
+{
+	LaunchCharacter(LastLaunchBack, true, true);
+
 }
 
 FTransform AMyCharacter::GetProjectileSpawn()

@@ -66,6 +66,7 @@ public:
 
 	void ApplyKnockBack(AActor* SourceActor, float Power);
 	void ApplyLaunchBack(AActor* SourceActor, FVector Power);
+	void OnDelayedLaunch();
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 
@@ -131,6 +132,7 @@ private:
 	float LastInputApexTime = -990.0f;
 	float LastInputZeroTime = -990.0f;
 	FVector LastInputVector = FVector(0.0f, 0.0f, 0.0f);
+	FVector LastLaunchBack = FVector(0.0f, 0.0f, 0.0f);
 	// float LastInputAngle = 0.0f;
 
 protected:
