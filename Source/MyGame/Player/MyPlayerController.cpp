@@ -7,6 +7,37 @@
 #include "MyDefaultPawn.h"
 #include "../UI/MyUserWidget.h"
 #include "../MyGameInstance.h"
+#include "Kismet/GameplayStatics.h"
+
+void AMyPlayerController::SetupInputComponent()
+{
+    Super::SetupInputComponent();
+    check(InputComponent);
+	InputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMyPlayerController::OnPausePressed).bExecuteWhenPaused = true;
+}
+
+void AMyPlayerController::OnPausePressed()
+{
+    UE_LOG(LogTemp, Warning, TEXT("Pause menu"));
+    if (!bIsPaused)
+    {
+        if (!PauseWidget) return;
+        PauseWidgetRef = CreateWidget<UMyUserWidget>(this, PauseWidget);
+        PauseWidgetRef->AddToViewport();
+        SetInputMode(FInputModeGameAndUI());
+        bShowMouseCursor = true;
+        if (!GetWorld()) return;
+        UGameplayStatics::SetGamePaused(GetWorld(), true);
+        bIsPaused = true;
+    }
+    else
+    {
+        if (PauseWidgetRef) PauseWidgetRef->RemoveFromParent();
+        UGameplayStatics::SetGamePaused(GetWorld(), false);
+        bIsPaused = false;
+
+    }
+}
 
 void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)
 {
