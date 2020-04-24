@@ -20,6 +20,8 @@ public:
 
 	UFUNCTION()
 	void OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
+	UFUNCTION()
+	void OnDelayedOpenLevel();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Goal)
 	class USceneComponent* RootComp;
@@ -34,6 +36,7 @@ public:
 	FString NextMapUrl = "";
 private:
 	bool bIsEnabled = false;
+	bool bIsCleared = false;
 
 protected:
 	// Called when the game starts or when spawned

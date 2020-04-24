@@ -5,8 +5,11 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "../Abilities/IGetHit.h"
+#include "../Player/MyCharacter.h"
+#include "../Player/MyPlayerController.h"
 #include "Engine/World.h"
 #include "../MyGameInstance.h"
+#include "TimerManager.h"
 
 // Sets default values
 AGoal::AGoal()
@@ -51,18 +54,27 @@ void AGoal::EnableGoal(bool IsEnabled)
 
 void AGoal::OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
-	if (!bIsEnabled) return;
-	IGetHit *Target = Cast<IGetHit>(OtherActor);
+	if (!bIsEnabled && !bIsCleared) return;
+	AMyCharacter *Target = Cast<AMyCharacter>(OtherActor);
 	if (Target && Target->IsAlive())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
-		UWorld* LeMundi = GetWorld();
-		if (!LeMundi) return;
-		LeMundi->ServerTravel(NextMapUrl);
-		UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
-		if (GI)
-		{
-			GI->LevelDifficulty++;
-		}
+		// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
+		bIsCleared = true;
+		AMyPlayerController* Cont = Cast<AMyPlayerController>(Target->GetController());
+		if (Cont) Cont->OnLevelWin(Target);
+		FTimerHandle Handle;
+		GetWorldTimerManager().SetTimer(Handle, this, &AGoal::OnDelayedOpenLevel, 5.0f, false);
+	}
+}
+
+void AGoal::OnDelayedOpenLevel()
+{
+	UWorld* LeMundi = GetWorld();
+	if (!LeMundi) return;
+	LeMundi->ServerTravel(NextMapUrl);
+	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+	if (GI)
+	{
+		GI->LevelDifficulty++;
 	}
 }

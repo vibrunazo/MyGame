@@ -12,6 +12,11 @@ ALevelBuilder* UMyGameInstance::GetLevelBuilder()
 }
 	
     
+void UMyGameInstance::OnGameOver()
+{
+    LevelDifficulty = 1;
+}
+
 void UMyGameInstance::SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder)
 {
     LevelBuilderRef = NewLevelBuilder;

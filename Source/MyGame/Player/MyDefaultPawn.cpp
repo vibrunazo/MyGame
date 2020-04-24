@@ -17,7 +17,7 @@ AMyDefaultPawn::AMyDefaultPawn()
 	RootComponent = SceneRoot;
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 1000.0f; // The camera follows at this distance behind the character	
+	CameraBoom->TargetArmLength = 1800.0f; // The camera follows at this distance behind the character	
 	// CameraBoom->bUsePawnControlRotation = true; // Rotate the arm based on the controller
 	CameraBoom->SetWorldRotation(FRotator(-80.0f, 0.0f, 0.0f));
 	CameraBoom->bInheritYaw = false;

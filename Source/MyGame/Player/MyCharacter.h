@@ -103,6 +103,7 @@ public:
 	float StunImmuneCooldown = 5.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float DoubleTapDelay = 0.1f;
+	bool bHasControl = true;
 	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
@@ -124,7 +125,6 @@ private:
 	void CalculateDash();
 	float GetInputAngle();
 	
-	bool bHasControl = true;
 	UAnimMontage *GetHitMontage;
 	float ForwardAxis = 0.0f;
 	float RightAxis = 0.0f;

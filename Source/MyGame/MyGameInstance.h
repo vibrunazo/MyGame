@@ -19,6 +19,7 @@ public:
 	// TSubclassOf<class UCameraShake> GetCamShakeClass();
 	class ALevelBuilder* GetLevelBuilder();
 	void SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder);
+	void OnGameOver();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShake> CamShakeClass;
