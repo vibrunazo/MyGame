@@ -18,6 +18,10 @@ class MYGAME_API AMyPlayerController : public ABaseController
 public:
 	void OnCharDies(class AMyCharacter* CharRef);
 	void OnDelayedCharDies(class AMyCharacter* CharRef);
+	void ShowGameOver();
 
 	class AMyDefaultPawn* DefaultPawnRef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
+	TSubclassOf<class UMyUserWidget> GameOverWidget;
+	class UMyUserWidget* GameOverWidgetRef;
 };
