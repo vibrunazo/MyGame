@@ -52,6 +52,9 @@ public:
 	TSubclassOf<class UCameraShake> GetCamShake();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool HasControl();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	class UMyGameInstance* GetMyGameInstance();
+	bool HasStunImmune();
 
 	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
@@ -133,6 +136,7 @@ private:
 	float LastInputZeroTime = -990.0f;
 	FVector LastInputVector = FVector(0.0f, 0.0f, 0.0f);
 	FVector LastLaunchBack = FVector(0.0f, 0.0f, 0.0f);
+	class UMyGameInstance* MyGIRef;
 	// float LastInputAngle = 0.0f;
 
 protected:

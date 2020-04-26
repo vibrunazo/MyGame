@@ -394,10 +394,11 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
-		if (StunImmune && GetWorld()->GetTimeSeconds() < LastHitstunTime + StunImmuneCooldown) return;
+		if (HasStunImmune()) return;
 		else IncrementHitStunCount();
 	}
-	if (EffectTags.HasTag(KnockbackTag) && !StunImmune) 
+	if (EffectTags.HasTag(KnockbackTag)) 
+	// if (EffectTags.HasTag(KnockbackTag) && !StunImmune) 
 	{
 		float Knockback = NewEffect.Data.Get()->GetSetByCallerMagnitude(KnockbackTag);
 		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
@@ -405,7 +406,8 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 		// UE_LOG(LogTemp, Warning, TEXT("Has KnockbackTag, Knockback: %f"), Knockback);
 		ApplyKnockBack(SourceActor, Knockback);
 	}
-	if (EffectTags.HasTag(LaunchTag) && !StunImmune) 
+	if (EffectTags.HasTag(LaunchTag)) 
+	// if (EffectTags.HasTag(LaunchTag) && !StunImmune) 
 	{
 		float LaunchX = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchXTag);
 		float LaunchY = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchYTag);
@@ -422,14 +424,30 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 
 void AMyCharacter::IncrementHitStunCount()
 {
-	if (StunImmune || GetWorld()->GetTimeSeconds() > LastHitstunTime + StunImmuneCooldown) {HitStunCount = 0; StunImmune = false;}
+	// if (StunImmune || GetWorld()->GetTimeSeconds() > LastHitstunTime + StunImmuneCooldown) {HitStunCount = 0; StunImmune = false;}
 	HitStunCount++;
-	LastHitstunTime = GetWorld()->GetTimeSeconds();
+	// LastHitstunTime = GetWorld()->GetTimeSeconds();
 	if (MaxStuns > 0 && HitStunCount >= MaxStuns)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("%s is Stunimmune"), *GetName());
 		StunImmune = true;
+		HitStunCount = 0;
+		TSubclassOf<UGameplayEffect> StunImmuneEffect = GetMyGameInstance()->StunImmuneEffectRef;
+		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(StunImmuneEffect, 0.f, AbilitySystem->MakeEffectContext());
+		FGameplayTag StunImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("data.stunimmune"));
+		Handle.Data.Get()->SetSetByCallerMagnitude(StunImmuneTag, StunImmuneCooldown);
+		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
 	}
+}
+
+bool AMyCharacter::HasStunImmune()
+{
+	FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("status.stunimmune"));
+    if(AbilitySystem->HasMatchingGameplayTag(ImmuneTag))
+	{
+		return true;
+	}
+	return false;
 }
 
 void AMyCharacter::OnDamaged(AActor* SourceActor)
@@ -509,6 +527,15 @@ void AMyCharacter::OnHitPause(float Duration)
 	CustomTimeDilation = 0.01f;
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnHitPauseEnd, Duration, false);
+}
+
+UMyGameInstance* AMyCharacter::GetMyGameInstance()
+{
+	if (MyGIRef) return MyGIRef;
+	UGameInstance* GI = GetGameInstance();
+	if (!ensure(GI != nullptr)) return nullptr;
+	MyGIRef = Cast<UMyGameInstance>(GI);
+	return MyGIRef;
 }
 
 TSubclassOf<UCameraShake> AMyCharacter::GetCamShake()	

@@ -23,6 +23,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShake> CamShakeClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
+	TSubclassOf<class UGameplayEffect> StunImmuneEffectRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	uint8 LevelDifficulty = 1;
