@@ -55,6 +55,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	class UMyGameInstance* GetMyGameInstance();
 	bool HasStunImmune();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void SetBodyColor(FLinearColor NewColor);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void ResetBodyColor();
 
 	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
@@ -108,7 +112,10 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float DoubleTapDelay = 0.1f;
 	bool bHasControl = true;
-	
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
+	class UMaterialInstanceDynamic* DynaMat;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	FLinearColor BodyColor = FLinearColor(0.5f, 0.5f, 0.5f);
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)

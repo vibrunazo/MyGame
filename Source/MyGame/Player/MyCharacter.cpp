@@ -26,6 +26,7 @@
 #include "../Level/LevelBuilder.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -96,6 +97,8 @@ void AMyCharacter::SetDefaultProperties()
 	GetMesh()->SetGenerateOverlapEvents(true);
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -97.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	// DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
+	// if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
 
 	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
 	HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
@@ -208,31 +211,25 @@ UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
 
 void AMyCharacter::BeginPlay()
 {
-	try
+	Super::BeginPlay();
+	if(AbilitySystem)
 	{
-		Super::BeginPlay();
-		if(AbilitySystem)
+		for (auto &&Ability : Abilities)
 		{
-			for (auto &&Ability : Abilities)
-			{
-				GiveAbility(Ability.AbilityClass);
-			}
+			GiveAbility(Ability.AbilityClass);
 		}
-		if (!ensure(AttributeSetBase != nullptr)) return;
-		AttributeSetBase->SetMaxHealth(MaxHealth);
-		AttributeSetBase->SetHealth(MaxHealth);
-		UpdateHealthBar();
-		// if (IsPlayerControlled()) 
-		// {
-		// 	Team = 1;
-		// }
+	}
+	if (!ensure(AttributeSetBase != nullptr)) return;
+	AttributeSetBase->SetMaxHealth(MaxHealth);
+	AttributeSetBase->SetHealth(MaxHealth);
+	UpdateHealthBar();
+	// if (IsPlayerControlled()) 
+	// {
+	// 	Team = 1;
+	// }
 		// else Team = 0;
-	}
-	catch(const std::exception& e)
-	{
-		UE_LOG(LogTemp, Error, TEXT("ERROR ON BEGINPLAY: %s"), *e.what());
-	}
-	
+	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
+	ResetBodyColor();
 }
 
 
@@ -329,15 +326,7 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
 			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
 			{
-				try
-				{
-					AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
-				}
-				catch(const std::exception& e)
-				{
-					UE_LOG(LogTemp, Error, TEXT("Error trying to activate ability: "), *e.what());
-				}
-				
+				AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
 			}
 		}
 	}
@@ -680,4 +669,12 @@ void AMyCharacter::CheckWalls()
 
 }
 
-
+void AMyCharacter::SetBodyColor(FLinearColor NewColor)
+{
+	// BodyColor = NewColor;
+	if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), NewColor);
+}
+void AMyCharacter::ResetBodyColor()
+{
+	if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
+}
