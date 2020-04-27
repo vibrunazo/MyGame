@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Containers/Map.h"
+#include "GameplayTagContainer.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 
@@ -28,6 +30,32 @@ struct FAbilityStruct
 	bool CanUseOnAir = false;
 
 };
+USTRUCT(BlueprintType)
+struct FMagnitudePair
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FGameplayTag GameplayTag;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Magnitude;
+};
+
+USTRUCT(BlueprintType)
+struct FEffectContainer
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UGameplayEffect> EffectClass;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FMagnitudePair> Magnitudes;
+
+
+};
+
 
 /**
  * 

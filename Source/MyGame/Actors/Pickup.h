@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "GameplayEffectTypes.h"
+#include "../MyBlueprintFunctionLibrary.h"
 #include "Pickup.generated.h"
 
 UCLASS()
@@ -24,6 +26,8 @@ public:
 	class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pickup)
 	class UBoxComponent* BoxCollision;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
+	TArray<FEffectContainer> EffectsToApply;
 
 protected:
 	// Called when the game starts or when spawned
