@@ -20,14 +20,16 @@ public:
 	UFUNCTION()
 	void OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Pickup)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class USceneComponent* RootComp;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Pickup)
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class UStaticMeshComponent* Mesh;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Pickup)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
 	class UBoxComponent* BoxCollision;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Pickup)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	TArray<FEffectContainer> EffectsToApply;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	bool bMaxHPCanPickup = true;
 
 protected:
 	// Called when the game starts or when spawned

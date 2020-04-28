@@ -6,6 +6,8 @@
 #include "Components/BoxComponent.h"
 #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
+#include "AbilitySystemComponent.h"
+#include "../Abilities/MyAttributeSet.h"
 
 // Sets default values
 APickup::APickup()
@@ -40,9 +42,16 @@ void APickup::Tick(float DeltaTime)
 
 void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
-	
+
 	UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
 	IGetHit* Char = Cast<IGetHit>(OtherActor);
 	if (!Char) return;
+	if (!bMaxHPCanPickup)
+	{
+		float hp = Char->GetAttributes()->GetHealth();
+		float maxhp = Char->GetAttributes()->GetMaxHealth();
+		if (hp >= maxhp) return;
+	}
 	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(Char, EffectsToApply);
+	Destroy();
 }

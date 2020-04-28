@@ -69,6 +69,7 @@ public:
 	bool IsAlive() override;
 	void OnHitPause(float Duration) override;
 	uint8 GetTeam() override;
+	UMyAttributeSet* GetAttributes() override;
 	FTransform GetProjectileSpawn() override;
 
 	void ApplyKnockBack(AActor* SourceActor, float Power);

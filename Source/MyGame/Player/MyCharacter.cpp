@@ -586,6 +586,11 @@ uint8 AMyCharacter::GetTeam()
 	return Team;
 }
 
+UMyAttributeSet* AMyCharacter::GetAttributes()
+{
+	return AttributeSetBase;
+}
+
 void AMyCharacter::ApplyKnockBack(AActor* SourceActor, float Power)
 {
 	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
