@@ -4,6 +4,8 @@
 #include "Pickup.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "../MyBlueprintFunctionLibrary.h"
+#include "../Abilities/IGetHit.h"
 
 // Sets default values
 APickup::APickup()
@@ -38,5 +40,9 @@ void APickup::Tick(float DeltaTime)
 
 void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
+	
 	UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
+	IGetHit* Char = Cast<IGetHit>(OtherActor);
+	if (!Char) return;
+	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(Char, EffectsToApply);
 }

@@ -59,9 +59,10 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 	{
         // Handle other health changes such as from healing or direct modifiers
 		// First clamp it
+        float DamageValue = Data.EvaluatedData.Magnitude;
 		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
         IGetHit* HeWhoGetsHit = Cast<IGetHit>(TargetActor);
-        if (HeWhoGetsHit)
+        if (HeWhoGetsHit && DamageValue < 0)
         {
             HeWhoGetsHit->OnDamaged(SourceActor);
             if (GetHealth() == 0)

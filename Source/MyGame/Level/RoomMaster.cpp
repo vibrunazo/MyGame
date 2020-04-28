@@ -53,7 +53,7 @@ void ARoomMaster::BeginPlay()
 void ARoomMaster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	// UE_LOG(LogTemp, Warning, TEXT("are all chars dead: %d"), AreAllCharsDead());
+	// TODO should be bound on char death event, not on tick
 	if (!bIsDoorOpen && AreAllCharsDead())
 	{
 		if (!ensure(LevelBuilderRef != nullptr)) return;

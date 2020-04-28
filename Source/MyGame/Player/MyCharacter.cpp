@@ -452,10 +452,12 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
 	UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
-	APawn* SeenPawn = Cast<APawn>(SourceActor);
-	if (!SeenPawn) return;
-	SetAggroTarget(SeenPawn);
-	
+	if (!IsPlayerControlled())
+	{
+		APawn* SeenPawn = Cast<APawn>(SourceActor);
+		if (!SeenPawn) return;
+		SetAggroTarget(SeenPawn);
+	}
 	
 	OnDamagedBP(SourceActor);
 }
@@ -637,6 +639,7 @@ bool AMyCharacter::HasControl()
 
 void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 {
+	if (!NewTarget) return;
 	if (NewTarget->IsPlayerControlled())
 	{
 		AAIController* AiCont = Cast<AAIController>(GetController());

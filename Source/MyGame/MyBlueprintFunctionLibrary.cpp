@@ -2,10 +2,28 @@
 
 
 #include "MyBlueprintFunctionLibrary.h"
-// #include "Camera/CameraShake.h"
+#include "Abilities/IGetHit.h"
+#include "AbilitySystemComponent.h"
 
+void UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container)
+{
+    UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();
+    if (!ensure(GAS != nullptr)) return;
+    FGameplayEffectSpecHandle NewHandle = GAS->MakeOutgoingSpec(Container.EffectClass, 0.f, GAS->MakeEffectContext());
+    for (auto &&Mag : Container.Magnitudes)
+    {
+        NewHandle.Data.Get()->SetSetByCallerMagnitude(Mag.GameplayTag, Mag.Magnitude);
+    }
+    Char->OnGetHitByEffect(NewHandle, nullptr);
+    
+    // FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
+    //    NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
+}
 
-// TSubclassOf<class UCameraShake> UMyBlueprintFunctionLibrary::GetCamShakeClass()
-// {
-//     return nullptr;
-// }
+void UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers)
+{
+    for (auto &&Container : Containers)
+    {
+        ApplyEffectContainerToChar(Char, Container);
+    }
+}

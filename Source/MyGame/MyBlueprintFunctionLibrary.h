@@ -6,6 +6,7 @@
 #include "Kismet/BlueprintFunctionLibrary.h"
 #include "Containers/Map.h"
 #include "GameplayTagContainer.h"
+#include "Abilities/IGetHit.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 
@@ -52,8 +53,6 @@ struct FEffectContainer
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<FMagnitudePair> Magnitudes;
-
-
 };
 
 
@@ -67,7 +66,10 @@ class MYGAME_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	
 public:
 	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	// static TSubclassOf<class UCameraShake> GetCamShakeClass();
+	static void ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container);
+
+	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
+	static void ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers);
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// static TSubclassOf<class UCameraShake> CamShakeClass;
