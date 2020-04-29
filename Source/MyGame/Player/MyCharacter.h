@@ -94,6 +94,10 @@ public:
 	float CamShakeRange = 1500.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float MaxHealth = 100.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float Attack = 1.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float Defense = 1.0f;
 	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TSubclassOf<class UUserWidget> HealthBarWidget;

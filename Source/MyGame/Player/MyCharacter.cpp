@@ -222,6 +222,8 @@ void AMyCharacter::BeginPlay()
 	if (!ensure(AttributeSetBase != nullptr)) return;
 	AttributeSetBase->SetMaxHealth(MaxHealth);
 	AttributeSetBase->SetHealth(MaxHealth);
+	AttributeSetBase->SetAttack(Attack);
+	AttributeSetBase->SetDefense(Defense);
 	UpdateHealthBar();
 	// if (IsPlayerControlled()) 
 	// {

@@ -34,4 +34,12 @@ public:
 	UPROPERTY(Category = "Attributes | MaxHealth", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxHealth)
+	
+	UPROPERTY(Category = "Attributes | Attack", EditAnywhere, BlueprintReadWrite)
+	FGameplayAttributeData Attack;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Attack)
+
+	UPROPERTY(Category = "Attributes | Defense", EditAnywhere, BlueprintReadWrite)
+	FGameplayAttributeData Defense;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Defense)
 };
