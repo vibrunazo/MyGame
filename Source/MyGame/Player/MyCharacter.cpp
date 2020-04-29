@@ -230,6 +230,12 @@ void AMyCharacter::BeginPlay()
 		// else Team = 0;
 	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	ResetBodyColor();
+	if (IsPlayerControlled() && GetMyGameInstance() && AttributeSetBase)
+	{
+		AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
+		UpdateHealthBar();
+		GetMyGameInstance()->SetCharRef(this);
+	}
 }
 
 
@@ -514,7 +520,7 @@ void AMyCharacter::OnDelayedDeath()
 
 void AMyCharacter::DropItems()
 {
-	UE_LOG(LogTemp, Warning, TEXT("dropping items"));
+	// UE_LOG(LogTemp, Warning, TEXT("dropping items"));
 	FVector Loc = GetActorLocation();
     FActorSpawnParameters params;
     params.bNoFail = true;
@@ -523,7 +529,7 @@ void AMyCharacter::DropItems()
 	for (auto &&Loot : LootTable)
 	{
     	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(Loot.Pickup, Loc, FRotator::ZeroRotator, params);
-		UE_LOG(LogTemp, Warning, TEXT("dropped a %s"), *Loot.Pickup->GetName());
+		// UE_LOG(LogTemp, Warning, TEXT("dropped a %s"), *Loot.Pickup->GetName());
 		if (NewPickup) {UE_LOG(LogTemp, Warning, TEXT("Spawned"));}
 		else {UE_LOG(LogTemp, Warning, TEXT("Nope"));}
 	}

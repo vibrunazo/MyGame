@@ -20,6 +20,8 @@ public:
 	class ALevelBuilder* GetLevelBuilder();
 	void SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder);
 	void OnGameOver();
+	void LevelClear(FString NextMapUrl);
+	void SetCharRef(class AMyCharacter* NewRef);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShake> CamShakeClass;
@@ -28,6 +30,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	uint8 LevelDifficulty = 1;
+
+	float Health = 100.f;
+	class AMyCharacter* PlayerCharRef;
 
 private:
 	class ALevelBuilder* LevelBuilderRef = nullptr;

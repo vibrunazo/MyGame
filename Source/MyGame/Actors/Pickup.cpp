@@ -43,7 +43,7 @@ void APickup::Tick(float DeltaTime)
 void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
 
-	UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
+	// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
 	IGetHit* Char = Cast<IGetHit>(OtherActor);
 	if (!Char || Char->GetTeam() != TeamWhoCanPickup) return;
 	if (!bMaxHPCanPickup)

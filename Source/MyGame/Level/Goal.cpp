@@ -7,7 +7,7 @@
 #include "../Abilities/IGetHit.h"
 #include "../Player/MyCharacter.h"
 #include "../Player/MyPlayerController.h"
-#include "Engine/World.h"
+// #include "Engine/World.h"
 #include "../MyGameInstance.h"
 #include "TimerManager.h"
 
@@ -69,12 +69,13 @@ void AGoal::OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 
 void AGoal::OnDelayedOpenLevel()
 {
-	UWorld* LeMundi = GetWorld();
-	if (!LeMundi) return;
-	LeMundi->ServerTravel(NextMapUrl);
+	// UWorld* LeMundi = GetWorld();
+	// if (!LeMundi) return;
+	// LeMundi->ServerTravel(NextMapUrl);
 	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (GI)
 	{
-		GI->LevelDifficulty++;
+		GI->LevelClear(NextMapUrl);
+		// GI->LevelDifficulty++;
 	}
 }
