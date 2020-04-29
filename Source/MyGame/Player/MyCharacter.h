@@ -10,6 +10,7 @@
 #include "../Abilities/ICastProjectile.h"
 #include "GameplayEffectTypes.h"
 #include "../Abilities/MyAttributeSet.h"
+#include "../Actors/Pickup.h"
 #include "MyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
@@ -85,6 +86,8 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	TArray<FLootDrop> LootTable;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TSubclassOf<class UCameraShake> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
@@ -117,6 +120,7 @@ public:
 	class UMaterialInstanceDynamic* DynaMat;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	FLinearColor BodyColor = FLinearColor(0.5f, 0.5f, 0.5f);
+	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
@@ -136,6 +140,7 @@ private:
 	void IncrementHitStunCount();
 	void CalculateDash();
 	float GetInputAngle();
+	void DropItems();
 	
 	UAnimMontage *GetHitMontage;
 	float ForwardAxis = 0.0f;

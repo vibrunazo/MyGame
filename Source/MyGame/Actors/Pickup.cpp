@@ -45,7 +45,7 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 
 	UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
 	IGetHit* Char = Cast<IGetHit>(OtherActor);
-	if (!Char) return;
+	if (!Char || Char->GetTeam() != TeamWhoCanPickup) return;
 	if (!bMaxHPCanPickup)
 	{
 		float hp = Char->GetAttributes()->GetHealth();

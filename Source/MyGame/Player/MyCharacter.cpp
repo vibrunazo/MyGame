@@ -495,7 +495,11 @@ void AMyCharacter::OnDie()
 	{
 		MyCont->OnCharDies(this);
 	}
-	else DetachFromControllerPendingDestroy();
+	if (!IsPlayerControlled())
+	{
+		DetachFromControllerPendingDestroy();
+		DropItems();
+	}
 }
 
 void AMyCharacter::OnDelayedDeath()
@@ -506,6 +510,24 @@ void AMyCharacter::OnDelayedDeath()
 		MyCont->OnDelayedCharDies(this);
 	}
 	Destroy();
+}
+
+void AMyCharacter::DropItems()
+{
+	UE_LOG(LogTemp, Warning, TEXT("dropping items"));
+	FVector Loc = GetActorLocation();
+    FActorSpawnParameters params;
+    params.bNoFail = true;
+    params.Instigator = this;
+    params.Owner = this;
+	for (auto &&Loot : LootTable)
+	{
+    	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(Loot.Pickup, Loc, FRotator::ZeroRotator, params);
+		UE_LOG(LogTemp, Warning, TEXT("dropped a %s"), *Loot.Pickup->GetName());
+		if (NewPickup) {UE_LOG(LogTemp, Warning, TEXT("Spawned"));}
+		else {UE_LOG(LogTemp, Warning, TEXT("Nope"));}
+	}
+	
 }
 
 bool AMyCharacter::IsAlive()

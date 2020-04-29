@@ -8,6 +8,7 @@
 #include "../MyBlueprintFunctionLibrary.h"
 #include "Pickup.generated.h"
 
+
 UCLASS()
 class MYGAME_API APickup : public AActor
 {
@@ -30,6 +31,8 @@ public:
 	TArray<FEffectContainer> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	bool bMaxHPCanPickup = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	uint8 TeamWhoCanPickup = 0;
 
 protected:
 	// Called when the game starts or when spawned
@@ -39,4 +42,17 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+};
+
+
+USTRUCT(BlueprintType)
+struct FLootDrop
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<APickup> Pickup;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	uint8 DropRate;
 };
