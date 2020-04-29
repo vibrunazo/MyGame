@@ -13,5 +13,9 @@ UCLASS()
 class MYGAME_API UMyUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
+
+public:
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
+	class UMyGameInstance* GetMyGameInstance();
 	
 };

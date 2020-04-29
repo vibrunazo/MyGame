@@ -15,11 +15,16 @@ class MYGAME_API UMyGameInstance : public UGameInstance
 	GENERATED_BODY()
 
 public:
-	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	// TSubclassOf<class UCameraShake> GetCamShakeClass();
+	UMyGameInstance();
+
+	UFUNCTION(BlueprintCallable, Category="MyGI")
 	class ALevelBuilder* GetLevelBuilder();
 	void SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder);
+	UFUNCTION(BlueprintCallable, Category="MyGI")
 	void OnGameOver();
+	UFUNCTION(BlueprintCallable, Category="MyGI")
+	void NewGame();
+	UFUNCTION(BlueprintCallable, Category="MyGI")
 	void LevelClear(FString NextMapUrl);
 	void SetCharRef(class AMyCharacter* NewRef);
 

@@ -3,6 +3,7 @@
 
 #include "MyBlueprintFunctionLibrary.h"
 #include "Abilities/IGetHit.h"
+#include "MyGameInstance.h"
 #include "AbilitySystemComponent.h"
 
 void UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container)

@@ -7,18 +7,27 @@
 #include "Player/MyCharacter.h"
 
 
+UMyGameInstance::UMyGameInstance()
+{
+    NewGame();
+}
+
 ALevelBuilder* UMyGameInstance::GetLevelBuilder()
 {
     return LevelBuilderRef;
 }
 	
-    
 void UMyGameInstance::SetCharRef(AMyCharacter* NewRef)
 {
     PlayerCharRef = NewRef;
 }
 
 void UMyGameInstance::OnGameOver()
+{
+    NewGame();
+}
+
+void UMyGameInstance::NewGame()
 {
     LevelDifficulty = 1;
     Health = 100.f;

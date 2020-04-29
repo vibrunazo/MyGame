@@ -2,4 +2,11 @@
 
 
 #include "MyUserWidget.h"
+#include "../MyGameInstance.h"
 
+UMyGameInstance* UMyUserWidget::GetMyGameInstance()
+{
+    UGameInstance* GI = GetGameInstance();
+    UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
+    return MyGI;
+}

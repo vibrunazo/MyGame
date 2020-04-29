@@ -101,6 +101,6 @@ void AHitBox::ApplyAllEffects(class IGetHit* Target)
 void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
 {
 	// FGameplayEffectSpecHandle *Handle =  FGameplayEffectSpecHandle(Effect);
-	if (!Target) return;
+	if (!Target->IsValidLowLevel()) return;
 	Target->OnGetHitByEffect(Effect, GetOwner());
 }

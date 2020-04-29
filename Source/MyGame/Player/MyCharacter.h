@@ -72,6 +72,7 @@ public:
 	uint8 GetTeam() override;
 	UMyAttributeSet* GetAttributes() override;
 	FTransform GetProjectileSpawn() override;
+	bool IsValidLowLevel() override;
 
 	void ApplyKnockBack(AActor* SourceActor, float Power);
 	void ApplyLaunchBack(AActor* SourceActor, FVector Power);

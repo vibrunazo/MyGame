@@ -543,6 +543,11 @@ bool AMyCharacter::IsAlive()
 	return AttributeSetBase->GetHealth() > 0;
 }
 
+bool AMyCharacter::IsValidLowLevel()
+{
+	return Super::IsValidLowLevel();
+}
+
 void AMyCharacter::OnHitPause(float Duration)
 {
 	CustomTimeDilation = 0.01f;
