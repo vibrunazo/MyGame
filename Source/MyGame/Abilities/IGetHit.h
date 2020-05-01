@@ -32,6 +32,6 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const = 0;
 	virtual class UMyAttributeSet* GetAttributes() = 0;
 	virtual bool IsValidLowLevel() = 0;
-	
+	virtual void AddItemToInventory(class UItemDataAsset* NewItem) = 0;
 	// virtual void ApplyKnockBack(FVector Dir) = 0;
 };

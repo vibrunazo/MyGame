@@ -82,8 +82,8 @@ void UDamageExec::Execute_Implementation(const FGameplayEffectCustomExecutionPar
     float Damage = Spec.GetSetByCallerMagnitude(DamageTag, true, -1.0f);
 	//float Damage = FMath::Max<float>(SetDamage, 0.0f);
 
-
-	float DamageDone = Damage * Attack / Defense;
+	float DamageDone = Damage;
+	if (Damage < 0) DamageDone = Damage * Attack / Defense;
     UE_LOG(LogTemp, Warning, TEXT("DamageExec, DamageDone: %f, Damage: %f, Attack: %f, Defense: %f"), DamageDone, Damage, Attack, Defense);
 	OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(DamageStatics().HealthProperty, EGameplayModOp::Additive, DamageDone));
 }

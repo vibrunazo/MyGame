@@ -28,7 +28,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
 	class UBoxComponent* BoxCollision;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
-	TArray<FEffectContainer> EffectsToApply;
+	class UItemDataAsset* ItemData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	bool bMaxHPCanPickup = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")

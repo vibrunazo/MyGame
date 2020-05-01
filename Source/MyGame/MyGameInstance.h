@@ -37,6 +37,8 @@ public:
 	uint8 LevelDifficulty = 1;
 
 	float Health = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	TArray<class UItemDataAsset*> Inventory;
 	class AMyCharacter* PlayerCharRef;
 
 private:

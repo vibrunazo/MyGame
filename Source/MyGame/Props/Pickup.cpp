@@ -2,9 +2,10 @@
 
 
 #include "Pickup.h"
+#include "ItemDataAsset.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
-#include "../MyBlueprintFunctionLibrary.h"
+// #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
 #include "AbilitySystemComponent.h"
 #include "../Abilities/MyAttributeSet.h"
@@ -52,6 +53,9 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 		float maxhp = Char->GetAttributes()->GetMaxHealth();
 		if (hp >= maxhp) return;
 	}
-	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(Char, EffectsToApply);
+	if (ItemData)
+	{
+		Char->AddItemToInventory(ItemData);
+	}
 	Destroy();
 }

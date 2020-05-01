@@ -27,6 +27,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "../Props/ItemDataAsset.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -237,6 +238,8 @@ void AMyCharacter::BeginPlay()
 		AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
 		UpdateHealthBar();
 		GetMyGameInstance()->SetCharRef(this);
+		Inventory = &GetMyGameInstance()->Inventory;
+		ApplyAllItemEffects();
 	}
 }
 
@@ -619,6 +622,23 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 uint8 AMyCharacter::GetTeam()
 {
 	return Team;
+}
+
+void AMyCharacter::AddItemToInventory(UItemDataAsset* NewItem)
+{
+	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, NewItem->EffectsToApply);
+	if (!NewItem->bIsConsumable)
+	{
+		(*Inventory).Add(NewItem);
+	}
+}
+
+void AMyCharacter::ApplyAllItemEffects()
+{
+	for (auto &&Item : *Inventory)
+	{
+		UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, Item->EffectsToApply);
+	}
 }
 
 UMyAttributeSet* AMyCharacter::GetAttributes()

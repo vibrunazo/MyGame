@@ -10,7 +10,7 @@
 #include "../Abilities/ICastProjectile.h"
 #include "GameplayEffectTypes.h"
 #include "../Abilities/MyAttributeSet.h"
-#include "../Actors/Pickup.h"
+#include "../Props/Pickup.h"
 #include "MyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
@@ -73,7 +73,10 @@ public:
 	UMyAttributeSet* GetAttributes() override;
 	FTransform GetProjectileSpawn() override;
 	bool IsValidLowLevel() override;
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void AddItemToInventory(class UItemDataAsset* NewItem) override;
 
+	void ApplyAllItemEffects();
 	void ApplyKnockBack(AActor* SourceActor, float Power);
 	void ApplyLaunchBack(AActor* SourceActor, FVector Power);
 	void OnDelayedLaunch();
@@ -125,6 +128,8 @@ public:
 	class UMaterialInstanceDynamic* DynaMat;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	FLinearColor BodyColor = FLinearColor(0.5f, 0.5f, 0.5f);
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
+	TArray<class UItemDataAsset*>* Inventory;
 	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
