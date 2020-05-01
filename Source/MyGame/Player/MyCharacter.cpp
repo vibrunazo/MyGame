@@ -493,14 +493,12 @@ void AMyCharacter::OnDie()
 	UWorld* World = GetWorld();
 	// FTimerManager TM = FTimerManager::FTimerManager;
 	FTimerHandle Handle;
+	FTimerHandle Handle2;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 5.0f, false);
-	HealthBarComp->SetVisibility(false);
-	GetMesh()->SetSimulatePhysics(true);
-	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
-	GetMesh()->AddForce(FVector(-80000.0f, 0.0f, 200000.0f), NAME_None, true);
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	GetWorldTimerManager().SetTimer(Handle2, this, &AMyCharacter::OnDelayedLaunch2, .05f, false);
 	bHasControl = false;
 	DisableInput(nullptr);
+	HealthBarComp->SetVisibility(false);
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 	if (MyCont)
 	{
@@ -511,8 +509,26 @@ void AMyCharacter::OnDie()
 		DetachFromControllerPendingDestroy();
 		DropItems();
 	}
+	GetMesh()->SetSimulatePhysics(true);
+	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	// GetMesh()->SetPhysicsLinearVelocity(FVector(200.f, 0.f, 5000.f));
+	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
+	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
+	if (MyAnim)
+	{
+		// MyAnim->StartRagdoll();
+	}
 }
 
+void AMyCharacter::OnDelayedLaunch2()
+{
+	float rx = FMath::RandRange(-100.f, 100.f);
+	float ry = FMath::RandRange(-100.f, 100.f);
+	GetMesh()->AddImpulse(FVector(8.0f*rx, 8.0f*ry, 4200.0f + 5.f*rx), NAME_None, true);
+	GetMesh()->AddForce(FVector(800.0f*rx, 800.0f*ry, 200000.0f), NAME_None, true);
+	// LaunchCharacter(FVector(200.f, 0.f, 5000.f), true, true);
+}
 void AMyCharacter::OnDelayedDeath()
 {
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
@@ -520,7 +536,12 @@ void AMyCharacter::OnDelayedDeath()
 	{
 		MyCont->OnDelayedCharDies(this);
 	}
-	Destroy();
+	// GetMesh()->SetSimulatePhysics(false);
+	GetMesh()->PutAllRigidBodiesToSleep();
+	// GetMesh()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// UE_LOG(LogTemp, Warning, TEXT("Delayed Death"));
+	
+	// Destroy();
 }
 
 void AMyCharacter::DropItems()

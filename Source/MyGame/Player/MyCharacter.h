@@ -80,6 +80,7 @@ public:
 	void ApplyKnockBack(AActor* SourceActor, float Power);
 	void ApplyLaunchBack(AActor* SourceActor, FVector Power);
 	void OnDelayedLaunch();
+	void OnDelayedLaunch2();
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 
