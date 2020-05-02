@@ -20,9 +20,12 @@ APickup::APickup()
 	RootComponent = RootComp;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
+	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	BoxCollision->SetupAttachment(RootComponent);
 	BoxCollision->SetBoxExtent(FVector(50.f, 50.f, 50.f));
+	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	OnActorBeginOverlap.AddDynamic(this, &APickup::OnPickupBeginOverlap);
 
 }
