@@ -525,7 +525,7 @@ void AMyCharacter::OnDelayedLaunch2()
 {
 	float rx = FMath::RandRange(-100.f, 100.f);
 	float ry = FMath::RandRange(-100.f, 100.f);
-	GetMesh()->AddImpulse(FVector(8.0f*rx, 8.0f*ry, 4200.0f + 5.f*rx), NAME_None, true);
+	GetMesh()->AddImpulse(FVector(8.0f*rx, 8.0f*ry, 2200.0f + 5.f*rx), NAME_None, true);
 	GetMesh()->AddForce(FVector(800.0f*rx, 800.0f*ry, 200000.0f), NAME_None, true);
 	// LaunchCharacter(FVector(200.f, 0.f, 5000.f), true, true);
 }
