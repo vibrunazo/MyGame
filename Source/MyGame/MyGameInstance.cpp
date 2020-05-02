@@ -31,6 +31,7 @@ void UMyGameInstance::NewGame()
 {
     LevelDifficulty = 1;
     Health = 100.f;
+    Inventory.Empty();
 }
 
 void UMyGameInstance::LevelClear(FString NextMapUrl)
