@@ -9,6 +9,9 @@
 #include "../Abilities/IGetHit.h"
 #include "AbilitySystemComponent.h"
 #include "../Abilities/MyAttributeSet.h"
+#include "../UI/WidgetActor.h"
+#include "UObject/ConstructorHelpers.h"
+#include "TimerManager.h"
 
 // Sets default values
 APickup::APickup()
@@ -25,8 +28,12 @@ APickup::APickup()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	BoxCollision->SetupAttachment(RootComponent);
 	BoxCollision->SetBoxExtent(FVector(50.f, 50.f, 50.f));
-	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	OnActorBeginOverlap.AddDynamic(this, &APickup::OnPickupBeginOverlap);
+	// Blueprint'/Game/UI/BP_WidgetActor.BP_WidgetActor'
+	// Blueprint'/Game/UI/BP_UMGActor.BP_UMGActor'
+	static ConstructorHelpers::FClassFinder<AWidgetActor> WABPClass(TEXT("/Game/UI/BP_UMGActor"));
+	WidgetActorClass = WABPClass.Class;
 
 }
 
@@ -34,14 +41,10 @@ APickup::APickup()
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
+
+	FTimerHandle Handle;
+	GetWorldTimerManager().SetTimer(Handle, this, &APickup::EnablePickup, 1.0f, false);
 	
-}
-
-// Called every frame
-void APickup::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
@@ -59,6 +62,22 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	if (ItemData)
 	{
 		Char->AddItemToInventory(ItemData);
+		if (WidgetActorClass)
+		{
+			FVector Loc = GetActorLocation();
+			FActorSpawnParameters params;
+			params.Owner = this;
+			AWidgetActor* NewWidget = GetWorld()->SpawnActor<AWidgetActor>(WidgetActorClass, Loc, FRotator::ZeroRotator, params);
+			if (NewWidget)
+			{
+				NewWidget->SetWidgetText(ItemData);
+			}
+		}
 	}
 	Destroy();
+}
+
+void APickup::EnablePickup()
+{
+	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 }

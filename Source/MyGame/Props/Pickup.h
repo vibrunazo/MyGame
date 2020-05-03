@@ -20,6 +20,7 @@ public:
 
 	UFUNCTION()
 	void OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
+	void EnablePickup();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class USceneComponent* RootComp;
@@ -33,14 +34,12 @@ public:
 	bool bMaxHPCanPickup = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	uint8 TeamWhoCanPickup = 0;
+	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
+	TSubclassOf<class AWidgetActor> WidgetActorClass;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
 };
 
