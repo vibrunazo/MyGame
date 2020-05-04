@@ -17,7 +17,9 @@ class MYGAME_API UItemDataAsset : public UPrimaryDataAsset
 	GENERATED_BODY()
 public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
-	FText ItemName = FText();
+	FText ItemName = FText::FromString(TEXT("Item"));
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
+	FText Description = FText();
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
 	TSubclassOf<class APickup> PickupActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
