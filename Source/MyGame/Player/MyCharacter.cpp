@@ -221,10 +221,12 @@ void AMyCharacter::BeginPlay()
 		}
 	}
 	if (!ensure(AttributeSetBase != nullptr)) return;
+	if (!ensure(GetCharacterMovement() != nullptr)) return;
 	AttributeSetBase->SetMaxHealth(MaxHealth);
 	AttributeSetBase->SetHealth(MaxHealth);
 	AttributeSetBase->SetAttack(Attack);
 	AttributeSetBase->SetDefense(Defense);
+	BaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	UpdateHealthBar();
 	// if (IsPlayerControlled()) 
 	// {
@@ -368,6 +370,7 @@ void AMyCharacter::UpdateHealthBar()
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet NOT created on %s"), *GetName());
 		return;
 	}
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed * AttributeSetBase->GetSpeed();
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());

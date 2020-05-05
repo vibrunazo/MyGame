@@ -103,6 +103,7 @@ public:
 	float Attack = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float Defense = 1.0f;
+	float BaseSpeed = 350.0f;
 	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TSubclassOf<class UUserWidget> HealthBarWidget;

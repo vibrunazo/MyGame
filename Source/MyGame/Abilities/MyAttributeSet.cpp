@@ -10,6 +10,7 @@ UMyAttributeSet::UMyAttributeSet()
     , MaxHealth(100.0f)
     , Attack(1.0f)
     , Defense(1.0f)
+    , Speed(1.0f)
 {
 }
 
