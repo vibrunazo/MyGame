@@ -4,7 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-// #include "GameplayEffectTypes.h"
+#include "GameplayEffectTypes.h"
+#include "GameplayTagContainer.h"
 #include "../MyBlueprintFunctionLibrary.h"
 #include "ItemDataAsset.generated.h"
 
@@ -24,6 +25,8 @@ public:
 	TSubclassOf<class APickup> PickupActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TArray<FEffectContainer> EffectsToApply;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
+	FGameplayTag CueTag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsConsumable = false;
 };

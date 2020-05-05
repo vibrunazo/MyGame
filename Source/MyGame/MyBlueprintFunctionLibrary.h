@@ -7,6 +7,7 @@
 #include "Containers/Map.h"
 #include "GameplayTagContainer.h"
 #include "Abilities/IGetHit.h"
+// #include "Props/ItemDataAsset.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 
@@ -66,10 +67,10 @@ class MYGAME_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	
 public:
 	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	static void ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container);
+	static void ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item = nullptr);
 
 	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	static void ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers);
+	static void ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr);
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// static TSubclassOf<class UCameraShake> CamShakeClass;

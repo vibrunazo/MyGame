@@ -5,14 +5,23 @@
 #include "Abilities/IGetHit.h"
 #include "MyGameInstance.h"
 #include "AbilitySystemComponent.h"
+#include "Props/ItemDataAsset.h"
 
-void UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container)
+void UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item)
 {
     UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();
     if (!ensure(GAS != nullptr)) return;
-    FGameplayEffectSpecHandle NewHandle = GAS->MakeOutgoingSpec(Container.EffectClass, 0.f, GAS->MakeEffectContext());
+    FGameplayEffectContextHandle Context = GAS->MakeEffectContext();
+    // FGameplayTag
+    if (Item && Item->CueTag.ToString() != "")
+    {
+        GAS->AddGameplayCue(Item->CueTag, Context);
+        UE_LOG(LogTemp, Warning, TEXT("Added %s to Context"), *Item->CueTag.ToString());
+    }
+    FGameplayEffectSpecHandle NewHandle = GAS->MakeOutgoingSpec(Container.EffectClass, 0.f, Context);
     for (auto &&Mag : Container.Magnitudes)
     {
+        // NewHandle.Data.Get()->dis;
         NewHandle.Data.Get()->SetSetByCallerMagnitude(Mag.GameplayTag, Mag.Magnitude);
     }
     Char->OnGetHitByEffect(NewHandle, nullptr);
@@ -21,10 +30,10 @@ void UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEff
     //    NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
 }
 
-void UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers)
+void UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item)
 {
     for (auto &&Container : Containers)
     {
-        ApplyEffectContainerToChar(Char, Container);
+        ApplyEffectContainerToChar(Char, Container, Item);
     }
 }

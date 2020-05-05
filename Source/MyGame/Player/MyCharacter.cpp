@@ -647,7 +647,7 @@ uint8 AMyCharacter::GetTeam()
 
 void AMyCharacter::AddItemToInventory(UItemDataAsset* NewItem)
 {
-	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, NewItem->EffectsToApply);
+	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, NewItem->EffectsToApply, NewItem);
 	if (!NewItem->bIsConsumable)
 	{
 		(*Inventory).Add(NewItem);
