@@ -658,7 +658,7 @@ void AMyCharacter::ApplyAllItemEffects()
 {
 	for (auto &&Item : *Inventory)
 	{
-		UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, Item->EffectsToApply);
+		UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, Item->EffectsToApply, Item);
 	}
 }
 
