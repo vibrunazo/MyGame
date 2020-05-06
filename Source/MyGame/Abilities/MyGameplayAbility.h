@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
+#include "../MyBlueprintFunctionLibrary.h"
 #include "MyGameplayAbility.generated.h"
 
 /**
@@ -19,7 +20,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<UAnimMontage*> MontagesToPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
+	TArray<FEffectContainer> EffectsToApply;
+	// TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float HitToComboDelay = 0.05f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
@@ -60,7 +62,6 @@ protected:
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
 	void IncComboCount();
 	void ResetHitBoxes();
-;
 	TSubclassOf<class AHitBox> HitBoxClass;
 	class AHitBox* HitBoxRef;
 

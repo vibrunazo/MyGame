@@ -11,6 +11,7 @@
 #include "GameplayEffect.h"
 #include "../Player/HitBox.h"
 #include "../Player/HitboxSettings.h"
+// #include "../MyBlueprintFunctionLibrary.h"
 #include "IGetHit.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
@@ -150,28 +151,50 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
     TArray<FGameplayEffectSpecHandle> Result = {};
     for (auto &&Effect : EffectsToApply)
     {
-        FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
-        FGameplayTagContainer EffectTags;
-        NewHandle.Data.Get()->GetAllAssetTags(EffectTags);
+        if (!Effect.EffectClass)
+        {
+            UE_LOG(LogTemp, Warning, TEXT("no class"));
+            break;
+        }
+        FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect.EffectClass);
+        for (auto &&Mag : Effect.Magnitudes)
+        {
+            // NewHandle.Data.Get()->dis;
+            NewHandle.Data.Get()->SetSetByCallerMagnitude(Mag.GameplayTag, Mag.Magnitude);
+        }
+        
+        // FGameplayTagContainer EffectTags = FGameplayTagContainer();
+        // NewHandle.Data.Get()->GetAllAssetTags(EffectTags);
+        //NewHandle.Data.Get()->DynamicAssetTags;
+        // UE_LOG(LogTemp, Warning, TEXT("Not moo %s"), *EffectTags.ToString());
         // TODO? Set Caller crashes if the tag does not exists. Maybe check first?
-        if (EffectTags.HasTag(HitStunTag))
-        {
-            NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
-        }
-        if (EffectTags.HasTag(DamageTag))
-        {
-            NewHandle.Data.Get()->SetSetByCallerMagnitude(DamageTag, -Damage);
-        }
-        if (EffectTags.HasTag(KnockbackTag))
-        {
-            NewHandle.Data.Get()->SetSetByCallerMagnitude(KnockbackTag, KnockBack);
-        }
-        if (EffectTags.HasTag(LaunchTag))
-        {
-            NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchXTag, LaunchVector.X);
-            NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchYTag, LaunchVector.Y);
-            NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchZTag, LaunchVector.Z);
-        }
+        // if (EffectTags.IsValid())
+        // {
+        //     UE_LOG(LogTemp, Warning, TEXT("Not empty"));
+        // if (EffectTags.HasTag(HitStunTag))
+        // {
+        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
+        // }
+        // if (EffectTags.HasTag(DamageTag))
+        // {
+        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(DamageTag, -Damage);
+        // }
+        // if (EffectTags.HasTag(KnockbackTag))
+        // {
+        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(KnockbackTag, KnockBack);
+        // }
+        // if (EffectTags.HasTag(LaunchTag))
+        // {
+        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchXTag, LaunchVector.X);
+        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchYTag, LaunchVector.Y);
+        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchZTag, LaunchVector.Z);
+        // }
+
+        // }
+        // else
+        // {
+        //     UE_LOG(LogTemp, Warning, TEXT("is empty"));
+        // }
         // EffectTags.HasTag(HitStunTag);
         // UE_LOG(LogTemp, Warning, TEXT("Effect: %s, tags: %s, has hitstun: %d"), *Effect.Get()->GetName(), *Container.ToString(), Container.HasTag(HitStunTag));
         // NewHandle.Data.Get()->GetAllAssetTags();
