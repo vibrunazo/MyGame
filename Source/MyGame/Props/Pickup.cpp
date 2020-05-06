@@ -12,6 +12,7 @@
 #include "../UI/WidgetActor.h"
 #include "UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 APickup::APickup()
@@ -69,6 +70,7 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	if (ItemData)
 	{
 		Char->AddItemToInventory(ItemData);
+		// The UI Widget that shows in the world letting player know he picked up this item
 		if (WidgetActorClass)
 		{
 			FVector Loc = GetActorLocation();
@@ -81,6 +83,7 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 			}
 		}
 	}
+	if (PickupSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, GetActorLocation());
 	Destroy();
 }
 
