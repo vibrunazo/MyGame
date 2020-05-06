@@ -22,12 +22,14 @@ public:
 	void OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
 	void EnablePickup();
 
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
-	class USceneComponent* RootComp;
+	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
+	// class USceneComponent* RootComp;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
 	class UBoxComponent* BoxCollision;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
+	class UBoxComponent* BoxTrigger;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class UItemDataAsset* ItemData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")

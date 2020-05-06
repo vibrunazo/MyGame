@@ -19,16 +19,23 @@ APickup::APickup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	// PrimaryActorTick.bCanEverTick = true;
 
-	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
-	RootComponent = RootComp;
+	// RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	// RootComponent = RootComp;
+	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
+	BoxCollision->SetupAttachment(RootComponent);
+	BoxCollision->SetBoxExtent(FVector(50.f, 50.f, 50.f));
+	BoxCollision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	BoxCollision->SetSimulatePhysics(true);
+	RootComponent = BoxCollision;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComponent);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
-	BoxCollision->SetupAttachment(RootComponent);
-	BoxCollision->SetBoxExtent(FVector(50.f, 50.f, 50.f));
-	BoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	// Mesh->SetVisibility(false);
+	BoxTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));
+	BoxTrigger->SetupAttachment(RootComponent);
+	BoxTrigger->SetBoxExtent(FVector(50.f, 50.f, 50.f));
+	BoxTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	OnActorBeginOverlap.AddDynamic(this, &APickup::OnPickupBeginOverlap);
 	// Blueprint'/Game/UI/BP_WidgetActor.BP_WidgetActor'
 	// Blueprint'/Game/UI/BP_UMGActor.BP_UMGActor'
@@ -79,5 +86,6 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 
 void APickup::EnablePickup()
 {
-	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	BoxTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+	// Mesh->SetVisibility(true);
 }
