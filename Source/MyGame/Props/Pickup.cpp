@@ -13,6 +13,8 @@
 #include "UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 
 // Sets default values
 APickup::APickup()
@@ -95,6 +97,7 @@ void APickup::OnDelayedSpawn()
 	if (GetOwner())
 	{
 		BoxCollision->AddImpulse(FVector(0.f, 0.5, 500.0f), NAME_None, true);
+		if (SpawnParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SpawnParticles, GetActorLocation(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
 		if (SpawnSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), SpawnSound, GetActorLocation());
 	}
 	Mesh->SetHiddenInGame(false);

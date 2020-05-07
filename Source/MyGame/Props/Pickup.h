@@ -34,6 +34,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class UItemDataAsset* ItemData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class UNiagaraSystem* SpawnParticles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class USoundBase* SpawnSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class USoundBase* PickupSound;
