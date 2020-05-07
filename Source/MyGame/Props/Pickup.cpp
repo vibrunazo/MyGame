@@ -15,6 +15,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
+// #include "Components/TimelineComponent.h"
 
 // Sets default values
 APickup::APickup()
@@ -22,7 +23,6 @@ APickup::APickup()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	// PrimaryActorTick.bCanEverTick = true;
 
-	// RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	// RootComponent = RootComp;
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	BoxCollision->SetupAttachment(RootComponent);
@@ -31,8 +31,11 @@ APickup::APickup()
 	BoxCollision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	BoxCollision->SetSimulatePhysics(true);
 	RootComponent = BoxCollision;
+	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
+	RootComp->SetupAttachment(RootComponent);
+
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComponent);
+	Mesh->SetupAttachment(RootComp);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
 	Mesh->SetVisibility(true);
@@ -56,6 +59,11 @@ void APickup::BeginPlay()
 
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &APickup::OnDelayedSpawn, FMath::RandRange(0.05f, 0.3f), false);
+	// if I have an owner it means I was dropped by an enemy instead of by being placed in the map in the editor
+	if (GetOwner())
+	{
+		AddActorLocalOffset(FVector(0.f, 0.f, 50.f));
+	}
 }
 
 void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
@@ -99,10 +107,42 @@ void APickup::OnDelayedSpawn()
 		BoxCollision->AddImpulse(FVector(0.f, 0.5, 500.0f), NAME_None, true);
 		if (SpawnParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SpawnParticles, GetActorLocation(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
 		if (SpawnSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), SpawnSound, GetActorLocation());
+
+		if (CurveScale)
+		{
+			FOnTimelineFloat TimelineCallback;
+			FOnTimelineEventStatic TimelineFinishedCallback;
+			TimelineCallback.BindUFunction(this, FName("OnTimelineCallback"));
+			MyTimeline.AddInterpFloat(CurveScale, TimelineCallback);
+			MyTimeline.PlayFromStart();
+			MyTimeline.TickTimeline(0.04f);
+			GetWorldTimerManager().SetTimer(TimelineTimer, this, &APickup::OnTimelineUpdate, 0.02f, true);
+		}
 	}
 	Mesh->SetHiddenInGame(false);
 	FTimerHandle Handle2;
 	GetWorldTimerManager().SetTimer(Handle2, this, &APickup::EnablePickup, 1.0f, false);
+
+}
+
+void APickup::OnTimelineCallback()
+{
+	MyTimeline.GetTimelineLength();
+	float Cur = CurveScale->GetFloatValue(MyTimeline.GetPlaybackPosition());
+	FVector NewScale = FVector(Cur, Cur, Cur);
+	// UE_LOG(LogTemp, Warning, TEXT("timeline callback %f"), Cur);
+	RootComp->SetRelativeScale3D(NewScale);
+}
+void APickup::OnTimelineUpdate()
+{
+	MyTimeline.TickTimeline(0.02f);
+
+	// UE_LOG(LogTemp, Warning, TEXT("timeline update, %f"), MyTimeline.GetPlaybackPosition());
+	if (MyTimeline.GetPlaybackPosition() >= MyTimeline.GetTimelineLength())
+	{
+		// UE_LOG(LogTemp, Warning, TEXT("stopping timeline"));
+		GetWorldTimerManager().ClearTimer(TimelineTimer);
+	}
 }
 
 void APickup::EnablePickup()

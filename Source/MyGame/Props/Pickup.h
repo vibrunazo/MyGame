@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "GameplayEffectTypes.h"
 #include "../MyBlueprintFunctionLibrary.h"
+#include "Components/TimelineComponent.h"
 #include "Pickup.generated.h"
 
 
@@ -21,10 +22,13 @@ public:
 	UFUNCTION()
 	void OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
 	void OnDelayedSpawn();
+	UFUNCTION()
+	void OnTimelineCallback();
+	void OnTimelineUpdate();
 	void EnablePickup();
 
-	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
-	// class USceneComponent* RootComp;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
+	class USceneComponent* RootComp;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
@@ -45,6 +49,10 @@ public:
 	uint8 TeamWhoCanPickup = 0;
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
 	TSubclassOf<class AWidgetActor> WidgetActorClass;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	UCurveFloat *CurveScale;
+	FTimeline MyTimeline;
+	FTimerHandle TimelineTimer;
 
 protected:
 	// Called when the game starts or when spawned
