@@ -20,6 +20,7 @@ public:
 
 	UFUNCTION()
 	void OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
+	void OnDelayedSpawn();
 	void EnablePickup();
 
 	// UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
@@ -32,6 +33,8 @@ public:
 	class UBoxComponent* BoxTrigger;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class UItemDataAsset* ItemData;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class USoundBase* SpawnSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class USoundBase* PickupSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")

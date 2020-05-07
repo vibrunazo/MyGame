@@ -25,6 +25,7 @@ APickup::APickup()
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	BoxCollision->SetupAttachment(RootComponent);
 	BoxCollision->SetBoxExtent(FVector(50.f, 50.f, 50.f));
+	// BoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	BoxCollision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	BoxCollision->SetSimulatePhysics(true);
 	RootComponent = BoxCollision;
@@ -32,7 +33,8 @@ APickup::APickup()
 	Mesh->SetupAttachment(RootComponent);
 	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	// Mesh->SetVisibility(false);
+	Mesh->SetVisibility(true);
+	Mesh->SetHiddenInGame(true);
 	BoxTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));
 	BoxTrigger->SetupAttachment(RootComponent);
 	BoxTrigger->SetBoxExtent(FVector(50.f, 50.f, 50.f));
@@ -51,8 +53,7 @@ void APickup::BeginPlay()
 	Super::BeginPlay();
 
 	FTimerHandle Handle;
-	GetWorldTimerManager().SetTimer(Handle, this, &APickup::EnablePickup, 1.0f, false);
-	
+	GetWorldTimerManager().SetTimer(Handle, this, &APickup::OnDelayedSpawn, FMath::RandRange(0.05f, 0.3f), false);
 }
 
 void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
@@ -85,6 +86,20 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	}
 	if (PickupSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, GetActorLocation());
 	Destroy();
+}
+
+void APickup::OnDelayedSpawn()
+{
+	// BoxCollision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
+	BoxCollision->SetSimulatePhysics(true);
+	if (GetOwner())
+	{
+		BoxCollision->AddImpulse(FVector(0.f, 0.5, 500.0f), NAME_None, true);
+		if (SpawnSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), SpawnSound, GetActorLocation());
+	}
+	Mesh->SetHiddenInGame(false);
+	FTimerHandle Handle2;
+	GetWorldTimerManager().SetTimer(Handle2, this, &APickup::EnablePickup, 1.0f, false);
 }
 
 void APickup::EnablePickup()
