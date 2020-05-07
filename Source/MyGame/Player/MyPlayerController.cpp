@@ -83,6 +83,11 @@ void AMyPlayerController::OnLevelWin(AMyCharacter* CharRef)
     DefaultPawnRef = MyPawn;
     SetViewTargetWithBlend(DefaultPawnRef, 3.0f);
     ShowLevelCleared();
+    UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+	if (GI)
+	{
+		GI->StoreCharStats();
+	}
 }
 
 void AMyPlayerController::OnDelayedLevelWin(AMyCharacter* CharRef)

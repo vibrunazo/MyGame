@@ -115,7 +115,7 @@ void APickup::OnDelayedSpawn()
 			TimelineCallback.BindUFunction(this, FName("OnTimelineCallback"));
 			MyTimeline.AddInterpFloat(CurveScale, TimelineCallback);
 			MyTimeline.PlayFromStart();
-			MyTimeline.TickTimeline(0.04f);
+			MyTimeline.TickTimeline(0.02f);
 			GetWorldTimerManager().SetTimer(TimelineTimer, this, &APickup::OnTimelineUpdate, 0.02f, true);
 		}
 	}

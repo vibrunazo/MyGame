@@ -26,6 +26,7 @@ public:
 	void NewGame();
 	UFUNCTION(BlueprintCallable, Category="MyGI")
 	void LevelClear(FString NextMapUrl);
+	void StoreCharStats();
 	void SetCharRef(class AMyCharacter* NewRef);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)

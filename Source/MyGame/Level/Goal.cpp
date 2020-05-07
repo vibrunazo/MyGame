@@ -56,7 +56,7 @@ void AGoal::OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
 	if (!bIsEnabled && !bIsCleared) return;
 	AMyCharacter *Target = Cast<AMyCharacter>(OtherActor);
-	if (Target && Target->IsAlive())
+	if (Target && Target->IsAlive() && Target->IsPlayerControlled())
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
 		bIsCleared = true;
@@ -69,13 +69,9 @@ void AGoal::OnGoalBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 
 void AGoal::OnDelayedOpenLevel()
 {
-	// UWorld* LeMundi = GetWorld();
-	// if (!LeMundi) return;
-	// LeMundi->ServerTravel(NextMapUrl);
 	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (GI)
 	{
 		GI->LevelClear(NextMapUrl);
-		// GI->LevelDifficulty++;
 	}
 }

@@ -37,10 +37,14 @@ void UMyGameInstance::NewGame()
 void UMyGameInstance::LevelClear(FString NextMapUrl)
 {
     LevelDifficulty++;
-    if (PlayerCharRef) Health = PlayerCharRef->GetAttributes()->GetHealth();
     UWorld* LeMundi = GetWorld();
 	if (!LeMundi) return;
 	LeMundi->ServerTravel(NextMapUrl);
+}
+
+void UMyGameInstance::StoreCharStats()
+{
+    if (PlayerCharRef) Health = PlayerCharRef->GetAttributes()->GetHealth();
 }
 
 void UMyGameInstance::SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder)
