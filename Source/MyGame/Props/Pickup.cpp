@@ -105,7 +105,9 @@ void APickup::OnDelayedSpawn()
 	if (GetOwner())
 	{
 		BoxCollision->AddImpulse(FVector(0.f, 0.5, 500.0f), NAME_None, true);
-		if (SpawnParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SpawnParticles, GetActorLocation(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
+		FVector SpawnLoc = FVector(GetActorLocation());
+		SpawnLoc.Z -= 20.f;
+		if (SpawnParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SpawnParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
 		if (SpawnSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), SpawnSound, GetActorLocation());
 
 		if (CurveScale)
