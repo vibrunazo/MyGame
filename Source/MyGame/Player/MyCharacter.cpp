@@ -96,7 +96,7 @@ void AMyCharacter::SetDefaultProperties()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	GetMesh()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Overlap);
 	GetMesh()->SetGenerateOverlapEvents(true);
-	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -97.0f));
+	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -92.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	// DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	// if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
@@ -426,12 +426,13 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 }
 
 /**Sets the outline of the enemy, visible through walls, when the enemy is hit
- *	The Post process material looks for a custom depth of stencil value 2 to draw the outline.
+ * 	The Post process material looks for a custom depth of stencil value 2 or more to draw the outline.
+ *  2 is the player outline color, greater is the enemy
  */
 void AMyCharacter::SetOutline()
 {
 	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(2);
+	GetMesh()->SetCustomDepthStencilValue(3);
 	GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, 5.f, false);
 }
 
