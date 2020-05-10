@@ -425,6 +425,22 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 	UpdateHealthBar();
 }
 
+/**Sets the outline of the enemy, visible through walls, when the enemy is hit
+ *	The Post process material looks for a custom depth of stencil value 2 to draw the outline.
+ */
+void AMyCharacter::SetOutline()
+{
+	GetMesh()->SetRenderCustomDepth(true);
+	GetMesh()->SetCustomDepthStencilValue(2);
+	GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, 5.f, false);
+}
+
+void AMyCharacter::RemoveOutline()
+{
+	GetMesh()->SetRenderCustomDepth(false);
+	GetMesh()->SetCustomDepthStencilValue(0);
+}
+
 void AMyCharacter::IncrementHitStunCount()
 {
 	// if (StunImmune || GetWorld()->GetTimeSeconds() > LastHitstunTime + StunImmuneCooldown) {HitStunCount = 0; StunImmune = false;}
@@ -471,6 +487,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 		APawn* SeenPawn = Cast<APawn>(SourceActor);
 		if (!SeenPawn) return;
 		SetAggroTarget(SeenPawn);
+		SetOutline();
 	}
 	
 	OnDamagedBP(SourceActor);

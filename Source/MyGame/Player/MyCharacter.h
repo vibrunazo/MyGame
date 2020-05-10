@@ -144,6 +144,8 @@ public:
 private:
 	UFUNCTION()
 	void SetAggroTarget(APawn* NewTarget);
+	void SetOutline();
+	void RemoveOutline();
 	void OnDelayedDeath();
 	void StartBackslide(FVector Dir);
 	void OnBackslide();
@@ -162,6 +164,7 @@ private:
 	FVector LastInputVector = FVector(0.0f, 0.0f, 0.0f);
 	FVector LastLaunchBack = FVector(0.0f, 0.0f, 0.0f);
 	class UMyGameInstance* MyGIRef;
+	FTimerHandle OutlineTimer;
 	// float LastInputAngle = 0.0f;
 
 protected:
