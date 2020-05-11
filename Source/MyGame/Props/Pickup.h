@@ -44,6 +44,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class USoundBase* PickupSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class UNiagaraSystem* PickupParticles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	bool bMaxHPCanPickup = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	uint8 TeamWhoCanPickup = 0;

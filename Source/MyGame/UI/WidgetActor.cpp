@@ -17,7 +17,7 @@ AWidgetActor::AWidgetActor()
 	RootComponent = MyRoot;
 	WidgetComp = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
 	WidgetComp->SetupAttachment(RootComponent);
-	WidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+	WidgetComp->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
 	WidgetComp->SetWidgetSpace(EWidgetSpace::Screen);
 
 }

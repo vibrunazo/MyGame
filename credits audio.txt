@@ -18,3 +18,6 @@ https://freesound.org/people/CrazyFrog249/sounds/161628/
 
 3-heal-spells
 https://opengameart.org/content/3-heal-spells
+
+spells
+https://opengameart.org/content/spell-sounds-starter-pack

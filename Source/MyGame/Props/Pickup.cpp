@@ -95,6 +95,8 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 		}
 	}
 	if (PickupSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, GetActorLocation());
+	if (PickupParticles) UNiagaraFunctionLibrary::SpawnSystemAttached(PickupParticles, OtherActor->GetRootComponent(), NAME_None, FVector(0.f, 0.f, -80.f), OtherActor->GetActorRotation(), EAttachLocation::SnapToTarget, true);
+	// if (PickupParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), PickupParticles, GetActorLocation(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
 	Destroy();
 }
 
