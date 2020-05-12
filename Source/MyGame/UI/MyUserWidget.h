@@ -17,5 +17,17 @@ class MYGAME_API UMyUserWidget : public UUserWidget
 public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
 	class UMyGameInstance* GetMyGameInstance();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
+	TArray<class UItemDataAsset*> GetInventory();
+
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
+	float GetMaxHealthAttr();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
+	float GetAttackAttr();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
+	float GetDefenseAttr();
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
+	float GetSpeedAttr();
 	
 };

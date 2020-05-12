@@ -228,7 +228,7 @@ void UMyGameplayAbility::UpdateCombo()
 
 void UMyGameplayAbility::ResetHitBoxes()
 {
-    if (!HitBoxRef || !HitBoxRef->IsValidLowLevel()) return;
+    if (!HitBoxRef || !HitBoxRef->IsValidLowLevel() || !GetAvatarActorFromActorInfo() || !GetAvatarActorFromActorInfo()->IsValidLowLevel()) return;
     // if (!IsValid(HitBoxRef)) return;
     HitBoxRef->Destroy();
 }
