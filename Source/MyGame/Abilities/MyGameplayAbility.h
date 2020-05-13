@@ -63,7 +63,7 @@ protected:
 	void IncComboCount();
 	void ResetHitBoxes();
 	TSubclassOf<class AHitBox> HitBoxClass;
-	class AHitBox* HitBoxRef;
+	class AHitBox* HitBoxRef = nullptr;
 
 	
 };
