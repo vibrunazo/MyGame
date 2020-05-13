@@ -32,7 +32,8 @@ void AMyPlayerController::OnPausePressed()
     }
     else
     {
-        if (PauseWidgetRef) PauseWidgetRef->RemoveFromParent();
+        if (PauseWidgetRef) PauseWidgetRef->BPOnEnd();
+        // if (PauseWidgetRef) PauseWidgetRef->RemoveFromParent();
         UGameplayStatics::SetGamePaused(GetWorld(), false);
         bIsPaused = false;
 

@@ -29,5 +29,8 @@ public:
 	float GetDefenseAttr();
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="My User Widget")
 	float GetSpeedAttr();
+
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category="My User Widget")
+	void BPOnEnd();
 	
 };
