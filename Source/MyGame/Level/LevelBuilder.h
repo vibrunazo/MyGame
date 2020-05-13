@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "RoomDataAsset.h"
 #include "LevelBuilder.generated.h"
 
 UENUM(BlueprintType)
@@ -129,6 +130,9 @@ private:
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
+	class URoomDataAsset* AddTreasureRoom(FCoord Coord);
+	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
+	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
 	class AStaticMeshActor* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
@@ -141,6 +145,8 @@ private:
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EWallPos Dir);
 	FCoord GetNeighbor(FCoord From, EWallPos To);
+	bool IsNeighborFree(FCoord From, EWallPos To);
+	TArray<FCoord> FindFreeNeighbors(FCoord From);
 	class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 
 	TArray<class AStaticMeshActor*> HiddenWalls;

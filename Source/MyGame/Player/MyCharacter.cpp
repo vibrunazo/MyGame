@@ -671,6 +671,10 @@ void AMyCharacter::AddItemToInventory(UItemDataAsset* NewItem)
 	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, NewItem->EffectsToApply, NewItem);
 	if (!NewItem->bIsConsumable)
 	{
+		if (!Inventory) {
+			UE_LOG(LogTemp, Error, TEXT("Failed to add item to inventory. Could not find Inventory on Char."));
+			return;
+		}
 		(*Inventory).Add(NewItem);
 	}
 }

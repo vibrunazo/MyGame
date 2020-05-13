@@ -12,7 +12,8 @@ enum class ERoomType : uint8
 {
 	Empty 		UMETA(DisplayName="Empty"),
 	Enemies 	UMETA(DisplayName="Enemies"),
-	Boss		UMETA(DisplayName="Boss")
+	Boss		UMETA(DisplayName="Boss"),
+	Treasure
 };
 
 /**
