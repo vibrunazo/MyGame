@@ -130,15 +130,16 @@ private:
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
-	class URoomDataAsset* AddTreasureRoom(FCoord Coord);
-	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
-	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
+	class URoomDataAsset* AddTreasureRoom();
+	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
 	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
 	class AStaticMeshActor* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos, bool Doored);
 	class AStaticMeshActor* GenerateWallMeshAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
 	class AStaticMeshActor* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
+	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
+	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	FVector GetLocFromGrid(FCoord Coord);
 	FTransform GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir);
 	FCoord GetGridFromLoc(FVector Location);
@@ -146,6 +147,8 @@ private:
 	FString GetWallID(FCoord Coord, EWallPos Dir);
 	FCoord GetNeighbor(FCoord From, EWallPos To);
 	bool IsNeighborFree(FCoord From, EWallPos To);
+	bool IsAnyNeighborOfType(FCoord From, ERoomType Type);
+	TArray<FCoord> GetAllNeighborsCoords(FCoord From);
 	TArray<FCoord> FindFreeNeighbors(FCoord From);
 	class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 	UFUNCTION()

@@ -113,7 +113,7 @@ void ALevelBuilder::OnLoadedOneLevel()
 	{
 		GetWorldSettings()->SetTimeDilation(1.0f);
 	}
-	UE_LOG(LogTemp, Warning, TEXT("new level is loaded, %d levels left to load"), CountOfLevelsThatDidntFinishLoading);
+	// UE_LOG(LogTemp, Warning, TEXT("new level is loaded, %d levels left to load"), CountOfLevelsThatDidntFinishLoading);
 }
 
 // Try to Create a Wall at this Grid Coord to direction Dir. Will not create the wall if it already exists
@@ -241,9 +241,26 @@ void ALevelBuilder::SetAssetListFromRegistry()
 	MyGI->SetLevelBuilderRef(this);
 }
 
+/* Adds a Room of ERoomType::Treasure to a free Grid Coord that is a neighbor of a random Grid Tile 
+between the Index 1 and second last of the Grid. Will try 20 times. If it fails, returns nullptr.
+Will add the Room to the Grid */
+URoomDataAsset* ALevelBuilder::AddTreasureRoom()
+{
+	URoomDataAsset* result = nullptr;
+	TArray<FCoord> GridCoords; Grid.GetKeys(GridCoords);
+	for (size_t i = 0; i < 20; i++)
+	{
+		uint8 TreasurePosition = FMath::RandRange(2, GridCoords.Num() - 2);
+		FCoord Coord = GridCoords[TreasurePosition];
+		result = AddTreasureRoomNextTo(Coord);
+		if (result) return result;
+	}
+	return result;
+}
+
 /* Adds a Room of ERoomType::Treasure to a free Grid Coord that is a free neighbor from given Coord param.
 Will add the Room to the Grid */
-URoomDataAsset* ALevelBuilder::AddTreasureRoom(FCoord Coord)
+URoomDataAsset* ALevelBuilder::AddTreasureRoomNextTo(FCoord Coord)
 {
 	TArray<URoomDataAsset *> FilteredRooms = FindRoomsOfType(ERoomType::Treasure);
 	if (FilteredRooms.Num() == 0) 
@@ -254,6 +271,10 @@ URoomDataAsset* ALevelBuilder::AddTreasureRoom(FCoord Coord)
 	FRoomState Content; Content.RoomType = FilteredRooms[0];
 	TArray<FCoord> FreeCoords = FindFreeNeighbors(Coord);
 	FCoord TreasureCoord = FreeCoords[0];
+	if (IsAnyNeighborOfType(TreasureCoord, ERoomType::Boss)) 
+	{
+		return nullptr;
+	}
 	Grid.Add(TreasureCoord, Content);
 	UE_LOG(LogTemp, Warning, TEXT("Added treasure at %s"), *TreasureCoord.ToString());
 	return Content.RoomType;
@@ -320,22 +341,21 @@ void ALevelBuilder::BuildGrid()
 	if (GI)
 	{
 		uint8 GIDifficulty = GI->LevelDifficulty;
-		NumRooms = 10 + GIDifficulty;
+		NumRooms += GIDifficulty;
 	}
 	// uint8 TreasureRoomPosition = 3;
-	uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);
-	FCoord TreasureRoomCoord;
+	// uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);
+	// FCoord TreasureRoomCoord;
 	
 	for (uint8 i = 0; i < NumRooms; i++)
 	{
 		// FCoord Coord = {x, y};
 		FCoord Coord = FCoord(x, y);
 		if (i > 1) Difficulty = 1;
-		if (i > 3) Difficulty = 2;
+		if (i > 4) Difficulty = 2;
 		if (i == NumRooms - 2) {ChanceOfGoingRight = 100;}
 		if (i == NumRooms - 1) {Difficulty = 9;}
-		if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
-		// if (i == TreasureRoomPosition) AddTreasureRoom(Coord);
+		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
 		FRoomState Content; Content.RoomType = GetRandomRoom(Difficulty);
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d for i: %d"), Coord.X, Coord.Y, Grid.Num(), i);
@@ -364,7 +384,7 @@ void ALevelBuilder::BuildGrid()
 
 		// else x--;
 	}
-	AddTreasureRoom(TreasureRoomCoord);
+	AddTreasureRoom();
 }
 
 void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> Tile)
@@ -466,6 +486,30 @@ TArray<FCoord> ALevelBuilder::FindFreeNeighbors(FCoord From)
 	for (auto &&Dir : ALLDIRECTIONS)
 	{
 		if (IsNeighborFree(From, Dir)) result.Add(GetNeighbor(From, Dir));
+	}
+	return result;
+}
+
+/* Returns true if any of the Neighbors From given Coord is of given Room Type */
+bool ALevelBuilder::IsAnyNeighborOfType(FCoord From, ERoomType Type)
+{
+	TArray<FCoord> NeighborCoords = GetAllNeighborsCoords(From);
+	for (auto &&Neighbor : NeighborCoords)
+	{
+		FRoomState* NeighborState = Grid.Find(Neighbor);
+		if (!NeighborState) continue;
+		if (NeighborState->RoomType->RoomType == Type) return true;
+	}
+	return false;
+}
+
+/* Returns the Coords of all Neighboring Tiles in the Grid From this given Grid Coord */
+TArray<FCoord> ALevelBuilder::GetAllNeighborsCoords(FCoord From)
+{
+	TArray<FCoord> result = {};
+	for (auto &&Dir : ALLDIRECTIONS)
+	{
+		result.Add(GetNeighbor(From, Dir));
 	}
 	return result;
 }

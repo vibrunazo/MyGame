@@ -35,7 +35,7 @@ public:
 	TSubclassOf<class UGameplayEffect> StunImmuneEffectRef;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
-	uint8 LevelDifficulty = 1;
+	uint8 LevelDifficulty = 0;
 
 	float Health = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
