@@ -8,6 +8,7 @@
 // #include "RoomDataAsset.h"
 #include "Engine/StaticMeshActor.h"
 #include "Components/StaticMeshComponent.h"
+#include "GameFramework/WorldSettings.h"
 #include "../MyGameInstance.h"
 #include "Door.h"
 #include "../MyGameInstance.h"
@@ -44,6 +45,8 @@ void ALevelBuilder::BeginPlay()
 {
 	Super::BeginPlay();
 	// ULevelStreaming* NewLevel = OnBPCreateLevelByName(NewRoom->LevelAddress);
+
+	GetWorldSettings()->SetTimeDilation(0.0f);
 
 	SetAssetListFromRegistry();
 	BuildGrid();
@@ -93,8 +96,24 @@ ULevelStreaming* ALevelBuilder::GenerateRoom(FCoord Where, class URoomDataAsset*
 		NewRoom->LevelTransform.SetLocation(GetLocFromGrid(Where));
 		NewRoom->SetShouldBeVisible(true);
 		NewRoom->SetShouldBeLoaded(true);
+		// UE_LOG(LogTemp, Warning, TEXT("Loaded new level, is loaded: %d"), NewRoom->IsLevelLoaded());
+		NewRoom->OnLevelLoaded.AddDynamic(this, &ALevelBuilder::OnLoadedOneLevel);
+		CountOfLevelsThatDidntFinishLoading++;
 	}
 	return NewRoom;
+}
+
+/* Callback function bound to 'OnLevelLoaded' event of a newly loaded room, this function will be called 
+when the level actually finishes loading. Because the event has no parameters, it's impossible to know which
+level exactly finished loading. So we have to check all of them, every time. */
+void ALevelBuilder::OnLoadedOneLevel()
+{
+	CountOfLevelsThatDidntFinishLoading--;
+	if (CountOfLevelsThatDidntFinishLoading == 0)
+	{
+		GetWorldSettings()->SetTimeDilation(1.0f);
+	}
+	UE_LOG(LogTemp, Warning, TEXT("new level is loaded, %d levels left to load"), CountOfLevelsThatDidntFinishLoading);
 }
 
 // Try to Create a Wall at this Grid Coord to direction Dir. Will not create the wall if it already exists
@@ -227,13 +246,17 @@ Will add the Room to the Grid */
 URoomDataAsset* ALevelBuilder::AddTreasureRoom(FCoord Coord)
 {
 	TArray<URoomDataAsset *> FilteredRooms = FindRoomsOfType(ERoomType::Treasure);
-	if (FilteredRooms.Num() == 0) return nullptr;
+	if (FilteredRooms.Num() == 0) 
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to create Treasure room, no free space next to %s"), *Coord.ToString());
+		return nullptr;
+	}
 	FRoomState Content; Content.RoomType = FilteredRooms[0];
 	TArray<FCoord> FreeCoords = FindFreeNeighbors(Coord);
-	FCoord TreasureCoord = FreeCoords[1];
+	FCoord TreasureCoord = FreeCoords[0];
 	Grid.Add(TreasureCoord, Content);
 	UE_LOG(LogTemp, Warning, TEXT("Added treasure at %s"), *TreasureCoord.ToString());
-	return nullptr;
+	return Content.RoomType;
 }
 
 URoomDataAsset* ALevelBuilder::GetRandomRoom()
@@ -297,7 +320,7 @@ void ALevelBuilder::BuildGrid()
 	if (GI)
 	{
 		uint8 GIDifficulty = GI->LevelDifficulty;
-		NumRooms = 4 + GIDifficulty;
+		NumRooms = 10 + GIDifficulty;
 	}
 	// uint8 TreasureRoomPosition = 3;
 	uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);

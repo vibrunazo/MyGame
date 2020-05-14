@@ -148,10 +148,13 @@ private:
 	bool IsNeighborFree(FCoord From, EWallPos To);
 	TArray<FCoord> FindFreeNeighbors(FCoord From);
 	class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
+	UFUNCTION()
+	void OnLoadedOneLevel();
 
 	TArray<class AStaticMeshActor*> HiddenWalls;
 	FCoord LastEnteredRoomCoord = FCoord(-67, 9390);
 	TArray<class AStaticMeshActor*> CappedWalls;
+	uint8 CountOfLevelsThatDidntFinishLoading = 0;
 
 protected:
 	// Called when the game starts or when spawned
