@@ -74,7 +74,8 @@ USphereComponent* AHitBox::AddHitSphere()
 
 void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
-	IGetHit *Target = Cast<IGetHit>(OtherActor);
+	IGetHit *Target = nullptr;
+	Target = Cast<IGetHit>(OtherActor);
 	IGetHit *Source = Cast<IGetHit>(GetInstigator());
 	if (!Target || ! Source) return;
 	if (!ensure(GetInstigator() != nullptr)) return;

@@ -213,12 +213,10 @@ UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	if(AbilitySystem)
+	if(!AbilitySystem) return;
+	for (auto &&Ability : Abilities)
 	{
-		for (auto &&Ability : Abilities)
-		{
-			GiveAbility(Ability.AbilityClass);
-		}
+		GiveAbility(Ability.AbilityClass);
 	}
 	if (!ensure(AttributeSetBase != nullptr)) return;
 	if (!ensure(GetCharacterMovement() != nullptr)) return;
@@ -227,6 +225,7 @@ void AMyCharacter::BeginPlay()
 	AttributeSetBase->SetAttack(Attack);
 	AttributeSetBase->SetDefense(Defense);
 	BaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
+	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetSpeedAttribute()).AddUObject(this, &AMyCharacter::OnSpeedChange);
 	UpdateHealthBar();
 	// if (IsPlayerControlled()) 
 	// {
@@ -370,13 +369,18 @@ void AMyCharacter::UpdateHealthBar()
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet NOT created on %s"), *GetName());
 		return;
 	}
-	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed * AttributeSetBase->GetSpeed();
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());
 	else {UE_LOG(LogTemp, Warning, TEXT("UpdateHealthbar: Failed on %s"), *GetName());}
 	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
 	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
+}
+
+void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
+{
+	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed * AttributeSetBase->GetSpeed();
+	// UE_LOG(LogTemp, Warning, TEXT("My Speed changed to %f"), GetCharacterMovement()->MaxWalkSpeed);
 }
 
 void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
@@ -577,8 +581,8 @@ void AMyCharacter::DropItems()
 	{
     	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(Loot.Pickup, Loc, FRotator::ZeroRotator, params);
 		// UE_LOG(LogTemp, Warning, TEXT("dropped a %s"), *Loot.Pickup->GetName());
-		if (NewPickup) {UE_LOG(LogTemp, Warning, TEXT("Spawned"));}
-		else {UE_LOG(LogTemp, Warning, TEXT("Nope"));}
+		// if (NewPickup) {UE_LOG(LogTemp, Warning, TEXT("Spawned"));}
+		// else {UE_LOG(LogTemp, Warning, TEXT("Nope"));}
 	}
 	
 }

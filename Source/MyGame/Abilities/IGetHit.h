@@ -28,6 +28,7 @@ public:
 	virtual void OnDie() = 0;
 	virtual bool IsAlive() = 0;
 	virtual void OnHitPause(float Duration) = 0;
+	// virtual void OnSpeedChange() = 0;
 	virtual uint8 GetTeam() = 0;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const = 0;
 	virtual class UMyAttributeSet* GetAttributes() = 0;

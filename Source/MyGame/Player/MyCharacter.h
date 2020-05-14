@@ -83,6 +83,7 @@ public:
 	void OnDelayedLaunch2();
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
+	void OnSpeedChange(const FOnAttributeChangeData& Data);
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))

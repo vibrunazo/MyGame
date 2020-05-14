@@ -74,4 +74,10 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
             }
         }
     }
+    // if (Data.EvaluatedData.Attribute == GetSpeedAttribute())
+    // {
+    //     UE_LOG(LogTemp, Warning, TEXT("attribute detected speed change"));
+    //     IGetHit* HeWhoGetsHit = Cast<IGetHit>(TargetActor);
+    //     HeWhoGetsHit->OnSpeedChange();
+    // }
 }
