@@ -383,7 +383,7 @@ void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
 	// UE_LOG(LogTemp, Warning, TEXT("My Speed changed to %f"), GetCharacterMovement()->MaxWalkSpeed);
 }
 
-void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
+FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
 	FGameplayTagContainer EffectTags;
@@ -401,7 +401,7 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
-		if (HasStunImmune()) return;
+		if (HasStunImmune()) return nullptr;
 		else IncrementHitStunCount();
 	}
 	if (EffectTags.HasTag(KnockbackTag)) 
@@ -425,8 +425,10 @@ void AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor*
 		UE_LOG(LogTemp, Warning, TEXT("Has Launchtag, Knockback: %s"), *LaunchVector.ToString());
 		ApplyLaunchBack(SourceActor, LaunchVector);
 	}
-	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
+	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
+	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
 	UpdateHealthBar();
+	return new FActiveGameplayEffectHandle(ActiveEffect);
 }
 
 /**Sets the outline of the enemy, visible through walls, when the enemy is hit

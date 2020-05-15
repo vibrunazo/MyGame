@@ -67,10 +67,13 @@ class MYGAME_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	
 public:
 	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	static void ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item = nullptr);
+	static FActiveGameplayEffectHandle ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item = nullptr);
 
-	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	static void ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr);
+	UFUNCTION(BlueprintCallable, Category="MyLibrary")
+	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr);
+	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr);
+	UFUNCTION(BlueprintCallable, Category="MyLibrary")
+	static void RemoveEffectsFromActor(AActor* Actor, TArray<FActiveGameplayEffectHandle> ActiveEffects);
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// static TSubclassOf<class UCameraShake> CamShakeClass;

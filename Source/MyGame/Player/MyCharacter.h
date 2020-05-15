@@ -61,7 +61,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ResetBodyColor();
 
-	void OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
+	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDamagedBP(AActor* SourceActor);
 	void OnDamaged(AActor* SourceActor) override;
