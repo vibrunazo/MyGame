@@ -400,7 +400,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	// {{TagName="data.knockback" },500.000000}
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
+		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
 		if (HasStunImmune()) return nullptr;
 		else IncrementHitStunCount();
 	}
@@ -422,7 +422,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 		FVector LaunchVector = FVector(LaunchX, LaunchY, LaunchZ);
 		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
 		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
-		UE_LOG(LogTemp, Warning, TEXT("Has Launchtag, Knockback: %s"), *LaunchVector.ToString());
+		// UE_LOG(LogTemp, Warning, TEXT("Has Launchtag, Knockback: %s"), *LaunchVector.ToString());
 		ApplyLaunchBack(SourceActor, LaunchVector);
 	}
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));

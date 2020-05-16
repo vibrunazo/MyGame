@@ -21,7 +21,7 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ANS Apply Effect")
 	TArray<FEffectContainer> EffectsToApply;
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ANS Apply Effect")
-	TArray<FActiveGameplayEffectHandle> ActiveEffects;
+	// UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ANS Apply Effect")
+	// TArray<TArray<FActiveGameplayEffectHandle>> ActiveEffects = {};
 	
 };

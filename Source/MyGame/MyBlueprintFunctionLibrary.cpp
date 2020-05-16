@@ -36,7 +36,11 @@ void UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(AActor* Actor, TArray<F
     if (!Char) return;
     UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();
     if (!GAS) return;
-    GAS->RemoveActiveGameplayEffect(ActiveEffects[0]);
+    for (auto &&Effect : ActiveEffects)
+    {
+        GAS->RemoveActiveGameplayEffect(Effect);
+    }
+    
 }
 TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item)
 {

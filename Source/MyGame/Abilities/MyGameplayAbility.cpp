@@ -11,8 +11,10 @@
 #include "GameplayEffect.h"
 #include "../Player/HitBox.h"
 #include "../Player/HitboxSettings.h"
+#include "EffectEventSettings.h"
 // #include "../MyBlueprintFunctionLibrary.h"
 #include "IGetHit.h"
+#include "../Player/MyCharacter.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "AbilitySystemComponent.h"
@@ -61,6 +63,8 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));;
     FGameplayTag HitEndTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.end"));
     FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
+    FGameplayTag EffectApplyTag = FGameplayTag::RequestGameplayTag(TEXT("notify.effect.apply"));
+    FGameplayTag EffectRemoveTag = FGameplayTag::RequestGameplayTag(TEXT("notify.effect.remove"));
 
     UAbilityTask_WaitGameplayEvent* HitStartTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitStartTag);
     HitStartTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitStart);
@@ -73,6 +77,14 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     UAbilityTask_WaitGameplayEvent* HitConnectTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitConnectTag);
     HitConnectTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitConnect);
     HitConnectTask->ReadyForActivation();
+
+    UAbilityTask_WaitGameplayEvent* EffectApplyTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, EffectApplyTag);
+    EffectApplyTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnEffectApplyEvent);
+    EffectApplyTask->ReadyForActivation();
+
+    UAbilityTask_WaitGameplayEvent* EffectRemoveTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, EffectRemoveTag);
+    EffectRemoveTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnEffectRemoveEvent);
+    EffectRemoveTask->ReadyForActivation();
     
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
@@ -84,6 +96,7 @@ void UMyGameplayAbility::OnMontageComplete()
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
+    ResetActiveEffects();
 }
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
@@ -139,6 +152,31 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
     
 }
 
+void UMyGameplayAbility::OnEffectApplyEvent(const FGameplayEventData Payload)
+{
+    if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect apply event"));
+    ResetActiveEffects();
+    const UEffectEventSettings* Settings = Cast<UEffectEventSettings>(Payload.OptionalObject);
+    if (Settings)
+    {
+        ActiveEffects = UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(GetAvatarActorFromActorInfo(), Settings->EffectsToApply);
+    }
+}
+void UMyGameplayAbility::OnEffectRemoveEvent(const FGameplayEventData Payload)
+{
+    ResetActiveEffects();
+}
+
+void UMyGameplayAbility::ResetActiveEffects()
+{
+    if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect remove event"));
+    if (ActiveEffects.Num() > 0)
+    {
+        UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(GetAvatarActorFromActorInfo(), ActiveEffects);
+        ActiveEffects = {};
+    }
+}
+
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 {
     FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
@@ -159,46 +197,9 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
         FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect.EffectClass);
         for (auto &&Mag : Effect.Magnitudes)
         {
-            // NewHandle.Data.Get()->dis;
             NewHandle.Data.Get()->SetSetByCallerMagnitude(Mag.GameplayTag, Mag.Magnitude);
         }
         
-        // FGameplayTagContainer EffectTags = FGameplayTagContainer();
-        // NewHandle.Data.Get()->GetAllAssetTags(EffectTags);
-        //NewHandle.Data.Get()->DynamicAssetTags;
-        // UE_LOG(LogTemp, Warning, TEXT("Not moo %s"), *EffectTags.ToString());
-        // TODO? Set Caller crashes if the tag does not exists. Maybe check first?
-        // if (EffectTags.IsValid())
-        // {
-        //     UE_LOG(LogTemp, Warning, TEXT("Not empty"));
-        // if (EffectTags.HasTag(HitStunTag))
-        // {
-        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
-        // }
-        // if (EffectTags.HasTag(DamageTag))
-        // {
-        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(DamageTag, -Damage);
-        // }
-        // if (EffectTags.HasTag(KnockbackTag))
-        // {
-        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(KnockbackTag, KnockBack);
-        // }
-        // if (EffectTags.HasTag(LaunchTag))
-        // {
-        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchXTag, LaunchVector.X);
-        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchYTag, LaunchVector.Y);
-        //     NewHandle.Data.Get()->SetSetByCallerMagnitude(LaunchZTag, LaunchVector.Z);
-        // }
-
-        // }
-        // else
-        // {
-        //     UE_LOG(LogTemp, Warning, TEXT("is empty"));
-        // }
-        // EffectTags.HasTag(HitStunTag);
-        // UE_LOG(LogTemp, Warning, TEXT("Effect: %s, tags: %s, has hitstun: %d"), *Effect.Get()->GetName(), *Container.ToString(), Container.HasTag(HitStunTag));
-        // NewHandle.Data.Get()->GetAllAssetTags();
-        // NewHandle.Data.Get()->SetSetByCallerMagnitude();
         Result.Add(NewHandle);
     }
     return Result;

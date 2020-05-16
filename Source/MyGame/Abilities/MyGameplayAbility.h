@@ -59,11 +59,17 @@ protected:
 	void OnHitEnd(const FGameplayEventData Payload);
 	UFUNCTION()
 	void OnHitConnect(const FGameplayEventData Payload);
+	UFUNCTION()
+	void OnEffectApplyEvent(const FGameplayEventData Payload);
+	UFUNCTION()
+	void OnEffectRemoveEvent(const FGameplayEventData Payload);
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
 	void IncComboCount();
 	void ResetHitBoxes();
+	void ResetActiveEffects();
 	TSubclassOf<class AHitBox> HitBoxClass;
 	class AHitBox* HitBoxRef = nullptr;
+	TArray<FActiveGameplayEffectHandle> ActiveEffects = {};
 
 	
 };
