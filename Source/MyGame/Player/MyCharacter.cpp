@@ -442,6 +442,8 @@ void AMyCharacter::SetOutline()
 	GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, 5.f, false);
 }
 
+/* Removes the outline of an enemy character by setting the custom depth stencil back to zero.
+Called from a timer set by SetOutline() and by the OnDie() event */
 void AMyCharacter::RemoveOutline()
 {
 	GetMesh()->SetRenderCustomDepth(false);
@@ -466,6 +468,7 @@ void AMyCharacter::IncrementHitStunCount()
 	}
 }
 
+/* Returns true if the Character is immune to stun. Checks if the Char has the Gameplay Tag status.stunimmune */
 bool AMyCharacter::HasStunImmune()
 {
 	FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("status.stunimmune"));
@@ -535,6 +538,7 @@ void AMyCharacter::OnDie()
 	{
 		DetachFromControllerPendingDestroy();
 		DropItems();
+		RemoveOutline();
 	}
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
@@ -722,7 +726,7 @@ void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
 	// LaunchDir.Z = Power.Z;
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedLaunch, 0.05f, false);
-	UE_LOG(LogTemp, Warning, TEXT("Applying Launch: %s"), *Power.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("Applying Launch: %s"), *Power.ToString());
 }
 
 void AMyCharacter::OnDelayedLaunch()

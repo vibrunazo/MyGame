@@ -154,7 +154,7 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnEffectApplyEvent(const FGameplayEventData Payload)
 {
-    if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect apply event"));
+    // if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect apply event"));
     ResetActiveEffects();
     const UEffectEventSettings* Settings = Cast<UEffectEventSettings>(Payload.OptionalObject);
     if (Settings)
@@ -169,7 +169,7 @@ void UMyGameplayAbility::OnEffectRemoveEvent(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::ResetActiveEffects()
 {
-    if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect remove event"));
+    // if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect remove event"));
     if (ActiveEffects.Num() > 0)
     {
         UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(GetAvatarActorFromActorInfo(), ActiveEffects);
