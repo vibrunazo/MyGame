@@ -117,6 +117,10 @@ public:
 	class UStaticMesh* WallDooredCappedMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	TSubclassOf<class ADoor> DoorActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	float RoomSizeX = 2000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	float RoomSizeY = 2000.f;
 	TMap<FCoord, FRoomState> Grid;
 	TMap<FString, class AStaticMeshActor*> AllWalls;
 	

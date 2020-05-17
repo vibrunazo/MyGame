@@ -170,20 +170,20 @@ AStaticMeshActor* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Po
 	switch (Pos)
 	{
 	case EWallPos::Top:
-		Loc.X += 1000.0f;
+		Loc.X += RoomSizeX/2;
 		break;
 
 	case EWallPos::Bottom:
-		Loc.X -= 1000.0f;
+		Loc.X -= RoomSizeX/2;
 		break;
 	
 	case EWallPos::Left:
-		Loc.Y -= 1000.0f;
+		Loc.Y -= RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		break;
 	
 	case EWallPos::Right:
-		Loc.Y += 1000.0f;
+		Loc.Y += RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		break;
 	}
@@ -408,7 +408,7 @@ void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> Tile)
 
 FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
 {
-	return FVector(2000.0f * (float)Coord.X, 2000.0f * (float)Coord.Y, 0.0f);
+	return FVector(RoomSizeX * (float)Coord.X, RoomSizeY * (float)Coord.Y, 0.0f);
 }
 
 FTransform ALevelBuilder::GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir)
@@ -418,20 +418,20 @@ FTransform ALevelBuilder::GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir)
 	switch (Dir)
 	{
 	case EWallPos::Top:
-		Loc.X += 1000.0f;
+		Loc.X += RoomSizeX/2;
 		break;
 
 	case EWallPos::Bottom:
-		Loc.X -= 1000.0f;
+		Loc.X -= RoomSizeX/2;
 		break;
 	
 	case EWallPos::Left:
-		Loc.Y -= 1000.0f;
+		Loc.Y -= RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		break;
 	
 	case EWallPos::Right:
-		Loc.Y += 1000.0f;
+		Loc.Y += RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		break;
 	}
@@ -441,8 +441,8 @@ FTransform ALevelBuilder::GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir)
 
 FCoord ALevelBuilder::GetGridFromLoc(FVector Location)
 {
-	int16 NewX = FMath::DivideAndRoundNearest(Location.X, 2000.0f);
-	int16 NewY = FMath::DivideAndRoundNearest(Location.Y, 2000.0f);
+	int16 NewX = FMath::DivideAndRoundNearest(Location.X, RoomSizeX);
+	int16 NewY = FMath::DivideAndRoundNearest(Location.Y, RoomSizeY);
 	return FCoord(NewX, NewY);
 }
 

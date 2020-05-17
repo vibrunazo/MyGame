@@ -10,7 +10,7 @@
 
 void UANS_ApplyEffect::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Im a notify beginning"));
+    // UE_LOG(LogTemp, Warning, TEXT("Im a notify beginning"));
     AActor* MyActor = MeshComp->GetOwner();
     IGetHit* MyChar = Cast<IGetHit>(MyActor);
     if (MyChar)
@@ -30,7 +30,7 @@ void UANS_ApplyEffect::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSeque
 
 void UANS_ApplyEffect::NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation)
 {
-    UE_LOG(LogTemp, Warning, TEXT("Im a notify ending"));
+    // UE_LOG(LogTemp, Warning, TEXT("Im a notify ending"));
     AActor* MyActor = MeshComp->GetOwner();
     // UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(MyActor, ActiveEffects.Pop(true));
     // ActiveEffects = {};
