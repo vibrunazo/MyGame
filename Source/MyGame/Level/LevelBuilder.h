@@ -121,16 +121,19 @@ public:
 	float RoomSizeX = 2000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	float RoomSizeY = 2000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	int32 RandomSeed = 0;
 	TMap<FCoord, FRoomState> Grid;
 	TMap<FString, class AStaticMeshActor*> AllWalls;
+	FRandomStream RandomStream;
 	
 
 private:
-	void GenerateLevels();
+	void SpawnLevels();
 	void BuildGrid();
 	void BuildWalls(TPair<FCoord, FRoomState> Tile);
 	class ULevelStreaming* GenerateRandomRoom(FTransform Where);
-	class ULevelStreaming* GenerateRoom(FCoord Where, class URoomDataAsset* RoomType);
+	class ULevelStreaming* SpawnRoom(FCoord Where, class URoomDataAsset* RoomType);
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
