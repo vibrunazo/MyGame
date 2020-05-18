@@ -60,7 +60,7 @@ void ARoomMaster::Tick(float DeltaTime)
 		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());
 		EnableGoals();
 		bIsDoorOpen = true;
-		UE_LOG(LogTemp, Warning, TEXT("cleared room at loc %s"), *GetActorLocation().ToString());
+		// UE_LOG(LogTemp, Warning, TEXT("cleared room at loc %s"), *GetActorLocation().ToString());
 	}
 }
 
