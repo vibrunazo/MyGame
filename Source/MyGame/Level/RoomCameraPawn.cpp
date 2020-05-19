@@ -3,11 +3,13 @@
 
 #include "RoomCameraPawn.h"
 #include "../Player/MyCharacter.h"
+#include "LevelBuilder.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 ARoomCameraPawn::ARoomCameraPawn()
@@ -45,7 +47,7 @@ ARoomCameraPawn::ARoomCameraPawn()
 void ARoomCameraPawn::BeginPlay()
 {
 	Super::BeginPlay();
-	
+
 }
 
 void ARoomCameraPawn::Tick(float DeltaTime)
@@ -62,6 +64,7 @@ void ARoomCameraPawn::Tick(float DeltaTime)
 void ARoomCameraPawn::SetPlayerRef(AMyCharacter* NewPlayer)
 {
 	PlayerRef = NewPlayer;
+	ViewTarget = PlayerRef->GetActorLocation();
 	// MovementComponent->HomingTargetComponent = PlayerRef->GetRootComponent();
 }
 
@@ -70,7 +73,9 @@ void ARoomCameraPawn::FollowPlayer()
 	// FollowCamera->RelativeRotation(NewRot);
 	float TargetX = PlayerRef->GetActorLocation().X ;
 	// Target = PlayerRef->GetActorLocation()  + FVector(-800.f - TargetX * 0.8, 0.f, 300.f);
-	Target = PlayerRef->GetActorLocation()  + CameraDistance;
+	FVector RoomDistance = GetRoomDistance();
+	// UE_LOG(LogTemp, Warning, TEXT("NewX: %d, Vec: %s"), NewX, *RoomDistance.ToString());
+	Target = PlayerRef->GetActorLocation()  + CameraDistance + RoomDistance;
 	Target.X -= TargetX * XRatio;
 	GetActorLocation();
 	FVector CurLoc = FMath::Lerp(GetActorLocation(), Target, LerpSpeed);
@@ -84,4 +89,26 @@ void ARoomCameraPawn::FollowPlayer()
 	SetActorRotation(NewRot);
 	// SetActorLocation(FVector(GetActorLocation().X, Target.Y, GetActorLocation().Z));
 
+}
+
+FVector ARoomCameraPawn::GetRoomDistance()
+{
+	FVector RoomDistance = FVector(0.f, 0.f, 0.f);
+	float RoomSize = 2000.f;
+	if (!LevelBuilderRef)
+	{
+		TArray<AActor*> OutActors;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALevelBuilder::StaticClass(), OutActors);
+		if (OutActors.Num() > 0)
+		{
+			LevelBuilderRef = Cast<ALevelBuilder>(OutActors[0]);
+		}
+	}
+	if (LevelBuilderRef)
+	{
+		RoomSize = LevelBuilderRef->RoomSizeX;
+	}
+	int16 NewX = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().X, RoomSize);
+	RoomDistance = FVector(NewX * RoomSize/2, 0.f, 0.f);
+	return RoomDistance;
 }

@@ -42,6 +42,9 @@ public:
 
 private:
 	void FollowPlayer();
+	FVector GetRoomDistance(); 
+
+	class ALevelBuilder* LevelBuilderRef = nullptr;
 	
 
 protected:
