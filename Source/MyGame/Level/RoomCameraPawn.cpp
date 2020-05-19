@@ -68,17 +68,33 @@ void ARoomCameraPawn::SetPlayerRef(AMyCharacter* NewPlayer)
 	// MovementComponent->HomingTargetComponent = PlayerRef->GetRootComponent();
 }
 
+/* Sets the Camera position and rotation depending on where the player is. */
 void ARoomCameraPawn::FollowPlayer()
 {
 	// FollowCamera->RelativeRotation(NewRot);
 	float TargetX = PlayerRef->GetActorLocation().X ;
 	// Target = PlayerRef->GetActorLocation()  + FVector(-800.f - TargetX * 0.8, 0.f, 300.f);
 	FVector RoomDistance = GetRoomDistance();
-	// UE_LOG(LogTemp, Warning, TEXT("NewX: %d, Vec: %s"), NewX, *RoomDistance.ToString());
-	Target = PlayerRef->GetActorLocation()  + CameraDistance + RoomDistance;
-	Target.X -= TargetX * XRatio;
+	// Target = PlayerRef->GetActorLocation()  + CameraDistance + RoomDistance/2.f;
+	// Target.X -= TargetX * XRatio;
+	float PositionInRoomX = TargetX - RoomDistance.X;
+	float PositionInRoomY = PlayerRef->GetActorLocation().Y - RoomDistance.Y;
+	FVector RoomSize = GetRoomSize();
+	float CamMinX = -RoomSize.X/2 + RoomDistance.X;
+	float CamMaxX = +RoomSize.X/2 + RoomDistance.X - 700.f;
+	float AlphaX = PositionInRoomX/RoomSize.X + 0.5f;
+	float CamMinY = -RoomSize.Y*0.4f + RoomDistance.Y;
+	float CamMaxY = +RoomSize.Y*0.4f + RoomDistance.Y;
+	float AlphaY = PositionInRoomY/RoomSize.Y + 0.5f;
+	Target = FVector(
+		FMath::Lerp(CamMinX, CamMaxX, AlphaX),
+		FMath::Lerp(CamMinY, CamMaxY, AlphaY),
+		0.f
+		);
+	
+	// UE_LOG(LogTemp, Warning, TEXT("PositionInRoomX: %f, AlphaX: %f, PositionInRoomY: %f, AlphaY: %f, RoomDistance: %s"), PositionInRoomX, AlphaX, PositionInRoomY, AlphaY, *RoomDistance.ToString());
 	GetActorLocation();
-	FVector CurLoc = FMath::Lerp(GetActorLocation(), Target, LerpSpeed);
+	FVector CurLoc = FMath::Lerp(GetActorLocation(), Target + CameraDistance, LerpSpeed);
 	// CurLoc += FVector(-500.f, 0.f, 400.f);
 
 	SetActorLocation(CurLoc);
@@ -91,24 +107,33 @@ void ARoomCameraPawn::FollowPlayer()
 
 }
 
-FVector ARoomCameraPawn::GetRoomDistance()
+/* Returns a FVector with the room size. Will try to get this value from the LevelBuilder placed in the world.
+If it finds the LevelBuilder will record a reference to it to use in future calls.
+If it fails defaults to 2000x2000x0 Room Size. */
+FVector ARoomCameraPawn::GetRoomSize()
 {
-	FVector RoomDistance = FVector(0.f, 0.f, 0.f);
-	float RoomSize = 2000.f;
+	FVector RoomSize = FVector(2000.f, 2000.f, 0.f);
 	if (!LevelBuilderRef)
 	{
 		TArray<AActor*> OutActors;
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALevelBuilder::StaticClass(), OutActors);
-		if (OutActors.Num() > 0)
-		{
-			LevelBuilderRef = Cast<ALevelBuilder>(OutActors[0]);
-		}
+		if (OutActors.Num() > 0) LevelBuilderRef = Cast<ALevelBuilder>(OutActors[0]);
 	}
-	if (LevelBuilderRef)
-	{
-		RoomSize = LevelBuilderRef->RoomSizeX;
-	}
-	int16 NewX = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().X, RoomSize);
-	RoomDistance = FVector(NewX * RoomSize/2, 0.f, 0.f);
+	if (LevelBuilderRef) RoomSize = FVector(LevelBuilderRef->RoomSizeX, LevelBuilderRef->RoomSizeY, 0.f);
+	return RoomSize;
+}
+
+/* Returns the location of the room the player is currently at. Used to position the camera next to the current room
+after the player changes rooms. */
+FVector ARoomCameraPawn::GetRoomDistance()
+{
+	FVector RoomDistance = FVector(0.f, 0.f, 0.f);
+	float RoomSizeX = 2000.f;
+	float RoomSizeY = 2000.f;
+	RoomSizeX = GetRoomSize().X;
+	RoomSizeY = GetRoomSize().Y;
+	int16 NewX = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().X, RoomSizeX);
+	int16 NewY = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().Y, RoomSizeY);
+	RoomDistance = FVector(NewX * RoomSizeX, NewY * RoomSizeY, 0.f);
 	return RoomDistance;
 }
