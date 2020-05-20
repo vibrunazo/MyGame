@@ -80,11 +80,11 @@ void ARoomCameraPawn::FollowPlayer()
 	float PositionInRoomX = TargetX - RoomDistance.X;
 	float PositionInRoomY = PlayerRef->GetActorLocation().Y - RoomDistance.Y;
 	FVector RoomSize = GetRoomSize();
-	float CamMinX = -RoomSize.X/2 + RoomDistance.X;
-	float CamMaxX = +RoomSize.X/2 + RoomDistance.X - 800.f;
+	float CamMinX = -RoomSize.X/2 + RoomSize.X * MinXRatio + RoomDistance.X;
+	float CamMaxX = -RoomSize.X/2 + RoomSize.X * MaxXRatio + RoomDistance.X;
 	float AlphaX = PositionInRoomX/RoomSize.X + 0.5f;
-	float CamMinY = -RoomSize.Y*0.4f + RoomDistance.Y;
-	float CamMaxY = +RoomSize.Y*0.4f + RoomDistance.Y;
+	float CamMinY = -RoomSize.Y*0.5f*YRatio + RoomDistance.Y;
+	float CamMaxY = +RoomSize.Y*0.5f*YRatio + RoomDistance.Y;
 	float AlphaY = PositionInRoomY/RoomSize.Y + 0.5f;
 	Target = FVector(
 		FMath::Lerp(CamMinX, CamMaxX, AlphaX),

@@ -32,13 +32,19 @@ public:
 	FVector Target = FVector();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	FVector CameraDistance = FVector(-800.f, 0.f, 300.f);
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float XRatio = 0.5f;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	// float XRatio = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float LerpSpeed = 0.05f;
 	FVector ViewTarget = FVector();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float RotLerp = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float MaxXRatio = 0.4f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float MinXRatio = 0.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float YRatio = 0.8f;
 
 private:
 	void FollowPlayer();
