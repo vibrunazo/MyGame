@@ -48,6 +48,8 @@ void ADoor::OpenDoor()
 	bIsDoorOpen = true;
 	BoxCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	DoorMesh->AddLocalOffset(FVector(0.f, 0.f, 150.f));
+	// DoorMesh->SetWorldScale3D(FVector(1.f, 1.f, 0.f));
+	// DoorMesh->SetRelativeScale3D(FVector(1.f, 1.f, 0.f));
 	OnOpenDoorBP();
 	UE_LOG(LogTemp, Warning, TEXT("Opening Door"));
 }
@@ -58,6 +60,7 @@ void ADoor::CloseDoor()
 	bIsDoorOpen = false;
 	UE_LOG(LogTemp, Warning, TEXT("Closing Door"));
 	BoxCollision->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	// DoorMesh->SetRelativeScale3D(FVector(1.f, 1.f, 1.f));
 	DoorMesh->AddLocalOffset(FVector(0.f, 0.f, -150.f));
 
 	OnCloseDoorBP();

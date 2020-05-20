@@ -81,7 +81,7 @@ void ARoomCameraPawn::FollowPlayer()
 	float PositionInRoomY = PlayerRef->GetActorLocation().Y - RoomDistance.Y;
 	FVector RoomSize = GetRoomSize();
 	float CamMinX = -RoomSize.X/2 + RoomDistance.X;
-	float CamMaxX = +RoomSize.X/2 + RoomDistance.X - 700.f;
+	float CamMaxX = +RoomSize.X/2 + RoomDistance.X - 800.f;
 	float AlphaX = PositionInRoomX/RoomSize.X + 0.5f;
 	float CamMinY = -RoomSize.Y*0.4f + RoomDistance.Y;
 	float CamMaxY = +RoomSize.Y*0.4f + RoomDistance.Y;
@@ -89,11 +89,10 @@ void ARoomCameraPawn::FollowPlayer()
 	Target = FVector(
 		FMath::Lerp(CamMinX, CamMaxX, AlphaX),
 		FMath::Lerp(CamMinY, CamMaxY, AlphaY),
-		0.f
+		PlayerRef->GetActorLocation().Z
 		);
 	
 	// UE_LOG(LogTemp, Warning, TEXT("PositionInRoomX: %f, AlphaX: %f, PositionInRoomY: %f, AlphaY: %f, RoomDistance: %s"), PositionInRoomX, AlphaX, PositionInRoomY, AlphaY, *RoomDistance.ToString());
-	GetActorLocation();
 	FVector CurLoc = FMath::Lerp(GetActorLocation(), Target + CameraDistance, LerpSpeed);
 	// CurLoc += FVector(-500.f, 0.f, 400.f);
 
