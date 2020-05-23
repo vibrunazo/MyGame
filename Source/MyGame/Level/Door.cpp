@@ -2,6 +2,8 @@
 
 
 #include "Door.h"
+// #include "RoomDataAsset.h"
+
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 
@@ -24,6 +26,16 @@ ADoor::ADoor()
 	DoorMesh->SetupAttachment(RootComponent);
 	DoorMesh->SetRelativeLocation(FVector(0.f, 0.f, 100.f));
 	DoorMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	DoorFrame = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Door Frame"));
+	DoorFrame->SetupAttachment(RootComponent);
+	DoorFrame->SetRelativeRotation(FRotator(0.f, -90.f, 0.f));
+	SymbolMeshA = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Symbol Mesh A"));
+	SymbolMeshB = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Symbol Mesh B"));
+	SymbolMeshA->SetupAttachment(DoorFrame);
+	SymbolMeshB->SetupAttachment(DoorFrame);
+	SymbolMeshA->SetRelativeLocation(FVector(0.f, 0.f, 300.f));
+	SymbolMeshB->SetRelativeLocation(FVector(0.f, 0.f, 300.f));
+	SymbolMeshB->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
 
 }
 
@@ -64,4 +76,18 @@ void ADoor::CloseDoor()
 	DoorMesh->AddLocalOffset(FVector(0.f, 0.f, -150.f));
 
 	OnCloseDoorBP();
+}
+
+void ADoor::SetSymbol(ERoomType SymbolType)
+{
+	switch (SymbolType)
+	{
+	case ERoomType::Treasure:
+		SymbolMeshA->SetStaticMesh(TreasureMesh);
+		SymbolMeshB->SetStaticMesh(TreasureMesh);
+		break;
+	
+	default:
+		break;
+	}
 }

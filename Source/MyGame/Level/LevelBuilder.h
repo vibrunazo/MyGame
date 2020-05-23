@@ -155,6 +155,7 @@ private:
 	FCoord GetNeighbor(FCoord From, EWallPos To);
 	bool IsNeighborFree(FCoord From, EWallPos To);
 	bool IsAnyNeighborOfType(FCoord From, ERoomType Type);
+	bool IsTileOfType(FCoord Tile, ERoomType Type);
 	TArray<FCoord> GetAllNeighborsCoords(FCoord From);
 	TArray<FCoord> FindFreeNeighbors(FCoord From);
 	class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);

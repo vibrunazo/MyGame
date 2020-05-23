@@ -224,6 +224,10 @@ ADoor* ALevelBuilder::SpawnDoor(FCoord Where, EWallPos Dir)
 	ADoor* NewDoor = GetWorld()->SpawnActor<ADoor>(DoorActor, Loc, DoorTran.Rotator(), params);
 	NewDoor->OpenDoor();
 	DoorList.Add(NewDoor);
+	if (IsTileOfType(Where, ERoomType::Treasure) || IsTileOfType(GetNeighbor(Where, Dir), ERoomType::Treasure))
+	{
+		NewDoor->SetSymbol(ERoomType::Treasure);
+	}
 	return NewDoor;
 }
 
@@ -519,6 +523,14 @@ bool ALevelBuilder::IsAnyNeighborOfType(FCoord From, ERoomType Type)
 		if (!NeighborState) continue;
 		if (NeighborState->RoomType->RoomType == Type) return true;
 	}
+	return false;
+}
+/* Returns true if this Tile at this Coord is of given Room Type */
+bool ALevelBuilder::IsTileOfType(FCoord Tile, ERoomType Type)
+{
+	FRoomState* MyState = Grid.Find(Tile);
+	if (!MyState) false;
+	if (MyState->RoomType->RoomType == Type) return true;
 	return false;
 }
 

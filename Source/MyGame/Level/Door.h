@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "RoomDataAsset.h"
 #include "GameFramework/Actor.h"
 #include "Door.generated.h"
 
@@ -23,6 +24,7 @@ public:
 	void CloseDoor();
 	UFUNCTION(BlueprintImplementableEvent, Category = Door)
 	void OnCloseDoorBP();
+	void SetSymbol(ERoomType SymbolType);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
 	class USceneComponent* MyRoot;
@@ -30,6 +32,14 @@ public:
 	class UBoxComponent* BoxCollision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
 	class UStaticMeshComponent* DoorMesh;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
+	class UStaticMeshComponent* DoorFrame;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
+	class UStaticMeshComponent* SymbolMeshA;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
+	class UStaticMeshComponent* SymbolMeshB;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Door)
+	class UStaticMesh *TreasureMesh;
 
 	bool bIsDoorOpen = false;
 protected:
