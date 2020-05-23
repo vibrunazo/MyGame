@@ -40,6 +40,8 @@ public:
 	class UStaticMeshComponent* SymbolMeshB;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Door)
 	class UStaticMesh *TreasureMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Door)
+	class UNiagaraSystem* TreasureParticles;
 
 	bool bIsDoorOpen = false;
 protected:

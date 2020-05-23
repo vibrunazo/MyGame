@@ -6,6 +6,8 @@
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "NiagaraFunctionLibrary.h"
+#include "NiagaraSystem.h"
 
 // Sets default values
 ADoor::ADoor()
@@ -52,6 +54,8 @@ void ADoor::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	SymbolMeshA->SetStaticMesh(nullptr);
+	SymbolMeshB->SetStaticMesh(nullptr);
 }
 
 void ADoor::OpenDoor()
@@ -80,11 +84,14 @@ void ADoor::CloseDoor()
 
 void ADoor::SetSymbol(ERoomType SymbolType)
 {
+	FVector SpawnLoc = GetActorLocation();
+	SpawnLoc.Z += 350.f;
 	switch (SymbolType)
 	{
 	case ERoomType::Treasure:
 		SymbolMeshA->SetStaticMesh(TreasureMesh);
 		SymbolMeshB->SetStaticMesh(TreasureMesh);
+		if (TreasureParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TreasureParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
 		break;
 	
 	default:
