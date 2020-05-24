@@ -101,7 +101,6 @@ void AHitBox::ApplyAllEffects(class IGetHit* Target)
 
 void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
 {
-	// FGameplayEffectSpecHandle *Handle =  FGameplayEffectSpecHandle(Effect);
-	if (!Target || !Target->IsValidLowLevel()) return;
-	Target->OnGetHitByEffect(Effect, GetOwner());
+	if (!Target || !Target->IsValidLowLevel() || !IsValid((UObject*)Target) ) return;
+	Target->OnGetHitByEffect(Effect, GetOwner());  // Invalid object index
 }

@@ -64,7 +64,7 @@ void ARoomCameraPawn::Tick(float DeltaTime)
 void ARoomCameraPawn::SetPlayerRef(AMyCharacter* NewPlayer)
 {
 	PlayerRef = NewPlayer;
-	ViewTarget = PlayerRef->GetActorLocation();
+	ViewLoc = PlayerRef->GetActorLocation();
 	// MovementComponent->HomingTargetComponent = PlayerRef->GetRootComponent();
 }
 
@@ -101,8 +101,10 @@ void ARoomCameraPawn::FollowPlayer()
 
 	SetActorLocation(CurLoc);
 
-	ViewTarget = FMath::Lerp(ViewTarget, PlayerRef->GetActorLocation(), RotLerp);
-	FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ViewTarget);
+	FVector ViewTarget = PlayerRef->GetActorLocation() + PlayerRef->GetActorForwardVector() * ViewRotDistanceAhead;
+	ViewTarget.X = FMath::Clamp(ViewTarget.X, -RoomSize.X/2 + RoomDistance.X, +RoomSize.X/2 + RoomDistance.X); // Clamp the View Target X axis to stay inside the room, if the player is looking towards bottom, then the camera won't point to the bottom room
+	ViewLoc = FMath::Lerp(ViewLoc, ViewTarget, RotLerp);
+	FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ViewLoc);
 	// FRotator CurRot = FMath::Lerp(GetActorRotation(), NewRot, 0.1f);
 	SetActorRotation(NewRot);
 	// SetActorLocation(FVector(GetActorLocation().X, Target.Y, GetActorLocation().Z));

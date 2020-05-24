@@ -36,9 +36,11 @@ public:
 	// float XRatio = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float LerpSpeed = 0.05f;
-	FVector ViewTarget = FVector();
+	FVector ViewLoc = FVector();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float RotLerp = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float ViewRotDistanceAhead = 400.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float MaxXRatio = 0.4f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
