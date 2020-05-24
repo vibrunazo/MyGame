@@ -45,6 +45,12 @@ public:
 	float MinXRatio = 0.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float YRatio = 0.8f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float MaxFoV = 50.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float MinFoV = 90.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float FoVLerp = 0.05f;
 
 private:
 	void FollowPlayer();

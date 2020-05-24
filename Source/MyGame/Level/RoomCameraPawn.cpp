@@ -91,7 +91,10 @@ void ARoomCameraPawn::FollowPlayer()
 		FMath::Lerp(CamMinY, CamMaxY, AlphaY),
 		PlayerRef->GetActorLocation().Z
 		);
-	
+	float TargetFoV = FMath::Lerp(MinFoV, MaxFoV, AlphaX);
+	float NewFoV = FMath::Lerp(FollowCamera->FieldOfView, TargetFoV, FoVLerp);
+	FollowCamera->FieldOfView = NewFoV;
+
 	// UE_LOG(LogTemp, Warning, TEXT("PositionInRoomX: %f, AlphaX: %f, PositionInRoomY: %f, AlphaY: %f, RoomDistance: %s"), PositionInRoomX, AlphaX, PositionInRoomY, AlphaY, *RoomDistance.ToString());
 	FVector CurLoc = FMath::Lerp(GetActorLocation(), Target + CameraDistance, LerpSpeed);
 	// CurLoc += FVector(-500.f, 0.f, 400.f);
