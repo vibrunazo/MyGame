@@ -38,9 +38,14 @@ public:
 	float LerpSpeed = 0.05f;
 	FVector ViewLoc = FVector();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float RotLerp = 0.05f;
+	float RotSpeed = 200.f;
+	FVector ViewVelocity = FVector();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float RotMaxSpeed = 200.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float ViewRotDistanceAhead = 400.f;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	// float RotBreak = 0.1f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float MaxXRatio = 0.4f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
@@ -53,9 +58,11 @@ public:
 	float MinFoV = 90.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float FoVLerp = 0.05f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	bool bDrawDebugLines = false;
 
 private:
-	void FollowPlayer();
+	void FollowPlayer(float DeltaTime);
 	FVector GetRoomDistance(); 
 	FVector GetRoomSize(); 
 

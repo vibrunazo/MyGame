@@ -10,6 +10,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
+#include "DrawDebugHelpers.h"
 
 // Sets default values
 ARoomCameraPawn::ARoomCameraPawn()
@@ -56,7 +57,7 @@ void ARoomCameraPawn::Tick(float DeltaTime)
 
 	if (PlayerRef)
 	{
-		FollowPlayer();
+		FollowPlayer(DeltaTime);
 	}
 
 }
@@ -69,7 +70,7 @@ void ARoomCameraPawn::SetPlayerRef(AMyCharacter* NewPlayer)
 }
 
 /* Sets the Camera position and rotation depending on where the player is. */
-void ARoomCameraPawn::FollowPlayer()
+void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 {
 	// FollowCamera->RelativeRotation(NewRot);
 	float TargetX = PlayerRef->GetActorLocation().X ;
@@ -102,8 +103,58 @@ void ARoomCameraPawn::FollowPlayer()
 	SetActorLocation(CurLoc);
 
 	FVector ViewTarget = PlayerRef->GetActorLocation() + PlayerRef->GetActorForwardVector() * ViewRotDistanceAhead;
-	ViewTarget.X = FMath::Clamp(ViewTarget.X, -RoomSize.X/2 + RoomDistance.X, +RoomSize.X/2 + RoomDistance.X); // Clamp the View Target X axis to stay inside the room, if the player is looking towards bottom, then the camera won't point to the bottom room
-	ViewLoc = FMath::Lerp(ViewLoc, ViewTarget, RotLerp);
+	// Clamp the View Target X axis to stay inside the room, if the player is looking towards bottom, then the camera won't point to the bottom room
+	ViewTarget.X = FMath::Clamp(ViewTarget.X, -RoomSize.X*0.3f + RoomDistance.X, +RoomSize.X*0.5f + RoomDistance.X);
+	// to avoid going past the target, check if the amount I would move isn't greater than the distance to target, if it is, snap to target
+	FVector ViewDelta = (ViewTarget - ViewLoc).GetSafeNormal() * RotSpeed * DeltaTime;
+	// ViewVelocity += ViewDelta;
+	// FVector::DotProduct(ViewTarget - ViewLoc, ViewVelocity);
+	// ViewVelocity = (ViewTarget - ViewLoc).GetSafeNormal() * ViewVelocity.Size() + ViewDelta;
+	// ViewVelocity = (ViewTarget - ViewLoc).GetSafeNormal() * FVector::DotProduct(ViewVelocity, ViewTarget - ViewLoc) + ViewDelta;
+	// if the angle between the current velocity and the target is too high (cosine between them too low), then stop moving
+	if (FVector::DotProduct(ViewTarget - ViewLoc, ViewVelocity)/((ViewTarget - ViewLoc).Size()*ViewVelocity.Size()) < 0.8)
+	{
+		// UE_LOG(LogTemp, Warning, TEXT("stopping"));
+		ViewVelocity = FVector(0.f, 0.f, 0.f);
+	}
+	// float cos = CurVector.CosineAngle2D(LastInputVector);
+	// 		float acos = UKismetMathLibrary::DegAcos(cos);
+	// TODO might not need dotproduct and still get same result because I'm already breaking on low cosine
+	ViewVelocity = (ViewTarget - ViewLoc).GetSafeNormal() * ViewVelocity.Size() + ViewDelta;
+	// ViewVelocity = ((ViewTarget - ViewLoc) * FVector::DotProduct(ViewTarget - ViewLoc, ViewVelocity)).GetSafeNormal() * ViewVelocity.Size() + ViewDelta ;
+	// ViewVelocity = ViewVelocity * FVector::DotProduct(ViewVelocity, ViewTarget - ViewLoc);
+	// if (bDrawDebugLines) DrawDebugDirectionalArrow(GetWorld(), ViewLoc, ViewLoc + ViewVelocity, 10.f, FColor::Turquoise, false, -1.f, 10, 2.f);
+	// ViewVelocity += ViewDelta;
+	// DrawDebugDirectionalArrow(GetWorld(), ViewLoc, ViewLoc + ViewVelocity, 10.f, FColor::Green, false, -1.f, 10, 2.f);
+	// UE_LOG(LogTemp, Warning, TEXT("dot product: %f"), FVector::DotProduct(ViewVelocity, ViewTarget - ViewLoc));
+	ViewVelocity = ViewVelocity.GetClampedToMaxSize(RotMaxSpeed);
+	if (bDrawDebugLines) DrawDebugDirectionalArrow(GetWorld(), ViewLoc, ViewTarget, 10.f, FColor::Green, false, -1.f, 10, 4.f);
+	if (bDrawDebugLines) DrawDebugDirectionalArrow(GetWorld(), ViewLoc, ViewLoc + ViewVelocity, 10.f, FColor::Red, false, -1.f, 10, 2.f);
+	if (bDrawDebugLines) DrawDebugDirectionalArrow(GetWorld(), FVector::ZeroVector, (ViewTarget - ViewLoc).GetSafeNormal() * 100.f, 10.f, FColor::White, false, -1.f, 10, 2.f);
+	if (bDrawDebugLines) DrawDebugDirectionalArrow(GetWorld(), FVector::ZeroVector, ViewVelocity.GetSafeNormal() * 50.f, 10.f, FColor::Red, false, -1.f, 10, 5.f);
+	if (bDrawDebugLines) DrawDebugDirectionalArrow(GetWorld(), FVector::ZeroVector, ((ViewTarget - ViewLoc).GetSafeNormal() * FVector::DotProduct(ViewTarget - ViewLoc, ViewVelocity)).GetSafeNormal() * 20.f, 10.f, FColor::Blue, false, -1.f, 10, 2.f);
+	// UE_LOG(LogTemp, Warning, TEXT("ViewLoc: %s, ViewTarget-Loc: %f, ViewVelocity: %f, Dot: %f"), *ViewLoc.ToString(), (ViewTarget - ViewLoc).Size(), ViewVelocity.Size(), FMath::Sign(FVector::DotProduct(ViewTarget - ViewLoc, ViewVelocity)));
+	// DrawDebugPoint(GetWorld(), ViewLoc, 10.f, FColor::White, false, -1.f, 10);
+	// DrawDebugDirectionalArrow(GetWorld(), ViewLoc, ViewLoc + ViewVelocity, 10.f, FColor::Turquoise, false, -1.f, 10, 2.f);
+	// DrawDebugDirectionalArrow(GetWorld(), ViewLoc + ViewVelocity, ViewLoc + ViewVelocity + ViewDelta, 10.f, FColor::Green, false, -1.f, 10, 2.f);
+	// DrawDebugPoint(GetWorld(), ViewTarget, 10.f, FColor::Yellow, false, -1.f, 10);
+	// if ((ViewTarget - ViewLoc).Size() < ViewRotDistanceAhead/2)
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("Slowing"));
+	// 	ViewVelocity *= RotBreak * DeltaTime;
+	// }
+	if (ViewVelocity.Size() > (ViewTarget - ViewLoc).Size() || (ViewTarget - ViewLoc).Size() < ViewRotDistanceAhead*0.1)
+	{
+		ViewVelocity = FVector(0.f, 0.f, 0.f);
+		// UE_LOG(LogTemp, Warning, TEXT("Snapping"));
+		ViewLoc = ViewTarget;
+	}
+	else 
+	{
+		ViewLoc += ViewVelocity;
+	}
+	// ViewLoc = FMath::Lerp(ViewLoc, ViewTarget, RotLerp);
+	// DrawDebugDirectionalArrow(GetWorld(), ViewLoc, ViewVelocity, 10.f, FColor::White, false, -1.f, 10, 2.f);
 	FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ViewLoc);
 	// FRotator CurRot = FMath::Lerp(GetActorRotation(), NewRot, 0.1f);
 	SetActorRotation(NewRot);
