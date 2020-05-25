@@ -94,6 +94,12 @@ void ADoor::SetSymbol(ERoomType SymbolType)
 		if (TreasureParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TreasureParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
 		break;
 	
+	case ERoomType::Boss:
+		SymbolMeshA->SetStaticMesh(BossMesh);
+		SymbolMeshB->SetStaticMesh(BossMesh);
+		if (BossParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BossParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
+		break;
+	
 	default:
 		break;
 	}

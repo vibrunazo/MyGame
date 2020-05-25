@@ -228,6 +228,10 @@ ADoor* ALevelBuilder::SpawnDoor(FCoord Where, EWallPos Dir)
 	{
 		NewDoor->SetSymbol(ERoomType::Treasure);
 	}
+	if (IsTileOfType(Where, ERoomType::Boss) || IsTileOfType(GetNeighbor(Where, Dir), ERoomType::Boss))
+	{
+		NewDoor->SetSymbol(ERoomType::Boss);
+	}
 	return NewDoor;
 }
 
