@@ -115,7 +115,8 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 	if (FVector::DotProduct(ViewTarget - ViewLoc, ViewVelocity)/((ViewTarget - ViewLoc).Size()*ViewVelocity.Size()) < 0.8)
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("stopping"));
-		ViewVelocity = FVector(0.f, 0.f, 0.f);
+		// ViewVelocity = FVector(0.f, 0.f, 0.f);
+		ViewVelocity *= RotBreak;
 	}
 	// float cos = CurVector.CosineAngle2D(LastInputVector);
 	// 		float acos = UKismetMathLibrary::DegAcos(cos);
@@ -143,11 +144,12 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 	// 	UE_LOG(LogTemp, Warning, TEXT("Slowing"));
 	// 	ViewVelocity *= RotBreak * DeltaTime;
 	// }
-	if (ViewVelocity.Size() > (ViewTarget - ViewLoc).Size() || (ViewTarget - ViewLoc).Size() < ViewRotDistanceAhead*0.1)
+	if (ViewVelocity.Size() > (ViewTarget - ViewLoc).Size() || (ViewTarget - ViewLoc).Size() < ViewRotDistanceAhead*0.15)
 	{
-		ViewVelocity = FVector(0.f, 0.f, 0.f);
+		// ViewVelocity = FVector(0.f, 0.f, 0.f);
+		ViewVelocity *= RotBreak;
 		// UE_LOG(LogTemp, Warning, TEXT("Snapping"));
-		ViewLoc = ViewTarget;
+		ViewLoc = FMath::Lerp(ViewLoc, ViewTarget, RotBreak);
 	}
 	else 
 	{
