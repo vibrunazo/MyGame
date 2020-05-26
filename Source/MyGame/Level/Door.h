@@ -38,6 +38,10 @@ public:
 	class UStaticMeshComponent* SymbolMeshA;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
 	class UStaticMeshComponent* SymbolMeshB;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
+	class UPointLightComponent* LightA;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
+	class UPointLightComponent* LightB;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Door)
 	class UStaticMesh *TreasureMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Door)

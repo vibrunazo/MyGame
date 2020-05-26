@@ -144,7 +144,7 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 	// 	UE_LOG(LogTemp, Warning, TEXT("Slowing"));
 	// 	ViewVelocity *= RotBreak * DeltaTime;
 	// }
-	if (ViewVelocity.Size() > (ViewTarget - ViewLoc).Size() || (ViewTarget - ViewLoc).Size() < ViewRotDistanceAhead*0.15)
+	if (ViewVelocity.Size() > (ViewTarget - ViewLoc).Size() || (ViewTarget - ViewLoc).Size() < ViewRotDistanceAhead*0.25)
 	{
 		// ViewVelocity = FVector(0.f, 0.f, 0.f);
 		ViewVelocity *= RotBreak;

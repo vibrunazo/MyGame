@@ -6,6 +6,7 @@
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/PointLightComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "NiagaraSystem.h"
 
@@ -38,6 +39,16 @@ ADoor::ADoor()
 	SymbolMeshA->SetRelativeLocation(FVector(0.f, 0.f, 300.f));
 	SymbolMeshB->SetRelativeLocation(FVector(0.f, 0.f, 300.f));
 	SymbolMeshB->SetRelativeRotation(FRotator(0.f, 180.f, 0.f));
+	LightA = CreateDefaultSubobject<UPointLightComponent>(TEXT("Light A"));
+	LightB = CreateDefaultSubobject<UPointLightComponent>(TEXT("Light B"));
+	LightA->SetupAttachment(RootComponent);
+	LightB->SetupAttachment(RootComponent);
+	LightA->SetRelativeLocation(FVector(100.f, 0.f, 300.f));
+	LightB->SetRelativeLocation(FVector(-100.f, 0.f, 300.f));
+	LightA->SetLightColor(FLinearColor(0.8f, 0.8f, 0.3f));
+	LightB->SetLightColor(FLinearColor(0.8f, 0.8f, 0.3f));
+	LightA->CastShadows = false;
+	LightB->CastShadows = false;
 
 }
 
@@ -92,12 +103,16 @@ void ADoor::SetSymbol(ERoomType SymbolType)
 		SymbolMeshA->SetStaticMesh(TreasureMesh);
 		SymbolMeshB->SetStaticMesh(TreasureMesh);
 		if (TreasureParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TreasureParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
+		LightA->SetLightColor(FLinearColor(0.9f, 0.9f, 0.1f));
+		LightB->SetLightColor(FLinearColor(0.9f, 0.9f, 0.1f));
 		break;
 	
 	case ERoomType::Boss:
 		SymbolMeshA->SetStaticMesh(BossMesh);
 		SymbolMeshB->SetStaticMesh(BossMesh);
 		if (BossParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BossParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
+		LightA->SetLightColor(FLinearColor(0.9f, 0.1f, 0.1f));
+		LightB->SetLightColor(FLinearColor(0.9f, 0.1f, 0.1f));
 		break;
 	
 	default:
