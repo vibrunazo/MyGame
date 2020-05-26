@@ -50,7 +50,8 @@ void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)
     DefaultPawnRef = MyPawn;
     SetViewTargetWithBlend(DefaultPawnRef, 3.0f);
     ShowGameOver();
-    UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance()); // TODO nullptr here
+    if (!GetGameInstance()) return;
+    UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (GI)
 	{
 		GI->OnGameOver();
