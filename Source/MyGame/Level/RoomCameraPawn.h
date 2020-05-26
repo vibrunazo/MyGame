@@ -44,6 +44,7 @@ public:
 	float RotMaxSpeed = 200.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float ViewRotDistanceAhead = 400.f;
+	float CurViewDistance = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float RotBreak = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)

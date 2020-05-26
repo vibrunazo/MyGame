@@ -102,9 +102,14 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 
 	SetActorLocation(CurLoc);
 
-	FVector ViewTarget = PlayerRef->GetActorLocation() + PlayerRef->GetActorForwardVector() * ViewRotDistanceAhead;
+	// FVector ViewTarget = PlayerRef->GetActorLocation() + PlayerRef->GetActorForwardVector() * ViewRotDistanceAhead;
+	FVector ViewTarget = PlayerRef->GetActorLocation();
+	if (PlayerRef->GetActorForwardVector().Y > 0.1) CurViewDistance = ViewRotDistanceAhead;
+	if (PlayerRef->GetActorForwardVector().Y < -0.1) CurViewDistance = -ViewRotDistanceAhead;
+	ViewTarget.Y += CurViewDistance;
 	// Clamp the View Target X axis to stay inside the room, if the player is looking towards bottom, then the camera won't point to the bottom room
-	ViewTarget.X = FMath::Clamp(ViewTarget.X, -RoomSize.X*0.3f + RoomDistance.X, +RoomSize.X*0.5f + RoomDistance.X);
+	// ViewTarget.X = FMath::Clamp(ViewTarget.X, -RoomSize.X*0.3f + RoomDistance.X, +RoomSize.X*0.5f + RoomDistance.X);
+	ViewTarget.X = PlayerRef->GetActorLocation().X;
 	// to avoid going past the target, check if the amount I would move isn't greater than the distance to target, if it is, snap to target
 	FVector ViewDelta = (ViewTarget - ViewLoc).GetSafeNormal() * RotSpeed * DeltaTime;
 	// ViewVelocity += ViewDelta;
@@ -149,7 +154,7 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 		// ViewVelocity = FVector(0.f, 0.f, 0.f);
 		ViewVelocity *= RotBreak;
 		// UE_LOG(LogTemp, Warning, TEXT("Snapping"));
-		ViewLoc = FMath::Lerp(ViewLoc, ViewTarget, RotBreak);
+		ViewLoc = FMath::Lerp(ViewLoc, ViewTarget, (1.f - RotBreak));
 	}
 	else 
 	{
