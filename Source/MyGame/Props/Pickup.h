@@ -18,7 +18,7 @@ class MYGAME_API APickup : public AActor
 public:	
 	// Sets default values for this actor's properties
 	APickup();
-
+	void OnConstruction(const FTransform & Transform) override;
 	UFUNCTION()
 	void OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
 	void OnDelayedSpawn();
@@ -26,6 +26,8 @@ public:
 	void OnTimelineCallback();
 	void OnTimelineUpdate();
 	void EnablePickup();
+	void ApplyItemData();
+	void SetItemData(class UItemDataAsset* NewItemData);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class USceneComponent* RootComp;
@@ -56,6 +58,11 @@ public:
 	FTimeline MyTimeline;
 	FTimerHandle TimelineTimer;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	bool bUseRandomPool = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	TArray<class UItemDataAsset*> RandomPool = {};
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -69,7 +76,7 @@ struct FLootDrop
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<APickup> Pickup;
+	class UItemDataAsset* Item;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 DropRate;

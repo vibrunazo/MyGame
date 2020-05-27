@@ -104,8 +104,9 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 
 	// FVector ViewTarget = PlayerRef->GetActorLocation() + PlayerRef->GetActorForwardVector() * ViewRotDistanceAhead;
 	FVector ViewTarget = PlayerRef->GetActorLocation();
-	if (PlayerRef->GetActorForwardVector().Y > 0.2) CurViewDistance = ViewRotDistanceAhead;
-	if (PlayerRef->GetActorForwardVector().Y < -0.2) CurViewDistance = -ViewRotDistanceAhead;
+	// UE_LOG(LogTemp, Warning, TEXT("forward: %s"), *PlayerRef->GetActorForwardVector().ToString());
+	if (PlayerRef->GetActorForwardVector().Y > 0.8) CurViewDistance = ViewRotDistanceAhead;
+	if (PlayerRef->GetActorForwardVector().Y < -0.8) CurViewDistance = -ViewRotDistanceAhead;
 	ViewTarget.Y += CurViewDistance;
 	// Clamp the View Target X axis to stay inside the room, if the player is looking towards bottom, then the camera won't point to the bottom room
 	// ViewTarget.X = FMath::Clamp(ViewTarget.X, -RoomSize.X*0.3f + RoomDistance.X, +RoomSize.X*0.5f + RoomDistance.X);

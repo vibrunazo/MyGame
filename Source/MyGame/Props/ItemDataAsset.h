@@ -21,12 +21,25 @@ public:
 	FText ItemName = FText::FromString(TEXT("Item"));
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
 	FText Description = FText();
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
-	TSubclassOf<class APickup> PickupActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	TArray<FEffectContainer> EffectsToApply;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
 	FGameplayTag CueTag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsConsumable = false;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
+	TSubclassOf<class APickup> PickupActor;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class UStaticMesh* PickupMesh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class UNiagaraSystem* SpawnParticles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class USoundBase* SpawnSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class USoundBase* PickupSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	class UNiagaraSystem* PickupParticles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	bool bMaxHPCanPickup = true;
 };

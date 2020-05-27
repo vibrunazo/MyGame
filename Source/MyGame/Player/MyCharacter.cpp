@@ -585,7 +585,8 @@ void AMyCharacter::DropItems()
     params.Owner = this;
 	for (auto &&Loot : LootTable)
 	{
-    	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(Loot.Pickup, Loc, FRotator::ZeroRotator, params);
+    	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(Loot.Item->PickupActor, Loc, FRotator::ZeroRotator, params);
+		NewPickup->SetItemData(Loot.Item);
 		// UE_LOG(LogTemp, Warning, TEXT("dropped a %s"), *Loot.Pickup->GetName());
 		// if (NewPickup) {UE_LOG(LogTemp, Warning, TEXT("Spawned"));}
 		// else {UE_LOG(LogTemp, Warning, TEXT("Nope"));}

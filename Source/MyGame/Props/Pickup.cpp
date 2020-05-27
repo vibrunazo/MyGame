@@ -52,10 +52,22 @@ APickup::APickup()
 
 }
 
+void APickup::OnConstruction(const FTransform & Transform)
+{
+	Super::OnConstruction(Transform);
+	ApplyItemData();
+}
+
 // Called when the game starts or when spawned
 void APickup::BeginPlay()
 {
 	Super::BeginPlay();
+
+	if (bUseRandomPool && RandomPool.Num() > 0)
+	{
+		int RandIndex = FMath::RandRange(0, RandomPool.Num() - 1);
+		SetItemData(RandomPool[RandIndex]);
+	}
 
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &APickup::OnDelayedSpawn, FMath::RandRange(0.05f, 0.3f), false);
@@ -153,4 +165,21 @@ void APickup::EnablePickup()
 {
 	BoxTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	// Mesh->SetVisibility(true);
+}
+
+void APickup::ApplyItemData()
+{
+	if (!ItemData) return;
+	if (ItemData->PickupMesh) Mesh->SetStaticMesh(ItemData->PickupMesh);
+	if (ItemData->SpawnParticles) SpawnParticles = ItemData->SpawnParticles;
+	if (ItemData->SpawnSound) SpawnSound = ItemData->SpawnSound;
+	if (ItemData->PickupSound) PickupSound = ItemData->PickupSound;
+	if (ItemData->PickupParticles) PickupParticles = ItemData->PickupParticles;
+	bMaxHPCanPickup = ItemData->bMaxHPCanPickup;
+}
+
+void APickup::SetItemData(UItemDataAsset* NewItemData)
+{
+	ItemData = NewItemData;
+	ApplyItemData();
 }
