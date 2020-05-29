@@ -30,6 +30,8 @@ public:
 	void SetItemData(class UItemDataAsset* NewItemData);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
+	class ULootComponent* LootComponent;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class USceneComponent* RootComp;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class UStaticMeshComponent* Mesh;
@@ -60,24 +62,11 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	bool bUseRandomPool = false;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
-	TArray<class UItemDataAsset*> RandomPool = {};
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	// TArray<class UItemDataAsset*> RandomPool = {};
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-};
-
-
-USTRUCT(BlueprintType)
-struct FLootDrop
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UItemDataAsset* Item;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 DropRate;
 };

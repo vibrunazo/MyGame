@@ -5,11 +5,12 @@
 #include "ItemDataAsset.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
-// #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
-#include "AbilitySystemComponent.h"
 #include "../Abilities/MyAttributeSet.h"
 #include "../UI/WidgetActor.h"
+#include "../Abilities/LootComponent.h"
+
+#include "AbilitySystemComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
@@ -50,6 +51,8 @@ APickup::APickup()
 	static ConstructorHelpers::FClassFinder<AWidgetActor> WABPClass(TEXT("/Game/UI/BP_UMGActor"));
 	WidgetActorClass = WABPClass.Class;
 
+	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
+
 }
 
 void APickup::OnConstruction(const FTransform & Transform)
@@ -63,10 +66,10 @@ void APickup::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (bUseRandomPool && RandomPool.Num() > 0)
+	if (bUseRandomPool && LootComponent && LootComponent->LootTable.Num() > 0)
 	{
-		int RandIndex = FMath::RandRange(0, RandomPool.Num() - 1);
-		SetItemData(RandomPool[RandIndex]);
+		int RandIndex = FMath::RandRange(0, LootComponent->LootTable.Num() - 1);
+		SetItemData(LootComponent->LootTable[RandIndex].Item);
 	}
 
 	FTimerHandle Handle;

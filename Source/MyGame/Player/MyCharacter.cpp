@@ -1,7 +1,14 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "MyCharacter.h"
-// #include "HeadMountedDisplayFunctionLibrary.h"
+#include "MyPlayerController.h"
+#include "../MyGameInstance.h"
+#include "../Abilities/LootComponent.h"
+#include "../Level/LevelBuilder.h"
+#include "../Props/ItemDataAsset.h"
+#include "../Props/Pickup.h"
+#include "../UI/MyHealthBar.h"
+
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
@@ -11,7 +18,6 @@
 #include "Components/WidgetComponent.h"
 #include "Blueprint/UserWidget.h"
 // #include "../Abilities/MyAttributeSet.h"
-#include "../UI/MyHealthBar.h"
 #include "MyAnimInstance.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
@@ -21,13 +27,9 @@
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/ArrowComponent.h"
 #include "UObject/ConstructorHelpers.h"
-#include "../MyGameInstance.h"
-#include "MyPlayerController.h"
-#include "../Level/LevelBuilder.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
-#include "../Props/ItemDataAsset.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -86,6 +88,7 @@ AMyCharacter::AMyCharacter()
 	// Our ability system component.
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
+	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 
 	SetDefaultProperties();
 }
@@ -388,6 +391,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
 	FGameplayTagContainer EffectTags;
 	// NewEffect.Data->GetAllGrantedTags(EffectTags);
+	if (!NewEffect.Data || !AbilitySystem) { return nullptr; }
 	NewEffect.Data->GetAllAssetTags(EffectTags);
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
 	// FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
@@ -583,8 +587,11 @@ void AMyCharacter::DropItems()
     params.bNoFail = true;
     params.Instigator = this;
     params.Owner = this;
+	if (!LootComponent) return;
+	auto LootTable = LootComponent->LootTable;
 	for (auto &&Loot : LootTable)
 	{
+		if (!Loot.Item) continue;
     	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(Loot.Item->PickupActor, Loc, FRotator::ZeroRotator, params);
 		NewPickup->SetItemData(Loot.Item);
 		// UE_LOG(LogTemp, Warning, TEXT("dropped a %s"), *Loot.Pickup->GetName());

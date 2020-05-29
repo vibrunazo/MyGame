@@ -10,7 +10,6 @@
 #include "../Abilities/ICastProjectile.h"
 #include "GameplayEffectTypes.h"
 #include "../Abilities/MyAttributeSet.h"
-#include "../Props/Pickup.h"
 #include "MyCharacter.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
@@ -88,12 +87,14 @@ public:
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	class UAbilitySystemComponent* AbilitySystem;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
+	class ULootComponent* LootComponent;
 	// UPROPERTY(BlueprintReadOnly, Category = Abilities)
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	TArray<FLootDrop> LootTable;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	// TArray<FLootDrop> LootTable;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TSubclassOf<class UCameraShake> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
