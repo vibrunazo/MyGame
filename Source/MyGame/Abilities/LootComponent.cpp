@@ -33,3 +33,13 @@ void ULootComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 	// ...
 }
 
+UItemDataAsset* ULootComponent::GetRandomItem()
+{
+	UItemDataAsset* result = nullptr;
+	if (LootTable.Num() > 0)
+	{
+		int RandIndex = FMath::RandRange(0, LootTable.Num() - 1);
+		result = LootTable[RandIndex].Item;
+	}
+	return result;
+}

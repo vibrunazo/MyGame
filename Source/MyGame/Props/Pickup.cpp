@@ -66,10 +66,9 @@ void APickup::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (bUseRandomPool && LootComponent && LootComponent->LootTable.Num() > 0)
+	if (bUseRandomPool && LootComponent)
 	{
-		int RandIndex = FMath::RandRange(0, LootComponent->LootTable.Num() - 1);
-		SetItemData(LootComponent->LootTable[RandIndex].Item);
+		SetItemData(LootComponent->GetRandomItem());
 	}
 
 	FTimerHandle Handle;
@@ -183,6 +182,7 @@ void APickup::ApplyItemData()
 
 void APickup::SetItemData(UItemDataAsset* NewItemData)
 {
+	if (!NewItemData) return;
 	ItemData = NewItemData;
 	ApplyItemData();
 }

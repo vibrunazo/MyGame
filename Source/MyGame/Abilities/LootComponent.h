@@ -28,6 +28,8 @@ public:
 	// Sets default values for this component's properties
 	ULootComponent();
 
+	class UItemDataAsset* GetRandomItem();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<FLootDrop> LootTable;
 
