@@ -2,6 +2,9 @@
 
 
 #include "LootComponent.h"
+#include "../MyGameInstance.h"
+
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 ULootComponent::ULootComponent()
@@ -36,9 +39,10 @@ void ULootComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 UItemDataAsset* ULootComponent::GetRandomItem()
 {
 	UItemDataAsset* result = nullptr;
-	if (LootTable.Num() > 0)
+	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(this));
+	if (LootTable.Num() > 0 && GI)
 	{
-		int RandIndex = FMath::RandRange(0, LootTable.Num() - 1);
+		int RandIndex = GI->RandomStream.RandRange(0, LootTable.Num() - 1);
 		result = LootTable[RandIndex].Item;
 	}
 	return result;
