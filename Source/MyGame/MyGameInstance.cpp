@@ -9,6 +9,11 @@
 
 UMyGameInstance::UMyGameInstance()
 {
+}
+
+void UMyGameInstance::Init()
+{
+    Super::Init();
     NewGame();
 }
 
@@ -32,6 +37,12 @@ void UMyGameInstance::NewGame()
     LevelDifficulty = 1;
     Health = 100.f;
     Inventory.Empty();
+
+    // TODO this might be called after the game is over, before the new game actually starts, which might cause random stream to desync?
+    RandomStream = FRandomStream(RandomSeed);
+	if (!RandomSeed) RandomStream.GenerateNewSeed();
+    UE_LOG(LogTemp, Warning, TEXT("GameInstance Random Seed: %d"), RandomStream.GetCurrentSeed());
+	UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
 }
 
 void UMyGameInstance::LevelClear(FString NextMapUrl)

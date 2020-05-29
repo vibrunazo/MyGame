@@ -17,6 +17,8 @@ class MYGAME_API UMyGameInstance : public UGameInstance
 public:
 	UMyGameInstance();
 
+	void Init() override;
+
 	UFUNCTION(BlueprintCallable, Category="MyGI")
 	class ALevelBuilder* GetLevelBuilder();
 	void SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder);
@@ -41,6 +43,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<class UItemDataAsset*> Inventory;
 	class AMyCharacter* PlayerCharRef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
+	int32 RandomSeed = 0;
+	FRandomStream RandomStream;
 
 private:
 	class ALevelBuilder* LevelBuilderRef = nullptr;

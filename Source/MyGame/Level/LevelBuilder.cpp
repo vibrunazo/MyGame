@@ -48,8 +48,8 @@ void ALevelBuilder::BeginPlay()
 	// ULevelStreaming* NewLevel = OnBPCreateLevelByName(NewRoom->LevelAddress);
 
 	GetWorldSettings()->SetTimeDilation(0.0f);
-	RandomStream = FRandomStream(RandomSeed);
-	if (!RandomSeed) RandomStream.GenerateNewSeed();
+	// RandomStream = FRandomStream(RandomSeed);
+	// if (!RandomSeed) RandomStream.GenerateNewSeed();
 
 	SetAssetListFromRegistry();
 	BuildGrid();
@@ -270,7 +270,7 @@ URoomDataAsset* ALevelBuilder::AddTreasureRoom()
 	for (size_t i = 0; i < 20; i++)
 	{
 		// uint8 TreasurePosition = FMath::RandRange(2, GridCoords.Num() - 2);
-		uint8 TreasurePosition = RandomStream.RandRange(2, GridCoords.Num() - 2);
+		uint8 TreasurePosition = RandomStream->RandRange(2, GridCoords.Num() - 2);
 		FCoord Coord = GridCoords[TreasurePosition];
 		result = AddTreasureRoomNextTo(Coord);
 		if (result) return result;
@@ -303,7 +303,7 @@ URoomDataAsset* ALevelBuilder::AddTreasureRoomNextTo(FCoord Coord)
 URoomDataAsset* ALevelBuilder::GetRandomRoom()
 {
 	if (RoomList.Num() == 0) return nullptr;
-	int32 Index = RandomStream.RandRange(0, RoomList.Num() - 1);
+	int32 Index = RandomStream->RandRange(0, RoomList.Num() - 1);
 	// int32 Index = FMath::RandRange(0, RoomList.Num() - 1);
 	return RoomList[Index];
 }
@@ -314,7 +314,7 @@ URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty)
 	TArray<URoomDataAsset *> FilteredRooms = {};
 	FilteredRooms = FindRoomsOfDifficulty(Difficulty);
 	if (FilteredRooms.Num() == 0) return nullptr;
-	int32 Index = RandomStream.RandRange(0, FilteredRooms.Num() - 1);
+	int32 Index = RandomStream->RandRange(0, FilteredRooms.Num() - 1);
 	// int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
 	
 	return FilteredRooms[Index];
@@ -356,8 +356,8 @@ TArray<URoomDataAsset*> ALevelBuilder::FindRoomsOfType(ERoomType Type, int32 Dif
 
 void ALevelBuilder::BuildGrid()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Random Seed: %d Stream: %s"), RandomStream.GetCurrentSeed(), *RandomStream.ToString());
-	UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
+	// UE_LOG(LogTemp, Warning, TEXT("Random Seed: %d Stream: %s"), RandomStream.GetCurrentSeed(), *RandomStream.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
 	int16 x = 0;
 	int16 y = 0;
 	int32 Difficulty = 0;
@@ -367,7 +367,9 @@ void ALevelBuilder::BuildGrid()
 	{
 		uint8 GIDifficulty = GI->LevelDifficulty;
 		NumRooms += GIDifficulty;
+		RandomStream = &GI->RandomStream;
 	}
+	else return;
 	// uint8 TreasureRoomPosition = 3;
 	// uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);
 	// FCoord TreasureRoomCoord;
@@ -387,7 +389,7 @@ void ALevelBuilder::BuildGrid()
 		// y++;
 		// UE_LOG(LogTemp, Warning, TEXT("Chance of Going Right: %d%"), ChanceOfGoingRight);
 		// if (FMath::RandRange(1, 100) <= ChanceOfGoingRight)
-		if (RandomStream.RandRange(1, 100) <= ChanceOfGoingRight)
+		if (RandomStream->RandRange(1, 100) <= ChanceOfGoingRight)
 		{
 			// UE_LOG(LogTemp, Warning, TEXT("Chose Right"));
 			y++; ChanceOfGoingRight -= DecWhenChoseRight;
@@ -397,7 +399,7 @@ void ALevelBuilder::BuildGrid()
 			// UE_LOG(LogTemp, Warning, TEXT("Chose Vert"));
 			ChanceOfGoingRight += IncWhenChoseVert;
 			// if(FMath::RandBool())
-			if(RandomStream.RandRange(0, 1))
+			if(RandomStream->RandRange(0, 1))
 			{
 				if (IsNeighborFree(Coord, EWallPos::Top)) x++;
 				else x--;
