@@ -443,7 +443,7 @@ void AMyCharacter::SetOutline()
 {
 	GetMesh()->SetRenderCustomDepth(true);
 	GetMesh()->SetCustomDepthStencilValue(3);
-	GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, 5.f, false);
+	GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, 3.f, false);
 }
 
 /* Removes the outline of an enemy character by setting the custom depth stencil back to zero.
@@ -733,8 +733,14 @@ void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
 	// Power = FVector(0.f, 600.f, 300.f);
 	LastLaunchBack = Power;
 	// LaunchDir.Z = Power.Z;
-	FTimerHandle Handle;
-	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedLaunch, 0.05f, false);
+	FTimerHandle TimerHandle;
+	GetWorldTimerManager().SetTimer(TimerHandle, this, &AMyCharacter::OnDelayedLaunch, 0.05f, false);
+	
+	TSubclassOf<UGameplayEffect> NoControlEffect = GetMyGameInstance()->NoControlEffectRef;
+	const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(NoControlEffect, 0.f, AbilitySystem->MakeEffectContext());
+	FGameplayTag NoControlTag = FGameplayTag::RequestGameplayTag(TEXT("data.nocontrol"));
+	Handle.Data.Get()->SetSetByCallerMagnitude(NoControlTag, 0.5f);
+	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
 	// UE_LOG(LogTemp, Warning, TEXT("Applying Launch: %s"), *Power.ToString());
 }
 
