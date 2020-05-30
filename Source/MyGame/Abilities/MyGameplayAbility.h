@@ -23,21 +23,17 @@ public:
 	TArray<FEffectContainer> EffectsToApply;
 	// TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	float HitPause = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	bool bCanCombo = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float HitToComboDelay = 0.05f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float ComboResetDelay = 2.00f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	float Damage = 15.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	float HitStun = 0.6f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	float HitPause = 0.5f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	float KnockBack = 500.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
-	FVector LaunchVector = FVector(200.0f, 0.0f, 300.0f);
 	uint8 CurrentComboCount = 0;
 	bool bHasHitConnected = false;
+	bool bCanComboState = false;
+	bool bIsInComboState = false;
 private:
 	void ResetCombo();
 	void UpdateCombo();

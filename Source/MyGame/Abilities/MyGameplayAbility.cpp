@@ -28,10 +28,13 @@ UMyGameplayAbility::UMyGameplayAbility()
 bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const
 {
     FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
+    // If I'm in the middle of an attack
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
-        if (bHasHitConnected && GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay) 
+        // check if it can be cancelled into a combo
+        if (bCanCombo && bHasHitConnected && (GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay || bCanComboState)) 
         {
+            // it can be cancelled so call Super to do regular checks if I can cast this ability 
             return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
         }
         return false;
@@ -49,11 +52,15 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         return;
     }
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
-    ResetHitBoxes();
+    // ResetHitBoxes();
     UpdateCombo();
     bHasHitConnected = false;
+    bCanComboState = false;
     bHasHitStarted = false;
-    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, NAME_None, false, 1.0f);
+    // ActorInfo->AvatarActor()->
+    FName MontageSection = NAME_None;
+    if (bIsInComboState) MontageSection = "ComboStart";
+    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, MontageSection, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnInterrupted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnCancelled.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
@@ -131,6 +138,7 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
     // UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitConnected && bHasHitStarted) ResetCombo();
+    if (bHasHitConnected && bHasHitStarted) bCanComboState = true;
     bHasHitStarted = false;
     ResetHitBoxes();
 }
@@ -207,6 +215,7 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 
 void UMyGameplayAbility::IncComboCount()
 {
+    bIsInComboState = true;
     if (bHasHitConnected) return;
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
     else ResetCombo();
@@ -222,7 +231,11 @@ void UMyGameplayAbility::ResetCombo()
 
 void UMyGameplayAbility::UpdateCombo()
 {
-    if (GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
+    if (GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) 
+    {
+        bIsInComboState = false;
+        ResetCombo();
+    }
     // if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
     // UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
 }
