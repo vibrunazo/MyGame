@@ -21,7 +21,7 @@
 
 UMyGameplayAbility::UMyGameplayAbility()
 {
-    static ConstructorHelpers::FClassFinder<AActor> HitBoxClassFinder(TEXT("/Game/Blueprints/BP_HitBox"));
+    static ConstructorHelpers::FClassFinder<AActor> HitBoxClassFinder(TEXT("/Game/Blueprints/Chars/BP_HitBox"));
     HitBoxClass = HitBoxClassFinder.Class;
 }
 
