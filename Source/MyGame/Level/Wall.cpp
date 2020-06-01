@@ -20,8 +20,10 @@ AWall::AWall()
 
 void AWall::OnConstruction(const FTransform & Transform)
 {
-	WallMeshes->SetStaticMesh(Wall_2m);
+	if (!WallMeshes) return;
 	WallMeshes->ClearInstances();
+	if (!Wall_2m) return;
+	WallMeshes->SetStaticMesh(Wall_2m);
 	float TileLength = 200.f;
 	uint8 NumInstances = FMath::FloorToInt(Length / TileLength);
 	for (int i = NumInstances - 1; i >= 0; i--)
