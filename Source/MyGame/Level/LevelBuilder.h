@@ -17,6 +17,19 @@ enum class EWallPos : uint8
 };
 
 USTRUCT(BlueprintType)
+struct FWallSettings
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Length = 2000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	float Height = 400.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bIsDoored = false;
+};
+
+USTRUCT(BlueprintType)
 struct FRoomState
 {
 	GENERATED_BODY()
@@ -142,7 +155,7 @@ private:
 	class URoomDataAsset* AddTreasureRoom();
 	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
 	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
-	class AWall* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
+	class AWall* SpawnWall(FTransform Where, FWallSettings* Settings = nullptr);
 	class AWall* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
 	class AWall* GenerateWallAtGrid(FCoord Where, EWallPos Pos, bool Doored);
 	class AWall* GenerateWallMeshAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);

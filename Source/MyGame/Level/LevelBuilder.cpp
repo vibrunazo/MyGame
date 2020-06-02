@@ -179,38 +179,48 @@ AWall* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticM
 {
 	FVector Loc = Where.GetLocation();
 	FRotator Rot = Where.Rotator();
+	FWallSettings NewSettings = FWallSettings();
 	switch (Pos)
 	{
 	case EWallPos::Top:
 		Loc.X += RoomSizeX/2;
+		NewSettings.Length = RoomSizeY;
 		break;
 
 	case EWallPos::Bottom:
 		Loc.X -= RoomSizeX/2;
+		NewSettings.Length = RoomSizeY;
 		break;
 	
 	case EWallPos::Left:
 		Loc.Y -= RoomSizeY/2;
 		Rot.Yaw = 90.0f;
+		NewSettings.Length = RoomSizeX;
 		break;
 	
 	case EWallPos::Right:
 		Loc.Y += RoomSizeY/2;
 		Rot.Yaw = 90.0f;
+		NewSettings.Length = RoomSizeX;
 		break;
 	}
-	return GenerateWall(FTransform(Rot, Loc), What);
+	return SpawnWall(FTransform(Rot, Loc), &NewSettings);
 }
 
-AWall* ALevelBuilder::GenerateWall(FTransform Where, UStaticMesh* What)
+AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 {
 	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
-	if (What == nullptr) What = WallMesh;
+	if (Settings == nullptr) 
+	{
+		FWallSettings NewSettings = FWallSettings();
+		Settings = &NewSettings;
+	}
 	FVector Loc = Where.GetLocation();
 	FActorSpawnParameters params;
 	params.bNoFail = true;
 	AWall* NewWall = GetWorld()->SpawnActor<AWall>(AWall::StaticClass(), Loc, Where.Rotator(), params);
 	NewWall->Wall_2m = Wall_2m;
+	NewWall->Length = Settings->Length;
 	NewWall->BuildWalls();
 	// NewWall->GetStaticMeshComponent()->SetMobility(EComponentMobility::Stationary);
 	// NewWall->GetStaticMeshComponent()->SetStaticMesh(What);
