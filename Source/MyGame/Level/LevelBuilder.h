@@ -156,9 +156,9 @@ private:
 	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
 	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
 	class AWall* SpawnWall(FTransform Where, FWallSettings* Settings = nullptr);
-	class AWall* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
-	class AWall* GenerateWallAtGrid(FCoord Where, EWallPos Pos, bool Doored);
-	class AWall* GenerateWallMeshAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
+	class AWall* GenerateWallAtLoc(FTransform Where, EWallPos Pos, FWallSettings* Settings = nullptr);
+	class AWall* GenerateWallOfDoorTypeAtGrid(FCoord Where, EWallPos Pos, bool Doored);
+	class AWall* TryGenerateWallAtGrid(FCoord Where, EWallPos Pos, FWallSettings* Settings = nullptr);
 	class AWall* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
 	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
 	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);

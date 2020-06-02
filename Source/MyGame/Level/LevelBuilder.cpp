@@ -129,13 +129,16 @@ void ALevelBuilder::OnLoadedOneLevel()
 }
 
 // Try to Create a Wall at this Grid Coord to direction Dir. Will not create the wall if it already exists
-// if Doored is false, creates just a WallMesh, else if Doored is true, creates a DooredWallMesh and a ADoor Actor
-AWall* ALevelBuilder::GenerateWallAtGrid(FCoord Where, EWallPos Dir, bool Doored = false)
+// Creates a WallSettings and set its Doored type and calls TryToGenerateWallAtGrid with that Settings
+AWall* ALevelBuilder::GenerateWallOfDoorTypeAtGrid(FCoord Where, EWallPos Dir, bool Doored = false)
 {
 	AWall* result = nullptr;
+	FWallSettings NewSettings = FWallSettings();
+	FWallSettings* Settings = &NewSettings;
+	Settings->bIsDoored = Doored;
 	if (Doored)
 	{
-		result = GenerateWallMeshAtGrid(Where, Dir, WallDooredMesh);
+		result = TryGenerateWallAtGrid(Where, Dir, Settings);
 		if (result)
 		{
 			SpawnDoor(Where, Dir);
@@ -143,12 +146,12 @@ AWall* ALevelBuilder::GenerateWallAtGrid(FCoord Where, EWallPos Dir, bool Doored
 	}
 	else 
 	{
-		result = GenerateWallMeshAtGrid(Where, Dir, WallMesh);
+		result = TryGenerateWallAtGrid(Where, Dir, Settings);
 	}
 	return result;
 }
 // Try to Create a Wall at this Grid Coord to direction Dir. Will not create the wall if it already exists
-AWall* ALevelBuilder::GenerateWallMeshAtGrid(FCoord Where, EWallPos Dir, UStaticMesh* What)
+AWall* ALevelBuilder::TryGenerateWallAtGrid(FCoord Where, EWallPos Dir, FWallSettings* Settings)
 {
 	FString ID = GetWallID(Where, Dir);
 	AWall** Existing = AllWalls.Find(ID);
@@ -158,7 +161,7 @@ AWall* ALevelBuilder::GenerateWallMeshAtGrid(FCoord Where, EWallPos Dir, UStatic
 	}
 	FTransform RoomLoc = FTransform();
 	RoomLoc.SetLocation(GetLocFromGrid(Where));
-	AWall* NewWall = GenerateWallAtLoc(RoomLoc, Dir, What);
+	AWall* NewWall = GenerateWallAtLoc(RoomLoc, Dir, Settings);
 	AllWalls.Add(ID, NewWall);
 	// UE_LOG(LogTemp, Warning, TEXT("Generated wall of ID: %s, total %d walls"), *ID, AllWalls.Num());
 	return NewWall;
@@ -170,43 +173,50 @@ AWall* ALevelBuilder::GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos)
 	FRoomState* Side = Grid.Find(SideCoord);
 	if (!Side)
 	{
-		GenerateWallMeshAtGrid(Where, Pos);
+		GenerateWallOfDoorTypeAtGrid(Where, Pos);
 	}
 	return nullptr;
 }
 
-AWall* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What)
+/* Spawns a wall in the room centered in Transform Where, the wall will be at Direction Pos of that room
+Will use given Wall Settings but will edit the Settings length depending on Room Size */
+AWall* ALevelBuilder::GenerateWallAtLoc(FTransform Where, EWallPos Pos, FWallSettings* Settings)
 {
 	FVector Loc = Where.GetLocation();
 	FRotator Rot = Where.Rotator();
-	FWallSettings NewSettings = FWallSettings();
+	if (!Settings) 
+	{
+		FWallSettings NewSettings = FWallSettings();
+		Settings = &NewSettings;
+	}
 	switch (Pos)
 	{
 	case EWallPos::Top:
 		Loc.X += RoomSizeX/2;
-		NewSettings.Length = RoomSizeY;
+		Settings->Length = RoomSizeY;
 		break;
 
 	case EWallPos::Bottom:
 		Loc.X -= RoomSizeX/2;
-		NewSettings.Length = RoomSizeY;
+		Settings->Length = RoomSizeY;
 		break;
 	
 	case EWallPos::Left:
 		Loc.Y -= RoomSizeY/2;
 		Rot.Yaw = 90.0f;
-		NewSettings.Length = RoomSizeX;
+		Settings->Length = RoomSizeX;
 		break;
 	
 	case EWallPos::Right:
 		Loc.Y += RoomSizeY/2;
 		Rot.Yaw = 90.0f;
-		NewSettings.Length = RoomSizeX;
+		Settings->Length = RoomSizeX;
 		break;
 	}
-	return SpawnWall(FTransform(Rot, Loc), &NewSettings);
+	return SpawnWall(FTransform(Rot, Loc), Settings);
 }
 
+/* Spawns a new AWall exactly at World Transform Where with given Wall Settings */
 AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 {
 	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
@@ -221,6 +231,7 @@ AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 	AWall* NewWall = GetWorld()->SpawnActor<AWall>(AWall::StaticClass(), Loc, Where.Rotator(), params);
 	NewWall->Wall_2m = Wall_2m;
 	NewWall->Length = Settings->Length;
+	NewWall->bIsDoored = Settings->bIsDoored;
 	NewWall->BuildWalls();
 	// NewWall->GetStaticMeshComponent()->SetMobility(EComponentMobility::Stationary);
 	// NewWall->GetStaticMeshComponent()->SetStaticMesh(What);
@@ -442,7 +453,7 @@ void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> Tile)
 		for (auto &&Dir : ALLDIRECTIONS)
 		{
 			// GenerateWallAtGrid(Tile.Key, Dir, WallDooredMesh);
-			GenerateWallAtGrid(Tile.Key, Dir, true);
+			GenerateWallOfDoorTypeAtGrid(Tile.Key, Dir, true);
 		}
 	}
 	
