@@ -26,11 +26,13 @@ void AWall::OnConstruction(const FTransform & Transform)
 	WallMeshes->SetStaticMesh(Wall_2m);
 	float TileLength = 200.f;
 	uint8 NumInstances = FMath::FloorToInt(Length / TileLength);
-	for (int i = 0; i < NumInstances; i++)
-	{
-		WallMeshes->AddInstance(FTransform(FVector(0.f, -NumInstances*0.5f*TileLength + TileLength*i + 0.5f*TileLength, 0.f)));
-
-	}
+	FTransform WallT = FTransform(FVector(0.f, 0.f, 0.f));
+	WallT.SetScale3D(FVector(1.f, Length / TileLength, 2.f));
+	WallMeshes->AddInstance(WallT);
+	// for (int i = 0; i < NumInstances; i++)
+	// {
+	// 	WallMeshes->AddInstance(FTransform(FVector(0.f, -NumInstances*0.5f*TileLength + TileLength*i + 0.5f*TileLength, 0.f)));
+	// }
 }
 
 // Called when the game starts or when spawned
