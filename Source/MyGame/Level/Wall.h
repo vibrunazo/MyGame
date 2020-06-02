@@ -23,11 +23,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
 	float Length = 1000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
+	float Height = 400.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
 	bool bIsDoored = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
 	class UStaticMesh* Wall_2m;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
-	class UStaticMesh* Wall_Tall2m;
+	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
+	// class UStaticMesh* Wall_Tall2m;
 
 protected:
 	// Called when the game starts or when spawned
