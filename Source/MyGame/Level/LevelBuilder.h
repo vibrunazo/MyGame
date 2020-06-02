@@ -179,7 +179,6 @@ private:
 
 	TArray<class AWall*> HiddenWalls;
 	FCoord LastEnteredRoomCoord = FCoord(-67, 9390);
-	TArray<class AWall*> CappedWalls;
 	uint8 CountOfLevelsThatDidntFinishLoading = 0;
 
 protected:
