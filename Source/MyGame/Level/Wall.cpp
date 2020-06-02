@@ -20,6 +20,26 @@ AWall::AWall()
 
 void AWall::OnConstruction(const FTransform & Transform)
 {
+	BuildWalls();
+}
+
+// Called when the game starts or when spawned
+void AWall::BeginPlay()
+{
+	Super::BeginPlay();
+	
+}
+
+// Called every frame
+void AWall::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
+void AWall::BuildWalls()
+{
+
 	if (!WallMeshes) return;
 	WallMeshes->ClearInstances();
 	if (!Wall_2m) return;
@@ -43,33 +63,11 @@ void AWall::OnConstruction(const FTransform & Transform)
 			TrRight.SetScale3D(FVector(1.f, ((Length - 200.f)/2.f) / TileLength, (FMath::Min(Height, 200.f) / TileHeight)));
 			WallMeshes->AddInstance(TrLeft);
 			WallMeshes->AddInstance(TrRight);
-
 		}
-
 	}
 	else
 	{
 		TrTop.SetScale3D(FVector(1.f, Length / TileLength, Height / TileHeight));
 		WallMeshes->AddInstance(TrTop);
 	}
-	
-	// for (int i = 0; i < NumInstances; i++)
-	// {
-	// 	WallMeshes->AddInstance(FTransform(FVector(0.f, -NumInstances*0.5f*TileLength + TileLength*i + 0.5f*TileLength, 0.f)));
-	// }
 }
-
-// Called when the game starts or when spawned
-void AWall::BeginPlay()
-{
-	Super::BeginPlay();
-	
-}
-
-// Called every frame
-void AWall::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
-}
-

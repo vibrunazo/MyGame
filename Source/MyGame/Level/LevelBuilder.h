@@ -85,8 +85,8 @@ public:
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
 	FRoomState* GetRoomStateFromCoord(FCoord Coord);
-	class AStaticMeshActor* GetBottomWallFromLoc(FVector Location);
-	class AStaticMeshActor* GetWallRefFromCoordAndDir(FCoord Coord, EWallPos Dir);
+	class AWall* GetBottomWallFromLoc(FVector Location);
+	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, EWallPos Dir);
 	void OnUpdateCharCoord(FVector Location, EWallPos Dir=EWallPos::Bottom);
 	void HideWall(FCoord Coord, EWallPos Dir=EWallPos::Bottom);
 	void SetRoomClearedAtLoc(FVector Location);
@@ -108,6 +108,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	int32 IncWhenChoseVert = 35;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	class UStaticMesh* Wall_2m;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* WallMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* WallDooredMesh;
@@ -125,7 +127,7 @@ public:
 	// int32 RandomSeed = 0;
 	FRandomStream* RandomStream = nullptr;
 	TMap<FCoord, FRoomState> Grid;
-	TMap<FString, class AStaticMeshActor*> AllWalls;
+	TMap<FString, class AWall*> AllWalls;
 	
 
 private:
@@ -140,11 +142,11 @@ private:
 	class URoomDataAsset* AddTreasureRoom();
 	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
 	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
-	class AStaticMeshActor* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
-	class AStaticMeshActor* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
-	class AStaticMeshActor* GenerateWallAtGrid(FCoord Where, EWallPos Pos, bool Doored);
-	class AStaticMeshActor* GenerateWallMeshAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
-	class AStaticMeshActor* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
+	class AWall* GenerateWall(FTransform Where, UStaticMesh* What = nullptr);
+	class AWall* GenerateWallAtLoc(FTransform Where, EWallPos Pos, UStaticMesh* What = nullptr);
+	class AWall* GenerateWallAtGrid(FCoord Where, EWallPos Pos, bool Doored);
+	class AWall* GenerateWallMeshAtGrid(FCoord Where, EWallPos Pos, UStaticMesh* What = nullptr);
+	class AWall* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
 	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
 	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	FVector GetLocFromGrid(FCoord Coord);
@@ -162,9 +164,9 @@ private:
 	UFUNCTION()
 	void OnLoadedOneLevel();
 
-	TArray<class AStaticMeshActor*> HiddenWalls;
+	TArray<class AWall*> HiddenWalls;
 	FCoord LastEnteredRoomCoord = FCoord(-67, 9390);
-	TArray<class AStaticMeshActor*> CappedWalls;
+	TArray<class AWall*> CappedWalls;
 	uint8 CountOfLevelsThatDidntFinishLoading = 0;
 
 protected:

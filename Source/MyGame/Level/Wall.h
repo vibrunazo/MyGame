@@ -16,6 +16,8 @@ public:
 	AWall();
 	void OnConstruction(const FTransform & Transform) override;
 
+	void BuildWalls();
+
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = Wall)
 	class USceneComponent* RootComp;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = Wall)
