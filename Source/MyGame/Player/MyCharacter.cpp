@@ -309,6 +309,15 @@ void AMyCharacter::Jump()
 	Super::Jump();
 }
 
+void AMyCharacter::FellOutOfWorld(const UDamageType& dmgType)
+{
+	if (IsAlive() && AttributeSetBase) 
+	{
+		AttributeSetBase->SetHealth(0.f);
+		OnDie();
+	}
+}
+
 
 void AMyCharacter::GiveAbility(TSubclassOf<class UGameplayAbility> Ability)
 {
@@ -550,10 +559,10 @@ void AMyCharacter::OnDie()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
-	if (MyAnim)
-	{
+	// if (MyAnim)
+	// {
 		// MyAnim->StartRagdoll();
-	}
+	// }
 }
 
 void AMyCharacter::OnDelayedLaunch2()
@@ -582,7 +591,9 @@ void AMyCharacter::OnDelayedDeath()
 void AMyCharacter::DropItems()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("dropping items"));
-	FVector Loc = GetActorLocation();
+	FVector Loc;
+	if (GetMovementComponent() && GetMovementComponent()->IsFalling()) Loc = LastGroundLocation;
+	else Loc = GetActorLocation();
     FActorSpawnParameters params;
     params.bNoFail = true;
     params.Instigator = this;
@@ -677,6 +688,7 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 		GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 		GetMesh()->SetGenerateOverlapEvents(true);
+		LastGroundLocation = GetActorLocation();
 	}
 }
 

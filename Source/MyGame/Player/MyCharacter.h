@@ -31,6 +31,7 @@ public:
 
 	void Tick(float DeltaSeconds) override;
 	void Jump() override;
+	void FellOutOfWorld(const UDamageType& dmgType) override;
 
 	virtual void SetDefaultProperties();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -167,6 +168,7 @@ private:
 	FVector LastLaunchBack = FVector(0.0f, 0.0f, 0.0f);
 	class UMyGameInstance* MyGIRef;
 	FTimerHandle OutlineTimer;
+	FVector LastGroundLocation = FVector();
 	// float LastInputAngle = 0.0f;
 
 protected:
