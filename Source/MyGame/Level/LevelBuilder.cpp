@@ -229,7 +229,7 @@ AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 	FActorSpawnParameters params;
 	params.bNoFail = true;
 	AWall* NewWall = GetWorld()->SpawnActor<AWall>(AWall::StaticClass(), Loc, Where.Rotator(), params);
-	NewWall->Wall_2m = Wall_2m;
+	NewWall->WallMesh = Wall_2m;
 	NewWall->Length = Settings->Length;
 	NewWall->bIsDoored = Settings->bIsDoored;
 	NewWall->BuildWalls();
@@ -639,14 +639,14 @@ void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 	}
 }
 
-UStaticMesh* ALevelBuilder::GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap)
-{
-	FRoomState* Tile1 = Grid.Find(Coord1);
-	FRoomState* Tile2 = Grid.Find(Coord2);
-	if (!Tile1 || !Tile2) return Cap? WallCappedMesh : WallMesh;
-	if (Tile1->RoomType->bIsWalled || Tile2->RoomType->bIsWalled) return Cap? WallDooredCappedMesh : WallDooredMesh;
-	return nullptr;
-}
+// UStaticMesh* ALevelBuilder::GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap)
+// {
+// 	FRoomState* Tile1 = Grid.Find(Coord1);
+// 	FRoomState* Tile2 = Grid.Find(Coord2);
+// 	if (!Tile1 || !Tile2) return Cap? WallCappedMesh : WallMesh;
+// 	if (Tile1->RoomType->bIsWalled || Tile2->RoomType->bIsWalled) return Cap? WallDooredCappedMesh : WallDooredMesh;
+// 	return nullptr;
+// }
 
 void ALevelBuilder::SetRoomClearedAtLoc(FVector Location)
 {

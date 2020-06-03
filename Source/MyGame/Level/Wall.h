@@ -22,14 +22,22 @@ public:
 	class USceneComponent* RootComp;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = Wall)
 	class UHierarchicalInstancedStaticMeshComponent* WallMeshes;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = Wall)
+	class UBoxComponent* CollisionTop;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = Wall)
+	class UBoxComponent* CollisionLeft;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite, Category = Wall)
+	class UBoxComponent* CollisionRight;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
 	float Length = 1000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
 	float Height = 400.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
+	float Depth = 20.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
 	bool bIsDoored = false;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
-	class UStaticMesh* Wall_2m;
+	class UStaticMesh* WallMesh;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Wall)
 	// class UStaticMesh* Wall_Tall2m;
 

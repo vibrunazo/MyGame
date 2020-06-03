@@ -123,14 +123,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	class UStaticMesh* Wall_2m;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
-	class UStaticMesh* WallMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
-	class UStaticMesh* WallDooredMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
-	class UStaticMesh* WallCappedMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
-	class UStaticMesh* WallDooredCappedMesh;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	TSubclassOf<class ADoor> DoorActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	float RoomSizeX = 2000.f;
@@ -173,7 +165,7 @@ private:
 	bool IsTileOfType(FCoord Tile, ERoomType Type);
 	TArray<FCoord> GetAllNeighborsCoords(FCoord From);
 	TArray<FCoord> FindFreeNeighbors(FCoord From);
-	class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
+	// class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 	UFUNCTION()
 	void OnLoadedOneLevel();
 
