@@ -121,7 +121,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	int32 IncWhenChoseVert = 35;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
-	class UStaticMesh* Wall_2m;
+	TSubclassOf<class AWall> WallActor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	TSubclassOf<class ADoor> DoorActor;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)

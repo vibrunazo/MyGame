@@ -38,6 +38,7 @@ ALevelBuilder::ALevelBuilder()
 
 	BBComp = CreateDefaultSubobject<UBillboardComponent>(TEXT("Dino"));
 	RootComponent = BBComp;
+	if (!WallActor) WallActor = AWall::StaticClass();
 	// BBComp->SetupAttachment(RootComponent);
 
 }
@@ -228,8 +229,7 @@ AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 	FVector Loc = Where.GetLocation();
 	FActorSpawnParameters params;
 	params.bNoFail = true;
-	AWall* NewWall = GetWorld()->SpawnActor<AWall>(AWall::StaticClass(), Loc, Where.Rotator(), params);
-	NewWall->WallMesh = Wall_2m;
+	AWall* NewWall = GetWorld()->SpawnActor<AWall>(WallActor, Loc, Where.Rotator(), params);
 	NewWall->Length = Settings->Length;
 	NewWall->bIsDoored = Settings->bIsDoored;
 	NewWall->BuildWalls();
