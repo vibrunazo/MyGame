@@ -93,6 +93,7 @@ class MYGAME_API ALevelBuilder : public AActor
 public:	
 	// Sets default values for this actor's properties
 	ALevelBuilder();
+	void OnConstruction(const FTransform & Transform) override;
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
@@ -108,6 +109,8 @@ public:
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* BBComp;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
+	class UBoxComponent* RoomBounds;
 	TArray<FAssetData> AssetDataList;
 	TArray<class URoomDataAsset*> RoomList;
 	TArray<class ADoor*> DoorList;

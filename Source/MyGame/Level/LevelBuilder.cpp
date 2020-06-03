@@ -8,6 +8,7 @@
 #include "../MyGameInstance.h"
 
 #include "Components/BillboardComponent.h"
+#include "Components/BoxComponent.h"
 #include "Engine/LevelStreaming.h"
 #include "AssetRegistryModule.h"
 #include "Engine/StaticMeshActor.h"
@@ -35,12 +36,20 @@ ALevelBuilder::ALevelBuilder()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	// PrimaryActorTick.bCanEverTick = true;
-
 	BBComp = CreateDefaultSubobject<UBillboardComponent>(TEXT("Dino"));
 	RootComponent = BBComp;
+	RoomBounds = CreateDefaultSubobject<UBoxComponent>(TEXT("Bounds"));
+	// RoomBounds->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepWorldTransform);
+	
 	if (!WallActor) WallActor = AWall::StaticClass();
 	// BBComp->SetupAttachment(RootComponent);
 
+}
+
+void ALevelBuilder::OnConstruction(const FTransform & Transform)
+{
+	RoomBounds->SetBoxExtent(FVector(RoomSizeX/2, RoomSizeY/2, 100.f));
+	RoomBounds->SetWorldLocation(FVector(0.f, 0.f, -100.f));
 }
 
 // Called when the game starts or when spawned
