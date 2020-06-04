@@ -400,7 +400,9 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
 	FGameplayTagContainer EffectTags;
 	// NewEffect.Data->GetAllGrantedTags(EffectTags);
-	if (!NewEffect.Data || !AbilitySystem) { return nullptr; }
+	if (!ensure(NewEffect.Data)) return nullptr;
+	if (!ensure(AbilitySystem)) return nullptr;
+	// if (!NewEffect.Data || !AbilitySystem) { return nullptr; }
 	NewEffect.Data->GetAllAssetTags(EffectTags);
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
 	// FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
