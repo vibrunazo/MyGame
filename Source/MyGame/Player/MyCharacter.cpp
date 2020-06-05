@@ -628,8 +628,15 @@ bool AMyCharacter::IsValidLowLevel()
 void AMyCharacter::OnHitPause(float Duration)
 {
 	CustomTimeDilation = 0.01f;
+	// UGameplayStatics::SetGlobalTimeDilation(this, 0.01f);
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnHitPauseEnd, Duration, false);
+}
+
+void AMyCharacter::OnHitPauseEnd()
+{
+	CustomTimeDilation = 1.0f;
+	// UGameplayStatics::SetGlobalTimeDilation(this, 1.f);
 }
 
 UMyGameInstance* AMyCharacter::GetMyGameInstance()
@@ -654,11 +661,6 @@ TSubclassOf<UCameraShake> AMyCharacter::GetCamShake()
 		}
 	}
 	return CamShakeClass;
-}
-
-void AMyCharacter::OnHitPauseEnd()
-{
-	CustomTimeDilation = 1.0f;
 }
 
 void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
