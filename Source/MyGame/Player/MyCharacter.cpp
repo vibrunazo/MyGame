@@ -30,6 +30,7 @@
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
+#include "NiagaraComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -631,12 +632,36 @@ void AMyCharacter::OnHitPause(float Duration)
 	// UGameplayStatics::SetGlobalTimeDilation(this, 0.01f);
 	FTimerHandle Handle;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnHitPauseEnd, Duration, false);
+
+	if (!GetMesh()) return;
+	TArray<USceneComponent*> MeshChildren;
+	GetMesh()->GetChildrenComponents(false, MeshChildren);
+
+	for (USceneComponent* Component : MeshChildren)
+	{
+		//if (UFXSystemComponent* FXSystemComponent = Cast<UFXSystemComponent>(Component))
+		if (UNiagaraComponent* FXSystemComponent = Cast<UNiagaraComponent>(Component))
+		{
+			FXSystemComponent->SetPaused(true);
+		}
+	}
 }
 
 void AMyCharacter::OnHitPauseEnd()
 {
 	CustomTimeDilation = 1.0f;
 	// UGameplayStatics::SetGlobalTimeDilation(this, 1.f);
+	if (!GetMesh()) return;
+	TArray<USceneComponent*> MeshChildren;
+	GetMesh()->GetChildrenComponents(false, MeshChildren);
+
+	for (USceneComponent* Component : MeshChildren)
+	{
+		if (UNiagaraComponent* FXSystemComponent = Cast<UNiagaraComponent>(Component))
+		{
+			FXSystemComponent->SetPaused(false);
+		}
+	}
 }
 
 UMyGameInstance* AMyCharacter::GetMyGameInstance()
