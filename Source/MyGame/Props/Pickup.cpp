@@ -139,7 +139,7 @@ void APickup::OnDelayedSpawn()
 	}
 	Mesh->SetHiddenInGame(false);
 	FTimerHandle Handle2;
-	GetWorldTimerManager().SetTimer(Handle2, this, &APickup::EnablePickup, 1.0f, false);
+	GetWorldTimerManager().SetTimer(Handle2, this, &APickup::EnablePickup, PickupTime, false);
 
 }
 
