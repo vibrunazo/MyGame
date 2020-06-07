@@ -19,5 +19,7 @@ public:
 	TArray<FName> BoneNames;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	float SphereRadius = 40.0f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	FTransform HitboxTransform = FTransform();
 	
 };

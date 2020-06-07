@@ -2,10 +2,11 @@
 
 
 #include "HitBox.h"
+#include "../Abilities/IGetHit.h"
+#include "HitboxSettings.h"
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/SkeletalMeshComponent.h"
-#include "../Abilities/IGetHit.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectTypes.h"
 
@@ -55,6 +56,27 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 		// NewSphere->bGenerateOverlapEvents = true;
 		if (!ensure(GetInstigator() != nullptr)) return;
 		// if (!ensure(GetOwner() != nullptr)) return;
+		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
+	}
+}
+
+void AHitBox::AddComponentsFromSettings(TArray<UHitboxSettings*> Settings)
+{
+	Hitboxes.Append(Settings);
+	for (auto&& Setting : Settings)
+	{
+		AddComponentsFromSetting(Setting);
+	}
+}
+
+void AHitBox::AddComponentsFromSetting(UHitboxSettings* Setting)
+{
+	TArray<FName> Bones = Setting->BoneNames;
+	for (auto&& Bone : Bones)
+	{
+		USphereComponent* NewSphere = AddHitSphere();
+		if (!ensure(GetInstigator() != nullptr)) return;
 		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
 	}
