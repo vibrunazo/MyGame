@@ -61,18 +61,19 @@ void AHitBox::AddComponentsToBones(TArray<FName> Bones)
 	}
 }
 
-void AHitBox::AddComponentsFromSettings(TArray<UHitboxSettings*> Settings)
+void AHitBox::AddComponentsFromContainer(UHitboxesContainer* Container)
 {
-	Hitboxes.Append(Settings);
-	for (auto&& Setting : Settings)
+	if (!Container) return;
+	//Hitboxes.Append(Container->Hitboxes);
+	for (auto&& Settings : Container->Hitboxes)
 	{
-		AddComponentsFromSetting(Setting);
+		AddComponentsFromSettings(Settings);
 	}
 }
 
-void AHitBox::AddComponentsFromSetting(UHitboxSettings* Setting)
+void AHitBox::AddComponentsFromSettings(FHitboxSettings Settings)
 {
-	TArray<FName> Bones = Setting->BoneNames;
+	TArray<FName> Bones = Settings.BoneNames;
 	for (auto&& Bone : Bones)
 	{
 		USphereComponent* NewSphere = AddHitSphere();

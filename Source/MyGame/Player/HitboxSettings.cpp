@@ -3,3 +3,12 @@
 
 #include "HitboxSettings.h"
 
+UHitboxesContainer::UHitboxesContainer()
+{
+
+}
+
+UHitboxesContainer::UHitboxesContainer(TArray<FHitboxSettings> NewHitboxes)
+{
+	Hitboxes = NewHitboxes;
+}

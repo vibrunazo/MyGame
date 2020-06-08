@@ -124,10 +124,10 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
     const UObject* OO = Payload.OptionalObject;
     if (OO) {
-        UHitboxSettings* Settings = (UHitboxSettings*)(Payload.OptionalObject);
+        UHitboxesContainer* Settings = (UHitboxesContainer*)(Payload.OptionalObject);
         if (!ensure(Settings != nullptr)) return;
         //NewHB->Hitboxes.Add(*Settings);
-        NewHB->AddComponentsFromSetting(Settings);
+        NewHB->AddComponentsFromContainer(Settings);
         //NewHB->SphereRadius = Settings->SphereRadius;
         //NewHB->AddComponentsToBones(Settings->BoneNames);
     }
