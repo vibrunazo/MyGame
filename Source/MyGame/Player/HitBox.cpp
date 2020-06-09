@@ -48,23 +48,24 @@ void AHitBox::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void AHitBox::AddComponentsToBones(TArray<FName> Bones)
-{
-	for (auto &&Bone : Bones)
-	{
-		USphereComponent* NewSphere = AddHitSphere();
-		// NewSphere->bGenerateOverlapEvents = true;
-		if (!ensure(GetInstigator() != nullptr)) return;
-		// if (!ensure(GetOwner() != nullptr)) return;
-		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
-		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
-	}
-}
+//void AHitBox::AddComponentsToBones(TArray<FName> Bones)
+//{
+//	for (auto &&Bone : Bones)
+//	{
+//		USphereComponent* NewSphere = AddHitSphere();
+//		// NewSphere->bGenerateOverlapEvents = true;
+//		if (!ensure(GetInstigator() != nullptr)) return;
+//		// if (!ensure(GetOwner() != nullptr)) return;
+//		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
+//		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
+//	}
+//}
 
 void AHitBox::AddComponentsFromContainer(UHitboxesContainer* Container)
 {
 	if (!Container) return;
 	//Hitboxes.Append(Container->Hitboxes);
+	Hitboxes = Container;
 	for (auto&& Settings : Container->Hitboxes)
 	{
 		AddComponentsFromSettings(Settings);
@@ -76,14 +77,14 @@ void AHitBox::AddComponentsFromSettings(FHitboxSettings Settings)
 	TArray<FName> Bones = Settings.BoneNames;
 	for (auto&& Bone : Bones)
 	{
-		USphereComponent* NewSphere = AddHitSphere();
+		USphereComponent* NewSphere = AddHitSphere(Settings.SphereRadius);
 		if (!ensure(GetInstigator() != nullptr)) return;
 		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
 		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
 	}
 }
 
-USphereComponent* AHitBox::AddHitSphere()
+USphereComponent* AHitBox::AddHitSphere(float SphereRadius)
 {
 	USphereComponent* NewSphere = NewObject<USphereComponent>(this);
 	NewSphere->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);

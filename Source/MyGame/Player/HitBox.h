@@ -19,10 +19,10 @@ public:
 	UFUNCTION()
 	void OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
 
-	void AddComponentsToBones(TArray<FName> Bones);
+	//void AddComponentsToBones(TArray<FName> Bones);
 	void AddComponentsFromContainer(class UHitboxesContainer* Container);
 	void AddComponentsFromSettings(struct FHitboxSettings Settings);
-	class USphereComponent* AddHitSphere();
+	class USphereComponent* AddHitSphere(float SphereRadius);
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
 
@@ -30,12 +30,12 @@ public:
 	class USceneComponent* MyRoot;
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USphereComponent* MySphere;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
-	float SphereRadius = 40.0f;
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	//float SphereRadius = 40.0f;
 	TArray<FGameplayEffectSpecHandle> EffectsToApply;
 	TArray<AActor*> ActorsHit;
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
-	//TArray<struct FHitboxSettings> Hitboxes = TArray<struct FHitboxSettings>();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class UHitboxesContainer* Hitboxes;
 
 protected:
 	// Called when the game starts or when spawned
