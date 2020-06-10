@@ -27,6 +27,8 @@ public:
 	FGameplayTag CueTag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
 	bool bIsConsumable = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	uint8 MaxStacks = 1;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
 	TSubclassOf<class APickup> PickupActor;

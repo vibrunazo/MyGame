@@ -3,6 +3,7 @@
 
 #include "LootComponent.h"
 #include "../MyGameInstance.h"
+#include "../Props/ItemDataAsset.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -42,8 +43,17 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(this));
 	if (LootTable.Num() > 0 && GI)
 	{
-		int RandIndex = GI->RandomStream.RandRange(0, LootTable.Num() - 1);
-		result = LootTable[RandIndex].Item;
+		TArray<FString> ItemsToFilter = GI->GetItemsICannotGetMoreOf();
+		TArray<FLootDrop> FilteredLootTable = TArray<FLootDrop>();
+		for (auto&& Item : LootTable)
+		{
+			if (!ItemsToFilter.Contains(Item.Item->ItemName.ToString()))
+			{
+				FilteredLootTable.Add(Item);
+			}
+		}
+		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTable.Num() - 1);
+		result = FilteredLootTable[RandIndex].Item;
 	}
 	return result;
 }

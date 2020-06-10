@@ -30,6 +30,7 @@ public:
 	void LevelClear(FString NextMapUrl);
 	void StoreCharStats();
 	void SetCharRef(class AMyCharacter* NewRef);
+	TArray<FString> GetItemsICannotGetMoreOf();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShake> CamShakeClass;

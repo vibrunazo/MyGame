@@ -125,6 +125,8 @@ void AHitBox::ApplyAllEffects(class IGetHit* Target)
 
 void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
 {
-	if (!Target || !Target->IsValidLowLevel() || !IsValid((UObject*)Target) ) return;
+	//if (!Target || !Target->IsValidLowLevel() || !IsValid((UObject*)Target)) return;
+	if (!Target) return;
+	if (!Target->IsValidLowLevel()) return;
 	Target->OnGetHitByEffect(Effect, GetOwner());  // Invalid object index
 }

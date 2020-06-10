@@ -3,8 +3,11 @@
 
 #include "MyGameInstance.h"
 #include "Level/LevelBuilder.h"
-#include "Engine/World.h"
 #include "Player/MyCharacter.h"
+#include "Props/ItemDataAsset.h"
+
+#include "Engine/World.h"
+
 
 
 UMyGameInstance::UMyGameInstance()
@@ -25,6 +28,35 @@ ALevelBuilder* UMyGameInstance::GetLevelBuilder()
 void UMyGameInstance::SetCharRef(AMyCharacter* NewRef)
 {
     PlayerCharRef = NewRef;
+}
+
+TArray<FString> UMyGameInstance::GetItemsICannotGetMoreOf()
+{
+    TArray<FString> result = TArray<FString>();
+    TMap<FString, int32> ItemCount = TMap<FString, int32>();
+    for (auto&& Item : Inventory)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("inventory item: %s"), *Item->ItemName.ToString());
+        int32 ThisCount = 0;
+        if (ItemCount.Contains(Item->ItemName.ToString()))
+        {
+            ThisCount = *ItemCount.Find(Item->ItemName.ToString());
+            UE_LOG(LogTemp, Warning, TEXT("already exists, have: %d of them"), ThisCount);
+            ItemCount.Emplace(Item->ItemName.ToString(), ++ThisCount);
+        }
+        else
+        {
+            UE_LOG(LogTemp, Warning, TEXT("New Item, adding to count"));
+            ThisCount = 1;
+            ItemCount.Add(Item->ItemName.ToString(), 1);
+        }
+        if (ThisCount >= Item->MaxStacks)
+        {
+            result.Add(Item->ItemName.ToString());
+        }
+    }
+
+    return result;
 }
 
 void UMyGameInstance::OnGameOver()
