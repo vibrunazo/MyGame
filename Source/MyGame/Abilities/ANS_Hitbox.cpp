@@ -18,8 +18,9 @@ void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSeque
 	Payload.OptionalObject = Cast<UObject>(NewContainer);
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), HitStartTag, Payload);
 
-	if (!GetWorld())
+	if (MeshComp->GetOwner() && !Cast<APawn>(MeshComp->GetOwner()))
 	{
+		UE_LOG(LogTemp, Warning, TEXT("I'm in editor"));
 		AActor* Owner = MeshComp->GetOwner();
 
 		if (!Owner) return;
