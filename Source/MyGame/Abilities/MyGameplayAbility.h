@@ -30,14 +30,20 @@ public:
 	float HitToComboDelay = 0.05f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float ComboResetDelay = 2.00f;
+	UPROPERTY()
 	uint8 CurrentComboCount = 0;
+	UPROPERTY()
 	bool bHasHitConnected = false;
+	UPROPERTY()
 	bool bCanComboState = false;
+	UPROPERTY()
 	bool bIsInComboState = false;
 private:
 	void ResetCombo();
 	void UpdateCombo();
+	UPROPERTY()
 	float LastComboTime = 0.0f;
+	UPROPERTY()
 	bool bHasHitStarted = false;
 
 protected:
@@ -63,8 +69,12 @@ protected:
 	void IncComboCount();
 	void ResetHitBoxes();
 	void ResetActiveEffects();
+
+	UPROPERTY()
 	TSubclassOf<class AHitBox> HitBoxClass;
+	UPROPERTY()
 	class AHitBox* HitBoxRef = nullptr;
+	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> ActiveEffects = {};
 
 	

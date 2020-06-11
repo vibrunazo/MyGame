@@ -134,13 +134,16 @@ public:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	// int32 RandomSeed = 0;
 	FRandomStream* RandomStream = nullptr;
+	UPROPERTY()
 	TMap<FCoord, FRoomState> Grid;
+	UPROPERTY()
 	TMap<FString, class AWall*> AllWalls;
 	
 
 private:
 	void SpawnLevels();
 	void BuildGrid();
+	FString DebugGrid();
 	void BuildWalls(TPair<FCoord, FRoomState> Tile);
 	class ULevelStreaming* GenerateRandomRoom(FTransform Where);
 	class ULevelStreaming* SpawnRoom(FCoord Where, class URoomDataAsset* RoomType);
@@ -172,6 +175,7 @@ private:
 	UFUNCTION()
 	void OnLoadedOneLevel();
 
+	UPROPERTY()
 	TArray<class AWall*> HiddenWalls;
 	FCoord LastEnteredRoomCoord = FCoord(-67, 9390);
 	uint8 CountOfLevelsThatDidntFinishLoading = 0;

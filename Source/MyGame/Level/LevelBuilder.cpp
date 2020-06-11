@@ -65,6 +65,7 @@ void ALevelBuilder::BeginPlay()
 	SetAssetListFromRegistry();
 	BuildGrid();
 	SpawnLevels();
+	UE_LOG(LogTemp, Warning, TEXT("Grid: %s"), *DebugGrid());
 	// GenerateRoom();
 }
 
@@ -449,6 +450,18 @@ void ALevelBuilder::BuildGrid()
 	AddTreasureRoom();
 }
 
+FString ALevelBuilder::DebugGrid()
+{
+	FString result = FString();
+	for (auto&& Tile : Grid)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Grid Coord: %s, Room: %s"), *Tile.Key.ToString(), *Tile.Value.RoomType->LevelAddress.ToString());
+		FString line = FString::Printf(TEXT("Coord: %s, Room: %s"), *Tile.Key.ToString(), *Tile.Value.RoomType->LevelAddress.ToString());
+		result.Append(line);
+	}
+	return result;
+}
+
 void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> Tile)
 {
 	// edge of world walls
@@ -618,9 +631,13 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EWallPos Dir)
 	FCoord Coord = GetGridFromLoc(Location);
 	if (Coord == LastEnteredRoomCoord) return;
 	LastEnteredRoomCoord = Coord;
+	UE_LOG(LogTemp, Warning, TEXT("Char at location %s, which is coord %s"), *Location.ToString(), *Coord.ToString());
 	FRoomState* Room = GetRoomStateFromCoord(Coord);
-	if (Room && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
+	UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
+	if ((Room != nullptr) && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("closing doors"));
+		DebugGrid();
 		CloseDoors();
 	}
 	HideWall(Coord, Dir);

@@ -41,16 +41,19 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	uint8 LevelDifficulty = 0;
-
+	UPROPERTY()
 	float Health = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<class UItemDataAsset*> Inventory;
+	UPROPERTY()
 	class AMyCharacter* PlayerCharRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	int32 RandomSeed = 0;
+	UPROPERTY()
 	FRandomStream RandomStream;
 
 private:
+	UPROPERTY()
 	class ALevelBuilder* LevelBuilderRef = nullptr;
 
 };
