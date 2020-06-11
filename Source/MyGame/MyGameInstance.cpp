@@ -50,7 +50,7 @@ TArray<FString> UMyGameInstance::GetItemsICannotGetMoreOf()
             ThisCount = 1;
             ItemCount.Add(Item->ItemName.ToString(), 1);
         }
-        if (ThisCount >= Item->MaxStacks)
+        if (ThisCount >= Item->MaxStacks && Item->MaxStacks > 0)
         {
             result.Add(Item->ItemName.ToString());
         }
