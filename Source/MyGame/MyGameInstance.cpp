@@ -59,6 +59,12 @@ TArray<FString> UMyGameInstance::GetItemsICannotGetMoreOf()
     return result;
 }
 
+void UMyGameInstance::TeleportPlayer(FVector NewLocation)
+{
+    if (!PlayerCharRef) return;
+    PlayerCharRef->SetActorLocation(NewLocation);
+}
+
 void UMyGameInstance::OnGameOver()
 {
     NewGame();

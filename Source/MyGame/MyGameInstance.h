@@ -31,6 +31,7 @@ public:
 	void StoreCharStats();
 	void SetCharRef(class AMyCharacter* NewRef);
 	TArray<FString> GetItemsICannotGetMoreOf();
+	void TeleportPlayer(FVector NewLocation);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShake> CamShakeClass;

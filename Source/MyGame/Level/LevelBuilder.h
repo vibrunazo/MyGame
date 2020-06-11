@@ -106,6 +106,7 @@ public:
 	void SetRoomClearedAtLoc(FVector Location);
 	void OpenDoors();
 	void CloseDoors();
+	void TeleportPlayerInsideRoom(FVector NewLocation);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* BBComp;

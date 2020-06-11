@@ -637,7 +637,8 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EWallPos Dir)
 	if ((Room != nullptr) && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("closing doors"));
-		DebugGrid();
+		TeleportPlayerInsideRoom(Location);
+		//DebugGrid();
 		CloseDoors();
 	}
 	HideWall(Coord, Dir);
@@ -665,15 +666,6 @@ void ALevelBuilder::HideWall(FCoord Coord, EWallPos Dir)
 	}
 }
 
-// UStaticMesh* ALevelBuilder::GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap)
-// {
-// 	FRoomState* Tile1 = Grid.Find(Coord1);
-// 	FRoomState* Tile2 = Grid.Find(Coord2);
-// 	if (!Tile1 || !Tile2) return Cap? WallCappedMesh : WallMesh;
-// 	if (Tile1->RoomType->bIsWalled || Tile2->RoomType->bIsWalled) return Cap? WallDooredCappedMesh : WallDooredMesh;
-// 	return nullptr;
-// }
-
 void ALevelBuilder::SetRoomClearedAtLoc(FVector Location)
 {
 	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
@@ -698,6 +690,45 @@ void ALevelBuilder::CloseDoors()
 	{
 		Door->CloseDoor();
 	}
+}
+
+/// <summary>
+/// Teleports the player inside the current room. Called before closing the doors of that room to ensure the
+/// Character isn't locked outside
+/// </summary>
+/// <param name="OldLocation">Where the Char was before being teleported</param>
+void ALevelBuilder::TeleportPlayerInsideRoom(FVector OldLocation)
+{
+	FCoord Coord = GetGridFromLoc(OldLocation);
+	FVector NewLocation = GetLocFromGrid(Coord);
+	NewLocation.Z = OldLocation.Z;
+	float Dist = 50.f;
+
+	// try to find which door I came from
+	float DistTop = NewLocation.X - OldLocation.X;
+	float DistRight = NewLocation.Y - OldLocation.Y;
+	if (FMath::Abs(DistRight) > FMath::Abs(DistTop))
+	{
+		// this means I came from either right or left
+		if (NewLocation.Y > OldLocation.Y) NewLocation.Y -= (RoomSizeY / 2 - Dist);	// from left
+		else NewLocation.Y += (RoomSizeY / 2 - Dist);								// from right
+		NewLocation.X = OldLocation.X;
+	}
+	else
+	{
+		// this means I came from either top or bottom
+		if (NewLocation.X > OldLocation.X) NewLocation.X -= (RoomSizeX / 2 - Dist);	// from bottom
+		else NewLocation.X += (RoomSizeX / 2 - Dist);								// from top
+		NewLocation.Y = OldLocation.Y;
+	}
+
+	UGameInstance* GI = GetGameInstance();
+	if (!GI) return;
+	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
+	if (!MyGI) return;
+	MyGI->TeleportPlayer(NewLocation);
+
+
 }
 
 
