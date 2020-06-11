@@ -702,7 +702,7 @@ void ALevelBuilder::TeleportPlayerInsideRoom(FVector OldLocation)
 	FCoord Coord = GetGridFromLoc(OldLocation);
 	FVector NewLocation = GetLocFromGrid(Coord);
 	NewLocation.Z = OldLocation.Z;
-	float Dist = 50.f;
+	float Dist = 60.f;
 
 	// try to find which door I came from
 	float DistTop = NewLocation.X - OldLocation.X;

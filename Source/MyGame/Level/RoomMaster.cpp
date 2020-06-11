@@ -68,7 +68,9 @@ bool ARoomMaster::AreAllCharsDead()
 {
 	for (auto &&Char : CharsToKill)
 	{
-		if (Char && Char->IsAlive()) return false;
+		if (!Char || !LevelBuilderRef) continue;
+		bool bIsInMyRoom = (LevelBuilderRef->GetGridFromLoc(Char->GetActorLocation()) == LevelBuilderRef->GetGridFromLoc(GetActorLocation()));
+		if (Char->IsAlive() && bIsInMyRoom) return false;
 	}
 	return true;
 }

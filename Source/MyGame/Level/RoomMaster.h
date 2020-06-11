@@ -21,9 +21,11 @@ public:
 	class UBillboardComponent* Billboard;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
 	TArray<class AMyCharacter*> CharsToKill;
+	UPROPERTY()
 	TArray<class AGoal*> Goals;
 
 	bool bIsDoorOpen = true;
+	UPROPERTY()
 	class ALevelBuilder* LevelBuilderRef = nullptr;
 
 private:

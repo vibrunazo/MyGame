@@ -107,6 +107,9 @@ public:
 	void OpenDoors();
 	void CloseDoors();
 	void TeleportPlayerInsideRoom(FVector NewLocation);
+	FVector GetLocFromGrid(FCoord Coord);
+	FCoord GetGridFromLoc(FVector Location);
+
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* BBComp;
@@ -161,9 +164,7 @@ private:
 	class AWall* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
 	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
 	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
-	FVector GetLocFromGrid(FCoord Coord);
 	FTransform GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir);
-	FCoord GetGridFromLoc(FVector Location);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EWallPos Dir);
 	FCoord GetNeighbor(FCoord From, EWallPos To);
