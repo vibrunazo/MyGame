@@ -236,8 +236,8 @@ void AMyCharacter::BeginPlay()
 	// 	Team = 1;
 	// }
 		// else Team = 0;
-	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
-	ResetBodyColor();
+	//DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
+	//ResetBodyColor();
 	if (IsPlayerControlled() && GetMyGameInstance() && AttributeSetBase)
 	{
 		AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
@@ -264,6 +264,14 @@ void AMyCharacter::Tick(float DeltaSeconds)
 		CheckWalls();
 		CalculateDash();
 	}
+
+}
+
+void AMyCharacter::OnConstruction(const FTransform& Transform)
+{
+	Super::OnConstruction(Transform);
+	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
+	ResetBodyColor();
 
 }
 

@@ -32,6 +32,7 @@ public:
 	void Tick(float DeltaSeconds) override;
 	void Jump() override;
 	void FellOutOfWorld(const UDamageType& dmgType) override;
+	void OnConstruction(const FTransform& Transform) override;
 
 	virtual void SetDefaultProperties();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
