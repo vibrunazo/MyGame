@@ -762,9 +762,17 @@ UMyAttributeSet* AMyCharacter::GetAttributes()
 
 void AMyCharacter::ApplyKnockBack(AActor* SourceActor, float Power)
 {
-	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
-	FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
-	KnockBackVector = (A - B).GetSafeNormal() * Power;
+	if (SourceActor)
+	{
+		FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
+		FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
+		KnockBackVector = (A - B).GetSafeNormal() * Power;
+	}
+	else
+	{
+		KnockBackVector = GetActorForwardVector().GetSafeNormal() * Power;
+	}
+	
 	// FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
 	// GetMovementComponent()->Velocity = KnockBackVector;
 	StartBackslide(KnockBackVector);

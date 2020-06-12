@@ -20,7 +20,6 @@ void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSeque
 
 	if (MeshComp->GetOwner() && !Cast<APawn>(MeshComp->GetOwner()))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("I'm in editor"));
 		AActor* Owner = MeshComp->GetOwner();
 
 		if (!Owner) return;

@@ -300,8 +300,9 @@ Will add the Room to the Grid */
 URoomDataAsset* ALevelBuilder::AddTreasureRoom()
 {
 	URoomDataAsset* result = nullptr;
+	if (NumRooms < 3) return result;
 	TArray<FCoord> GridCoords; Grid.GetKeys(GridCoords);
-	for (size_t i = 0; i < 20; i++)
+	for (uint8 i = 0; i < 20; i++)
 	{
 		// uint8 TreasurePosition = FMath::RandRange(2, GridCoords.Num() - 2);
 		uint8 TreasurePosition = RandomStream->RandRange(2, GridCoords.Num() - 2);
@@ -412,7 +413,7 @@ void ALevelBuilder::BuildGrid()
 	{
 		// FCoord Coord = {x, y};
 		FCoord Coord = FCoord(x, y);
-		if (i > 1) Difficulty = 1;
+		if (i > 0) Difficulty = 1;
 		if (i > 4) Difficulty = 2;
 		if (i == NumRooms - 2) {ChanceOfGoingRight = 100;}
 		if (i == NumRooms - 1) {Difficulty = 9;}

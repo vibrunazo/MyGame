@@ -13,5 +13,7 @@ UCLASS()
 class MYGAME_API AMyAIController : public AAIController
 {
 	GENERATED_BODY()
-	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My AI Controller")
+	float RangeDistance = 140.f;
 };

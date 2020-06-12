@@ -68,6 +68,7 @@ public:
 	void OnDamaged(AActor* SourceActor) override;
 	// UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDie() override;
+	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsAlive() override;
 	void OnHitPause(float Duration) override;
 	uint8 GetTeam() override;
