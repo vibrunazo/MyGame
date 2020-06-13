@@ -416,7 +416,8 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
 	// FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
 	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
-	FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback")); 
+	FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
+	FGameplayTag CamShakeTag = FGameplayTag::RequestGameplayTag(TEXT("data.camshake"));
 	FGameplayTag LaunchTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch")); 
 	FGameplayTag LaunchXTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.x")); 
 	FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y")); 
@@ -428,14 +429,15 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 		if (HasStunImmune()) return nullptr;
 		else IncrementHitStunCount();
 	}
-	if (EffectTags.HasTag(KnockbackTag)) 
-	// if (EffectTags.HasTag(KnockbackTag) && !StunImmune) 
+	if (EffectTags.HasTag(KnockbackTag))
 	{
 		float Knockback = NewEffect.Data.Get()->GetSetByCallerMagnitude(KnockbackTag);
-		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
-		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
-		// UE_LOG(LogTemp, Warning, TEXT("Has KnockbackTag, Knockback: %f"), Knockback);
 		ApplyKnockBack(SourceActor, Knockback);
+	}
+	if (EffectTags.HasTag(CamShakeTag))
+	{
+		float CamShakePower = NewEffect.Data.Get()->GetSetByCallerMagnitude(CamShakeTag);
+		if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(CamShakePower);
 	}
 	if (EffectTags.HasTag(LaunchTag)) 
 	// if (EffectTags.HasTag(LaunchTag) && !StunImmune) 
@@ -516,7 +518,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
 	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
-	if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(50.f);
+	
 	if (!IsPlayerControlled())
 	{
 		APawn* SeenPawn = Cast<APawn>(SourceActor);
