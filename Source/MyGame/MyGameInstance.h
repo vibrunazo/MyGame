@@ -32,6 +32,7 @@ public:
 	void SetCharRef(class AMyCharacter* NewRef);
 	TArray<FString> GetItemsICannotGetMoreOf();
 	void TeleportPlayer(FVector NewLocation);
+	void DoCamShake(float Intensity);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShake> CamShakeClass;

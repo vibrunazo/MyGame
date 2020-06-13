@@ -21,7 +21,7 @@
 #include "MyAnimInstance.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
-#include "Kismet/GameplayStatics.h"
+//#include "Kismet/GameplayStatics.h"
 #include "Perception/PawnSensingComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -515,7 +515,8 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	PlayAnimMontage(GetHitMontage);
-	UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
+	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
+	if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(50.f);
 	if (!IsPlayerControlled())
 	{
 		APawn* SeenPawn = Cast<APawn>(SourceActor);

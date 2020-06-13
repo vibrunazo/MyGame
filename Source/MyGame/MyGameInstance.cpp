@@ -5,9 +5,10 @@
 #include "Level/LevelBuilder.h"
 #include "Player/MyCharacter.h"
 #include "Props/ItemDataAsset.h"
+#include "Level/RoomCameraPawn.h"
 
 #include "Engine/World.h"
-
+#include "Kismet/GameplayStatics.h"
 
 
 UMyGameInstance::UMyGameInstance()
@@ -63,6 +64,15 @@ void UMyGameInstance::TeleportPlayer(FVector NewLocation)
 {
     if (!PlayerCharRef) return;
     PlayerCharRef->SetActorLocation(NewLocation);
+}
+
+void UMyGameInstance::DoCamShake(float Intensity)
+{
+    if (!CamShakeClass || !PlayerCharRef || !PlayerCharRef->CamPawnRef) return;
+    UE_LOG(LogTemp, Warning, TEXT("cam shaking"));
+    FVector Loc = PlayerCharRef->CamPawnRef->GetActorLocation();
+    Loc.X += (100 - Intensity);
+    UGameplayStatics::PlayWorldCameraShake(GetWorld(), CamShakeClass, Loc, 0.0f, 100.f);
 }
 
 void UMyGameInstance::OnGameOver()

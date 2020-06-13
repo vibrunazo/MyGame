@@ -101,7 +101,7 @@ public:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TSubclassOf<class UCameraShake> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	float CamShakeRange = 1500.0f;
+	class ARoomCameraPawn* CamPawnRef = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float MaxHealth = 100.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
