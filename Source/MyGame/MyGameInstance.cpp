@@ -69,7 +69,6 @@ void UMyGameInstance::TeleportPlayer(FVector NewLocation)
 void UMyGameInstance::DoCamShake(float Intensity)
 {
     if (!CamShakeClass || !PlayerCharRef || !PlayerCharRef->CamPawnRef) return;
-    UE_LOG(LogTemp, Warning, TEXT("cam shaking"));
     FVector Loc = PlayerCharRef->CamPawnRef->GetActorLocation();
     Loc.X += (100 - Intensity);
     UGameplayStatics::PlayWorldCameraShake(GetWorld(), CamShakeClass, Loc, 0.0f, 100.f);

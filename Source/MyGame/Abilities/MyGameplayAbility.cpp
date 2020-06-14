@@ -27,18 +27,36 @@ UMyGameplayAbility::UMyGameplayAbility()
 
 bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const
 {
+    //UE_LOG(LogTemp, Warning, TEXT("Trying to activate ability"));
     FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
+    // This tag should be used when the ability is in a State where other abilties can cancel its animation to combo into some other ability
+    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    // This tag will be set as soon as an ability is cancelled into another, so that the next ability knows that it's starting from a cancel, so that it can move the montage section to ComboStart
+    FGameplayTag IsCancellingState = FGameplayTag::RequestGameplayTag(TEXT("combo.iscancelling"));
     // If I'm in the middle of an attack
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
         // check if it can be cancelled into a combo
-        if (bCanCombo && bHasHitConnected && (GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay || bCanComboState)) 
+        //if (bCanCombo && bHasHitConnected && (GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay || bCanComboState)) 
+        //{
+        //    UE_LOG(LogTemp, Warning, TEXT("Cancelling Ability into itself"));
+        //    // it can be cancelled so call Super to do regular checks if I can cast this ability 
+        //    return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+        //}
+        // check if this ability can cancel a different ability that is active, by checking if the CanCancelState Tag was applied by any ability
+        if (ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(CanCancelState) && ActorInfo->AbilitySystemComponent.Get()->HasAnyMatchingGameplayTags(TagsIcanCancel))
         {
+            // Add tag to actor to let the next ability know it's comming from a cancelled ability
+            // TODO check if super is true before doing this
+            ActorInfo->AbilitySystemComponent.Get()->AddLooseGameplayTag(IsCancellingState);
             // it can be cancelled so call Super to do regular checks if I can cast this ability 
             return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
         }
+
+        // or else, I cannot activate the ability since I'm in the middle of an attack and I can't cancel it
         return false;
     }
+    // if not in an attack just perform regular checks to see if the ability can be activated and activate it
     return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
 }
 
@@ -59,7 +77,15 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     bHasHitStarted = false;
     // ActorInfo->AvatarActor()->
     FName MontageSection = NAME_None;
-    if (bIsInComboState) MontageSection = "ComboStart";
+    //if (bIsInComboState) MontageSection = "ComboStart";
+    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    FGameplayTag IsCancellingState = FGameplayTag::RequestGameplayTag(TEXT("combo.iscancelling"));
+    if (ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(IsCancellingState))
+    {
+        MontageSection = "ComboStart";
+    }
+    GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
+    GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(IsCancellingState);
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, MontageSection, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnInterrupted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
@@ -104,6 +130,8 @@ void UMyGameplayAbility::OnMontageComplete()
     ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
     ResetActiveEffects();
+    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
 }
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
@@ -126,10 +154,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     if (OO) {
         UHitboxesContainer* Settings = (UHitboxesContainer*)(Payload.OptionalObject);
         if (!ensure(Settings != nullptr)) return;
-        //NewHB->Hitboxes.Add(*Settings);
         NewHB->AddComponentsFromContainer(Settings);
-        //NewHB->SphereRadius = Settings->SphereRadius;
-        //NewHB->AddComponentsToBones(Settings->BoneNames);
     }
 
     HitBoxRef = NewHB;
@@ -139,7 +164,7 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
     // UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
-    if (!bHasHitConnected && bHasHitStarted) ResetCombo();
+    if (!bHasHitConnected && bHasHitStarted) ResetComboCount();
     if (bHasHitConnected && bHasHitStarted) bCanComboState = true;
     bHasHitStarted = false;
     ResetHitBoxes();
@@ -218,13 +243,15 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 void UMyGameplayAbility::IncComboCount()
 {
     bIsInComboState = true;
+    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    GetActorInfo().AbilitySystemComponent.Get()->AddLooseGameplayTag(CanCancelState);
     if (bHasHitConnected) return;
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
-    else ResetCombo();
+    else ResetComboCount();
     // UE_LOG(LogTemp, Warning, TEXT("Increased combo to %d"), CurrentComboCount);
 }
 
-void UMyGameplayAbility::ResetCombo()
+void UMyGameplayAbility::ResetComboCount()
 {
     // UE_LOG(LogTemp, Warning, TEXT("Combo resetted"));
     CurrentComboCount = 0;
@@ -236,7 +263,7 @@ void UMyGameplayAbility::UpdateCombo()
     if (GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) 
     {
         bIsInComboState = false;
-        ResetCombo();
+        ResetComboCount();
     }
     // if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
     // UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);

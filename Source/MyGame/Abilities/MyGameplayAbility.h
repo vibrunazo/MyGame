@@ -28,8 +28,10 @@ public:
 	bool bCanCombo = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float HitToComboDelay = 0.05f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	float ComboResetDelay = 2.00f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	FGameplayTagContainer TagsIcanCancel;
 	UPROPERTY()
 	uint8 CurrentComboCount = 0;
 	UPROPERTY()
@@ -39,7 +41,7 @@ public:
 	UPROPERTY()
 	bool bIsInComboState = false;
 private:
-	void ResetCombo();
+	void ResetComboCount();
 	void UpdateCombo();
 	UPROPERTY()
 	float LastComboTime = 0.0f;
