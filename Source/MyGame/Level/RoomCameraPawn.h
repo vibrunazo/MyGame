@@ -38,12 +38,22 @@ public:
 	float LerpSpeed = 0.05f;
 	FVector ViewLoc = FVector();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float RotSpeed = 200.f;
-	FVector ViewVelocity = FVector();
+		float RotSpeed = 200.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float RotMaxSpeed = 200.f;
+		float RotInterpExp = 1.f;
+	// How long I've been in the current direction. Will be positive if the direction is to the right, negative to the left
+	float TimeInCurrentDirection = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float ViewRotDistanceAhead = 400.f;
+	float DelayBeforeStartsMoving = 0.5f;
+	// Point to start the Lerp that will change the Rotation, will reset every time player changes direction
+	FVector RotSource = FVector();
+	float RotLerpAlpha = 0.f;
+	/*FVector ViewVelocity = FVector();
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float RotMaxSpeed = 200.f;*/
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	// Offset from the player the camera Rotation should be looking at
+	float RotOffset = 400.f;
 	float CurViewDistance = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float RotBreak = 0.5f;
@@ -59,8 +69,8 @@ public:
 	float MinFoV = 90.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float FoVLerp = 0.05f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	bool bDrawDebugLines = false;
+	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	bool bDrawDebugLines = false;*/
 
 private:
 	void FollowPlayer(float DeltaTime);
