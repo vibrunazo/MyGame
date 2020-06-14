@@ -117,20 +117,21 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 		RotSource = ViewLoc;
 		RotLerpAlpha = 0.f;
 	}
-	//UE_LOG(LogTemp, Warning, TEXT("Sign: %f, TimeInDir: %f"), FMath::Sign(CurViewDistance), TimeInCurrentDirection);
+	UE_LOG(LogTemp, Warning, TEXT("Sign: %f, TimeInDir: %f"), FMath::Sign(CurViewDistance), TimeInCurrentDirection);
 	// set offset
 	if (TimeInCurrentDirection > 0.f)
 	{
 		ViewTarget.Y += RotOffset;
+		RotLerpAlpha += RotSpeed * DeltaTime;
 	}
-	else
+	if (TimeInCurrentDirection < 0.f)
 	{
 		ViewTarget.Y -= RotOffset;
+		RotLerpAlpha += RotSpeed * DeltaTime;
 	}
 	// lock X to player X
-	ViewTarget.X = PlayerRef->GetActorLocation().X;
-	RotLerpAlpha += RotSpeed * DeltaTime;
 	RotLerpAlpha = FMath::Min(RotLerpAlpha, 1.f);
+	ViewTarget.X = PlayerRef->GetActorLocation().X;
 	ViewLoc = FMath::InterpEaseInOut(RotSource, ViewTarget, RotLerpAlpha, RotInterpExp);
 	/*ViewLoc.X = FMath::FInterpTo(ViewLoc.X, ViewTarget.X, DeltaTime, RotSpeed);
 	ViewLoc.Y = FMath::FInterpTo(ViewLoc.Y, ViewTarget.Y, DeltaTime, RotSpeed);
