@@ -830,7 +830,8 @@ bool AMyCharacter::HasControl()
 
 void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 {
-	if (!NewTarget) return;
+	IGetHit* NewChar = Cast<IGetHit>(NewTarget);
+	if (!NewChar || !NewChar->IsAlive()) return;
 	if (NewTarget->IsPlayerControlled())
 	{
 		AAIController* AiCont = Cast<AAIController>(GetController());
