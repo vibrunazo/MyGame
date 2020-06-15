@@ -154,6 +154,9 @@ private:
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
+	class URoomDataAsset* GetRandomRoom(int32 Difficulty, ERoomType Type);
+	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
+	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	class URoomDataAsset* AddTreasureRoom();
 	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
 	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
@@ -162,8 +165,6 @@ private:
 	class AWall* GenerateWallOfDoorTypeAtGrid(FCoord Where, EWallPos Pos, bool Doored);
 	class AWall* TryGenerateWallAtGrid(FCoord Where, EWallPos Pos, FWallSettings* Settings = nullptr);
 	class AWall* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
-	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
-	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	FTransform GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EWallPos Dir);

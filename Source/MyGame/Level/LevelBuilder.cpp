@@ -70,21 +70,74 @@ void ALevelBuilder::BeginPlay()
 }
 
 /* Spawns all streaming levels from the pre-built Grid into the world */
-void ALevelBuilder::SpawnLevels()
+void ALevelBuilder::BuildGrid()
 {
-	FTransform RoomLoc = FTransform();
-	for (auto &&Tile : Grid)
+	// UE_LOG(LogTemp, Warning, TEXT("Random Seed: %d Stream: %s"), RandomStream.GetCurrentSeed(), *RandomStream.ToString());
+	// UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
+	int16 x = 0;
+	int16 y = 0;
+	int32 Difficulty = 0;
+	int16 ChanceOfGoingRight = InitialChanceOfGoingRight;
+	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
+	if (GI)
 	{
-		ULevelStreaming* NewRoom = SpawnRoom(Tile.Key, Tile.Value.RoomType);
-		// UE_LOG(LogTemp, Warning, TEXT("created %s room at %s"), *Tile.Value.RoomType->LevelAddress.ToString(), *Tile.Key.ToString());
-		BuildWalls(Tile);
+		uint8 GIDifficulty = GI->LevelDifficulty;
+		NumRooms += GIDifficulty;
+		RandomStream = &GI->RandomStream;
 	}
-	
-	// for (auto &&Wall : AllWalls)
-	// {
-	// 	UE_LOG(LogTemp, Warning, TEXT("Wall: %s"), *Wall.Key);
-	// }
-	
+	else return;
+	// uint8 TreasureRoomPosition = 3;
+	// uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);
+	// FCoord TreasureRoomCoord;
+
+	for (uint8 i = 0; i < NumRooms; i++)
+	{
+		// FCoord Coord = {x, y};
+		FCoord Coord = FCoord(x, y);
+		if (i > 1) Difficulty = 1;
+		if (i > 4) Difficulty = 2;
+		if (i == NumRooms - 2) { ChanceOfGoingRight = 100; }
+		if (i == NumRooms - 1) { Difficulty = 9; }
+		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
+		FRoomState Content; 
+		// first room will always be empty
+		if (i == 0) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Empty);
+		else
+		{
+			// all next rooms will always have regular enemies, unless it's the last room, then it's a boss room
+			if (i == NumRooms - 1) { Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Boss); }
+			else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies);
+		}
+		Grid.Add(Coord, Content);
+		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d for i: %d"), Coord.X, Coord.Y, Grid.Num(), i);
+		// y++;
+		// UE_LOG(LogTemp, Warning, TEXT("Chance of Going Right: %d%"), ChanceOfGoingRight);
+		// if (FMath::RandRange(1, 100) <= ChanceOfGoingRight)
+		if (RandomStream->RandRange(1, 100) <= ChanceOfGoingRight)
+		{
+			// UE_LOG(LogTemp, Warning, TEXT("Chose Right"));
+			y++; ChanceOfGoingRight -= DecWhenChoseRight;
+		}
+		else
+		{
+			// UE_LOG(LogTemp, Warning, TEXT("Chose Vert"));
+			ChanceOfGoingRight += IncWhenChoseVert;
+			// if(FMath::RandBool())
+			if (RandomStream->RandRange(0, 1))
+			{
+				if (IsNeighborFree(Coord, EWallPos::Top)) x++;
+				else x--;
+			}
+			else
+			{
+				if (IsNeighborFree(Coord, EWallPos::Bottom)) x--;
+				else x++;
+			}
+		}
+
+		// else x--;
+	}
+	AddTreasureRoom();
 }
 
 ULevelStreaming* ALevelBuilder::GenerateRandomRoom(FTransform Where)
@@ -104,6 +157,22 @@ ULevelStreaming* ALevelBuilder::GenerateRandomRoom(FTransform Where)
 /* Spawns one room at Where Coords using RoomType DataAsset. Will load the streaming level for
 that DataAsset, load it and set it visible to spawn it in the world. Returns a pointer to the
 Streaming Level that it spawned. */
+void ALevelBuilder::SpawnLevels()
+{
+	FTransform RoomLoc = FTransform();
+	for (auto &&Tile : Grid)
+	{
+		ULevelStreaming* NewRoom = SpawnRoom(Tile.Key, Tile.Value.RoomType);
+		// UE_LOG(LogTemp, Warning, TEXT("created %s room at %s"), *Tile.Value.RoomType->LevelAddress.ToString(), *Tile.Key.ToString());
+		BuildWalls(Tile);
+	}
+	
+	// for (auto &&Wall : AllWalls)
+	// {
+	// 	UE_LOG(LogTemp, Warning, TEXT("Wall: %s"), *Wall.Key);
+	// }
+	
+}
 ULevelStreaming* ALevelBuilder::SpawnRoom(FCoord Where, class URoomDataAsset* RoomType)
 {
 	ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->GetAutoLevelAddress());
@@ -335,6 +404,10 @@ URoomDataAsset* ALevelBuilder::AddTreasureRoomNextTo(FCoord Coord)
 	return Content.RoomType;
 }
 
+/// <summary>
+/// Returns a pointer to a room of random type. Of any room type and any difficulty
+/// </summary>
+/// <returns></returns>
 URoomDataAsset* ALevelBuilder::GetRandomRoom()
 {
 	if (RoomList.Num() == 0) return nullptr;
@@ -343,15 +416,38 @@ URoomDataAsset* ALevelBuilder::GetRandomRoom()
 	return RoomList[Index];
 }
 
+/// <summary>
+/// Returns a pointer to a room of random type. Of any type but always of specified difficulty
+/// </summary>
+/// <param name="Difficulty"></param>
+/// <returns></returns>
 URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty)
 {
 	if (RoomList.Num() == 0) return nullptr;
-	TArray<URoomDataAsset *> FilteredRooms = {};
+	TArray<URoomDataAsset*> FilteredRooms = {};
 	FilteredRooms = FindRoomsOfDifficulty(Difficulty);
 	if (FilteredRooms.Num() == 0) return nullptr;
 	int32 Index = RandomStream->RandRange(0, FilteredRooms.Num() - 1);
 	// int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
-	
+
+	return FilteredRooms[Index];
+}
+
+/// <summary>
+/// Returns a pointer to a random room of specified type and specified difficulty. If difficulty is less than zero, then ignore difficulty
+/// </summary>
+/// <param name="Difficulty"></param>
+/// <param name="Type"></param>
+/// <returns></returns>
+URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty, ERoomType Type)
+{
+	if (RoomList.Num() == 0) return nullptr;
+	TArray<URoomDataAsset*> FilteredRooms = {};
+	FilteredRooms = FindRoomsOfType(Type, Difficulty);
+	if (FilteredRooms.Num() == 0) return nullptr;
+	int32 Index = RandomStream->RandRange(0, FilteredRooms.Num() - 1);
+	// int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
+
 	return FilteredRooms[Index];
 }
 
@@ -388,69 +484,6 @@ TArray<URoomDataAsset*> ALevelBuilder::FindRoomsOfType(ERoomType Type, int32 Dif
 	}
 	return FilteredRooms;
 }
-
-void ALevelBuilder::BuildGrid()
-{
-	// UE_LOG(LogTemp, Warning, TEXT("Random Seed: %d Stream: %s"), RandomStream.GetCurrentSeed(), *RandomStream.ToString());
-	// UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
-	int16 x = 0;
-	int16 y = 0;
-	int32 Difficulty = 0;
-	int16 ChanceOfGoingRight = InitialChanceOfGoingRight;
-	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
-	if (GI)
-	{
-		uint8 GIDifficulty = GI->LevelDifficulty;
-		NumRooms += GIDifficulty;
-		RandomStream = &GI->RandomStream;
-	}
-	else return;
-	// uint8 TreasureRoomPosition = 3;
-	// uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);
-	// FCoord TreasureRoomCoord;
-	
-	for (uint8 i = 0; i < NumRooms; i++)
-	{
-		// FCoord Coord = {x, y};
-		FCoord Coord = FCoord(x, y);
-		if (i > 0) Difficulty = 1;
-		if (i > 4) Difficulty = 2;
-		if (i == NumRooms - 2) {ChanceOfGoingRight = 100;}
-		if (i == NumRooms - 1) {Difficulty = 9;}
-		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
-		FRoomState Content; Content.RoomType = GetRandomRoom(Difficulty);
-		Grid.Add(Coord, Content);
-		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d for i: %d"), Coord.X, Coord.Y, Grid.Num(), i);
-		// y++;
-		// UE_LOG(LogTemp, Warning, TEXT("Chance of Going Right: %d%"), ChanceOfGoingRight);
-		// if (FMath::RandRange(1, 100) <= ChanceOfGoingRight)
-		if (RandomStream->RandRange(1, 100) <= ChanceOfGoingRight)
-		{
-			// UE_LOG(LogTemp, Warning, TEXT("Chose Right"));
-			y++; ChanceOfGoingRight -= DecWhenChoseRight;
-		}
-		else 
-		{
-			// UE_LOG(LogTemp, Warning, TEXT("Chose Vert"));
-			ChanceOfGoingRight += IncWhenChoseVert;
-			// if(FMath::RandBool())
-			if(RandomStream->RandRange(0, 1))
-			{
-				if (IsNeighborFree(Coord, EWallPos::Top)) x++;
-				else x--;
-			}
-			else 
-			{
-				if (IsNeighborFree(Coord, EWallPos::Bottom)) x--;
-				else x++;
-			}
-		}
-
-		// else x--;
-	}
-	AddTreasureRoom();
-}
-
 FString ALevelBuilder::DebugGrid()
 {
 	FString result = FString();
