@@ -38,6 +38,7 @@ void UCastAbility::OnCast(const FGameplayEventData Payload)
     hbparams.Owner = NewProj;
     AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, hbparams);
     NewHB->AttachToActor(NewProj, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+    NewHB->HitSound = HitSound;
     NewHB->EffectsToApply = MakeSpecHandles();
     NewHB->AddHitSphere(40.f);
 }
