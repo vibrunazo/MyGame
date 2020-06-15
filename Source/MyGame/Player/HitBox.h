@@ -33,6 +33,8 @@ public:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	//float SphereRadius = 40.0f;
 	TArray<FGameplayEffectSpecHandle> EffectsToApply;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class USoundBase* HitSound;
 	TArray<AActor*> ActorsHit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UHitboxesContainer* Hitboxes;

@@ -38,9 +38,9 @@ public:
 	float LerpSpeed = 0.05f;
 	FVector ViewLoc = FVector();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-		float RotSpeed = 200.f;
+	float RotSpeed = 200.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-		float RotInterpExp = 1.f;
+	float RotInterpExp = 1.f;
 	// How long I've been in the current direction. Will be positive if the direction is to the right, negative to the left
 	float TimeInCurrentDirection = 0.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)

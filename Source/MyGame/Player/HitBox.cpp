@@ -2,13 +2,15 @@
 
 
 #include "HitBox.h"
-#include "../Abilities/IGetHit.h"
 #include "HitboxSettings.h"
+#include "../Abilities/IGetHit.h"
+
 #include "Components/SphereComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectTypes.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AHitBox::AHitBox()
@@ -110,6 +112,7 @@ void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 		FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), HitConnectTag, FGameplayEventData());
 		ApplyAllEffects(Target);
+		if (HitSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
 	}
 }
 

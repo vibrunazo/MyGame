@@ -516,7 +516,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 		GetHitMontage = MyAnim->GetHitMontage;
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
-	PlayAnimMontage(GetHitMontage);
+	if (!StunImmune) PlayAnimMontage(GetHitMontage);
 	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
 	
 	if (!IsPlayerControlled())

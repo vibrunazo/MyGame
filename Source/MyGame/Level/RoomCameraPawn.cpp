@@ -117,7 +117,7 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 		RotSource = ViewLoc;
 		RotLerpAlpha = 0.f;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("Sign: %f, TimeInDir: %f"), FMath::Sign(CurViewDistance), TimeInCurrentDirection);
+	//UE_LOG(LogTemp, Warning, TEXT("Sign: %f, TimeInDir: %f"), FMath::Sign(CurViewDistance), TimeInCurrentDirection);
 	// set offset
 	if (TimeInCurrentDirection > 0.f)
 	{
