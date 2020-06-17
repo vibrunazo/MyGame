@@ -30,10 +30,18 @@ public:
 	UPROPERTY(Category = "Attributes | Health", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData Health;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Health)
-	
+
 	UPROPERTY(Category = "Attributes | MaxHealth", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData MaxHealth;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxHealth)
+
+	UPROPERTY(Category = "Attributes | Mana", EditAnywhere, BlueprintReadWrite)
+	FGameplayAttributeData Mana;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Mana)
+
+	UPROPERTY(Category = "Attributes | MaxMana", EditAnywhere, BlueprintReadWrite)
+	FGameplayAttributeData MaxMana;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxMana)
 	
 	UPROPERTY(Category = "Attributes | Attack", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData Attack;

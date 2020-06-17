@@ -8,6 +8,8 @@
 UMyAttributeSet::UMyAttributeSet()
     : Health(100.0f)
     , MaxHealth(100.0f)
+    , Mana(40.0f)
+    , MaxMana(100.0f)
     , Attack(1.0f)
     , Defense(1.0f)
     , Speed(1.0f)
@@ -73,6 +75,11 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
                 HeWhoGetsHit->OnDie();
             }
         }
+    }
+
+    if (Data.EvaluatedData.Attribute == GetManaAttribute())
+    {
+        SetMana(FMath::Clamp(GetMana(), 0.0f, GetMaxMana()));
     }
     // if (Data.EvaluatedData.Attribute == GetSpeedAttribute())
     // {
