@@ -9,6 +9,11 @@
 #include "../MyGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 
+void AMyPlayerController::BeginPlay()
+{
+    ShowHUD();
+}
+
 void AMyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
@@ -38,6 +43,14 @@ void AMyPlayerController::OnPausePressed()
         bIsPaused = false;
 
     }
+}
+
+void AMyPlayerController::ShowHUD()
+{
+    UE_LOG(LogTemp, Warning, TEXT("showing HUD"));
+    if (!HUDWidget) return;
+    HUDWidgetRef = CreateWidget<UMyUserWidget>(this, HUDWidget);
+    HUDWidgetRef->AddToViewport();
 }
 
 void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)

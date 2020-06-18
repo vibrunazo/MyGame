@@ -23,6 +23,7 @@ public:
 	void OnDelayedLevelWin(class AMyCharacter* CharRef);
 	void ShowLevelCleared();
 	void OnPausePressed();
+	void ShowHUD();
 
 	class AMyDefaultPawn* DefaultPawnRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
@@ -34,10 +35,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyUserWidget> PauseWidget;
 	class UMyUserWidget* PauseWidgetRef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
+	TSubclassOf<class UMyUserWidget> HUDWidget;
+	class UMyUserWidget* HUDWidgetRef;
 
 	bool bIsLevelOver = false;
 	bool bIsPaused = false;
 
 protected:
+	void BeginPlay() override;
 	virtual void SetupInputComponent() override;
 };
