@@ -3,10 +3,12 @@
 
 #include "MyPlayerController.h"
 #include "MyCharacter.h"
-#include "Blueprint/UserWidget.h"
 #include "MyDefaultPawn.h"
 #include "../UI/MyUserWidget.h"
+#include "../UI/MyHUDWidget.h"
 #include "../MyGameInstance.h"
+
+#include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 
 void AMyPlayerController::BeginPlay()
@@ -49,8 +51,18 @@ void AMyPlayerController::ShowHUD()
 {
     UE_LOG(LogTemp, Warning, TEXT("showing HUD"));
     if (!HUDWidget) return;
-    HUDWidgetRef = CreateWidget<UMyUserWidget>(this, HUDWidget);
+    HUDWidgetRef = CreateWidget<UMyHUDWidget>(this, HUDWidget);
     HUDWidgetRef->AddToViewport();
+}
+
+void AMyPlayerController::UpdateHUD(AMyCharacter* Char)
+{
+    UMyAttributeSet* Attr = Char->GetAttributes();
+    if (!Attr) return;
+    if (!HUDWidgetRef) return;
+    HUDWidgetRef->BPUpdateHUD(Char);
+    HUDWidgetRef->BPUpdateHealth(Attr->GetHealth());
+    HUDWidgetRef->BPUpdateMana(Attr->GetMana());
 }
 
 void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)

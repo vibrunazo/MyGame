@@ -24,6 +24,7 @@ public:
 	void ShowLevelCleared();
 	void OnPausePressed();
 	void ShowHUD();
+	void UpdateHUD(AMyCharacter* Char);
 
 	class AMyDefaultPawn* DefaultPawnRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
@@ -36,8 +37,8 @@ public:
 	TSubclassOf<class UMyUserWidget> PauseWidget;
 	class UMyUserWidget* PauseWidgetRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
-	TSubclassOf<class UMyUserWidget> HUDWidget;
-	class UMyUserWidget* HUDWidgetRef;
+	TSubclassOf<class HUDWidgetRef> HUDWidget;
+	class UMyHUDWidget* HUDWidgetRef;
 
 	bool bIsLevelOver = false;
 	bool bIsPaused = false;

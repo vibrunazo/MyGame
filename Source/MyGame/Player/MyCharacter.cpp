@@ -394,8 +394,14 @@ void AMyCharacter::UpdateHealthBar()
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());
 	else {UE_LOG(LogTemp, Warning, TEXT("UpdateHealthbar: Failed on %s"), *GetName());}
+	GetController();
 	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
 	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
+	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+	if (MyCont)
+	{
+		MyCont->UpdateHUD(this);
+	}
 }
 
 void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
@@ -555,7 +561,7 @@ void AMyCharacter::OnDie()
 	GetWorldTimerManager().SetTimer(Handle2, this, &AMyCharacter::OnDelayedLaunch2, .05f, false);
 	bHasControl = false;
 	DisableInput(nullptr);
-	HealthBarComp->SetVisibility(false);
+	if (HealthBarComp) HealthBarComp->SetVisibility(false);
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 	if (MyCont)
 	{
