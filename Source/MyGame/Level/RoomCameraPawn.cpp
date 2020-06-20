@@ -81,17 +81,17 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 	// FollowCamera->RelativeRotation(NewRot);
 	float TargetX = PlayerRef->GetActorLocation().X ;
 	// Target = PlayerRef->GetActorLocation()  + FVector(-800.f - TargetX * 0.8, 0.f, 300.f);
-	FVector RoomDistance = GetRoomDistance();
+	FVector RoomPosition = GetRoomDistance();
 	// Target = PlayerRef->GetActorLocation()  + CameraDistance + RoomDistance/2.f;
 	// Target.X -= TargetX * XRatio;
-	float PositionInRoomX = TargetX - RoomDistance.X;
-	float PositionInRoomY = PlayerRef->GetActorLocation().Y - RoomDistance.Y;
+	float PositionInRoomX = TargetX - RoomPosition.X;
+	float PositionInRoomY = PlayerRef->GetActorLocation().Y - RoomPosition.Y;
 	FVector RoomSize = GetRoomSize();
-	float CamMinX = -RoomSize.X/2 + RoomSize.X * MinXRatio + RoomDistance.X;
-	float CamMaxX = -RoomSize.X/2 + RoomSize.X * MaxXRatio + RoomDistance.X;
+	float CamMinX = -RoomSize.X/2 + RoomSize.X * MinXRatio + RoomPosition.X;
+	float CamMaxX = -RoomSize.X/2 + RoomSize.X * MaxXRatio + RoomPosition.X;
 	float AlphaX = PositionInRoomX/RoomSize.X + 0.5f;
-	float CamMinY = -RoomSize.Y*0.5f*YRatio + RoomDistance.Y;
-	float CamMaxY = +RoomSize.Y*0.5f*YRatio + RoomDistance.Y;
+	float CamMinY = -RoomSize.Y*0.5f*YRatio + RoomPosition.Y;
+	float CamMaxY = +RoomSize.Y*0.5f*YRatio + RoomPosition.Y;
 	float AlphaY = PositionInRoomY/RoomSize.Y + 0.5f;
 	Target = FVector(
 		FMath::Lerp(CamMinX, CamMaxX, AlphaX),
@@ -125,14 +125,20 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 	}
 	//UE_LOG(LogTemp, Warning, TEXT("Sign: %f, TimeInDir: %f"), FMath::Sign(CurViewDistance), TimeInCurrentDirection);
 	// set offset
+	// If player moving right
 	if (TimeInCurrentDirection > 0.f)
 	{
 		ViewTarget.Y += RotOffset;
+		// if current room has a wall to the right, limit how far the camera offset can go so it can't point past the wall
+		if (bIsWalledRight) ViewTarget.Y = FMath::Min(ViewTarget.Y, RoomPosition.Y + RoomSize.Y/4);
 		RotLerpAlpha += RotSpeed * DeltaTime;
 	}
+	// If player moving left
 	if (TimeInCurrentDirection < 0.f)
 	{
 		ViewTarget.Y -= RotOffset;
+		// if current room has a wall to the left, limit how far the camera offset can go so it can't point past the wall
+		if (bIsWalledLeft) ViewTarget.Y = FMath::Max(ViewTarget.Y, RoomPosition.Y - RoomSize.Y/4);
 		RotLerpAlpha += RotSpeed * DeltaTime;
 	}
 	// lock X to player X
@@ -144,6 +150,7 @@ void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 	ViewLoc.Z = FMath::FInterpTo(ViewLoc.Z, ViewTarget.Z, DeltaTime, RotSpeed);*/
 	FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), ViewLoc);
 	SetActorRotation(NewRot);
+	UE_LOG(LogTemp, Warning, TEXT("Cam rot target: %s, Left: %d, Right: %d"), *ViewTarget.ToString(), bIsWalledLeft, bIsWalledRight);
 	// SetActorLocation(FVector(GetActorLocation().X, Target.Y, GetActorLocation().Z));
 
 }
@@ -202,7 +209,10 @@ void ARoomCameraPawn::TryRegisterEnterRoomEvent()
 
 void ARoomCameraPawn::OnEnterRoom(FRoomState NewRoom)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Running Enter Room event on RoomCamera, Room: %s"), *NewRoom.RoomType->LevelAddress.ToString());
+	UE_LOG(LogTemp, Warning, TEXT("Running Enter Room event on RoomCamera, Room: %s, left: %d, right: %d"), *NewRoom.RoomType->LevelAddress.ToString(), NewRoom.Walls.Contains(EDirection::Left), NewRoom.Walls.Contains(EDirection::Right));
+	bIsWalledLeft = NewRoom.Walls.Contains(EDirection::Left);
+	bIsWalledRight = NewRoom.Walls.Contains(EDirection::Right);
+	CurrentRoomRef = &NewRoom;
 }
 
 /* Returns the location of the room the player is currently at. Used to position the camera next to the current room

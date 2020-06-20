@@ -87,6 +87,9 @@ private:
 	UPROPERTY()
 	class ALevelBuilder* LevelBuilderRef = nullptr;
 	bool bIsRoomEnterRegistered = false;
+	struct FRoomState* CurrentRoomRef = nullptr;
+	bool bIsWalledLeft = false;
+	bool bIsWalledRight = false;
 	
 
 protected:

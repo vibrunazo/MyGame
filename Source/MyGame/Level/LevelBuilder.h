@@ -8,7 +8,7 @@
 #include "LevelBuilder.generated.h"
 
 UENUM(BlueprintType)
-enum class EWallPos : uint8
+enum class EDirection : uint8
 {
 	Left,
 	Right,
@@ -41,7 +41,7 @@ struct FRoomState
 	class ULevelStreaming* RoomRef = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<EWallPos> Walls = {};
+	TArray<EDirection> Walls = {};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsRoomCleared = false;
@@ -102,9 +102,9 @@ public:
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
 	FRoomState* GetRoomStateFromCoord(FCoord Coord);
 	class AWall* GetBottomWallFromLoc(FVector Location);
-	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, EWallPos Dir);
-	void OnUpdateCharCoord(FVector Location, EWallPos Dir=EWallPos::Bottom);
-	void HideWall(FCoord Coord, EWallPos Dir=EWallPos::Bottom);
+	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, EDirection Dir);
+	void OnUpdateCharCoord(FVector Location, EDirection Dir=EDirection::Bottom);
+	void HideWall(FCoord Coord, EDirection Dir=EDirection::Bottom);
 	void SetRoomClearedAtLoc(FVector Location);
 	void OpenDoors();
 	void CloseDoors();
@@ -158,7 +158,7 @@ private:
 	void SpawnLevels();
 	void BuildGrid();
 	FString DebugGrid();
-	void BuildWalls(TPair<FCoord, FRoomState> Tile);
+	void BuildWalls(TPair<FCoord, FRoomState> &Tile);
 	class ULevelStreaming* GenerateRandomRoom(FTransform Where);
 	class ULevelStreaming* SpawnRoom(FCoord Where, class URoomDataAsset* RoomType);
 	void SetAssetListFromRegistry();
@@ -169,17 +169,17 @@ private:
 	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	class URoomDataAsset* AddTreasureRoom();
 	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
-	class ADoor* SpawnDoor(FCoord Where, EWallPos Dir);
+	class ADoor* SpawnDoor(FCoord Where, EDirection Dir);
 	class AWall* SpawnWall(FTransform Where, FWallSettings* Settings = nullptr);
-	class AWall* GenerateWallAtLoc(FTransform Where, EWallPos Pos, FWallSettings* Settings = nullptr);
-	class AWall* GenerateWallOfDoorTypeAtGrid(FCoord Where, EWallPos Pos, bool Doored);
-	class AWall* TryGenerateWallAtGrid(FCoord Where, EWallPos Pos, FWallSettings* Settings = nullptr);
-	class AWall* GenerateEdgeWallAtGrid(FCoord Where, EWallPos Pos);
-	FTransform GetWallLocFromGridAndDir(FCoord Coord, EWallPos Dir);
+	class AWall* SpawnWallAtLocDirSettings(FTransform Where, EDirection Pos, FWallSettings* Settings = nullptr);
+	class AWall* TrySpawnWallCoordDir(FCoord Where, EDirection Pos, bool Doored);
+	class AWall* TrySpawnWallFromSettings(FCoord Where, EDirection Pos, FWallSettings* Settings = nullptr);
+	class AWall* TrySpawnEdgeWallAtCoord(FCoord Where, EDirection Pos);
+	FTransform GetWallLocFromGridAndDir(FCoord Coord, EDirection Dir);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
-	FString GetWallID(FCoord Coord, EWallPos Dir);
-	FCoord GetNeighbor(FCoord From, EWallPos To);
-	bool IsNeighborFree(FCoord From, EWallPos To);
+	FString GetWallID(FCoord Coord, EDirection Dir);
+	FCoord GetNeighbor(FCoord From, EDirection To);
+	bool IsNeighborFree(FCoord From, EDirection To);
 	bool IsAnyNeighborOfType(FCoord From, ERoomType Type);
 	bool IsTileOfType(FCoord Tile, ERoomType Type);
 	TArray<FCoord> GetAllNeighborsCoords(FCoord From);
