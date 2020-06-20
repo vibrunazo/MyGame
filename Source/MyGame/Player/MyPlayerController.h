@@ -37,7 +37,7 @@ public:
 	TSubclassOf<class UMyUserWidget> PauseWidget;
 	class UMyUserWidget* PauseWidgetRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
-	TSubclassOf<class HUDWidgetRef> HUDWidget;
+	TSubclassOf<class UMyHUDWidget> HUDWidget;
 	class UMyHUDWidget* HUDWidgetRef;
 
 	bool bIsLevelOver = false;

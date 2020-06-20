@@ -15,6 +15,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/WorldSettings.h"
 #include "Math/RandomStream.h"
+#include "Kismet/GameplayStatics.h"
+#include "Components/AudioComponent.h"
 
 TArray<EWallPos> ALLDIRECTIONS = {EWallPos::Left, EWallPos::Right, EWallPos::Bottom, EWallPos::Top};
 int8 GetXFromDir(EWallPos Dir)
@@ -65,6 +67,8 @@ void ALevelBuilder::BeginPlay()
 	SetAssetListFromRegistry();
 	BuildGrid();
 	SpawnLevels();
+
+	if (LevelMusic) LevelMusicRef = UGameplayStatics::SpawnSound2D(GetWorld(), LevelMusic);
 	UE_LOG(LogTemp, Warning, TEXT("Grid: %s"), *DebugGrid());
 	// GenerateRoom();
 }
@@ -638,6 +642,17 @@ FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)
 	return GS;
 }
 
+void ALevelBuilder::OnEnterRoom(FRoomState NewRoom)
+{
+	if (NewRoom.RoomType->RoomType == ERoomType::Boss && BossMusic)
+	{
+		if (LevelMusic) LevelMusicRef->Stop();
+		UGameplayStatics::PlaySound2D(GetWorld(), BossMusic);
+	}
+
+	OnEnterRoomDelegate.Broadcast(NewRoom);
+}
+
 URoomDataAsset* ALevelBuilder::GetRoomFromCoord(FCoord Coord)
 {
 	FRoomState* GS = Grid.Find(Coord);
@@ -667,6 +682,7 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EWallPos Dir)
 	LastEnteredRoomCoord = Coord;
 	UE_LOG(LogTemp, Warning, TEXT("Char at location %s, which is coord %s"), *Location.ToString(), *Coord.ToString());
 	FRoomState* Room = GetRoomStateFromCoord(Coord);
+	OnEnterRoom(*Room);
 	UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
 	if ((Room != nullptr) && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
 	{

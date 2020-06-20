@@ -151,6 +151,7 @@ FVector ARoomCameraPawn::GetRoomSize()
 	if (!LevelBuilderRef)
 	{
 		TArray<AActor*> OutActors;
+		// TODO DON'T DO THIS WTF
 		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALevelBuilder::StaticClass(), OutActors);
 		if (OutActors.Num() > 0) LevelBuilderRef = Cast<ALevelBuilder>(OutActors[0]);
 	}

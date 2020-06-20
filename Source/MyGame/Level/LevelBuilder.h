@@ -83,7 +83,8 @@ struct FCoord
 	FString ToString() { return FString::Printf(TEXT("%d,%d"), X, Y);}
 };
 
-
+//DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FEnterRoomSignature, ALevelBuilder, OnEnterRoom, FRoomState, NewRoom);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEnterRoomSignature, FRoomState, NewRoom);
 
 UCLASS()
 class MYGAME_API ALevelBuilder : public AActor
@@ -97,6 +98,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
+	void OnEnterRoom(FRoomState NewRoom);
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
 	FRoomState* GetRoomStateFromCoord(FCoord Coord);
 	class AWall* GetBottomWallFromLoc(FVector Location);
@@ -135,6 +137,11 @@ public:
 	float RoomSizeX = 2000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	float RoomSizeY = 2000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder")
+	class USoundBase* LevelMusic;
+	class UAudioComponent* LevelMusicRef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder")
+	class USoundBase* BossMusic;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	// int32 RandomSeed = 0;
 	FRandomStream* RandomStream = nullptr;
@@ -142,6 +149,9 @@ public:
 	TMap<FCoord, FRoomState> Grid;
 	UPROPERTY()
 	TMap<FString, class AWall*> AllWalls;
+
+	UPROPERTY(BlueprintAssignable, Category = "LevelBuilder")
+	FEnterRoomSignature OnEnterRoomDelegate;
 	
 
 private:

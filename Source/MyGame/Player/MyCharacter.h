@@ -12,7 +12,7 @@
 #include "../Abilities/MyAttributeSet.h"
 #include "MyCharacter.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
+//DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
 
 UCLASS(config=Game)
 class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit, public ICastProjectile
@@ -47,8 +47,8 @@ public:
 	void ActivateAbilityByEvent(FString EventName);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void UpdateHealthBar();
-	UPROPERTY(BlueprintAssignable, Category="Abilities")
-	FHealthUpdateSignature OnUpdatedHealth;
+	/*UPROPERTY(BlueprintAssignable, Category="Abilities")
+	FHealthUpdateSignature OnUpdatedHealth;*/
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void OnPawnSeen(APawn* SeenPawn);
 	TSubclassOf<class UCameraShake> GetCamShake();
