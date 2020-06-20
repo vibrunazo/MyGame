@@ -2,8 +2,9 @@
 
 
 #include "RoomCameraPawn.h"
-#include "../Player/MyCharacter.h"
 #include "LevelBuilder.h"
+#include "../MyGameInstance.h"
+#include "../Player/MyCharacter.h"
 
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -55,13 +56,18 @@ void ARoomCameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (PlayerRef)
+	if (PlayerRef && GetMyGameInstance() && GetLevelBuilder())
 	{
+		TryRegisterEnterRoomEvent();
 		FollowPlayer(DeltaTime);
 	}
 
 }
 
+/// <summary>
+/// Currently called by the Player BP Begin Play
+/// </summary>
+/// <param name="NewPlayer"></param>
 void ARoomCameraPawn::SetPlayerRef(AMyCharacter* NewPlayer)
 {
 	PlayerRef = NewPlayer;
@@ -157,6 +163,46 @@ FVector ARoomCameraPawn::GetRoomSize()
 	}
 	if (LevelBuilderRef) RoomSize = FVector(LevelBuilderRef->RoomSizeX, LevelBuilderRef->RoomSizeY, 0.f);
 	return RoomSize;
+}
+
+UMyGameInstance* ARoomCameraPawn::GetMyGameInstance()
+{
+	if (MyGameInstanceRef) return MyGameInstanceRef;
+	UMyGameInstance* result = Cast<UMyGameInstance>(GetGameInstance());
+	if (result)
+	{
+		MyGameInstanceRef = result;
+		return result;
+	}
+	return nullptr;
+}
+
+ALevelBuilder* ARoomCameraPawn::GetLevelBuilder()
+{
+	if (LevelBuilderRef) return LevelBuilderRef;
+	if (!GetMyGameInstance()) return nullptr;
+	ALevelBuilder* result = Cast<ALevelBuilder>(GetMyGameInstance()->GetLevelBuilder());
+	if (result)
+	{
+		LevelBuilderRef = result;
+		return result;
+	}
+	return nullptr;
+}
+
+void ARoomCameraPawn::TryRegisterEnterRoomEvent()
+{
+	if (bIsRoomEnterRegistered) return;
+	if (!GetLevelBuilder()) return;
+	LevelBuilderRef->OnEnterRoomDelegate.AddDynamic(this, &ARoomCameraPawn::OnEnterRoom);
+	
+
+	bIsRoomEnterRegistered = true;
+}
+
+void ARoomCameraPawn::OnEnterRoom(FRoomState NewRoom)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Running Enter Room event on RoomCamera, Room: %s"), *NewRoom.RoomType->LevelAddress.ToString());
 }
 
 /* Returns the location of the room the player is currently at. Used to position the camera next to the current room
