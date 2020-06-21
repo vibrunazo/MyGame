@@ -210,6 +210,12 @@ void ARoomCameraPawn::TryRegisterEnterRoomEvent()
 void ARoomCameraPawn::OnEnterRoom(FRoomState NewRoom)
 {
 	UE_LOG(LogTemp, Warning, TEXT("Running Enter Room event on RoomCamera, Room: %s, left: %d, right: %d"), *NewRoom.RoomType->LevelAddress.ToString(), NewRoom.Walls.Contains(EDirection::Left), NewRoom.Walls.Contains(EDirection::Right));
+	// if I just came from a room that had a wall in the direction that I'm facing, then reset the rot interp
+	if ((TimeInCurrentDirection > 0.f && bIsWalledRight) || (TimeInCurrentDirection < 0.f && bIsWalledLeft))
+	{
+		RotSource = ViewLoc;
+		RotLerpAlpha = 0.1f;
+	}
 	bIsWalledLeft = NewRoom.Walls.Contains(EDirection::Left);
 	bIsWalledRight = NewRoom.Walls.Contains(EDirection::Right);
 	CurrentRoomRef = &NewRoom;

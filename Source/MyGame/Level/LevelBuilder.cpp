@@ -735,6 +735,8 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
 	LastEnteredRoomCoord = Coord;
 	UE_LOG(LogTemp, Warning, TEXT("Char at location %s, which is coord %s"), *Location.ToString(), *Coord.ToString());
 	FRoomState* Room = GetRoomStateFromCoord(Coord);
+	// this might actually be null if I dash into a pit UNDER the wall like an idiot
+	if (!Room) return;
 	OnEnterRoom(*Room);
 	UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
 	if ((Room != nullptr) && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
