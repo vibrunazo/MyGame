@@ -225,11 +225,7 @@ void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> &Tile)
 	// edge of world walls
 	for (auto&& Dir : ALLDIRECTIONS)
 	{
-		auto NewWall = TrySpawnEdgeWallAtCoord(Tile.Key, Dir);
-		if (NewWall)
-		{
-			Tile.Value.Walls.Add(Dir);
-		}
+		auto NewWall = TrySpawnEdgeWallAtCoord(Tile, Dir);
 	}
 	// room type walls
 	if (Tile.Value.RoomType->bIsWalled)
@@ -237,26 +233,23 @@ void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> &Tile)
 		for (auto&& Dir : ALLDIRECTIONS)
 		{
 			// GenerateWallAtGrid(Tile.Key, Dir, WallDooredMesh);
-			auto NewWall = TrySpawnWallCoordDir(Tile.Key, Dir, true);
-			if (NewWall)
-			{
-				Tile.Value.Walls.Add(Dir);
-			}
+			auto NewWall = TrySpawnWallCoordDir(Tile, Dir, true);
 		}
 	}
 }
 
-// Try to Spawn a Wall at this Grid Coord to direction Dir. Will not create the wall if it already exists
+// Try to Spawn a Wall at this Tile on the Grid in direction Dir. Will not create the wall if it already exists
 // Creates a WallSettings and set its Doored type and calls TryToGenerateWallAtGrid with that Settings
-AWall* ALevelBuilder::TrySpawnWallCoordDir(FCoord Where, EDirection Dir, bool Doored = false)
+AWall* ALevelBuilder::TrySpawnWallCoordDir(TPair<FCoord, FRoomState> &Tile, EDirection Dir, bool Doored = false)
 {
+	FCoord Where = Tile.Key;
 	AWall* result = nullptr;
 	FWallSettings NewSettings = FWallSettings();
 	FWallSettings* Settings = &NewSettings;
 	Settings->bIsDoored = Doored;
 	if (Doored)
 	{
-		result = TrySpawnWallFromSettings(Where, Dir, Settings);
+		result = TrySpawnWallFromSettings(Tile, Dir, Settings);
 		if (result)
 		{
 			SpawnDoor(Where, Dir);
@@ -264,13 +257,14 @@ AWall* ALevelBuilder::TrySpawnWallCoordDir(FCoord Where, EDirection Dir, bool Do
 	}
 	else 
 	{
-		result = TrySpawnWallFromSettings(Where, Dir, Settings);
+		result = TrySpawnWallFromSettings(Tile, Dir, Settings);
 	}
 	return result;
 }
 // Try to Create a Wall at this Grid Coord to direction Dir. Will not create the wall if it already exists
-AWall* ALevelBuilder::TrySpawnWallFromSettings(FCoord Where, EDirection Dir, FWallSettings* Settings)
+AWall* ALevelBuilder::TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, EDirection Dir, FWallSettings* Settings)
 {
+	FCoord Where = Tile.Key;
 	FString ID = GetWallID(Where, Dir);
 	AWall** Existing = AllWalls.Find(ID);
 	if (Existing) {
@@ -280,7 +274,15 @@ AWall* ALevelBuilder::TrySpawnWallFromSettings(FCoord Where, EDirection Dir, FWa
 	FTransform RoomLoc = FTransform();
 	RoomLoc.SetLocation(GetLocFromGrid(Where));
 	AWall* NewWall = SpawnWallAtLocDirSettings(RoomLoc, Dir, Settings);
-	AllWalls.Add(ID, NewWall);
+	if (NewWall)
+	{
+		AllWalls.Add(ID, NewWall);
+		UE_LOG(LogTemp, Warning, TEXT("Adding wall at %s, Dir: %d"), *Where.ToString(), Dir);
+		if (!Tile.Value.Walls.Contains(Dir)) Tile.Value.Walls.Add(Dir);
+		FRoomState* Neighbor = Grid.Find(GetNeighbor(Where, Dir));
+		EDirection OppositeDir = GetOppositeDirection(Dir);
+		if (Neighbor && !Neighbor->Walls.Contains(OppositeDir)) Neighbor->Walls.Add(OppositeDir);
+	}
 	// UE_LOG(LogTemp, Warning, TEXT("Generated wall of ID: %s, total %d walls"), *ID, AllWalls.Num());
 	return NewWall;
 }
@@ -288,16 +290,17 @@ AWall* ALevelBuilder::TrySpawnWallFromSettings(FCoord Where, EDirection Dir, FWa
 /// <summary>
 /// Try to spawn an Edge AWall at Where Coord and Pos direction. Fails if it already exists.
 /// </summary>
-/// <param name="Where">Grid Coordinate the Wall at</param>
+/// <param name="Tile">Tile Coordinate to spawn the Wall at</param>
 /// <param name="Pos">Direction from Coordinate to Spawn Wall at</param>
 /// <returns>The spawned AWall if successful, nullptr if it already exists</returns>
-AWall* ALevelBuilder::TrySpawnEdgeWallAtCoord(FCoord Where, EDirection Pos)
+AWall* ALevelBuilder::TrySpawnEdgeWallAtCoord(TPair<FCoord, FRoomState> &Tile, EDirection Pos)
 {
+	FCoord Where = Tile.Key;
 	FCoord SideCoord = GetNeighbor(Where, Pos);
 	FRoomState* Side = Grid.Find(SideCoord);
 	if (!Side)
 	{
-		AWall* NewWall = TrySpawnWallCoordDir(Where, Pos);
+		AWall* NewWall = TrySpawnWallCoordDir(Tile, Pos);
 		if (NewWall) return NewWall;
 	}
 	return nullptr;
@@ -654,6 +657,30 @@ TArray<FCoord> ALevelBuilder::GetAllNeighborsCoords(FCoord From)
 		result.Add(GetNeighbor(From, Dir));
 	}
 	return result;
+}
+
+/// <summary>
+/// Returns what the EDirection is the opposite of From. For example, Left is opposite of Right.
+/// Used by wall spawning to figure what direction to add wall data to both tiles the wall is between.
+/// </summary>
+/// <param name="From">Direction to get the opposite from</param>
+/// <returns>The opposite direction of From</returns>
+EDirection ALevelBuilder::GetOppositeDirection(EDirection From)
+{
+	switch (From)
+	{
+	case EDirection::Left:
+		return EDirection::Right;
+	case EDirection::Right:
+		return EDirection::Left;
+	case EDirection::Bottom:
+		return EDirection::Top;
+	case EDirection::Top:
+		return EDirection::Bottom;
+	default:
+		break;
+	}
+	return EDirection();
 }
 
 FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)

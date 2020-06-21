@@ -172,9 +172,9 @@ private:
 	class ADoor* SpawnDoor(FCoord Where, EDirection Dir);
 	class AWall* SpawnWall(FTransform Where, FWallSettings* Settings = nullptr);
 	class AWall* SpawnWallAtLocDirSettings(FTransform Where, EDirection Pos, FWallSettings* Settings = nullptr);
-	class AWall* TrySpawnWallCoordDir(FCoord Where, EDirection Pos, bool Doored);
-	class AWall* TrySpawnWallFromSettings(FCoord Where, EDirection Pos, FWallSettings* Settings = nullptr);
-	class AWall* TrySpawnEdgeWallAtCoord(FCoord Where, EDirection Pos);
+	class AWall* TrySpawnWallCoordDir(TPair<FCoord, FRoomState> &Tile, EDirection Pos, bool Doored);
+	class AWall* TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, EDirection Pos, FWallSettings* Settings = nullptr);
+	class AWall* TrySpawnEdgeWallAtCoord(TPair<FCoord, FRoomState> &Tile, EDirection Pos);
 	FTransform GetWallLocFromGridAndDir(FCoord Coord, EDirection Dir);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, EDirection Dir);
@@ -183,6 +183,7 @@ private:
 	bool IsAnyNeighborOfType(FCoord From, ERoomType Type);
 	bool IsTileOfType(FCoord Tile, ERoomType Type);
 	TArray<FCoord> GetAllNeighborsCoords(FCoord From);
+	EDirection GetOppositeDirection(EDirection From);
 	TArray<FCoord> FindFreeNeighbors(FCoord From);
 	// class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 	UFUNCTION()
