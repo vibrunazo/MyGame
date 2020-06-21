@@ -699,7 +699,7 @@ void ALevelBuilder::OnEnterRoom(FRoomState NewRoom)
 {
 	if (NewRoom.RoomType->RoomType == ERoomType::Boss && BossMusic)
 	{
-		if (LevelMusic) LevelMusicRef->Stop();
+		if (LevelMusic && LevelMusicRef) LevelMusicRef->Stop();
 		UGameplayStatics::PlaySound2D(GetWorld(), BossMusic);
 	}
 

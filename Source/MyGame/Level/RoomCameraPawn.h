@@ -48,15 +48,13 @@ public:
 	// Point to start the Lerp that will change the Rotation, will reset every time player changes direction
 	FVector RotSource = FVector();
 	float RotLerpAlpha = 0.f;
-	/*FVector ViewVelocity = FVector();
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float RotMaxSpeed = 200.f;*/
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	// Offset from the player the camera Rotation should be looking at
 	float RotOffset = 400.f;
 	float CurViewDistance = 0.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
-	float RotBreak = 0.5f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera, meta = (ClampMin = "0", ClampMax = "1"))
+	// How far into the room to clamp how far the camera rotation can point to, when the player is looking at a wall. 0 means center of the room, 1 means in the wall
+	float RotWallClamp = 0.5f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float MaxXRatio = 0.4f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
