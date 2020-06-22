@@ -773,9 +773,10 @@ void AMyCharacter::ApplyKnockBack(AActor* SourceActor, float Power)
 {
 	if (SourceActor)
 	{
-		FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
+		/*FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
 		FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
-		KnockBackVector = (A - B).GetSafeNormal() * Power;
+		KnockBackVector = (A - B).GetSafeNormal() * Power;*/
+		KnockBackVector = SourceActor->GetActorForwardVector().GetSafeNormal() * Power;
 	}
 	else
 	{
@@ -791,12 +792,19 @@ void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
 {
 	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
 	FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
-	FVector LaunchDir = (A - B).GetSafeNormal();
+	//FVector LaunchDir = (A - B).GetSafeNormal();
+	FVector LaunchDir = FVector();
+	if (SourceActor) LaunchDir = SourceActor->GetActorForwardVector();
+	else LaunchDir = GetActorForwardVector();
 	FRotator DRot = LaunchDir.Rotation();
 	FRotator PRot = Power.Rotation();
 	float Angle = DRot.Yaw - PRot.Yaw;
 	Power = Power.RotateAngleAxis(Angle, FVector(0.f, 0.f, 1.f));
 	// Power = FVector(0.f, 600.f, 300.f);
+
+	/*if (SourceActor) Power = -SourceActor->GetActorForwardVector() * Power;
+	else Power = GetActorForwardVector().GetSafeNormal() * Power;*/
+	UE_LOG(LogTemp, Warning, TEXT("FV: %s, power: %s"), *SourceActor->GetActorForwardVector().ToString(), *Power.ToString());
 	LastLaunchBack = Power;
 	// LaunchDir.Z = Power.Z;
 	FTimerHandle TimerHandle;
