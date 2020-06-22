@@ -275,8 +275,12 @@ void AMyCharacter::OnConstruction(const FTransform& Transform)
 
 }
 
+/// <summary>
+/// Calculates if I should dash this tick
+/// </summary>
 void AMyCharacter::CalculateDash()
 {
+	// TODO move to controller
 	float length = 0.0f;
 	length = FMath::Abs(RightAxis)*FMath::Abs(RightAxis) + FMath::Abs(ForwardAxis)*FMath::Abs(ForwardAxis);
 	length = FMath::Sqrt(length);
@@ -285,19 +289,25 @@ void AMyCharacter::CalculateDash()
 		// float CurAngle = GetInputAngle();
 		// float Delta = FMath::FindDeltaAngleDegrees(CurAngle, 45.0f);
 		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
+		// LastInputZeroTime > LastInputApexTime means this is a tap and not a hold
+		// So if this a tap AND the time before last tap was short
 		if (GetWorld()->GetTimeSeconds() - LastInputApexTime < DoubleTapDelay && LastInputZeroTime > LastInputApexTime)
 		{
 			float cos = CurVector.CosineAngle2D(LastInputVector);
 			float acos = UKismetMathLibrary::DegAcos(cos);
 			// UE_LOG(LogTemp, Warning, TEXT("Forward: %f, Right: %f, len: %f, angle: %f"), ForwardAxis, RightAxis, length, acos);
+			// if the angle between last tap and current tap is less than 20 degrees
 			if (acos <= 20)
 			{
-				// UE_LOG(LogTemp, Warning, TEXT("Yes dash"));
 				ActivateAbilityByEvent("dash");
 			}
 		}
-		LastInputVector = CurVector;
-		LastInputApexTime = GetWorld()->GetTimeSeconds();
+		// if this is a tap and not a hold
+		if (LastInputZeroTime > LastInputApexTime)
+		{
+			LastInputVector = CurVector;
+			LastInputApexTime = GetWorld()->GetTimeSeconds();
+		}
 	}
 	else
 	{
