@@ -25,22 +25,22 @@ ARoomCameraPawn::ARoomCameraPawn()
 	MovementComponent->HomingTargetComponent;
 	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComponent = RootComp;
-	// CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
-	// CameraBoom->SetupAttachment(RootComponent);
-	// CameraBoom->TargetArmLength = 700.0f; // The camera follows at this distance behind the character	
-	// CameraBoom->SetWorldRotation(FRotator(-40.0f, 0.0f, 0.0f));
-	// CameraBoom->bInheritYaw = false;
-	// CameraBoom->bInheritPitch = false;
-	// CameraBoom->bInheritRoll = false;
-	// CameraBoom->bDoCollisionTest = false;
-	// CameraBoom->bEnableCameraLag = true;
-	// CameraBoom->CameraLagSpeed = 2.0f;
-	// CameraBoom->CameraLagMaxDistance = 200.0f;
+	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
+	CameraBoom->SetupAttachment(RootComponent);
+	CameraBoom->TargetArmLength = 50.0f; // The camera follows at this distance behind the character	
+	//CameraBoom->SetWorldRotation(FRotator(-40.0f, 0.0f, 0.0f));
+	CameraBoom->bInheritYaw = false;
+	CameraBoom->bInheritPitch = false;
+	CameraBoom->bInheritRoll = false;
+	CameraBoom->bDoCollisionTest = false;
+	CameraBoom->bEnableCameraLag = true;
+	CameraBoom->CameraLagSpeed = 2.0f;
+	CameraBoom->CameraLagMaxDistance = 200.0f;
 	// Create a follow camera
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
-	FollowCamera->SetupAttachment(RootComponent);
+	//FollowCamera->SetupAttachment(RootComponent);
 	// FollowCamera->SetRelativeLocation(FVector(0.f, 0.f, 500.f));
-	// FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
+	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
 
 }
