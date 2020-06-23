@@ -86,6 +86,8 @@ public:
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 	void OnSpeedChange(const FOnAttributeChangeData& Data);
+	UFUNCTION()
+	void PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))

@@ -91,6 +91,8 @@ AMyCharacter::AMyCharacter()
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 
+	if (AbilitySystem) AbilitySystem->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
+
 	SetDefaultProperties();
 }
 
@@ -421,6 +423,13 @@ void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
 	// UE_LOG(LogTemp, Warning, TEXT("My Speed changed to %f"), GetCharacterMovement()->MaxWalkSpeed);
 }
 
+void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
+{
+	UE_LOG(LogTemp, Warning, TEXT("PawnBlockTagChanged to %d"), NewCount);
+	if (NewCount) GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	else GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+}
+
 FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
@@ -435,6 +444,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
 	FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
 	FGameplayTag CamShakeTag = FGameplayTag::RequestGameplayTag(TEXT("data.camshake"));
+	//FGameplayTag NoPawnBlockTag = FGameplayTag::RequestGameplayTag(TEXT("data.nopawnblock"));
 	FGameplayTag LaunchTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch")); 
 	FGameplayTag LaunchXTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.x")); 
 	FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y")); 
@@ -456,6 +466,10 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 		float CamShakePower = NewEffect.Data.Get()->GetSetByCallerMagnitude(CamShakeTag);
 		if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(CamShakePower);
 	}
+	/*if (EffectTags.HasTag(NoPawnBlockTag))
+	{
+		AbilitySystem->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
+	}*/
 	if (EffectTags.HasTag(LaunchTag)) 
 	// if (EffectTags.HasTag(LaunchTag) && !StunImmune) 
 	{

@@ -11,6 +11,7 @@ FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToC
 {
     UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();
     if (!ensure(GAS != nullptr)) return FActiveGameplayEffectHandle();
+    if (!Container.EffectClass) return FActiveGameplayEffectHandle();
     FGameplayEffectContextHandle Context = GAS->MakeEffectContext();
     // FGameplayTag
     if (Item && Item->CueTag.ToString() != "")
