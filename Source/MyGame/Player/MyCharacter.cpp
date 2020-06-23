@@ -299,6 +299,7 @@ void AMyCharacter::CalculateDash()
 			// if the angle between last tap and current tap is less than 20 degrees
 			if (acos <= 20)
 			{
+				if (GetController()) GetController()->SetControlRotation(CurVector.Rotation());
 				ActivateAbilityByEvent("dash");
 			}
 		}
