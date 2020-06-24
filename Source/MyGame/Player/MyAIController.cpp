@@ -3,3 +3,10 @@
 
 #include "MyAIController.h"
 
+#include "Navigation/CrowdFollowingComponent.h"
+
+AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer)
+
+	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent"))) {
+
+}
