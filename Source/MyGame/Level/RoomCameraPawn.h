@@ -82,6 +82,9 @@ public:
 	// How far left the camera can go from the center of the room, when there's a wall in the direction the player is facing
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float WallClampLeft = 400.f;
+	// How much the offset accelerates 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float OffsetAccel = 20.f;
 
 private:
 	void FollowPlayer(float DeltaTime);

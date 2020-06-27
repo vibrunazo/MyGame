@@ -163,9 +163,12 @@ void ARoomCameraPawn::FollowPlayer2(float DeltaTime)
 	OffsetTimeVector += (PlayerRef->GetActorForwardVector().GetSafeNormal()* DelayBeforeStartsMoving - OffsetTimeVector).GetSafeNormal()* DeltaTime;
 	OffsetTimeVector = OffsetTimeVector.GetClampedToMaxSize(DelayBeforeStartsMoving);
 	//if (OffsetTimeVector.Size() >= DelayBeforeStartsMoving) CurrentOffset = PlayerRef->GetActorForwardVector().GetSafeNormal() * RotOffset;
-	if (OffsetTimeVector.Size() >= DelayBeforeStartsMoving)
+	if (OffsetTimeVector.Size() >= DelayBeforeStartsMoving * 0.95f)
 	{
-		CurrentOffset = OffsetTimeVector.GetSafeNormal() * RotOffset;
+		CurrentOffset += (OffsetTimeVector.GetSafeNormal()* RotOffset - CurrentOffset).GetSafeNormal() * DeltaTime * OffsetAccel;
+		CurrentOffset = CurrentOffset.GetClampedToMaxSize(RotOffset);
+		//UE_LOG(LogTemp, Warning, TEXT("CurrentOffset: %s"), *CurrentOffset.ToString());
+		//CurrentOffset = OffsetTimeVector.GetSafeNormal() * RotOffset;
 	}
 	//if (OffsetTimeVector.Size() >= DelayBeforeStartsMoving) CurrentOffset = FVector(0.f, 1.f, 0.f) * RotOffset;
 	TargetLoc += CurrentOffset;
