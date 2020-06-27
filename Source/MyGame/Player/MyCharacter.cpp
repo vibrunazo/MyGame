@@ -260,6 +260,10 @@ void AMyCharacter::Tick(float DeltaSeconds)
 		if (GetAbilityKeyDown(1)) ActivateAbilityByInput(1);
 		if (GetAbilityKeyDown(2)) ActivateAbilityByInput(2);
 		if (GetAbilityKeyDown(3)) ActivateAbilityByInput(3);
+		if (GetAbilityKeyDown(4)) ActivateAbilityByInput(4);
+		if (GetAbilityKeyDown(5)) ActivateAbilityByInput(5);
+		if (GetAbilityKeyDown(6)) ActivateAbilityByInput(6);
+		if (GetAbilityKeyDown(7)) ActivateAbilityByInput(7);
 	}
 	if (IsPlayerControlled())
 	{
@@ -406,14 +410,19 @@ void AMyCharacter::UpdateHealthBar()
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());
-	else {UE_LOG(LogTemp, Warning, TEXT("UpdateHealthbar: Failed on %s"), *GetName());}
-	GetController();
+	//else {UE_LOG(LogTemp, Warning, TEXT("UpdateHealthbar: Failed on %s"), *GetName());}
+	//GetController();
 	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
 	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 	if (MyCont)
 	{
 		MyCont->UpdateHUD(this);
+	}
+
+	if (AttributeSetBase->GetHealth() / AttributeSetBase->GetMaxHealth() <= 0.7f)
+	{
+		ActivateAbilityByEvent("health70");
 	}
 }
 

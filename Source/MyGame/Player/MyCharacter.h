@@ -61,6 +61,8 @@ public:
 	void SetBodyColor(FLinearColor NewColor);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ResetBodyColor();
+	UFUNCTION()
+	void SetAggroTarget(APawn* NewTarget);
 
 	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
@@ -111,7 +113,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float Defense = 1.0f;
 	float BaseSpeed = 350.0f;
-	TArray<bool> IsAbilityKeyDown = {false, false, false, false};
+	TArray<bool> IsAbilityKeyDown = { false, false, false, false, false, false, false, false};
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TSubclassOf<class UUserWidget> HealthBarWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
@@ -149,8 +151,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 private:
-	UFUNCTION()
-	void SetAggroTarget(APawn* NewTarget);
 	void SetOutline();
 	void RemoveOutline();
 	void OnDelayedDeath();
