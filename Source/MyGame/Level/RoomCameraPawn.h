@@ -70,8 +70,22 @@ public:
 	/*UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	bool bDrawDebugLines = false;*/
 
+	// How far top the camera can go from the center of the room, when there's a wall in the direction the player is facing
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float WallClampTop = 200.f;
+	// How far bottom the camera can go from the center of the room, when there's a wall in the direction the player is facing
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float WallClampBottom = 300.f;
+	// How far right the camera can go from the center of the room, when there's a wall in the direction the player is facing
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float WallClampRight = 400.f;
+	// How far left the camera can go from the center of the room, when there's a wall in the direction the player is facing
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
+	float WallClampLeft = 400.f;
+
 private:
 	void FollowPlayer(float DeltaTime);
+	void FollowPlayer2(float DeltaTime);
 	FVector GetRoomDistance(); 
 	FVector GetRoomSize(); 
 	class UMyGameInstance* GetMyGameInstance();
@@ -88,6 +102,15 @@ private:
 	struct FRoomState* CurrentRoomRef = nullptr;
 	bool bIsWalledLeft = false;
 	bool bIsWalledRight = false;
+	bool bIsWalledTop = false;
+	bool bIsWalledBottom = false;
+	// A Vector to decide if the offset should change or not. Will increase everytime the player is looking at the same direction.
+	// Its length is how long in seconds the player is looking at that direction
+	FVector OffsetTimeVector = FVector();
+	// The actual offset of the camera ahead from the Player Character
+	FVector CurrentOffset = FVector();
+	FVector CurrentRoomSize;
+	FVector CurrentRoomPosition;
 	
 
 protected:
