@@ -31,6 +31,7 @@ void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSeque
 		AHitBox* NewHB = Owner->GetWorld()->SpawnActor<AHitBox>(AHitBox::StaticClass(), Loc, FRotator::ZeroRotator, params);
 		NewHB->AddComponentsFromContainer(NewContainer);
 		NewHB->AttachToComponent(MeshComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
+		
 	}
 	
 	

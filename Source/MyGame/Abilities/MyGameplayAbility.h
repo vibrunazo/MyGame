@@ -34,6 +34,10 @@ public:
 	float ComboResetDelay = 2.00f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	FGameplayTagContainer TagsIcanCancel;
+	// if true, I can only cancel abilities with TagsIcanCancel if the last ability hits, so I can combo from the hit, if false then always cancel it
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	bool bNeedsHitToCancel = true;
+
 	UPROPERTY()
 	uint8 CurrentComboCount = 0;
 	UPROPERTY()

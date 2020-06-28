@@ -36,23 +36,24 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
     // If I'm in the middle of an attack
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
-        // check if it can be cancelled into a combo
-        //if (bCanCombo && bHasHitConnected && (GetWorld()->GetTimeSeconds() > LastComboTime + HitToComboDelay || bCanComboState)) 
-        //{
-        //    UE_LOG(LogTemp, Warning, TEXT("Cancelling Ability into itself"));
-        //    // it can be cancelled so call Super to do regular checks if I can cast this ability 
-        //    return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
-        //}
-        // check if this ability can cancel a different ability that is active, by checking if the CanCancelState Tag was applied by any ability
-        if (ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(CanCancelState) && ActorInfo->AbilitySystemComponent.Get()->HasAnyMatchingGameplayTags(TagsIcanCancel))
+        // check if I can cancel an attack of the current type
+        if (ActorInfo->AbilitySystemComponent.Get()->HasAnyMatchingGameplayTags(TagsIcanCancel))
         {
-            // Add tag to actor to let the next ability know it's comming from a cancelled ability
-            // TODO check if super is true before doing this
-            ActorInfo->AbilitySystemComponent.Get()->AddLooseGameplayTag(IsCancellingState);
-            // it can be cancelled so call Super to do regular checks if I can cast this ability 
-            return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+            // check if I need a combo hit to cancel and if I have hit, by checking if the CanCancelState Tag was applied by any ability
+            if (bNeedsHitToCancel && ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(CanCancelState))
+            {
+                // Add tag to actor to let the next ability know it's comming from a cancelled ability
+                // TODO check if super is true before doing this?
+                ActorInfo->AbilitySystemComponent.Get()->AddLooseGameplayTag(IsCancellingState);
+                // it can be cancelled so call Super to do regular checks if I can cast this ability 
+                return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+            }
+            if (!bNeedsHitToCancel)
+            {
+                // if I can cancel this ability and don't require a hit, so cancel it anyway even if I didn't hit
+                return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+            }
         }
-
         // or else, I cannot activate the ability since I'm in the middle of an attack and I can't cancel it
         return false;
     }

@@ -18,7 +18,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	float SphereRadius = 40.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
-	FTransform HitboxTransform = FTransform();
+	FVector BoxExtent = FVector(30.f, 30.f, 30.f);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	FTransform HitboxTransform = FTransform(FVector());
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	bool bIsSphere = true;
 };
 
 /**

@@ -6,6 +6,7 @@
 #include "../Abilities/IGetHit.h"
 
 #include "Components/SphereComponent.h"
+#include "Components/BoxComponent.h"
 #include "Components/SceneComponent.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
@@ -76,13 +77,17 @@ void AHitBox::AddComponentsFromContainer(UHitboxesContainer* Container)
 
 void AHitBox::AddComponentsFromSettings(FHitboxSettings Settings)
 {
+	if (!ensure(GetInstigator() != nullptr)) return;
 	TArray<FName> Bones = Settings.BoneNames;
 	for (auto&& Bone : Bones)
 	{
-		USphereComponent* NewSphere = AddHitSphere(Settings.SphereRadius);
-		if (!ensure(GetInstigator() != nullptr)) return;
+		USceneComponent* NewHitComponent;
+		if (Settings.bIsSphere)	NewHitComponent = AddHitSphere(Settings.SphereRadius);
+		else NewHitComponent = AddHitBoxComponent(Settings.BoxExtent);
 		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));
-		NewSphere->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
+		NewHitComponent->AttachToComponent(SkelMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, Bone);
+		NewHitComponent->SetRelativeTransform(Settings.HitboxTransform);
+		//NewHitComponent->SetWorldScale3D(FVector(1.f, 1.f, 0.1f));
 	}
 }
 
@@ -93,6 +98,15 @@ USphereComponent* AHitBox::AddHitSphere(float SphereRadius)
 	NewSphere->RegisterComponent();
 	NewSphere->SetSphereRadius(SphereRadius);
 	return NewSphere;
+}
+
+UBoxComponent* AHitBox::AddHitBoxComponent(FVector BoxExtent)
+{
+	UBoxComponent* NewBox = NewObject<UBoxComponent>(this);
+	NewBox->AttachToComponent(RootComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
+	NewBox->RegisterComponent();
+	NewBox->SetBoxExtent(BoxExtent);
+	return NewBox;
 }
 
 // Instigator is the PLAYER PAWN

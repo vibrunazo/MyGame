@@ -23,6 +23,7 @@ public:
 	void AddComponentsFromContainer(class UHitboxesContainer* Container);
 	void AddComponentsFromSettings(struct FHitboxSettings Settings);
 	class USphereComponent* AddHitSphere(float SphereRadius);
+	class UBoxComponent* AddHitBoxComponent(FVector BoxExtent);
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
 
