@@ -139,7 +139,10 @@ public:
 	float RoomSizeY = 2000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder")
 	class USoundBase* LevelMusic;
-	class UAudioComponent* LevelMusicRef;
+	UPROPERTY()
+	class UAudioComponent* LevelMusicRef = nullptr;
+	UPROPERTY()
+	class UAudioComponent* BossMusicRef = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder")
 	class USoundBase* BossMusic;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)

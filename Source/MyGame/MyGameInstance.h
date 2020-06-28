@@ -45,6 +45,8 @@ public:
 	uint8 LevelDifficulty = 0;
 	UPROPERTY()
 	float Health = 100.f;
+	UPROPERTY()
+	float Mana = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<class UItemDataAsset*> Inventory;
 	UPROPERTY()

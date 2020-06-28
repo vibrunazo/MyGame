@@ -243,6 +243,7 @@ void AMyCharacter::BeginPlay()
 	if (IsPlayerControlled() && GetMyGameInstance() && AttributeSetBase)
 	{
 		AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
+		AttributeSetBase->SetMana(GetMyGameInstance()->Mana);
 		UpdateHealthBar();
 		GetMyGameInstance()->SetCharRef(this);
 		Inventory = &GetMyGameInstance()->Inventory;

@@ -83,6 +83,7 @@ void UMyGameInstance::NewGame()
 {
     LevelDifficulty = 1;
     Health = 100.f;
+    Mana = 40.f;
     Inventory.Empty();
 
     // TODO this might be called after the game is over, before the new game actually starts, which might cause random stream to desync?
@@ -100,9 +101,16 @@ void UMyGameInstance::LevelClear(FString NextMapUrl)
 	LeMundi->ServerTravel(NextMapUrl);
 }
 
+/// <summary>
+/// Called when level ends before going to the next one
+/// </summary>
 void UMyGameInstance::StoreCharStats()
 {
-    if (PlayerCharRef) Health = PlayerCharRef->GetAttributes()->GetHealth();
+    if (PlayerCharRef)
+    {
+        Health = PlayerCharRef->GetAttributes()->GetHealth();
+        Mana = PlayerCharRef->GetAttributes()->GetMana();
+    }
 }
 
 void UMyGameInstance::SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder)
