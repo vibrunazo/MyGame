@@ -424,6 +424,10 @@ void AMyCharacter::UpdateHealthBar()
 	{
 		ActivateAbilityByEvent("health70");
 	}
+	if (AttributeSetBase->GetHealth() / AttributeSetBase->GetMaxHealth() <= 0.3f)
+	{
+		ActivateAbilityByEvent("health30");
+	}
 }
 
 void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
