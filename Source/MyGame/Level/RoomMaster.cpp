@@ -45,6 +45,7 @@ void ARoomMaster::BeginPlay()
 	if (!ensure(MyGI != nullptr)) return;
 	ALevelBuilder* LBuilder = MyGI->GetLevelBuilder();
 	LevelBuilderRef = LBuilder;
+	LevelBuilderRef->RegisterRoomMaster(this, GetActorLocation());
 	bIsDoorOpen = false;
 	
 }
@@ -73,6 +74,25 @@ bool ARoomMaster::AreAllCharsDead()
 		if (Char->IsAlive() && bIsInMyRoom) return false;
 	}
 	return true;
+}
+
+TArray<class AMyCharacter*> ARoomMaster::GetChars()
+{
+	return CharsToKill;
+}
+
+/// <summary>
+/// Aggroes all chars that spawned on this room to te given Player
+/// </summary>
+/// <param name="PlayerRef">Player to Aggro all chars on</param>
+void ARoomMaster::AggroAll(APawn* PlayerRef)
+{
+	if (bAggroed) return;
+	bAggroed = true;
+	for (auto&& Enemy : CharsToKill)
+	{
+		Enemy->SetAggroTarget(PlayerRef);
+	}
 }
 
 void ARoomMaster::EnableGoals()

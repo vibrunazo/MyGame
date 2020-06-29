@@ -910,7 +910,7 @@ bool AMyCharacter::HasControl()
 void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 {
 	IGetHit* NewChar = Cast<IGetHit>(NewTarget);
-	if (!NewChar || !NewChar->IsAlive()) return;
+	if (!NewChar || !NewChar->IsAlive() || !IsAlive()) return;
 	if (NewTarget->IsPlayerControlled())
 	{
 		AAIController* AiCont = Cast<AAIController>(GetController());
@@ -920,6 +920,12 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), NewTarget);
 		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
 	}
+
+	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
+	if (!MyGI) return;
+	ALevelBuilder* Builder = MyGI->GetLevelBuilder();
+	if (!Builder) return;
+	Builder->AggroRoom(NewTarget, GetActorLocation());
 }
 
 void AMyCharacter::CheckWalls()

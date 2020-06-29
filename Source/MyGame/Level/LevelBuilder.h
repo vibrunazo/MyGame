@@ -41,6 +41,9 @@ struct FRoomState
 	class ULevelStreaming* RoomRef = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class ARoomMaster* RoomMasterRef = nullptr;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<EDirection> Walls = {};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -98,6 +101,7 @@ public:
 
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
 	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
+	void RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Location);
 	void OnEnterRoom(FRoomState NewRoom);
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
 	FRoomState* GetRoomStateFromCoord(FCoord Coord);
@@ -109,6 +113,7 @@ public:
 	void OpenDoors();
 	void CloseDoors();
 	void TeleportPlayerInsideRoom(FVector NewLocation);
+	void AggroRoom(class APawn* PlayerToAggro, FVector Location);
 	FVector GetLocFromGrid(FCoord Coord);
 	FCoord GetGridFromLoc(FVector Location);
 

@@ -81,7 +81,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     //if (bIsInComboState) MontageSection = "ComboStart";
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
     FGameplayTag IsCancellingState = FGameplayTag::RequestGameplayTag(TEXT("combo.iscancelling"));
-    if (ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(IsCancellingState))
+    if (ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(IsCancellingState) && bNeedsHitToCancel)
     {
         MontageSection = "ComboStart";
     }

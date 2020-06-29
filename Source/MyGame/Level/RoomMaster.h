@@ -16,6 +16,8 @@ public:
 	ARoomMaster();
 
 	bool AreAllCharsDead();
+	TArray<class AMyCharacter*> GetChars();
+	void AggroAll(APawn* PlayerRef);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* Billboard;
@@ -25,6 +27,7 @@ public:
 	TArray<class AGoal*> Goals;
 
 	bool bIsDoorOpen = true;
+	bool bAggroed = false;
 	UPROPERTY()
 	class ALevelBuilder* LevelBuilderRef = nullptr;
 

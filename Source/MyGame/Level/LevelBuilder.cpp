@@ -4,6 +4,7 @@
 #include "LevelBuilder.h"
 #include "Door.h"
 #include "Wall.h"
+#include "RoomMaster.h"
 #include "../MyGameInstance.h"
 #include "../MyGameInstance.h"
 
@@ -691,6 +692,18 @@ FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)
 }
 
 /// <summary>
+/// Registers a RoomMaster in the RoomState of the Room in this Location.
+/// Called by the RoomMater at its BeginPlay
+/// </summary>
+/// <param name="NewRoomMaster">The RoomMaster to register</param>
+/// <param name="Location">Where the RoomMaster is so I can place its reference in the appropriate Room in the Grid.</param>
+void ALevelBuilder::RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Location)
+{
+	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
+	Room->RoomMasterRef = NewRoomMaster;
+}
+
+/// <summary>
 /// Called when player enters a new room. Broadcasts RoomEnterDelegate.
 /// Called by OnUpdateCharCoord if curent room is different from last.
 /// </summary>
@@ -835,6 +848,17 @@ void ALevelBuilder::TeleportPlayerInsideRoom(FVector OldLocation)
 	MyGI->TeleportPlayer(NewLocation);
 
 
+}
+
+/// <summary>
+/// Aggro all enemies in the room at this Location to the given player
+/// </summary>
+/// <param name="Location">Location of the Room</param>
+void ALevelBuilder::AggroRoom(APawn* PlayerToAggro, FVector Location)
+{
+	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
+	if (!Room || !Room->RoomMasterRef) return;
+	Room->RoomMasterRef->AggroAll(PlayerToAggro);
 }
 
 
