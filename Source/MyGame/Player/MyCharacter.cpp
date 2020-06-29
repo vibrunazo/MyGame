@@ -511,6 +511,19 @@ void AMyCharacter::SetOutline()
 	GetMesh()->SetRenderCustomDepth(true);
 	GetMesh()->SetCustomDepthStencilValue(3);
 	GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, 3.f, false);
+
+	TArray<USceneComponent*> ChildrenComponents;
+	GetMesh()->GetChildrenComponents(false, ChildrenComponents);
+
+	for (USceneComponent* Component : ChildrenComponents)
+	{
+		if (!Component->GetOwner()) continue;
+		if (UStaticMeshComponent* ChildMesh = Cast<UStaticMeshComponent>(Component))
+		{
+			ChildMesh->SetRenderCustomDepth(true);
+			ChildMesh->SetCustomDepthStencilValue(3);
+		}
+	}
 }
 
 /* Removes the outline of an enemy character by setting the custom depth stencil back to zero.
@@ -519,6 +532,19 @@ void AMyCharacter::RemoveOutline()
 {
 	GetMesh()->SetRenderCustomDepth(false);
 	GetMesh()->SetCustomDepthStencilValue(0);
+
+	TArray<USceneComponent*> ChildrenComponents;
+	GetMesh()->GetChildrenComponents(false, ChildrenComponents);
+
+	for (USceneComponent* Component : ChildrenComponents)
+	{
+		if (!Component->GetOwner()) continue;
+		if (UStaticMeshComponent* ChildMesh = Cast<UStaticMeshComponent>(Component))
+		{
+			ChildMesh->SetRenderCustomDepth(false);
+			ChildMesh->SetCustomDepthStencilValue(0);
+		}
+	}
 }
 
 void AMyCharacter::IncrementHitStunCount()
