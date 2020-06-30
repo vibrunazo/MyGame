@@ -27,7 +27,7 @@ UMyGameplayAbility::UMyGameplayAbility()
 
 bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const
 {
-    //UE_LOG(LogTemp, Warning, TEXT("Trying to activate ability"));
+    //UE_LOG(LogTemp, Warning, TEXT("Trying Ability: %s on %s"), *GetName(), *GetAvatarActorFromActorInfo()->GetName());
     FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
     // This tag should be used when the ability is in a State where other abilties can cancel its animation to combo into some other ability
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
@@ -71,6 +71,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         return;
     }
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
+    //UE_LOG(LogTemp, Warning, TEXT("Activating Ability: %s on %s"), *GetName(), *GetAvatarActorFromActorInfo()->GetName());
     // ResetHitBoxes();
     UpdateCombo();
     bHasHitConnected = false;

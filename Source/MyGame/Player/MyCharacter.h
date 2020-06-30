@@ -141,6 +141,10 @@ public:
 	FLinearColor BodyColor = FLinearColor(0.5f, 0.5f, 0.5f);
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	TArray<class UItemDataAsset*>* Inventory;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
+	class USoundBase* AggroSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
+	class USoundBase* DeathSound;
 	
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */

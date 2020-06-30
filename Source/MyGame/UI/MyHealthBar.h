@@ -17,5 +17,10 @@ class MYGAME_API UMyHealthBar : public UUserWidget
 public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetHealth(float NewHealth);
+	UFUNCTION(BlueprintCallable)
+	float GetHealth();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="HealthBar")
+	float Health;
 	
 };

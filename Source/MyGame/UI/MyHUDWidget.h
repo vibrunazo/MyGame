@@ -15,11 +15,20 @@ class MYGAME_API UMyHUDWidget : public UMyUserWidget
 	GENERATED_BODY()
 
 public:
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My User Widget")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateHUD(AMyCharacter* Char);
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My User Widget")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateHealth(float NewHealth);
-	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My User Widget")
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateMana(float NewMana);
+	UFUNCTION(BlueprintCallable, Category = "My HUD")
+	float GetHealth();
+	UFUNCTION(BlueprintCallable, Category = "My HUD")
+	float GetMana();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My HUD")
+	float Health = 100.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My HUD")
+	float Mana = 0.f;
 	
 };

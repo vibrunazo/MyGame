@@ -25,6 +25,7 @@ public:
 	void OnPausePressed();
 	void ShowHUD();
 	void UpdateHUD(AMyCharacter* Char);
+	float GetHUDHealth();
 
 	class AMyDefaultPawn* DefaultPawnRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)

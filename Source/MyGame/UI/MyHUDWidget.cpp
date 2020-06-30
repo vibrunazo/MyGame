@@ -3,3 +3,12 @@
 
 #include "MyHUDWidget.h"
 
+float UMyHUDWidget::GetHealth()
+{
+    return Health;
+}
+
+float UMyHUDWidget::GetMana()
+{
+    return Mana;
+}

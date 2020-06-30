@@ -3,3 +3,7 @@
 
 #include "MyHealthBar.h"
 
+float UMyHealthBar::GetHealth()
+{
+    return Health;
+}

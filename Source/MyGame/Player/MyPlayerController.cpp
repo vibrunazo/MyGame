@@ -65,6 +65,12 @@ void AMyPlayerController::UpdateHUD(AMyCharacter* Char)
     HUDWidgetRef->BPUpdateMana(Attr->GetMana());
 }
 
+float AMyPlayerController::GetHUDHealth()
+{
+    if (!HUDWidgetRef) return 0.0f;
+    return HUDWidgetRef->GetHealth();
+}
+
 void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)
 {
     if (bIsLevelOver) return;

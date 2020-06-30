@@ -31,6 +31,8 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
 #include "NiagaraComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AMyGameCharacter
@@ -408,27 +410,43 @@ void AMyCharacter::UpdateHealthBar()
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet NOT created on %s"), *GetName());
 		return;
 	}
+	if (!AbilitySystem) return;
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
-	if (HealthBar && AttributeSetBase) HealthBar->SetHealth(AttributeSetBase->GetHealth());
-	//else {UE_LOG(LogTemp, Warning, TEXT("UpdateHealthbar: Failed on %s"), *GetName());}
-	//GetController();
-	// OnUpdatedHealth.Broadcast(AttributeSetBase->GetHealth());
-	// UE_LOG(LogTemp, Warning, TEXT("HP: %f"), AttributeSetBase->GetHealth());
+	float OldHealth = 0.f;
+	float NewHealth = AttributeSetBase->GetHealth();
+	if (HealthBar)
+	{
+		OldHealth = HealthBar->GetHealth();
+		HealthBar->SetHealth(NewHealth);
+	}
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 	if (MyCont)
 	{
+		OldHealth = MyCont->GetHUDHealth();
 		MyCont->UpdateHUD(this);
 	}
-
-	if (AttributeSetBase->GetHealth() / AttributeSetBase->GetMaxHealth() <= 0.7f)
+	float OldHealthPct = OldHealth / AttributeSetBase->GetMaxHealth();
+	float NewHealthPct = NewHealth / AttributeSetBase->GetMaxHealth();
+	UE_LOG(LogTemp, Warning, TEXT("On %s OldHealth: %f, NewHealth: %f"), *GetName(), OldHealth, NewHealth);
+	if (NewHealthPct <= 0.7f && OldHealthPct > 0.7f)
 	{
 		ActivateAbilityByEvent("health70");
+		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.70"));
+		//AbilitySystem->AddLooseGameplayTag(HealthTag);
+		//AbilitySystem->gameplayevent
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
+		UE_LOG(LogTemp, Warning, TEXT("Triggering health70 event on %s"), *GetName());
 	}
-	if (AttributeSetBase->GetHealth() / AttributeSetBase->GetMaxHealth() <= 0.3f)
+	if (NewHealthPct <= 0.3f && OldHealthPct > 0.3f)
 	{
 		ActivateAbilityByEvent("health30");
+		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.30"));
+		//AbilitySystem->AddLooseGameplayTag(HealthTag);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
+		UE_LOG(LogTemp, Warning, TEXT("Triggering health30 event on %s"), *GetName());
 	}
+
 }
 
 void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
@@ -644,6 +662,8 @@ void AMyCharacter::OnDie()
 	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
+
+	if (DeathSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 	// if (MyAnim)
 	// {
 		// MyAnim->StartRagdoll();
@@ -917,6 +937,8 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 		if (!ensure(AiCont != nullptr)) return;
 		UBlackboardComponent* MyBB = AiCont->GetBlackboardComponent();
 		if (!ensure(MyBB != nullptr)) return;
+		auto OldTarget = MyBB->GetValueAsObject(FName(TEXT("TargetChar")));
+		if (OldTarget) return;
 		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), NewTarget);
 		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
 	}
@@ -926,6 +948,7 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 	ALevelBuilder* Builder = MyGI->GetLevelBuilder();
 	if (!Builder) return;
 	Builder->AggroRoom(NewTarget, GetActorLocation());
+	if (AggroSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), AggroSound, GetActorLocation());
 }
 
 void AMyCharacter::CheckWalls()
