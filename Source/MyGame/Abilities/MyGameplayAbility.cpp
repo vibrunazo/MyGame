@@ -193,7 +193,7 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 void UMyGameplayAbility::OnEffectApplyEvent(const FGameplayEventData Payload)
 {
     // if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect apply event"));
-    ResetActiveEffects();
+    //ResetActiveEffects();
     const UEffectEventSettings* Settings = Cast<UEffectEventSettings>(Payload.OptionalObject);
     if (Settings)
     {

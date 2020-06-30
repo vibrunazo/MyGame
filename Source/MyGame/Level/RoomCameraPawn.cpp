@@ -76,6 +76,12 @@ void ARoomCameraPawn::SetPlayerRef(AMyCharacter* NewPlayer)
 	// MovementComponent->HomingTargetComponent = PlayerRef->GetRootComponent();
 }
 
+FVector ARoomCameraPawn::GetCameraLoc()
+{
+	if (FollowCamera) return FollowCamera->GetComponentLocation();
+	return FVector();
+}
+
 /* Sets the Camera position and rotation depending on where the player is. */
 void ARoomCameraPawn::FollowPlayer(float DeltaTime)
 {

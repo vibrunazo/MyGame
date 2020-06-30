@@ -17,6 +17,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 	UFUNCTION(BlueprintCallable, Category = RoomCamera)
 	void SetPlayerRef(class AMyCharacter* NewPlayer);
+	FVector GetCameraLoc();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Camera)
 	class USceneComponent* RootComp;

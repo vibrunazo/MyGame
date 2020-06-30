@@ -428,7 +428,6 @@ void AMyCharacter::UpdateHealthBar()
 	}
 	float OldHealthPct = OldHealth / AttributeSetBase->GetMaxHealth();
 	float NewHealthPct = NewHealth / AttributeSetBase->GetMaxHealth();
-	UE_LOG(LogTemp, Warning, TEXT("On %s OldHealth: %f, NewHealth: %f"), *GetName(), OldHealth, NewHealth);
 	if (NewHealthPct <= 0.7f && OldHealthPct > 0.7f)
 	{
 		ActivateAbilityByEvent("health70");
@@ -436,7 +435,6 @@ void AMyCharacter::UpdateHealthBar()
 		//AbilitySystem->AddLooseGameplayTag(HealthTag);
 		//AbilitySystem->gameplayevent
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
-		UE_LOG(LogTemp, Warning, TEXT("Triggering health70 event on %s"), *GetName());
 	}
 	if (NewHealthPct <= 0.3f && OldHealthPct > 0.3f)
 	{
@@ -444,7 +442,6 @@ void AMyCharacter::UpdateHealthBar()
 		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.30"));
 		//AbilitySystem->AddLooseGameplayTag(HealthTag);
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
-		UE_LOG(LogTemp, Warning, TEXT("Triggering health30 event on %s"), *GetName());
 	}
 
 }
