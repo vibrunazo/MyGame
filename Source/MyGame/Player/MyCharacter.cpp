@@ -193,6 +193,8 @@ void AMyCharacter::MoveForward(float Value)
 		// const FVector Direction = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 		FVector Direction = FVector(1.0f, 0.0f, 0.0f);
 		AddMovementInput(Direction, Value);
+		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
+		if (GetController()) GetController()->SetControlRotation(CurVector.Rotation());
 	}
 }
 
@@ -210,6 +212,8 @@ void AMyCharacter::MoveRight(float Value)
 		FVector Direction = FVector(0.0f, 1.0f, 0.0f);
 		// add movement in that direction
 		AddMovementInput(Direction, Value);
+		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
+		if (GetController()) GetController()->SetControlRotation(CurVector.Rotation());
 	}
 }
 

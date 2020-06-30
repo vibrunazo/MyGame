@@ -37,7 +37,11 @@ public:
 	// if true, I can only cancel abilities with TagsIcanCancel if the last ability hits, so I can combo from the hit, if false then always cancel it
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bNeedsHitToCancel = true;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	bool bUpdateRotationFromController = true;
 
+
+private:
 	UPROPERTY()
 	uint8 CurrentComboCount = 0;
 	UPROPERTY()
@@ -46,7 +50,6 @@ public:
 	bool bCanComboState = false;
 	UPROPERTY()
 	bool bIsInComboState = false;
-private:
 	void ResetComboCount();
 	void UpdateCombo();
 	UPROPERTY()

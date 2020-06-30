@@ -2,6 +2,11 @@
 
 
 #include "MyGameplayAbility.h"
+#include "IGetHit.h"
+#include "../Player/MyCharacter.h"
+#include "../Player/HitBox.h"
+#include "../Player/HitboxSettings.h"
+
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 // #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
@@ -9,12 +14,8 @@
 #include "GameplayTagContainer.h"
 #include "UObject/ConstructorHelpers.h"
 #include "GameplayEffect.h"
-#include "../Player/HitBox.h"
-#include "../Player/HitboxSettings.h"
 #include "EffectEventSettings.h"
 // #include "../MyBlueprintFunctionLibrary.h"
-#include "IGetHit.h"
-#include "../Player/MyCharacter.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "AbilitySystemComponent.h"
@@ -78,6 +79,12 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     bCanComboState = false;
     bHasHitStarted = false;
     // ActorInfo->AvatarActor()->
+    APawn* AvatarPawn = Cast<APawn>(GetAvatarActorFromActorInfo());
+    if (bUpdateRotationFromController && AvatarPawn)
+    {
+        AvatarPawn->SetActorRotation(AvatarPawn->GetControlRotation());
+        
+    }
     FName MontageSection = NAME_None;
     //if (bIsInComboState) MontageSection = "ComboStart";
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
