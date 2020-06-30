@@ -197,7 +197,7 @@ void UMyGameplayAbility::OnEffectApplyEvent(const FGameplayEventData Payload)
     const UEffectEventSettings* Settings = Cast<UEffectEventSettings>(Payload.OptionalObject);
     if (Settings)
     {
-        ActiveEffects = UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(GetAvatarActorFromActorInfo(), Settings->EffectsToApply);
+        ActiveEffects.Append(UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(GetAvatarActorFromActorInfo(), Settings->EffectsToApply));
     }
 }
 void UMyGameplayAbility::OnEffectRemoveEvent(const FGameplayEventData Payload)

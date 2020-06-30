@@ -454,7 +454,6 @@ void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
 
 void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
-	UE_LOG(LogTemp, Warning, TEXT("PawnBlockTagChanged to %d"), NewCount);
 	if (NewCount) GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	else GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 }
