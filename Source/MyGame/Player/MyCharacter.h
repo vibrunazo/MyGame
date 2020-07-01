@@ -122,6 +122,8 @@ public:
 	class UPawnSensingComponent* PawnSenseComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UArrowComponent* SpawnArrow;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
+	class UBoxComponent* TargetDetection;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	uint8 Team = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

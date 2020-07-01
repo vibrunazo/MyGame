@@ -19,6 +19,11 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 #include "AbilitySystemComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "Components/BoxComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 UMyGameplayAbility::UMyGameplayAbility()
 {
@@ -82,9 +87,11 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     APawn* AvatarPawn = Cast<APawn>(GetAvatarActorFromActorInfo());
     if (bUpdateRotationFromController && AvatarPawn)
     {
-        AvatarPawn->SetActorRotation(AvatarPawn->GetControlRotation());
-        
+        FRotator NewRot = AvatarPawn->GetActorRotation();
+        NewRot.Yaw = AvatarPawn->GetControlRotation().Yaw;
+        AvatarPawn->SetActorRotation(NewRot);
     }
+    if (bLockRotationToTarget) RotateToTarget();
     FName MontageSection = NAME_None;
     //if (bIsInComboState) MontageSection = "ComboStart";
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
@@ -129,6 +136,18 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     EffectRemoveTask->ReadyForActivation();
     
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
+}
+
+void UMyGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+    Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+
+    if (!bLockRotationToTarget) return;
+    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
+    if (!MyChar) return;
+    UCharacterMovementComponent* Move = Cast<UCharacterMovementComponent>(MyChar->GetMovementComponent());
+    if (Move) Move->RotationRate = InitialRotRate;
+
 }
 
 void UMyGameplayAbility::OnMontageComplete()
@@ -219,6 +238,51 @@ void UMyGameplayAbility::ResetActiveEffects()
     {
         UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(GetAvatarActorFromActorInfo(), ActiveEffects);
         ActiveEffects = {};
+    }
+}
+
+void UMyGameplayAbility::RotateToTarget()
+{
+    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
+    if (!MyChar) return;
+    UPrimitiveComponent* Box = Cast<UPrimitiveComponent>(MyChar->TargetDetection);
+    FTransform Tran = Box->GetComponentTransform();
+    TArray < TEnumAsByte < EObjectTypeQuery > > ObjectTypes = TArray < TEnumAsByte < EObjectTypeQuery > >();
+    //ObjectTypes.Add(TEnumAsByte < EObjectTypeQuery >(TestNum));
+    ObjectTypes = TypesToTestTargetLock;
+    //ObjectTypes = FCollisionObjectQueryParams(ECC_TO_BITFIELD(ECC_WorldStatic) | ECC_TO_BITFIELD(ECC_WorldDynamic));
+    //ObjectTypes.Add(ECC_TO_BITFIELD(MyChar->GetCapsuleComponent()->GetCollisionObjectType()));
+    TArray < AActor* > ActorsToIgnore = TArray < AActor* >();
+    ActorsToIgnore.Add(GetAvatarActorFromActorInfo());
+    TArray < class AActor* > OutActors;
+    UKismetSystemLibrary::ComponentOverlapActors(Box, Tran, ObjectTypes, AMyCharacter::StaticClass(), ActorsToIgnore, OutActors);
+    //MyChar->TargetDetection->GetOverlappingActors(OutActors, AMyCharacter::StaticClass());
+    UE_LOG(LogTemp, Warning, TEXT("Looking for overlapped chars"));
+    AMyCharacter* Closest = nullptr;
+    float Best = 9000.f;
+    for (auto&& Overlapped : OutActors)
+    {
+        UE_LOG(LogTemp, Warning, TEXT("Overlapped: %s"), *Overlapped->GetName());
+        AMyCharacter* OtherChar = Cast<AMyCharacter>(Overlapped);
+        if (!OtherChar || !OtherChar->IsAlive()) continue;
+        float Dist = FVector::Dist2D(MyChar->GetActorLocation(), OtherChar->GetActorLocation());
+        if (Dist < Best)
+        {
+            Best = Dist;
+            Closest = OtherChar;
+        }
+    }
+    if (Closest)
+    {
+        FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(MyChar->GetActorLocation(), Closest->GetActorLocation());
+        NewRot.Pitch = MyChar->GetActorRotation().Pitch; NewRot.Roll = MyChar->GetActorRotation().Roll;
+        MyChar->SetActorRotation(NewRot);
+        UCharacterMovementComponent* Move = Cast<UCharacterMovementComponent>(MyChar->GetMovementComponent());
+        if (Move)
+        {
+            InitialRotRate = Move->RotationRate;
+            Move->RotationRate = FRotator(0.f, 0.f, 0.f);
+        }
     }
 }
 

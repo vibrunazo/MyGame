@@ -39,7 +39,12 @@ public:
 	bool bNeedsHitToCancel = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bUpdateRotationFromController = true;
-
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	bool bLockRotationToTarget = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	int32 TestNum= 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	TArray < TEnumAsByte < EObjectTypeQuery > > TypesToTestTargetLock;
 
 private:
 	UPROPERTY()
@@ -64,6 +69,8 @@ protected:
 		const FGameplayAbilityActorInfo * ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,
 		const FGameplayEventData * TriggerEventData) override;
+	/** Native function, called if an ability ends normally or abnormally. If bReplicate is set to true, try to replicate the ending to the client/server */
+	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	UFUNCTION()
 	void OnMontageComplete();
 	UFUNCTION()
@@ -80,6 +87,7 @@ protected:
 	void IncComboCount();
 	void ResetHitBoxes();
 	void ResetActiveEffects();
+	void RotateToTarget();
 
 	UPROPERTY()
 	TSubclassOf<class AHitBox> HitBoxClass;
@@ -87,6 +95,7 @@ protected:
 	class AHitBox* HitBoxRef = nullptr;
 	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> ActiveEffects = {};
-
+	UPROPERTY()
+	FRotator InitialRotRate = FRotator();
 	
 };

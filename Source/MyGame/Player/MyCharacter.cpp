@@ -12,6 +12,7 @@
 #include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/InputComponent.h"
+#include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
@@ -84,6 +85,12 @@ AMyCharacter::AMyCharacter()
 	SpawnArrow->SetupAttachment(RootComponent);
 	SpawnArrow->SetRelativeLocation(FVector(50.0f, 0.0f, 10.0f));
 	SpawnArrow->bTreatAsASprite = true;
+
+	TargetDetection = CreateDefaultSubobject<UBoxComponent>(TEXT("Target Box"));
+	TargetDetection->SetupAttachment(RootComponent);
+	TargetDetection->SetRelativeLocation(FVector(400.f, 0.f, 0.f));
+	TargetDetection->SetBoxExtent(FVector(400.f, 300.f, 200.f));
+	TargetDetection->SetGenerateOverlapEvents(false);
 	
 	PawnSenseComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
 	PawnSenseComp->OnSeePawn.AddDynamic(this, &AMyCharacter::OnPawnSeen);
