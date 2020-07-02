@@ -27,18 +27,26 @@ public:
 	void OnTimelineUpdate();
 	void EnablePickup();
 	void ApplyItemData();
+	void UpdateFromItemData(class UItemDataAsset* NewItemData);
 	void SetItemData(class UItemDataAsset* NewItemData);
+	class APickupMeshActor* GetPickupMeshActor();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Item Pickup")
+	class APickupMeshActor* BP_GetChildActorRef();
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "Item Pickup")
+	void BP_UpdateChildActor(TSubclassOf<class APickupMeshActor> NewMeshActorClass);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class ULootComponent* LootComponent;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class USceneComponent* RootComp;
-	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
-	class UStaticMeshComponent* Mesh;
+	/*UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
+	class UStaticMeshComponent* Mesh;*/
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
 	class UBoxComponent* BoxCollision;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
 	class UBoxComponent* BoxTrigger;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
+	TSubclassOf<class APickupMeshActor> MeshActorClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class UItemDataAsset* ItemData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
@@ -71,4 +79,6 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
+	class APickupMeshActor* APickupMeshActorRef = nullptr;
 };

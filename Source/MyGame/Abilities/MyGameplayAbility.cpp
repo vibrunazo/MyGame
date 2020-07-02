@@ -280,7 +280,9 @@ void UMyGameplayAbility::RotateToTarget()
         UCharacterMovementComponent* Move = Cast<UCharacterMovementComponent>(MyChar->GetMovementComponent());
         if (Move)
         {
-            InitialRotRate = Move->RotationRate;
+            // TODO should not be hard coded, but getting initial rot from movement component was failing sometimes
+            //InitialRotRate = Move->RotationRate;
+            InitialRotRate = FRotator(0.f, 600.f, 0.f);
             Move->RotationRate = FRotator(0.f, 0.f, 0.f);
         }
     }

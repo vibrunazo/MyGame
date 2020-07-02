@@ -32,6 +32,10 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
 	TSubclassOf<class APickup> PickupActor;
+
+	// The Class of the Actor for the visible Mesh of this Item when dropped in the world
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
+	TSubclassOf<class APickupMeshActor> PickupMeshActorClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	class UStaticMesh* PickupMesh;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")

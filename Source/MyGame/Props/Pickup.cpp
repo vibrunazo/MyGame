@@ -2,6 +2,7 @@
 
 
 #include "Pickup.h"
+#include "PickupMeshActor.h"
 #include "ItemDataAsset.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
@@ -35,12 +36,12 @@ APickup::APickup()
 	RootComp = CreateDefaultSubobject<USceneComponent>(TEXT("Root"));
 	RootComp->SetupAttachment(RootComponent);
 
-	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	Mesh->SetupAttachment(RootComp);
-	Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
-	Mesh->SetVisibility(true);
-	Mesh->SetHiddenInGame(true);
+	//Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	//Mesh->SetupAttachment(RootComp);
+	//Mesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	//Mesh->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Ignore);
+	//Mesh->SetVisibility(true);
+	//Mesh->SetHiddenInGame(true);
 	BoxTrigger = CreateDefaultSubobject<UBoxComponent>(TEXT("Trigger"));
 	BoxTrigger->SetupAttachment(RootComponent);
 	BoxTrigger->SetBoxExtent(FVector(50.f, 50.f, 50.f));
@@ -137,7 +138,8 @@ void APickup::OnDelayedSpawn()
 			GetWorldTimerManager().SetTimer(TimelineTimer, this, &APickup::OnTimelineUpdate, 0.02f, true);
 		}
 	}
-	Mesh->SetHiddenInGame(false);
+	if (GetPickupMeshActor()) GetPickupMeshActor()->Mesh->SetHiddenInGame(false);
+	//Mesh->SetHiddenInGame(false);
 	FTimerHandle Handle2;
 	GetWorldTimerManager().SetTimer(Handle2, this, &APickup::EnablePickup, PickupTime, false);
 
@@ -165,6 +167,7 @@ void APickup::OnTimelineUpdate()
 
 void APickup::EnablePickup()
 {
+	UE_LOG(LogTemp, Warning, TEXT("enabling pickup"));
 	BoxTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	// Mesh->SetVisibility(true);
 }
@@ -172,12 +175,40 @@ void APickup::EnablePickup()
 void APickup::ApplyItemData()
 {
 	if (!ItemData) return;
-	if (ItemData->PickupMesh) Mesh->SetStaticMesh(ItemData->PickupMesh);
-	if (ItemData->SpawnParticles) SpawnParticles = ItemData->SpawnParticles;
-	if (ItemData->SpawnSound) SpawnSound = ItemData->SpawnSound;
-	if (ItemData->PickupSound) PickupSound = ItemData->PickupSound;
-	if (ItemData->PickupParticles) PickupParticles = ItemData->PickupParticles;
-	bMaxHPCanPickup = ItemData->bMaxHPCanPickup;
+	UpdateFromItemData(ItemData);
+
+
+
+	/*if (ItemData->PickupActor)
+	{
+		APickup* Child = Cast<APickup>(ItemData->PickupActor->GetDefaultObject());
+		if (Child && Child->ItemData)
+		{
+			UpdateFromItemData(Child->ItemData);
+		}
+	}*/
+}
+
+void APickup::UpdateFromItemData(UItemDataAsset* NewItemData)
+{
+	if (NewItemData->PickupMeshActorClass)
+	{
+		MeshActorClass = NewItemData->PickupMeshActorClass;
+		BP_UpdateChildActor(NewItemData->PickupMeshActorClass);
+	}
+	else UE_LOG(LogTemp, Warning, TEXT("no PickupMeshActorClass"));
+	if (NewItemData->PickupMesh)
+	{
+		if (GetPickupMeshActor())
+		{
+			GetPickupMeshActor()->Mesh->SetStaticMesh(NewItemData->PickupMesh);
+		}
+	}
+	if (NewItemData->SpawnParticles) SpawnParticles = NewItemData->SpawnParticles;
+	if (NewItemData->SpawnSound) SpawnSound = NewItemData->SpawnSound;
+	if (NewItemData->PickupSound) PickupSound = NewItemData->PickupSound;
+	if (NewItemData->PickupParticles) PickupParticles = NewItemData->PickupParticles;
+	bMaxHPCanPickup = NewItemData->bMaxHPCanPickup;
 }
 
 void APickup::SetItemData(UItemDataAsset* NewItemData)
@@ -185,4 +216,12 @@ void APickup::SetItemData(UItemDataAsset* NewItemData)
 	if (!NewItemData) return;
 	ItemData = NewItemData;
 	ApplyItemData();
+}
+
+APickupMeshActor* APickup::GetPickupMeshActor()
+{
+	//if (APickupMeshActorRef) return APickupMeshActorRef; 
+	APickupMeshActorRef = BP_GetChildActorRef();
+	if (APickupMeshActorRef) return APickupMeshActorRef;
+	return nullptr;
 }
