@@ -958,6 +958,37 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 	if (AggroSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), AggroSound, GetActorLocation());
 }
 
+void AMyCharacter::SetIsInCombat(bool NewState)
+{
+	if (NewState && InCombatBuff && AbilitySystem)
+	{
+		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(InCombatBuff, 0.f, AbilitySystem->MakeEffectContext());
+		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
+	}
+	if (!NewState && InCombatBuff && AbilitySystem)
+	{
+		AbilitySystem->RemoveActiveGameplayEffectBySourceEffect(InCombatBuff, AbilitySystem);
+	}
+}
+
+bool AMyCharacter::IsInCombat()
+{
+	if (AbilitySystem && AbilitySystem->GetGameplayEffectCount(InCombatBuff, AbilitySystem) > 0)
+	{
+		return true;
+	}
+	return false;
+}
+
+void AMyCharacter::SetRunning(bool NewState)
+{
+}
+
+bool AMyCharacter::IsRunning()
+{
+	return false;
+}
+
 void AMyCharacter::CheckWalls()
 {
 	UGameInstance* GI = GetGameInstance();

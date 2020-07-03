@@ -167,7 +167,7 @@ void APickup::OnTimelineUpdate()
 
 void APickup::EnablePickup()
 {
-	UE_LOG(LogTemp, Warning, TEXT("enabling pickup"));
+	//UE_LOG(LogTemp, Warning, TEXT("enabling pickup"));
 	BoxTrigger->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
 	// Mesh->SetVisibility(true);
 }

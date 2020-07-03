@@ -63,6 +63,14 @@ public:
 	void ResetBodyColor();
 	UFUNCTION()
 	void SetAggroTarget(APawn* NewTarget);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void SetIsInCombat(bool NewState);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool IsInCombat();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void SetRunning(bool NewState);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool IsRunning();
 
 	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
@@ -141,6 +149,10 @@ public:
 	class UMaterialInstanceDynamic* DynaMat;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	FLinearColor BodyColor = FLinearColor(0.5f, 0.5f, 0.5f);
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UGameplayEffect> InCombatBuff;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UGameplayEffect> RunBuff;
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	TArray<class UItemDataAsset*>* Inventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
