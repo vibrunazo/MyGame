@@ -28,7 +28,9 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Goal)
 	class UStaticMeshComponent* PoleMesh;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Goal)
-	class UStaticMeshComponent* FlagMesh;
+		class UStaticMeshComponent* FlagMesh;
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = Goal)
+		class UPointLightComponent* GoalLight;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Goal)
 	class UBoxComponent* BoxCollision;
 

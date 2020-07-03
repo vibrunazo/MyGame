@@ -14,6 +14,7 @@
 void AMyPlayerController::BeginPlay()
 {
     ShowHUD();
+    ShowLevelIntro();
 }
 
 void AMyPlayerController::SetupInputComponent()
@@ -53,6 +54,14 @@ void AMyPlayerController::ShowHUD()
     if (!HUDWidget) return;
     HUDWidgetRef = CreateWidget<UMyHUDWidget>(this, HUDWidget);
     HUDWidgetRef->AddToViewport();
+}
+
+void AMyPlayerController::ShowLevelIntro()
+{
+    UE_LOG(LogTemp, Warning, TEXT("level Intro widget"));
+    if (!IntroWidget) return;
+    IntroWidgetRef = CreateWidget<UMyUserWidget>(this, IntroWidget);
+    IntroWidgetRef->AddToViewport();
 }
 
 void AMyPlayerController::UpdateHUD(AMyCharacter* Char)

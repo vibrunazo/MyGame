@@ -24,6 +24,7 @@ public:
 	void ShowLevelCleared();
 	void OnPausePressed();
 	void ShowHUD();
+	void ShowLevelIntro();
 	void UpdateHUD(AMyCharacter* Char);
 	float GetHUDHealth();
 
@@ -40,6 +41,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyHUDWidget> HUDWidget;
 	class UMyHUDWidget* HUDWidgetRef;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
+	TSubclassOf<class UMyUserWidget> IntroWidget;
+	class UMyUserWidget* IntroWidgetRef;
 
 	bool bIsLevelOver = false;
 	bool bIsPaused = false;

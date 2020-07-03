@@ -91,6 +91,7 @@ AMyCharacter::AMyCharacter()
 	TargetDetection->SetRelativeLocation(FVector(400.f, 0.f, 0.f));
 	TargetDetection->SetBoxExtent(FVector(400.f, 300.f, 200.f));
 	TargetDetection->SetGenerateOverlapEvents(false);
+	TargetDetection->SetVisibility(false);
 	
 	PawnSenseComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
 	PawnSenseComp->OnSeePawn.AddDynamic(this, &AMyCharacter::OnPawnSeen);
@@ -542,7 +543,6 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
 	UpdateHealthBar();
-	SetIsInCombat(true);
 	return new FActiveGameplayEffectHandle(ActiveEffect);
 }
 
@@ -623,6 +623,7 @@ bool AMyCharacter::HasStunImmune()
 void AMyCharacter::OnDamaged(AActor* SourceActor)
 {
 	// if (!ensure(GetHitMontage != nullptr)) return;
+	SetIsInCombat(true);
 	if (!GetHitMontage)
 	{
 		UAnimInstance* Anim = GetMesh()->GetAnimInstance();

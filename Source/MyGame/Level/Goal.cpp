@@ -2,13 +2,15 @@
 
 
 #include "Goal.h"
-#include "Components/StaticMeshComponent.h"
-#include "Components/BoxComponent.h"
+#include "../MyGameInstance.h"
 #include "../Abilities/IGetHit.h"
 #include "../Player/MyCharacter.h"
 #include "../Player/MyPlayerController.h"
+
+#include "Components/StaticMeshComponent.h"
+#include "Components/BoxComponent.h"
+#include "Components/PointLightComponent.h"
 // #include "Engine/World.h"
-#include "../MyGameInstance.h"
 #include "TimerManager.h"
 
 // Sets default values
@@ -23,6 +25,8 @@ AGoal::AGoal()
 	PoleMesh->SetupAttachment(RootComponent);
 	FlagMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Flag"));
 	FlagMesh->SetupAttachment(RootComponent);
+	GoalLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("Goal Light"));
+	GoalLight->SetupAttachment(RootComponent);
 	BoxCollision = CreateDefaultSubobject<UBoxComponent>(TEXT("Box"));
 	BoxCollision->SetupAttachment(RootComponent);
 	BoxCollision->SetBoxExtent(FVector(50.f, 50.f, 50.f));
@@ -48,6 +52,7 @@ void AGoal::EnableGoal(bool IsEnabled)
 {
 	PoleMesh->SetVisibility(IsEnabled);
 	FlagMesh->SetVisibility(IsEnabled);
+	GoalLight->SetVisibility(IsEnabled);
 	bIsEnabled = IsEnabled;
 }
 
