@@ -144,6 +144,10 @@ public:
 	float StunImmuneCooldown = 5.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float DoubleTapDelay = 0.1f;
+	// How long do I need to press forward for, to start running
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float TimeRequiredToRun = 1.1f;
+	float TimeHoldingRun = 0.f;
 	bool bHasControl = true;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UMaterialInstanceDynamic* DynaMat;
@@ -177,7 +181,8 @@ private:
 	FVector KnockBackVector;
 	void CheckWalls();
 	void IncrementHitStunCount();
-	void CalculateDash();
+	void CalculateDash(float DeltaSeconds);
+	void TryRun(float DeltaSeconds);
 	float GetInputAngle();
 	void DropItems();
 	

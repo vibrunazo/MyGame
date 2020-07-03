@@ -41,8 +41,9 @@ public:
 	bool bUpdateRotationFromController = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bLockRotationToTarget = false;
+	// If true, activating this ability puts the user in Combat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-	int32 TestNum= 0;
+	bool bStartsCombat = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	TArray < TEnumAsByte < EObjectTypeQuery > > TypesToTestTargetLock;
 

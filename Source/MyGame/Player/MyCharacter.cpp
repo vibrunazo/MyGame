@@ -262,6 +262,7 @@ void AMyCharacter::BeginPlay()
 		Inventory = &GetMyGameInstance()->Inventory;
 		ApplyAllItemEffects();
 	}
+	SetIsInCombat(true);
 }
 
 
@@ -282,7 +283,7 @@ void AMyCharacter::Tick(float DeltaSeconds)
 	if (IsPlayerControlled())
 	{
 		CheckWalls();
-		CalculateDash();
+		CalculateDash(DeltaSeconds);
 	}
 
 }
@@ -298,7 +299,7 @@ void AMyCharacter::OnConstruction(const FTransform& Transform)
 /// <summary>
 /// Calculates if I should dash this tick
 /// </summary>
-void AMyCharacter::CalculateDash()
+void AMyCharacter::CalculateDash(float DeltaSeconds)
 {
 	// TODO move to controller
 	float length = 0.0f;
@@ -306,6 +307,7 @@ void AMyCharacter::CalculateDash()
 	length = FMath::Sqrt(length);
 	if (length >= 0.89f)
 	{
+		TryRun(DeltaSeconds);
 		// float CurAngle = GetInputAngle();
 		// float Delta = FMath::FindDeltaAngleDegrees(CurAngle, 45.0f);
 		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
@@ -333,9 +335,24 @@ void AMyCharacter::CalculateDash()
 	else
 	{
 		LastInputZeroTime = GetWorld()->GetTimeSeconds();
+		SetRunning(false);
 	}
 
 }
+
+void AMyCharacter::TryRun(float DeltaSeconds)
+{
+	if (!IsInCombat() && !IsRunning())
+	{
+		TimeHoldingRun += DeltaSeconds;
+		if (TimeHoldingRun >= TimeRequiredToRun)
+		{
+			TimeHoldingRun = TimeHoldingRun;
+			SetRunning(true);
+		}
+	}
+}
+
 float AMyCharacter::GetInputAngle()
 {
 	// UKismetMathLibrary::DegAtan2
@@ -346,6 +363,7 @@ float AMyCharacter::GetInputAngle()
 void AMyCharacter::Jump()
 {
 	if (!HasControl()) return;
+	SetIsInCombat(true);
 	Super::Jump();
 }
 
@@ -524,6 +542,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
 	UpdateHealthBar();
+	SetIsInCombat(true);
 	return new FActiveGameplayEffectHandle(ActiveEffect);
 }
 
@@ -964,6 +983,7 @@ void AMyCharacter::SetIsInCombat(bool NewState)
 	{
 		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(InCombatBuff, 0.f, AbilitySystem->MakeEffectContext());
 		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
+		SetRunning(false);
 	}
 	if (!NewState && InCombatBuff && AbilitySystem)
 	{
@@ -982,10 +1002,24 @@ bool AMyCharacter::IsInCombat()
 
 void AMyCharacter::SetRunning(bool NewState)
 {
+	if (NewState && RunBuff && AbilitySystem)
+	{
+		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(RunBuff, 0.f, AbilitySystem->MakeEffectContext());
+		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
+	}
+	if (!NewState && RunBuff && AbilitySystem)
+	{
+		AbilitySystem->RemoveActiveGameplayEffectBySourceEffect(RunBuff, AbilitySystem);
+		TimeHoldingRun = 0.f;
+	}
 }
 
 bool AMyCharacter::IsRunning()
 {
+	if (AbilitySystem && AbilitySystem->GetGameplayEffectCount(RunBuff, AbilitySystem) > 0)
+	{
+		return true;
+	}
 	return false;
 }
 

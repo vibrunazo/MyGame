@@ -77,6 +77,14 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         return;
     }
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
+    if (bStartsCombat)
+    {
+        AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
+        if (MyChar)
+        {
+            MyChar->SetIsInCombat(true);
+        }
+    }
     //UE_LOG(LogTemp, Warning, TEXT("Activating Ability: %s on %s"), *GetName(), *GetAvatarActorFromActorInfo()->GetName());
     // ResetHitBoxes();
     UpdateCombo();
