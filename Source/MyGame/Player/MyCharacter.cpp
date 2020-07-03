@@ -1007,11 +1007,21 @@ void AMyCharacter::SetRunning(bool NewState)
 	{
 		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(RunBuff, 0.f, AbilitySystem->MakeEffectContext());
 		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
+		if (GetCharacterMovement())
+		{
+			GetCharacterMovement()->RotationRate = RunRotationRate;
+			GetCharacterMovement()->MaxAcceleration = RunAccel;
+		}
 	}
 	if (!NewState && RunBuff && AbilitySystem)
 	{
 		AbilitySystem->RemoveActiveGameplayEffectBySourceEffect(RunBuff, AbilitySystem);
 		TimeHoldingRun = 0.f;
+		if (GetCharacterMovement())
+		{
+			GetCharacterMovement()->RotationRate = WalkRotationRate;
+			GetCharacterMovement()->MaxAcceleration = WalkAccel;
+		}
 	}
 }
 

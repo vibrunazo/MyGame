@@ -13,6 +13,8 @@ APickupMeshActor::APickupMeshActor()
 	RootComponent = RootComp;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComp);
+	Mesh->SetRenderCustomDepth(true);
+	Mesh->SetCustomDepthStencilValue(2);
 
 }
 
