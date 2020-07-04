@@ -868,6 +868,16 @@ void AMyCharacter::AddItemToInventory(UItemDataAsset* NewItem)
 	}
 }
 
+AActor* AMyCharacter::GetTargetEnemy()
+{
+	return TargetEnemy;
+}
+
+void AMyCharacter::SetTargetEnemy(AActor* NewTarget)
+{
+	TargetEnemy = NewTarget;
+}
+
 void AMyCharacter::ApplyAllItemEffects()
 {
 	for (auto &&Item : *Inventory)
@@ -968,6 +978,7 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 		if (OldTarget) return;
 		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), NewTarget);
 		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
+		SetTargetEnemy(NewTarget);
 	}
 
 	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());

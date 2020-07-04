@@ -37,10 +37,16 @@ public:
 	// if true, I can only cancel abilities with TagsIcanCancel if the last ability hits, so I can combo from the hit, if false then always cancel it
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bNeedsHitToCancel = true;
+	// if true, at the beginning of this ability, rotate the player towards the direction of controller input
+	// this will garantee that slow mesh rotation won't make the ability not target where the player is trying to point to
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bUpdateRotationFromController = true;
+	// if true, at the beginning of this ability, rotate towards the current target and prevents player from changing rotation until ability ends
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bLockRotationToTarget = false;
+	// if true, at the beginning of this ability, acquires a new target: the nearest target that overlaps the target detection box
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	bool bAqcuireNewTargetFromDetectionBox = false;
 	// If true, activating this ability puts the user in Combat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bStartsCombat = true;
@@ -88,7 +94,8 @@ protected:
 	void IncComboCount();
 	void ResetHitBoxes();
 	void ResetActiveEffects();
-	void RotateToTarget();
+	void AcquireNewTarget();
+	void LockToTarget();
 
 	UPROPERTY()
 	TSubclassOf<class AHitBox> HitBoxClass;

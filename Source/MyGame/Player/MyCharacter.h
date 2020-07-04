@@ -87,6 +87,10 @@ public:
 	bool IsValidLowLevel() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddItemToInventory(class UItemDataAsset* NewItem) override;
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	AActor* GetTargetEnemy();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void SetTargetEnemy(AActor* NewTarget);
 
 	void ApplyAllItemEffects();
 	void ApplyKnockBack(AActor* SourceActor, float Power);
@@ -204,6 +208,9 @@ private:
 	class UMyGameInstance* MyGIRef;
 	FTimerHandle OutlineTimer;
 	FVector LastGroundLocation = FVector();
+	UPROPERTY()
+	AActor* TargetEnemy = nullptr;
+
 	// float LastInputAngle = 0.0f;
 
 protected:

@@ -99,7 +99,8 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         NewRot.Yaw = AvatarPawn->GetControlRotation().Yaw;
         AvatarPawn->SetActorRotation(NewRot);
     }
-    if (bLockRotationToTarget) RotateToTarget();
+    if (bAqcuireNewTargetFromDetectionBox) AcquireNewTarget();
+    if (bLockRotationToTarget) LockToTarget();
     FName MontageSection = NAME_None;
     //if (bIsInComboState) MontageSection = "ComboStart";
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
@@ -249,7 +250,12 @@ void UMyGameplayAbility::ResetActiveEffects()
     }
 }
 
-void UMyGameplayAbility::RotateToTarget()
+/// <summary>
+/// Acquires a new target from the character's target detection box. 
+/// Finds the nearest player in the box and sets it as the character's "EnemyTarget"
+/// Called in the beginning of the ability if bAqcuireNewTargetFromDetectionBox is true
+/// </summary>
+void UMyGameplayAbility::AcquireNewTarget()
 {
     AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
     if (!MyChar) return;
@@ -282,17 +288,35 @@ void UMyGameplayAbility::RotateToTarget()
     }
     if (Closest)
     {
-        FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(MyChar->GetActorLocation(), Closest->GetActorLocation());
-        NewRot.Pitch = MyChar->GetActorRotation().Pitch; NewRot.Roll = MyChar->GetActorRotation().Roll;
-        MyChar->SetActorRotation(NewRot);
-        UCharacterMovementComponent* Move = Cast<UCharacterMovementComponent>(MyChar->GetMovementComponent());
-        if (Move)
-        {
-            // TODO should not be hard coded, but getting initial rot from movement component was failing sometimes
-            //InitialRotRate = Move->RotationRate;
-            InitialRotRate = FRotator(0.f, 600.f, 0.f);
-            Move->RotationRate = FRotator(0.f, 0.f, 0.f);
-        }
+        MyChar->SetTargetEnemy(Closest);
+
+        
+    }
+}
+
+/// <summary>
+/// Rotates the character towards its "EnemyTarget" variable 
+/// and locks rotation rate to zero, (EndAbility should reset this)
+/// called at the beginning of the ability if bLockRotationToTarget is trye
+/// </summary>
+void UMyGameplayAbility::LockToTarget()
+{
+    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
+    if (!MyChar) return;
+    AActor* EnemyTarget = MyChar->GetTargetEnemy();
+    if (!EnemyTarget) return;
+
+    FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(MyChar->GetActorLocation(), EnemyTarget->GetActorLocation());
+    NewRot.Pitch = MyChar->GetActorRotation().Pitch; NewRot.Roll = MyChar->GetActorRotation().Roll;
+    MyChar->SetActorRotation(NewRot);
+    UCharacterMovementComponent* Move = Cast<UCharacterMovementComponent>(MyChar->GetMovementComponent());
+    if (Move)
+    {
+        // TODO should not be hard coded, but getting initial rot from movement component was failing sometimes
+        // should get it from the character's walk rotation variables
+        //InitialRotRate = Move->RotationRate;
+        InitialRotRate = FRotator(0.f, 600.f, 0.f);
+        Move->RotationRate = FRotator(0.f, 0.f, 0.f);
     }
 }
 
