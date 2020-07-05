@@ -16,6 +16,7 @@ public:
 	APickupMeshActor();
 
 	void UpdateMesh();
+	void SetMeshOutline();
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = "Item Pickup")
 	class USceneComponent* RootComp;

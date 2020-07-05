@@ -119,6 +119,7 @@ void APickup::OnDelayedSpawn()
 {
 	// BoxCollision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	BoxCollision->SetSimulatePhysics(true);
+	// if I have an owner it means I was dropped by an enemy instead of by being placed in the map in the editor
 	if (GetOwner())
 	{
 		BoxCollision->AddImpulse(FVector(0.f, 0.5, 500.0f), NAME_None, true);
@@ -137,6 +138,8 @@ void APickup::OnDelayedSpawn()
 			MyTimeline.TickTimeline(0.02f);
 			GetWorldTimerManager().SetTimer(TimelineTimer, this, &APickup::OnTimelineUpdate, 0.02f, true);
 		}
+		auto ChildMesh = GetPickupMeshActor();
+		if (ChildMesh) ChildMesh->SetMeshOutline();
 	}
 	if (GetPickupMeshActor()) GetPickupMeshActor()->Mesh->SetHiddenInGame(false);
 	//Mesh->SetHiddenInGame(false);

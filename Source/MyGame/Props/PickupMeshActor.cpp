@@ -3,6 +3,8 @@
 
 #include "PickupMeshActor.h"
 
+#include "Components/StaticMeshComponent.h"
+
 // Sets default values
 APickupMeshActor::APickupMeshActor()
 {
@@ -13,14 +15,23 @@ APickupMeshActor::APickupMeshActor()
 	RootComponent = RootComp;
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(RootComp);
-	Mesh->SetRenderCustomDepth(true);
-	Mesh->SetCustomDepthStencilValue(2);
+	//Mesh->SetRenderCustomDepth(true);
+	//Mesh->SetCustomDepthStencilValue(2);
 
 }
 
 void APickupMeshActor::UpdateMesh()
 {
 	UE_LOG(LogTemp, Warning, TEXT("update mesh on APickupMeshActor"));
+}
+
+void APickupMeshActor::SetMeshOutline()
+{
+	//UE_LOG(LogTemp, Warning, TEXT("setting mesh outline"));
+	if (!Mesh) return;
+	Mesh->SetRenderCustomDepth(true);
+	Mesh->SetCustomDepthStencilValue(2);
+	//UE_LOG(LogTemp, Warning, TEXT("CD %d %d"), Mesh->bRenderCustomDepth, Mesh->CustomDepthStencilValue);
 }
 
 // Called when the game starts or when spawned
