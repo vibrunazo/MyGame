@@ -56,7 +56,6 @@ void ASpawner::SpawnActors()
 		AMyCharacter* PlayerRef = nullptr;
 		if (MyGI) PlayerRef = MyGI->PlayerCharRef;
 		NewChar->SetAggroTarget(PlayerRef);
-		UE_LOG(LogTemp, Warning, TEXT("told %s to aggro on %s"), *NewChar->GetName(), *PlayerRef->GetName());
 	}
 }
 

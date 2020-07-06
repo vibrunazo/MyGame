@@ -49,7 +49,7 @@ public:
 	float Mana = 100.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<class UItemDataAsset*> Inventory;
-	UPROPERTY()
+	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	class AMyCharacter* PlayerCharRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	int32 RandomSeed = 0;

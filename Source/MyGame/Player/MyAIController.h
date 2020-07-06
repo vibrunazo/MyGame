@@ -21,4 +21,6 @@ public:
 	float AttackRange = 140.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My AI Controller")
 	float ChaseRange = 40.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My AI Controller")
+	float AggressiveRange = 300.f;
 };

@@ -309,6 +309,7 @@ void UMyGameplayAbility::LockToTarget()
     FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(MyChar->GetActorLocation(), EnemyTarget->GetActorLocation());
     NewRot.Pitch = MyChar->GetActorRotation().Pitch; NewRot.Roll = MyChar->GetActorRotation().Roll;
     MyChar->SetActorRotation(NewRot);
+    UE_LOG(LogTemp, Warning, TEXT("Rotated %s %s"), *MyChar->GetName(), *NewRot.ToCompactString());
     UCharacterMovementComponent* Move = Cast<UCharacterMovementComponent>(MyChar->GetMovementComponent());
     if (Move)
     {
