@@ -71,6 +71,10 @@ public:
 	void SetRunning(bool NewState);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsRunning();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void SetWalking(bool NewState);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool IsWalking();
 
 	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
@@ -161,6 +165,8 @@ public:
 	TSubclassOf<class UGameplayEffect> InCombatBuff;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UGameplayEffect> RunBuff;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<class UGameplayEffect> WalkBuff;
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	TArray<class UItemDataAsset*>* Inventory;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")

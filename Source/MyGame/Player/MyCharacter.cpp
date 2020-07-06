@@ -1045,6 +1045,29 @@ bool AMyCharacter::IsRunning()
 	return false;
 }
 
+void AMyCharacter::SetWalking(bool NewState)
+{
+	if (NewState && WalkBuff && AbilitySystem)
+	{
+		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(WalkBuff, 0.f, AbilitySystem->MakeEffectContext());
+		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
+		SetRunning(false);
+	}
+	if (!NewState && WalkBuff && AbilitySystem)
+	{
+		AbilitySystem->RemoveActiveGameplayEffectBySourceEffect(WalkBuff, AbilitySystem);
+	}
+}
+
+bool AMyCharacter::IsWalking()
+{
+	if (AbilitySystem && AbilitySystem->GetGameplayEffectCount(WalkBuff, AbilitySystem) > 0)
+	{
+		return true;
+	}
+	return false;
+}
+
 void AMyCharacter::CheckWalls()
 {
 	UGameInstance* GI = GetGameInstance();
