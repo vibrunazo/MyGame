@@ -17,6 +17,8 @@ class MYGAME_API UMyHealthBar : public UUserWidget
 public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetHealth(float NewHealth);
+	UFUNCTION(BlueprintImplementableEvent)
+	void SetMaxHealth(float NewMaxHealth);
 	UFUNCTION(BlueprintCallable)
 	float GetHealth();
 

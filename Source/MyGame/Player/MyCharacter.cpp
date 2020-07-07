@@ -448,6 +448,7 @@ void AMyCharacter::UpdateHealthBar()
 	if (HealthBar)
 	{
 		OldHealth = HealthBar->GetHealth();
+		HealthBar->SetMaxHealth(AttributeSetBase->GetMaxHealth());
 		HealthBar->SetHealth(NewHealth);
 	}
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
