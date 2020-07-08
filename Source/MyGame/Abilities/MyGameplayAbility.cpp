@@ -99,6 +99,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         NewRot.Yaw = AvatarPawn->GetControlRotation().Yaw;
         AvatarPawn->SetActorRotation(NewRot);
     }
+    if (bResetTarget) ResetTarget();
     if (bAqcuireNewTargetFromDetectionBox) AcquireNewTarget();
     if (bLockRotationToTarget) LockToTarget();
     FName MontageSection = NAME_None;
@@ -250,6 +251,14 @@ void UMyGameplayAbility::ResetActiveEffects()
     }
 }
 
+void UMyGameplayAbility::ResetTarget()
+{
+    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
+    if (!MyChar) return;
+    MyChar->SetTargetEnemy(nullptr);
+
+}
+
 /// <summary>
 /// Acquires a new target from the character's target detection box. 
 /// Finds the nearest player in the box and sets it as the character's "EnemyTarget"
@@ -289,8 +298,6 @@ void UMyGameplayAbility::AcquireNewTarget()
     if (Closest)
     {
         MyChar->SetTargetEnemy(Closest);
-
-        
     }
 }
 

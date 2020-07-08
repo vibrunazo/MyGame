@@ -41,6 +41,9 @@ public:
 	// this will garantee that slow mesh rotation won't make the ability not target where the player is trying to point to
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bUpdateRotationFromController = true;
+	// if true, at the beginning of this ability, will reset the current target before acquiring a new one
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	bool bResetTarget = false;
 	// if true, at the beginning of this ability, rotate towards the current target and prevents player from changing rotation until ability ends
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bLockRotationToTarget = false;
@@ -94,6 +97,7 @@ protected:
 	void IncComboCount();
 	void ResetHitBoxes();
 	void ResetActiveEffects();
+	void ResetTarget(); 
 	void AcquireNewTarget();
 	void LockToTarget();
 
