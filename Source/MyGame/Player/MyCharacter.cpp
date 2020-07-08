@@ -117,7 +117,7 @@ void AMyCharacter::SetDefaultProperties()
 	// DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	// if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
 
-	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, 120.0f));
+	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, -140.0f));
 	HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
 
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
@@ -459,19 +459,34 @@ void AMyCharacter::UpdateHealthBar()
 	}
 	float OldHealthPct = OldHealth / AttributeSetBase->GetMaxHealth();
 	float NewHealthPct = NewHealth / AttributeSetBase->GetMaxHealth();
+	if (NewHealthPct <= 0.75f && OldHealthPct > 0.75f)
+	{
+		ActivateAbilityByEvent("health75");
+		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.75"));
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
+	}
 	if (NewHealthPct <= 0.7f && OldHealthPct > 0.7f)
 	{
 		ActivateAbilityByEvent("health70");
 		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.70"));
-		//AbilitySystem->AddLooseGameplayTag(HealthTag);
-		//AbilitySystem->gameplayevent
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
+	}
+	if (NewHealthPct <= 0.5f && OldHealthPct > 0.5f)
+	{
+		ActivateAbilityByEvent("health50");
+		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.50"));
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.3f && OldHealthPct > 0.3f)
 	{
 		ActivateAbilityByEvent("health30");
 		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.30"));
-		//AbilitySystem->AddLooseGameplayTag(HealthTag);
+		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
+	}
+	if (NewHealthPct <= 0.25f && OldHealthPct > 0.25f)
+	{
+		ActivateAbilityByEvent("health25");
+		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.25"));
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 

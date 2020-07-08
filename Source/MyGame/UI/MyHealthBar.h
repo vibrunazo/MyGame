@@ -20,6 +20,8 @@ public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void SetMaxHealth(float NewMaxHealth);
 	UFUNCTION(BlueprintCallable)
+	void GetRatioFromHealth(float Health);
+	UFUNCTION(BlueprintCallable)
 	float GetHealth();
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="HealthBar")
