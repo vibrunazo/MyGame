@@ -515,6 +515,9 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	NewEffect.Data->GetAllAssetTags(EffectTags);
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
 	// FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
+	// the 'data.noapply' tag let's us know this effect only has side effects, and doesn't modify any attributes
+	// so we should NOT call ApplyGameplayEffectSpecToSelf
+	FGameplayTag NoApplyTag = FGameplayTag::RequestGameplayTag(TEXT("data.noapply"));
 	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
 	FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
 	FGameplayTag CamShakeTag = FGameplayTag::RequestGameplayTag(TEXT("data.camshake"));
@@ -555,6 +558,12 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
 		// UE_LOG(LogTemp, Warning, TEXT("Has Launchtag, Knockback: %s"), *LaunchVector.ToString());
 		ApplyLaunchBack(SourceActor, LaunchVector);
+	}
+	// the 'data.noapply' tag let's us know this effect only has side effects, and doesn't modify any attributes
+	// so we should NOT call ApplyGameplayEffectSpecToSelf
+	if (EffectTags.HasTag(NoApplyTag))
+	{
+		return new FActiveGameplayEffectHandle();
 	}
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
