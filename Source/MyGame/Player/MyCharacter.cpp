@@ -903,6 +903,44 @@ void AMyCharacter::SetTargetEnemy(AActor* NewTarget)
 	TargetEnemy = NewTarget;
 }
 
+void AMyCharacter::AddToAggroList(AActor* NewActor)
+{
+	if (NewActor)
+	{
+		AggroList.Add(NewActor);
+	}
+}
+
+void AMyCharacter::RemoveFromAggroList(AActor* NewActor)
+{
+	if (!NewActor)
+	{
+		ClearAggroList();
+		return;
+	}
+	AggroList.Remove(NewActor);
+}
+
+void AMyCharacter::ClearAggroList()
+{
+	AggroList.Empty();
+}
+
+bool AMyCharacter::IsInAggroList(AActor* NewActor)
+{
+	if (AggroList.Num() == 0) return true;
+	for (auto&& Enemy : AggroList)
+	{
+		if (!Cast<AMyCharacter>(Enemy) || !Cast<AMyCharacter>(Enemy)->IsAlive())
+		{
+			AggroList.Empty();
+			return true;
+		}
+		if (Enemy == NewActor) return true;
+	}
+	return false;
+}
+
 void AMyCharacter::ApplyAllItemEffects()
 {
 	for (auto &&Item : *Inventory)

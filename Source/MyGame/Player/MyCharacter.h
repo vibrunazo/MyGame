@@ -95,6 +95,14 @@ public:
 	AActor* GetTargetEnemy();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetTargetEnemy(AActor* NewTarget);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void AddToAggroList(AActor* NewActor);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void RemoveFromAggroList(AActor* NewActor);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void ClearAggroList();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool IsInAggroList(AActor* NewActor);
 
 	void ApplyAllItemEffects();
 	void ApplyKnockBack(AActor* SourceActor, float Power);
@@ -216,6 +224,8 @@ private:
 	FVector LastGroundLocation = FVector();
 	UPROPERTY()
 	AActor* TargetEnemy = nullptr;
+	UPROPERTY()
+	TArray<AActor*> AggroList = TArray<AActor*>();
 
 	// float LastInputAngle = 0.0f;
 
