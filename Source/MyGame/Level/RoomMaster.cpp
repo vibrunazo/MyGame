@@ -46,7 +46,6 @@ void ARoomMaster::BeginPlay()
 	ALevelBuilder* LBuilder = MyGI->GetLevelBuilder();
 	LevelBuilderRef = LBuilder;
 	LevelBuilderRef->RegisterRoomMaster(this, GetActorLocation());
-	bIsDoorOpen = false;
 	
 }
 
@@ -55,10 +54,11 @@ void ARoomMaster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	// TODO should be bound on char death event, not on tick
-	if (!bIsDoorOpen && AreAllCharsDead())
+	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
 	{
 		if (!ensure(LevelBuilderRef != nullptr)) return;
 		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());
+
 		EnableGoals();
 		bIsDoorOpen = true;
 		// UE_LOG(LogTemp, Warning, TEXT("cleared room at loc %s"), *GetActorLocation().ToString());

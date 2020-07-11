@@ -701,6 +701,7 @@ void ALevelBuilder::RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Locat
 {
 	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
 	Room->RoomMasterRef = NewRoomMaster;
+	NewRoomMaster->RoomStateRef = Room;
 }
 
 /// <summary>
@@ -758,6 +759,7 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
 		UE_LOG(LogTemp, Warning, TEXT("closing doors"));
 		TeleportPlayerInsideRoom(Location);
 		//DebugGrid();
+		if (Room->RoomMasterRef) Room->RoomMasterRef->bIsDoorOpen = false;
 		CloseDoors();
 	}
 	HideWall(Coord, Dir);
@@ -803,6 +805,9 @@ void ALevelBuilder::OpenDoors()
 	}
 }
 
+/// <summary>
+/// Closes all Doors from the DoorList Array
+/// </summary>
 void ALevelBuilder::CloseDoors()
 {
 	for (auto &&Door : DoorList)

@@ -30,6 +30,7 @@ public:
 	bool bAggroed = false;
 	UPROPERTY()
 	class ALevelBuilder* LevelBuilderRef = nullptr;
+	struct FRoomState* RoomStateRef = nullptr;
 
 private:
 	void EnableGoals();
