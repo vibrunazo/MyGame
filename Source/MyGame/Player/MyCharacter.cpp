@@ -688,6 +688,10 @@ void AMyCharacter::OnBackslide()
 void AMyCharacter::OnDie()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("I died"));
+	if (IsAlive() && AttributeSetBase)
+	{
+		AttributeSetBase->SetHealth(0.f);
+	}
 	UWorld* World = GetWorld();
 	// FTimerManager TM = FTimerManager::FTimerManager;
 	FTimerHandle Handle;
