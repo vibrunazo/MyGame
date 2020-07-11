@@ -848,6 +848,7 @@ TSubclassOf<UCameraShake> AMyCharacter::GetCamShake()
 
 void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
 {
+	UE_LOG(LogTemp, Warning, TEXT("%s Seen Pawn"), *GetName());
 	SetAggroTarget(SeenPawn);
 }
 
