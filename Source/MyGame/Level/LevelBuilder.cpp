@@ -278,7 +278,7 @@ AWall* ALevelBuilder::TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, 
 	if (NewWall)
 	{
 		AllWalls.Add(ID, NewWall);
-		UE_LOG(LogTemp, Warning, TEXT("Adding wall at %s, Dir: %d"), *Where.ToString(), Dir);
+		//UE_LOG(LogTemp, Warning, TEXT("Adding wall at %s, Dir: %d"), *Where.ToString(), Dir);
 		if (!Tile.Value.Walls.Contains(Dir)) Tile.Value.Walls.Add(Dir);
 		FRoomState* Neighbor = Grid.Find(GetNeighbor(Where, Dir));
 		EDirection OppositeDir = GetOppositeDirection(Dir);
@@ -753,10 +753,10 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
 	if (!Room) return;
 	// TODO pass location as parameter
 	OnEnterRoom(*Room);
-	UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
+	//UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
 	if ((Room != nullptr) && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("closing doors"));
+		//UE_LOG(LogTemp, Warning, TEXT("closing doors"));
 		TeleportPlayerInsideRoom(Location);
 		//DebugGrid();
 		if (Room->RoomMasterRef) Room->RoomMasterRef->bIsDoorOpen = false;

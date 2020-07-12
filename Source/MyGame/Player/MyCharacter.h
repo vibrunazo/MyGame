@@ -14,6 +14,8 @@
 
 //DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
 
+DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FDieSignature, AMyCharacter, OnDieDelegate, AMyCharacter*, WhoDied);
+
 UCLASS(config=Game)
 class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit, public ICastProjectile
 {
@@ -75,6 +77,9 @@ public:
 	void SetWalking(bool NewState);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsWalking();
+
+	UPROPERTY(BlueprintAssignable, Category="Abilities")
+	FDieSignature OnDieDelegate;
 
 	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)

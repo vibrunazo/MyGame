@@ -33,6 +33,7 @@ void ARoomMaster::BeginPlay()
 		if (Char)
 		{
 			CharsToKill.Add(Char);
+			Char->OnDieDelegate.AddDynamic(this, &ARoomMaster::OnCharDied);
 		}
 		AGoal* NewGoal = Cast<AGoal>(Actor);
 		if (NewGoal)
@@ -53,16 +54,6 @@ void ARoomMaster::BeginPlay()
 void ARoomMaster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-	// TODO should be bound on char death event, not on tick
-	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
-	{
-		if (!ensure(LevelBuilderRef != nullptr)) return;
-		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());
-
-		EnableGoals();
-		bIsDoorOpen = true;
-		// UE_LOG(LogTemp, Warning, TEXT("cleared room at loc %s"), *GetActorLocation().ToString());
-	}
 }
 
 bool ARoomMaster::AreAllCharsDead()
@@ -93,6 +84,22 @@ void ARoomMaster::AggroAll(APawn* PlayerRef)
 	{
 		Enemy->SetAggroTarget(PlayerRef);
 	}
+}
+
+void ARoomMaster::OnCharDied(AMyCharacter* WhoDied)
+{
+	UE_LOG(LogTemp, Warning, TEXT("%s died lol noob"), *WhoDied->GetName());
+
+	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
+	{
+		if (!ensure(LevelBuilderRef != nullptr)) return;
+		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());
+
+		EnableGoals();
+		bIsDoorOpen = true;
+		// UE_LOG(LogTemp, Warning, TEXT("cleared room at loc %s"), *GetActorLocation().ToString());
+	}
+
 }
 
 void ARoomMaster::EnableGoals()

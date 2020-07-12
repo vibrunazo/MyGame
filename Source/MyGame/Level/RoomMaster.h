@@ -18,6 +18,8 @@ public:
 	bool AreAllCharsDead();
 	TArray<class AMyCharacter*> GetChars();
 	void AggroAll(APawn* PlayerRef);
+	UFUNCTION()
+	void OnCharDied(class AMyCharacter* WhoDied);
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* Billboard;

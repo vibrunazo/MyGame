@@ -600,7 +600,7 @@ void AMyCharacter::IncrementHitStunCount()
 	// LastHitstunTime = GetWorld()->GetTimeSeconds();
 	if (MaxStuns > 0 && HitStunCount >= MaxStuns)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("%s is Stunimmune"), *GetName());
+		//UE_LOG(LogTemp, Warning, TEXT("%s is Stunimmune"), *GetName());
 		StunImmune = true;
 		HitStunCount = 0;
 		TSubclassOf<UGameplayEffect> StunImmuneEffect = GetMyGameInstance()->StunImmuneEffectRef;
@@ -698,6 +698,8 @@ void AMyCharacter::OnDie()
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
 
 	if (DeathSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
+
+	OnDieDelegate.Broadcast(this);
 	// if (MyAnim)
 	// {
 		// MyAnim->StartRagdoll();
@@ -972,7 +974,7 @@ void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
 
 	/*if (SourceActor) Power = -SourceActor->GetActorForwardVector() * Power;
 	else Power = GetActorForwardVector().GetSafeNormal() * Power;*/
-	UE_LOG(LogTemp, Warning, TEXT("FV: %s, power: %s"), *SourceActor->GetActorForwardVector().ToString(), *Power.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("FV: %s, power: %s"), *SourceActor->GetActorForwardVector().ToString(), *Power.ToString());
 	LastLaunchBack = Power;
 	// LaunchDir.Z = Power.Z;
 	FTimerHandle TimerHandle;
