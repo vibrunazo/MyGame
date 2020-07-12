@@ -1,6 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "MyCharacter.h"
+#include "EnemyCharBase.h"
 #include "MyPlayerController.h"
 #include "../MyGameInstance.h"
 #include "../Abilities/LootComponent.h"
@@ -571,30 +572,6 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	return new FActiveGameplayEffectHandle(ActiveEffect);
 }
 
-/**Sets the outline of the enemy, visible through walls, when the enemy is hit
- * 	The Post process material looks for a custom depth of stencil value 2 or more to draw the outline.
- *  2 is the player outline color, greater is the enemy
- */
-void AMyCharacter::SetOutline()
-{
-	GetMesh()->SetRenderCustomDepth(true);
-	GetMesh()->SetCustomDepthStencilValue(3);
-	GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, 3.f, false);
-
-	TArray<USceneComponent*> ChildrenComponents;
-	GetMesh()->GetChildrenComponents(false, ChildrenComponents);
-
-	for (USceneComponent* Component : ChildrenComponents)
-	{
-		if (!Component->GetOwner()) continue;
-		if (UStaticMeshComponent* ChildMesh = Cast<UStaticMeshComponent>(Component))
-		{
-			ChildMesh->SetRenderCustomDepth(true);
-			ChildMesh->SetCustomDepthStencilValue(3);
-		}
-	}
-}
-
 /* Removes the outline of an enemy character by setting the custom depth stencil back to zero.
 Called from a timer set by SetOutline() and by the OnDie() event */
 void AMyCharacter::RemoveOutline()
@@ -660,12 +637,13 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 	if (!HasStunImmune()) PlayAnimMontage(GetHitMontage);
 	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
 	
-	if (!IsPlayerControlled())
+	if (IsPlayerControlled())
 	{
-		APawn* SeenPawn = Cast<APawn>(SourceActor);
-		if (!SeenPawn) return;
-		SetAggroTarget(SeenPawn);
-		SetOutline();
+		AEnemyCharBase* SourceChar = Cast<AEnemyCharBase>(SourceActor);
+		if (SourceChar && !SourceChar->IsPlayerControlled())
+		{
+			SourceChar->SetOutline();
+		}
 	}
 	
 	OnDamagedBP(SourceActor);

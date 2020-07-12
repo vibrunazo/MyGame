@@ -114,6 +114,7 @@ public:
 	void OnSpeedChange(const FOnAttributeChangeData& Data);
 	UFUNCTION()
 	void PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	void RemoveOutline();
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
@@ -199,8 +200,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
 	float BaseLookUpRate;
 private:
-	void SetOutline();
-	void RemoveOutline();
+	
 	void OnDelayedDeath();
 	void StartBackslide(FVector Dir);
 	void OnBackslide();
@@ -220,7 +220,6 @@ private:
 	FVector LastInputVector = FVector(0.0f, 0.0f, 0.0f);
 	FVector LastLaunchBack = FVector(0.0f, 0.0f, 0.0f);
 	class UMyGameInstance* MyGIRef;
-	FTimerHandle OutlineTimer;
 	FVector LastGroundLocation = FVector();
 	UPROPERTY()
 	AActor* TargetEnemy = nullptr;
@@ -230,11 +229,14 @@ private:
 	// float LastInputAngle = 0.0f;
 
 protected:
-
 	void BeginPlay() override;
 	void MoveRight(float Value);
 	void MoveForward(float Value);
 	void TurnAtRate(float Rate);
+
+
+	//void SetOutline();
+	//FTimerHandle OutlineTimer;
 	/**
 	 * Called via input to turn look up/down at a given rate. 
 	 * @param Rate	This is a normalized rate, i.e. 1.0 means 100% of desired turn rate

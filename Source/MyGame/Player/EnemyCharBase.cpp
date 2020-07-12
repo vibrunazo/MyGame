@@ -36,5 +36,36 @@ void AEnemyCharBase::OnDamaged(AActor* SourceActor)
 {
     Super::OnDamaged(SourceActor);
     HealthBarComp->SetVisibility(true);
+
+    APawn* SeenPawn = Cast<APawn>(SourceActor);
+    if (!SeenPawn) return;
+    SetAggroTarget(SeenPawn);
+    SetOutline();
     // UE_LOG(LogTemp, Warning, TEXT("Enemy damaged"));
 }
+
+/**Sets the outline of the enemy, visible through walls, when the enemy is hit
+ * 	The Post process material looks for a custom depth of stencil value 2 or more to draw the outline.
+ *  2 is the player outline color, greater is the enemy
+ */
+void AEnemyCharBase::SetOutline()
+{
+    GetMesh()->SetRenderCustomDepth(true);
+    GetMesh()->SetCustomDepthStencilValue(3);
+    GetWorldTimerManager().SetTimer(OutlineTimer, this, &AMyCharacter::RemoveOutline, OutlineRemoveDelay, false);
+
+    TArray<USceneComponent*> ChildrenComponents;
+    GetMesh()->GetChildrenComponents(false, ChildrenComponents);
+
+    for (USceneComponent* Component : ChildrenComponents)
+    {
+        if (!Component->GetOwner()) continue;
+        if (UStaticMeshComponent* ChildMesh = Cast<UStaticMeshComponent>(Component))
+        {
+            ChildMesh->SetRenderCustomDepth(true);
+            ChildMesh->SetCustomDepthStencilValue(3);
+        }
+    }
+}
+
+

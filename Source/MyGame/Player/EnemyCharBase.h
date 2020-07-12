@@ -19,4 +19,12 @@ public:
 	void BeginPlay() override;
 
 	void OnDamaged(AActor* SourceActor) override;
+
+	void SetOutline();
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Enemy Base")
+	float OutlineRemoveDelay = 3.5f;
+
+protected:
+	FTimerHandle OutlineTimer;
 };
