@@ -1146,3 +1146,13 @@ void AMyCharacter::ResetBodyColor()
 {
 	if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
 }
+
+void AMyCharacter::SetGlow(float NewGlow)
+{
+	if (DynaMat) DynaMat->SetScalarParameterValue(FName("GlowAlpha"), NewGlow);
+}
+
+void AMyCharacter::ResetGlow()
+{
+	if (DynaMat) DynaMat->SetScalarParameterValue(FName("GlowAlpha"), 0.f);
+}

@@ -63,6 +63,10 @@ public:
 	void SetBodyColor(FLinearColor NewColor);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ResetBodyColor();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void SetGlow(float NewGlow);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void ResetGlow();
 	UFUNCTION()
 	void SetAggroTarget(APawn* NewTarget);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
