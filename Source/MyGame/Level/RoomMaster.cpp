@@ -88,7 +88,7 @@ void ARoomMaster::AggroAll(APawn* PlayerRef)
 
 void ARoomMaster::OnCharDied(AMyCharacter* WhoDied)
 {
-	UE_LOG(LogTemp, Warning, TEXT("%s died lol noob"), *WhoDied->GetName());
+	//UE_LOG(LogTemp, Warning, TEXT("%s died lol noob"), *WhoDied->GetName());
 
 	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
 	{

@@ -187,6 +187,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
     NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
     NewHB->HitSound = HitSound;
+    NewHB->BlockSound = BlockSound;
     NewHB->EffectsToApply = MakeSpecHandles();
     // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
     const UObject* OO = Payload.OptionalObject;

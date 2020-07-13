@@ -36,6 +36,8 @@ public:
 	TArray<FGameplayEffectSpecHandle> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class USoundBase* BlockSound;
 	TArray<AActor*> ActorsHit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UHitboxesContainer* Hitboxes;

@@ -23,6 +23,8 @@ public:
 	TArray<FEffectContainer> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	class USoundBase* HitSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	class USoundBase* BlockSound;
 	// TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float HitPause = 0.5f;

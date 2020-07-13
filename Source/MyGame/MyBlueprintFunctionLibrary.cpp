@@ -7,6 +7,14 @@
 #include "AbilitySystemComponent.h"
 #include "Props/ItemDataAsset.h"
 
+
+/// <summary>
+/// Used by Items and self apply notify. Abilities have their own version of this
+/// </summary>
+/// <param name="Char"></param>
+/// <param name="Container"></param>
+/// <param name="Item"></param>
+/// <returns></returns>
 FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item)
 {
     UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();

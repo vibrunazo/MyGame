@@ -12,6 +12,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "GameplayEffectTypes.h"
 #include "Kismet/GameplayStatics.h"
+#include "AbilitySystemComponent.h"
 
 // Sets default values
 AHitBox::AHitBox()
@@ -126,7 +127,17 @@ void AHitBox::OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 		FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), HitConnectTag, FGameplayEventData());
 		ApplyAllEffects(Target);
-		if (HitSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
+		UAbilitySystemComponent* GAS = Target->GetAbilitySystemComponent();
+		FGameplayTag HitStunImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("status.stunimmune"));
+		if (GAS && GAS->HasMatchingGameplayTag(HitStunImmuneTag))
+		{
+			if (BlockSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), BlockSound, GetActorLocation());
+			else if (HitSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
+		}
+		else
+		{
+			if (HitSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
+		}
 	}
 }
 
@@ -145,5 +156,5 @@ void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Ta
 	//if (!Target || !Target->IsValidLowLevel() || !IsValid((UObject*)Target)) return;
 	if (!Target) return;
 	if (!Target->IsValidLowLevel()) return;
-	Target->OnGetHitByEffect(Effect, GetOwner());  // Invalid object index
+	Target->OnGetHitByEffect(Effect, GetOwner());
 }
