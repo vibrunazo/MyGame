@@ -25,6 +25,10 @@ public:
 	class USoundBase* HitSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	class USoundBase* BlockSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class UNiagaraSystem* HitParticles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class UNiagaraSystem* BlockParticles;
 	// TArray<TSubclassOf<class UGameplayEffect>> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	float HitPause = 0.5f;

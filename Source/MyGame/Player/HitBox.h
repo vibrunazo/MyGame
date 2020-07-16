@@ -38,6 +38,10 @@ public:
 	class USoundBase* HitSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USoundBase* BlockSound;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class UNiagaraSystem* HitParticles;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
+	class UNiagaraSystem* BlockParticles;
 	TArray<AActor*> ActorsHit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UHitboxesContainer* Hitboxes;
