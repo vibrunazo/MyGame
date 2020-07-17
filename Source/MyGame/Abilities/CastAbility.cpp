@@ -2,10 +2,12 @@
 
 
 #include "CastAbility.h"
-#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 #include "ICastProjectile.h"
 #include "../Player/MyProjectile.h"
 #include "../Player/HitBox.h"
+#include "../Player/HitBoxSettings.h"
+
+#include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
 
 void UCastAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
 {
@@ -39,6 +41,13 @@ void UCastAbility::OnCast(const FGameplayEventData Payload)
     AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, hbparams);
     NewHB->AttachToActor(NewProj, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
     NewHB->HitSound = HitSound;
+    NewHB->BlockSound = BlockSound;
+    NewHB->HitParticles = HitParticles;
+    NewHB->BlockParticles = BlockParticles;
     NewHB->EffectsToApply = MakeSpecHandles();
-    NewHB->AddHitSphere(40.f);
+    FHitboxSettings Settings = FHitboxSettings();
+    Settings.SphereRadius = 40.f;
+    Settings.bIsSphere = true;
+    NewHB->AddComponentsFromSettings(Settings);
+    //NewHB->AddHitSphere(40.f);
 }

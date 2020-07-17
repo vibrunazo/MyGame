@@ -21,11 +21,16 @@ public:
 
 	//void AddComponentsToBones(TArray<FName> Bones);
 	void AddComponentsFromContainer(class UHitboxesContainer* Container);
-	void AddComponentsFromSettings(struct FHitboxSettings Settings);
+	void AddComponentsFromSettings(struct FHitboxSettings Settings); 
+	void AddOneComponentFromBone(FHitboxSettings Settings, FName Bone);
 	class USphereComponent* AddHitSphere(float SphereRadius);
 	class UBoxComponent* AddHitBoxComponent(FVector BoxExtent);
 	UFUNCTION()
 	void OnOwnerDestroyed(AActor* DestroyedActor);
+
+	/** Called when the collision capsule touches another primitive component */
+	UFUNCTION()
+	virtual void HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class USceneComponent* MyRoot;
