@@ -105,6 +105,7 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 				if (HitParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitParticles, OutHit.ImpactPoint, SparkRot);
 			}
 		}
+		else UE_LOG(LogTemp, Warning, TEXT("Hittrace failed"));
 	}
 }
 

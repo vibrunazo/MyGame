@@ -100,7 +100,7 @@ public:
 	bool IsValidLowLevel() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddItemToInventory(class UItemDataAsset* NewItem) override;
-	UFUNCTION(BlueprintCallable, Category = Abilities)
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = Abilities)
 	AActor* GetTargetEnemy();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetTargetEnemy(AActor* NewTarget);
