@@ -756,6 +756,7 @@ void AMyCharacter::DropItems()
 
 bool AMyCharacter::IsAlive()
 {
+	if (!ensure(AttributeSetBase != nullptr)) return 0;
 	return AttributeSetBase->GetHealth() > 0;
 }
 

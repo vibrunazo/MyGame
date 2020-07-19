@@ -18,6 +18,8 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile)
 	class UStaticMeshComponent* Mesh;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile)
+	class AHitBox* HitboxRef;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Projectile)
 	class UProjectileMovementComponent* MovementComp;
 
 protected:

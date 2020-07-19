@@ -256,8 +256,8 @@ protected:
 	/** Handler for when a touch input stops. */
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
-	UPROPERTY()
-	// UPROPERTY(Category=Attributes, VisibleAnywhere, BlueprintReadOnly)
+	//UPROPERTY()
+	UPROPERTY(Category=Attributes, VisibleAnywhere, BlueprintReadOnly)
 	UMyAttributeSet* AttributeSetBase;
 
 protected:

@@ -158,6 +158,7 @@ void AHitBox::AddOneComponentFromBone(FHitboxSettings Settings, FName Bone)
 	UPrimitiveComponent* NewHitComponent;
 	if (Settings.bIsSphere)	NewHitComponent = AddHitSphere(Settings.SphereRadius);
 	else NewHitComponent = AddHitBoxComponent(Settings.BoxExtent);
+	HitComponents.Add(NewHitComponent);
 	if (Bone != NAME_None)
 	{
 		USkeletalMeshComponent* SkelMesh = Cast<USkeletalMeshComponent>(GetInstigator()->GetComponentByClass(USkeletalMeshComponent::StaticClass()));

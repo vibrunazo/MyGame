@@ -50,6 +50,8 @@ public:
 	TArray<AActor*> ActorsHit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UHitboxesContainer* Hitboxes;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hitbox")
+	TArray<UPrimitiveComponent*> HitComponents;
 
 protected:
 	// Called when the game starts or when spawned
