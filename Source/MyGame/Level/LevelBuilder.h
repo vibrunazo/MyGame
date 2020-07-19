@@ -109,6 +109,7 @@ public:
 	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, EDirection Dir);
 	void OnUpdateCharCoord(FVector Location, EDirection Dir=EDirection::Bottom);
 	void HideWall(FCoord Coord, EDirection Dir=EDirection::Bottom);
+	void HideOneWall(AWall* ThisWall);
 	void SetRoomClearedAtLoc(FVector Location);
 	void OpenDoors();
 	void CloseDoors();

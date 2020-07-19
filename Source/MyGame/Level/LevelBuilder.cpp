@@ -733,7 +733,8 @@ void ALevelBuilder::OnEnterRoom(FRoomState NewRoom)
 URoomDataAsset* ALevelBuilder::GetRoomFromCoord(FCoord Coord)
 {
 	FRoomState* GS = Grid.Find(Coord);
-	return GS->RoomType;
+	if (GS) return GS->RoomType;
+	return nullptr;
 }
 
 AWall* ALevelBuilder::GetBottomWallFromLoc(FVector Location)
@@ -789,6 +790,23 @@ void ALevelBuilder::HideWall(FCoord Coord, EDirection Dir)
 	}
 	HiddenWalls = {};
 	AWall* ThisWall = GetWallRefFromCoordAndDir(Coord, Dir);
+	// Hide wall in given coord
+	HideOneWall(ThisWall);
+	FCoord RightCoord = GetNeighbor(Coord, EDirection::Right);
+	AWall* RightWall = GetWallRefFromCoordAndDir(RightCoord, Dir);
+	URoomDataAsset* RightRoom = GetRoomFromCoord(RightCoord);
+	// if room to the right is not doored, then hide it too
+	if (RightRoom && !RightRoom->bIsDoored)	HideOneWall(RightWall);
+	FCoord LeftCoord = GetNeighbor(Coord, EDirection::Left);
+	AWall* LeftWall = GetWallRefFromCoordAndDir(LeftCoord, Dir);
+	URoomDataAsset* LeftRoom = GetRoomFromCoord(LeftCoord);
+	// if room to the left is not doored, then hide it too
+	if (LeftRoom && !LeftRoom->bIsDoored) HideOneWall(LeftWall);
+
+}
+
+void ALevelBuilder::HideOneWall(AWall* ThisWall)
+{
 	if (ThisWall)
 	{
 		ThisWall->Height = 50.f;

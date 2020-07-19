@@ -14,7 +14,7 @@ struct FHitboxSettings
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
-	TArray<FName> BoneNames;
+	TArray<FName> BoneNames = TArray<FName>();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	float SphereRadius = 40.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
