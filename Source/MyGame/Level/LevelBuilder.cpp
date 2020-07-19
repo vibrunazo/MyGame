@@ -84,13 +84,12 @@ void ALevelBuilder::BuildGrid()
 	int32 Difficulty = 0;
 	int16 ChanceOfGoingRight = InitialChanceOfGoingRight;
 	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
-	if (GI)
-	{
-		uint8 GIDifficulty = GI->LevelDifficulty;
-		NumRooms += GIDifficulty;
-		RandomStream = &GI->RandomStream;
-	}
-	else return;
+	if (!GI) return;
+	uint8 GIDifficulty = GI->LevelDifficulty;
+	NumRooms += GIDifficulty;
+	RandomStream = &GI->RandomStream;
+	uint8 DooredRoom = 0; 
+	
 	// uint8 TreasureRoomPosition = 3;
 	// uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);
 	// FCoord TreasureRoomCoord;
@@ -104,6 +103,12 @@ void ALevelBuilder::BuildGrid()
 		if (i == NumRooms - 2) { ChanceOfGoingRight = 100; }
 		if (i == NumRooms - 1) { Difficulty = 9; }
 		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
+		if (NumRooms > 2 && i % 5 == 0)
+		{
+			DooredRoom = RandomStream->RandRange(0, 4) + FMath::FloorToInt(i / 5) * 5;
+			DooredRoom = FMath::Clamp((int)DooredRoom, 2, NumRooms -2);
+			UE_LOG(LogTemp, Warning, TEXT("DooredRoom = %d, i = %d"), DooredRoom, i);
+		}
 		FRoomState Content; 
 		// first room will always be empty
 		if (i == 0) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Empty);
@@ -111,7 +116,10 @@ void ALevelBuilder::BuildGrid()
 		{
 			// all next rooms will always have regular enemies, unless it's the last room, then it's a boss room
 			if (i == NumRooms - 1) { Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Boss); }
-			else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies);
+			//else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, -1);
+			else if (i == DooredRoom) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
+			//else if (i > 1) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
+			else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 0);
 		}
 		Grid.Add(Coord, Content);
 		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d for i: %d"), Coord.X, Coord.Y, Grid.Num(), i);
@@ -183,7 +191,8 @@ that DataAsset, load it and set it visible to spawn it in the world. Returns a p
 Streaming Level that it spawned. */
 ULevelStreaming* ALevelBuilder::SpawnRoom(FCoord Where, class URoomDataAsset* RoomType)
 {
-	ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->GetAutoLevelAddress());
+	ULevelStreaming* NewRoom = nullptr;
+	if (RoomType) NewRoom = OnBPCreateLevelByName(RoomType->GetAutoLevelAddress());
 	// UE_LOG(LogTemp, Warning, TEXT("AddressO: %s"), *RoomType->LevelAddress.ToString());
 	// UE_LOG(LogTemp, Warning, TEXT("AddressA: %s"), *RoomType->GetAutoLevelAddress().ToString());
 	// ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->LevelAddress);
@@ -488,11 +497,11 @@ URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty)
 /// <param name="Difficulty"></param>
 /// <param name="Type"></param>
 /// <returns></returns>
-URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty, ERoomType Type)
+URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty, ERoomType Type, int8 IsDoored)
 {
 	if (RoomList.Num() == 0) return nullptr;
 	TArray<URoomDataAsset*> FilteredRooms = {};
-	FilteredRooms = FindRoomsOfType(Type, Difficulty);
+	FilteredRooms = FindRoomsOfType(Type, Difficulty, IsDoored);
 	if (FilteredRooms.Num() == 0) return nullptr;
 	int32 Index = RandomStream->RandRange(0, FilteredRooms.Num() - 1);
 	// int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
@@ -519,14 +528,15 @@ TArray<URoomDataAsset*> ALevelBuilder::FindRoomsOfDifficulty(int32 Difficulty)
 
 /**Returns a filtered list of Rooms from RoomList that contains only Rooms of this Type
  * and Difficulty. If Difficulty is less than zero then ignores Difficulty.
+ * if IsDoored is zero or 1, then only find rooms that are not doored, or only that are doored. -1 to ignore
 */
-TArray<URoomDataAsset*> ALevelBuilder::FindRoomsOfType(ERoomType Type, int32 Difficulty)
+TArray<URoomDataAsset*> ALevelBuilder::FindRoomsOfType(ERoomType Type, int32 Difficulty, int8 IsDoored)
 {
 	TArray<URoomDataAsset *> FilteredRooms = {};
 	if (RoomList.Num() == 0) return FilteredRooms;
 	for (auto &&Room : RoomList)
 	{
-		if (Type == Room->RoomType && (Difficulty < 0 || Room->RoomDifficulty == Difficulty))
+		if (Type == Room->RoomType && (Difficulty < 0 || Room->RoomDifficulty == Difficulty) && (IsDoored < 0 || Room->bIsDoored == (bool)IsDoored))
 		{
 			FilteredRooms.Add(Room);
 		}
@@ -635,7 +645,7 @@ bool ALevelBuilder::IsAnyNeighborOfType(FCoord From, ERoomType Type)
 	for (auto &&Neighbor : NeighborCoords)
 	{
 		FRoomState* NeighborState = Grid.Find(Neighbor);
-		if (!NeighborState) continue;
+		if (!NeighborState || !NeighborState->RoomType) continue;
 		if (NeighborState->RoomType->RoomType == Type) return true;
 	}
 	return false;

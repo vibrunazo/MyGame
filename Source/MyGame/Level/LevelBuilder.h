@@ -172,8 +172,8 @@ private:
 	void SetAssetListFromRegistry();
 	class URoomDataAsset* GetRandomRoom();
 	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
-	class URoomDataAsset* GetRandomRoom(int32 Difficulty, ERoomType Type);
-	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1);
+	class URoomDataAsset* GetRandomRoom(int32 Difficulty, ERoomType Type, int8 IsDoored = -1);
+	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1, int8 IsDoored = -1);
 	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	class URoomDataAsset* AddTreasureRoom();
 	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
