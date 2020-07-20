@@ -29,7 +29,8 @@ ASpawner::ASpawner()
 void ASpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	PickRandomSpawnIndex();
+	if (bSpawnOnBegin) SpawnActors();
 }
 
 // Called every frame
@@ -43,19 +44,30 @@ void ASpawner::SpawnActors()
 {
 	UE_LOG(LogTemp, Warning, TEXT("spawner is spawning"));
 
-	if (!CharToSpawn) return;
+	if (CharsToSpawn.Num() == 0) return;
 
 	FVector Loc = GetActorLocation();
 	FActorSpawnParameters params;
 	params.bNoFail = true;
 	params.Owner = this;
-	AMyCharacter* NewChar = GetWorld()->SpawnActor<AMyCharacter>(CharToSpawn, Loc, FRotator::ZeroRotator, params);
+	AMyCharacter* NewChar = GetWorld()->SpawnActor<AMyCharacter>(CharsToSpawn[IndexToSpawn], Loc, GetActorRotation(), params);
 	if (bAggroOnSpawn)
 	{
 		UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
 		AMyCharacter* PlayerRef = nullptr;
 		if (MyGI) PlayerRef = MyGI->PlayerCharRef;
 		NewChar->SetAggroTarget(PlayerRef);
+	}
+}
+
+void ASpawner::PickRandomSpawnIndex()
+{
+	if (CharsToSpawn.Num() == 0) return;
+	IndexToSpawn = 0;
+	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
+	if (MyGI)
+	{
+		IndexToSpawn = MyGI->RandomStream.RandRange(0, CharsToSpawn.Num() - 1);
 	}
 }
 

@@ -100,6 +100,7 @@ void ALevelBuilder::BuildGrid()
 		FCoord Coord = FCoord(x, y);
 		if (i > 1) Difficulty = 1;
 		if (i > 4) Difficulty = 2;
+		if (i > 6) Difficulty = 3;
 		if (i == NumRooms - 2) { ChanceOfGoingRight = 100; }
 		if (i == NumRooms - 1) { Difficulty = 9; }
 		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
