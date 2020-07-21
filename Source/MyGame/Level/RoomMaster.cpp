@@ -4,6 +4,7 @@
 #include "RoomMaster.h"
 #include "Components/BillboardComponent.h"
 #include "../Player/MyCharacter.h"
+#include "../Player/ReportDeath.h"
 #include "../MyGameInstance.h"
 #include "LevelBuilder.h"
 #include "Goal.h"
@@ -29,11 +30,30 @@ void ARoomMaster::BeginPlay()
 	TArray<AActor *> AllActors = MyLevel->Actors;
 	for (auto &&Actor : AllActors)
 	{
+		if (!Actor) continue;
+		//AMyCharacter* Char = Cast<AMyCharacter>(Actor);
+		//if (Char)
+		//{
+		//	CharsToKill.Add(Char);
+		//	//Char->OnDieDelegate.AddDynamic(this, &ARoomMaster::OnCharDied);
+		//	//Char->OnDieDelegate.AddSP(this, &ARoomMaster::OnCharDied);
+		//	Char->OnDieDelegate.AddUObject(this , &ARoomMaster::OnCharDied);
+		//}
 		AMyCharacter* Char = Cast<AMyCharacter>(Actor);
+		IReportDeath* DeathInt = Cast<IReportDeath>(Actor);
 		if (Char)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("adding actor: %s"), *Actor->GetName());
 			CharsToKill.Add(Char);
-			Char->OnDieDelegate.AddDynamic(this, &ARoomMaster::OnCharDied);
+			//Char->OnDieDelegate.AddDynamic(this, &ARoomMaster::OnCharDied);
+			//Char->OnDieDelegate.AddSP(this, &ARoomMaster::OnCharDied);
+			//Char->GetReportDeathDelegate().AddUObject(this, &ARoomMaster::OnCharDied);
+			//Char->OnDieDelegate.AddUObject(this, &ARoomMaster::OnCharDied);
+			if (DeathInt)
+			{
+				DeathInt->GetReportDeathDelegate().AddUObject(this , &ARoomMaster::OnCharDied);
+				UE_LOG(LogTemp, Warning, TEXT("succeeded"));
+			}
 		}
 		AGoal* NewGoal = Cast<AGoal>(Actor);
 		if (NewGoal)
@@ -88,7 +108,7 @@ void ARoomMaster::AggroAll(APawn* PlayerRef)
 
 void ARoomMaster::OnCharDied(AMyCharacter* WhoDied)
 {
-	//UE_LOG(LogTemp, Warning, TEXT("%s died lol noob"), *WhoDied->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("%s died lol noob"), *WhoDied->GetName());
 
 	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
 	{

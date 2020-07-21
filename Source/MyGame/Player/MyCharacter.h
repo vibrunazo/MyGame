@@ -3,21 +3,25 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Character.h"
-#include "AbilitySystemInterface.h"
+#include "ReportDeath.h"
+#include "../Abilities/MyAttributeSet.h"
 #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
 #include "../Abilities/ICastProjectile.h"
+
+#include "GameFramework/Character.h"
+#include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
-#include "../Abilities/MyAttributeSet.h"
 #include "MyCharacter.generated.h"
 
 //DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
 
-DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FDieSignature, AMyCharacter, OnDieDelegate, AMyCharacter*, WhoDied);
+//DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FDieSignature, AMyCharacter, OnDieDelegate, AMyCharacter*, WhoDied);
+//DECLARE_MULTICAST_DELEGATE_OneParam(FDieSignature, AMyCharacter*);
+
 
 UCLASS(config=Game)
-class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit, public ICastProjectile
+class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit, public ICastProjectile, public IReportDeath
 {
 	GENERATED_BODY()
 
@@ -82,7 +86,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsWalking();
 
-	UPROPERTY(BlueprintAssignable, Category="Abilities")
+	//UPROPERTY(BlueprintAssignable, Category="Abilities")
+	FDieSignature& GetReportDeathDelegate() override;
 	FDieSignature OnDieDelegate;
 
 	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;

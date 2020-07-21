@@ -50,7 +50,7 @@ public:
 	TArray<AActor*> ActorsHit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UHitboxesContainer* Hitboxes;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hitbox")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	TArray<UPrimitiveComponent*> HitComponents;
 
 protected:

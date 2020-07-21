@@ -1117,6 +1117,11 @@ bool AMyCharacter::IsWalking()
 	return false;
 }
 
+FDieSignature& AMyCharacter::GetReportDeathDelegate()
+{
+	return OnDieDelegate;
+}
+
 void AMyCharacter::CheckWalls()
 {
 	UGameInstance* GI = GetGameInstance();
