@@ -105,6 +105,7 @@ public:
 	void OnEnterRoom(FRoomState NewRoom);
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
 	FRoomState* GetRoomStateFromCoord(FCoord Coord);
+	FRoomState* GetRoomStateFromLoc(FVector Location);
 	class AWall* GetBottomWallFromLoc(FVector Location);
 	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, EDirection Dir);
 	void OnUpdateCharCoord(FVector Location, EDirection Dir=EDirection::Bottom);

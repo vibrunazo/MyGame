@@ -18,6 +18,7 @@ public:
 	bool AreAllCharsDead();
 	TArray<class AMyCharacter*> GetChars();
 	void AggroAll(APawn* PlayerRef);
+	void AddNewCharToRoom(AMyCharacter* Char);
 	UFUNCTION()
 	void OnCharDied(class AMyCharacter* WhoDied);
 
@@ -40,6 +41,8 @@ private:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	
 
 public:	
 	// Called every frame

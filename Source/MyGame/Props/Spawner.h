@@ -39,7 +39,12 @@ public:
 	bool bSpawnOnBegin = true;
 
 private:
+	void TryToUpdateRoomMasterRef();
+	void RegisterNewCharOnRoomMaster(class AMyCharacter* NewChar);
+
 	uint8 IndexToSpawn = 0;
+	UPROPERTY()
+	class ARoomMaster* RoomMasterRef = nullptr;
 
 
 protected:

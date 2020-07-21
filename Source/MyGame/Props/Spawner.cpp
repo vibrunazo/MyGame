@@ -4,6 +4,8 @@
 #include "Spawner.h"
 #include "../MyGameInstance.h"
 #include "../Player/MyCharacter.h"
+#include "../Level/LevelBuilder.h"
+#include "../Level/RoomMaster.h"
 
 
 #include "Components/BillboardComponent.h"
@@ -23,6 +25,32 @@ ASpawner::ASpawner()
 
 	BoxComp->SetCollisionObjectType(ECollisionChannel::ECC_WorldStatic);
 
+}
+
+void ASpawner::TryToUpdateRoomMasterRef()
+{
+	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
+	if (MyGI)
+	{
+		ALevelBuilder* LB = MyGI->GetLevelBuilder();
+		if (LB)
+		{
+			FRoomState* RS = LB->GetRoomStateFromLoc(GetActorLocation());
+			if (RS)
+			{
+				RoomMasterRef = RS->RoomMasterRef;
+				return;
+			}
+		}
+	}
+	UE_LOG(LogTemp, Error, TEXT("failed to update room master ref on %s"), *GetName());
+}
+
+void ASpawner::RegisterNewCharOnRoomMaster(AMyCharacter* NewChar)
+{
+	if (!RoomMasterRef) TryToUpdateRoomMasterRef();
+	if (!RoomMasterRef) return;
+	RoomMasterRef->AddNewCharToRoom(NewChar);
 }
 
 // Called when the game starts or when spawned
@@ -51,6 +79,7 @@ void ASpawner::SpawnActors()
 	params.bNoFail = true;
 	params.Owner = this;
 	AMyCharacter* NewChar = GetWorld()->SpawnActor<AMyCharacter>(CharsToSpawn[IndexToSpawn], Loc, GetActorRotation(), params);
+	RegisterNewCharOnRoomMaster(NewChar);
 	if (bAggroOnSpawn)
 	{
 		UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());

@@ -702,6 +702,11 @@ FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)
 	return GS;
 }
 
+FRoomState* ALevelBuilder::GetRoomStateFromLoc(FVector Location)
+{
+	return GetRoomStateFromCoord(GetGridFromLoc(Location));
+}
+
 /// <summary>
 /// Registers a RoomMaster in the RoomState of the Room in this Location.
 /// Called by the RoomMater at its BeginPlay
