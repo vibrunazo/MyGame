@@ -19,7 +19,7 @@ public:
 
 	void Init() override;
 
-	UFUNCTION(BlueprintCallable, Category="MyGI")
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category="MyGI")
 	class ALevelBuilder* GetLevelBuilder();
 	void SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder);
 	UFUNCTION(BlueprintCallable, Category="MyGI")

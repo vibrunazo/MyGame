@@ -100,11 +100,11 @@ void ALevelBuilder::BuildGrid()
 		FCoord Coord = FCoord(x, y);
 		if (i > 1) Difficulty = 1;
 		if (i > 4) Difficulty = 2;
-		if (i > 6) Difficulty = 3;
+		//if (i > 6) Difficulty = 3;
 		if (i == NumRooms - 2) { ChanceOfGoingRight = 100; }
 		if (i == NumRooms - 1) { Difficulty = 9; }
 		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
-		if (NumRooms > 2 && i % 5 == 0)
+		if (NumRooms > 3 && i % 5 == 0)
 		{
 			DooredRoom = RandomStream->RandRange(0, 4) + FMath::FloorToInt(i / 5) * 5;
 			DooredRoom = FMath::Clamp((int)DooredRoom, 2, NumRooms -2);
@@ -118,7 +118,7 @@ void ALevelBuilder::BuildGrid()
 			// all next rooms will always have regular enemies, unless it's the last room, then it's a boss room
 			if (i == NumRooms - 1) { Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Boss); }
 			//else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, -1);
-			else if (i == DooredRoom) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
+			else if (DooredRoom > 0 && i == DooredRoom) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
 			//else if (i > 1) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
 			else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 0);
 		}
@@ -181,7 +181,9 @@ void ALevelBuilder::SpawnLevels()
 		Tile.Value.RoomRef = NewRoom;
 		// UE_LOG(LogTemp, Warning, TEXT("created %s room at %s"), *Tile.Value.RoomType->LevelAddress.ToString(), *Tile.Key.ToString());
 		BuildWalls(Tile);
-		FString line = FString::Printf(TEXT("Coord: %s, Room: %s, Walls: %d"), *Tile.Key.ToString(), *Tile.Value.RoomType->LevelAddress.ToString(), Tile.Value.Walls.Num());
+		FString RoomAddress = "invalid";
+		if (Tile.Value.RoomType) RoomAddress = Tile.Value.RoomType->LevelAddress.ToString();
+		FString line = FString::Printf(TEXT("Coord: %s, Room: %s, Walls: %d"), *Tile.Key.ToString(), *RoomAddress, Tile.Value.Walls.Num());
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *line);
 	}
 	
@@ -239,7 +241,7 @@ void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> &Tile)
 		auto NewWall = TrySpawnEdgeWallAtCoord(Tile, Dir);
 	}
 	// room type walls
-	if (Tile.Value.RoomType->bIsWalled)
+	if (Tile.Value.RoomType && Tile.Value.RoomType->bIsWalled)
 	{
 		for (auto&& Dir : ALLDIRECTIONS)
 		{
@@ -503,7 +505,11 @@ URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty, ERoomType Type, i
 	if (RoomList.Num() == 0) return nullptr;
 	TArray<URoomDataAsset*> FilteredRooms = {};
 	FilteredRooms = FindRoomsOfType(Type, Difficulty, IsDoored);
-	if (FilteredRooms.Num() == 0) return nullptr;
+	if (FilteredRooms.Num() == 0)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Failed to find rooms, Difficulty: %d, Type: %d, Doored: %d"), Difficulty, Type, IsDoored);
+		return nullptr;
+	}
 	int32 Index = RandomStream->RandRange(0, FilteredRooms.Num() - 1);
 	// int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
 
@@ -549,7 +555,9 @@ FString ALevelBuilder::DebugGrid()
 	FString result = FString();
 	for (auto&& Tile : Grid)
 	{
-		FString line = FString::Printf(TEXT("Coord: %s, Room: %s, Walls: %d"), *Tile.Key.ToString(), *Tile.Value.RoomType->LevelAddress.ToString(), Tile.Value.Walls.Num());
+		FString RoomAddress = "invalid";
+		if (Tile.Value.RoomType) RoomAddress = Tile.Value.RoomType->LevelAddress.ToString();
+		FString line = FString::Printf(TEXT("Coord: %s, Room: %s, Walls: %d"), *Tile.Key.ToString(), *RoomAddress, Tile.Value.Walls.Num());
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *line);
 		result.Append(line);
 	}
@@ -593,6 +601,17 @@ FCoord ALevelBuilder::GetGridFromLoc(FVector Location)
 	int16 NewX = FMath::DivideAndRoundNearest(Location.X, RoomSizeX);
 	int16 NewY = FMath::DivideAndRoundNearest(Location.Y, RoomSizeY);
 	return FCoord(NewX, NewY);
+}
+
+/// <summary>
+/// From a given CurrentLocation returns the center of the Room that CurrentLocation is in
+/// </summary>
+/// <param name="CurrentLocation"></param>
+/// <returns></returns>
+FVector ALevelBuilder::GetLocOfRoomCenter(FVector CurrentLocation)
+{
+	FCoord Coord = GetGridFromLoc(CurrentLocation);
+	return GetLocFromGrid(Coord);
 }
 
 FString ALevelBuilder::GetWallID(FCoord Coord1, FCoord Coord2)
@@ -655,7 +674,7 @@ bool ALevelBuilder::IsAnyNeighborOfType(FCoord From, ERoomType Type)
 bool ALevelBuilder::IsTileOfType(FCoord Tile, ERoomType Type)
 {
 	FRoomState* MyState = Grid.Find(Tile);
-	if (!MyState) false;
+	if (!MyState || !MyState->RoomType) return false;
 	if (MyState->RoomType->RoomType == Type) return true;
 	return false;
 }
@@ -727,7 +746,7 @@ void ALevelBuilder::RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Locat
 /// <param name="NewRoom">State of the Room player is currently at</param>
 void ALevelBuilder::OnEnterRoom(FRoomState NewRoom)
 {
-	if (NewRoom.RoomType->RoomType == ERoomType::Boss && BossMusic)
+	if (NewRoom.RoomType && NewRoom.RoomType->RoomType == ERoomType::Boss && BossMusic)
 	{
 		if (LevelMusic && LevelMusicRef) LevelMusicRef->Stop();
 		if (BossMusic && !BossMusicRef) BossMusicRef = UGameplayStatics::SpawnSound2D(GetWorld(), BossMusic);

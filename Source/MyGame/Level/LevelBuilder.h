@@ -118,6 +118,8 @@ public:
 	void AggroRoom(class APawn* PlayerToAggro, FVector Location);
 	FVector GetLocFromGrid(FCoord Coord);
 	FCoord GetGridFromLoc(FVector Location);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "LevelBuilder")
+	FVector GetLocOfRoomCenter(FVector CurrentLocation);
 
 
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
