@@ -35,25 +35,7 @@ void ARoomMaster::BeginPlay()
 		if (Char)
 		{
 			AddNewCharToRoom(Char);
-			//Char->OnDieDelegate.AddDynamic(this, &ARoomMaster::OnCharDied);
-			//Char->OnDieDelegate.AddSP(this, &ARoomMaster::OnCharDied);
 		}
-		//AMyCharacter* Char = Cast<AMyCharacter>(Actor);
-		//IReportDeath* DeathInt = Cast<IReportDeath>(Actor);
-		//if (Char)
-		//{
-		//	UE_LOG(LogTemp, Warning, TEXT("adding actor: %s"), *Actor->GetName());
-		//	CharsToKill.Add(Char);
-		//	//Char->OnDieDelegate.AddDynamic(this, &ARoomMaster::OnCharDied);
-		//	//Char->OnDieDelegate.AddSP(this, &ARoomMaster::OnCharDied);
-		//	//Char->GetReportDeathDelegate().AddUObject(this, &ARoomMaster::OnCharDied);
-		//	//Char->OnDieDelegate.AddUObject(this, &ARoomMaster::OnCharDied);
-		//	if (DeathInt)
-		//	{
-		//		DeathInt->GetReportDeathDelegate().AddUObject(this , &ARoomMaster::OnCharDied);
-		//		UE_LOG(LogTemp, Warning, TEXT("succeeded"));
-		//	}
-		//}
 		AGoal* NewGoal = Cast<AGoal>(Actor);
 		if (NewGoal)
 		{

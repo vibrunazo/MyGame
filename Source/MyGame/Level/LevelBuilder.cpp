@@ -789,13 +789,15 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
 	if (!Room) return;
 	// TODO pass location as parameter
 	OnEnterRoom(*Room);
+	ARoomMaster* Master = Room->RoomMasterRef;
+	if (!Master) return;
 	//UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
-	if ((Room != nullptr) && !Room->bIsRoomCleared && Room->RoomType->bIsDoored)
+	if (!Room->bIsRoomCleared && Room->RoomType->bIsDoored && !Master->AreAllCharsDead())
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("closing doors"));
 		TeleportPlayerInsideRoom(Location);
 		//DebugGrid();
-		if (Room->RoomMasterRef) Room->RoomMasterRef->bIsDoorOpen = false;
+		if (Master) Master->bIsDoorOpen = false;
 		CloseDoors();
 	}
 	HideWall(Coord, Dir);
