@@ -7,7 +7,7 @@
 #include "RoomCameraPawn.generated.h"
 
 UCLASS()
-class MYGAME_API ARoomCameraPawn : public APawn
+class MYGAME_API ARoomCameraPawn : public AActor
 {
 	GENERATED_BODY()
 
