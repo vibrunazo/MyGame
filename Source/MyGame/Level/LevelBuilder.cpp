@@ -784,12 +784,14 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
 	if (Coord == LastEnteredRoomCoord) return;
 	LastEnteredRoomCoord = Coord;
 	UE_LOG(LogTemp, Warning, TEXT("Char at location %s, which is coord %s"), *Location.ToString(), *Coord.ToString());
+	HideWall(Coord, Dir);
 	FRoomState* Room = GetRoomStateFromCoord(Coord);
 	// this might actually be null if I dash into a pit UNDER the wall like an idiot
 	if (!Room) return;
 	// TODO pass location as parameter
 	OnEnterRoom(*Room);
 	ARoomMaster* Master = Room->RoomMasterRef;
+	// TODO this fails on coord 0,0 because game starts before room master spawns
 	if (!Master) return;
 	//UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
 	if (!Room->bIsRoomCleared && Room->RoomType->bIsDoored && !Master->AreAllCharsDead())
@@ -800,7 +802,6 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
 		if (Master) Master->bIsDoorOpen = false;
 		CloseDoors();
 	}
-	HideWall(Coord, Dir);
 }
 
 // Try to Hide walls on this Grid Tile
