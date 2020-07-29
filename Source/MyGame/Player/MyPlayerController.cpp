@@ -83,7 +83,9 @@ float AMyPlayerController::GetHUDHealth()
 void AMyPlayerController::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
 {
     if (Index < AbilityKeyStates.Num()) AbilityKeyStates[Index] = IsKeyDown;
-    if (GetPawn<AMyCharacter>()) GetPawn<AMyCharacter>()->SetAbilityKeyDown(Index, IsKeyDown);
+    AMyCharacter* MyChar = GetPawn<AMyCharacter>();
+    if (MyChar) MyChar->SetAbilityKeyDown(Index, IsKeyDown);
+    if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey(Index, IsKeyDown);
 }
 
 bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)
