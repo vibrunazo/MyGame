@@ -27,6 +27,10 @@ public:
 	void ShowLevelIntro();
 	void UpdateHUD(AMyCharacter* Char);
 	float GetHUDHealth();
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	bool IsAbilityKeyDown(uint8 Index);
 
 	class AMyDefaultPawn* DefaultPawnRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
@@ -47,6 +51,10 @@ public:
 
 	bool bIsLevelOver = false;
 	bool bIsPaused = false;
+
+
+private:
+	TArray<bool> AbilityKeyStates = { false, false, false, false, false, false, false, false };
 
 protected:
 	void BeginPlay() override;

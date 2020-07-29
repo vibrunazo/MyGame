@@ -80,6 +80,18 @@ float AMyPlayerController::GetHUDHealth()
     return HUDWidgetRef->GetHealth();
 }
 
+void AMyPlayerController::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
+{
+    if (Index < AbilityKeyStates.Num()) AbilityKeyStates[Index] = IsKeyDown;
+    if (GetPawn<AMyCharacter>()) GetPawn<AMyCharacter>()->SetAbilityKeyDown(Index, IsKeyDown);
+}
+
+bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)
+{
+    if (Index < AbilityKeyStates.Num()) return AbilityKeyStates[Index];
+    return false;
+}
+
 void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)
 {
     if (bIsLevelOver) return;
