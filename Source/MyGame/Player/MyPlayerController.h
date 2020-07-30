@@ -59,4 +59,6 @@ private:
 protected:
 	void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	void Jump();
+	void StopJump();
 };

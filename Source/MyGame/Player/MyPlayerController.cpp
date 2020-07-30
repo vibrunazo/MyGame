@@ -22,6 +22,23 @@ void AMyPlayerController::SetupInputComponent()
     Super::SetupInputComponent();
     check(InputComponent);
 	InputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMyPlayerController::OnPausePressed).bExecuteWhenPaused = true;
+
+    InputComponent->BindAction("Jump", IE_Pressed, this, &AMyPlayerController::Jump);
+    InputComponent->BindAction("Jump", IE_Released, this, &AMyPlayerController::StopJump);
+}
+
+void AMyPlayerController::Jump()
+{
+    SetAbilityKeyDown(100, true);
+    AMyCharacter* MyChar = GetPawn<AMyCharacter>();
+    if (MyChar) MyChar->Jump();
+}
+
+void AMyPlayerController::StopJump()
+{
+    SetAbilityKeyDown(100, false);
+    AMyCharacter* MyChar = GetPawn<AMyCharacter>();
+    if (MyChar) MyChar->StopJumping();
 }
 
 void AMyPlayerController::OnPausePressed()
