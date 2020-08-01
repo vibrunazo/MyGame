@@ -307,7 +307,7 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 	float length = 0.0f;
 	length = FMath::Abs(RightAxis)*FMath::Abs(RightAxis) + FMath::Abs(ForwardAxis)*FMath::Abs(ForwardAxis);
 	length = FMath::Sqrt(length);
-	if (length >= 0.89f)
+	if (length >= 0.7f)
 	{
 		TryRun(DeltaSeconds);
 		// float CurAngle = GetInputAngle();
@@ -326,6 +326,7 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 				if (GetController()) GetController()->SetControlRotation(CurVector.Rotation());
 				ActivateAbilityByEvent("dash");
 			}
+			else SetRunning(false);
 		}
 		// if this is a tap and not a hold
 		if (LastInputZeroTime > LastInputApexTime)
@@ -337,7 +338,7 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 	else
 	{
 		LastInputZeroTime = GetWorld()->GetTimeSeconds();
-		SetRunning(false);
+		/*SetRunning(false);*/
 	}
 
 }
