@@ -69,7 +69,6 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
 
 void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
 {
-    CommitAbility(Handle, ActorInfo, ActivationInfo);
     if (MontagesToPlay.Num() == 0)
     {
         UE_LOG(LogTemp, Error, TEXT("No Montages in Ability"));
@@ -77,14 +76,16 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
         return;
     }
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
+    CommitAbility(Handle, ActorInfo, ActivationInfo);
+    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo()); 
     if (bStartsCombat)
     {
-        AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
         if (MyChar)
         {
             MyChar->SetIsInCombat(true);
         }
     }
+    if (MyChar) MyChar->OnCastDelegate.Broadcast(this);
     //UE_LOG(LogTemp, Warning, TEXT("Activating Ability: %s on %s"), *GetName(), *GetAvatarActorFromActorInfo()->GetName());
     // ResetHitBoxes();
     UpdateCombo();
@@ -368,6 +369,11 @@ void UMyGameplayAbility::IncComboCount()
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
     else ResetComboCount();
     // UE_LOG(LogTemp, Warning, TEXT("Increased combo to %d"), CurrentComboCount);
+}
+
+FGameplayTagContainer UMyGameplayAbility::GetAbilityTags()
+{
+    return AbilityTags;
 }
 
 void UMyGameplayAbility::ResetComboCount()

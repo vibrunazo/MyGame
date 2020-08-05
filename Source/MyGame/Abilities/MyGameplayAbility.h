@@ -17,6 +17,11 @@ class MYGAME_API UMyGameplayAbility : public UGameplayAbility
 
 public:
 	UMyGameplayAbility();
+	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
+	void BPOnAbilityActivated(UMyGameplayAbility* ActivatedAbility);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Abilities")
+	FGameplayTagContainer GetAbilityTags();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<UAnimMontage*> MontagesToPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")

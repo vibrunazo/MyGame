@@ -18,6 +18,11 @@
 
 //DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FDieSignature, AMyCharacter, OnDieDelegate, AMyCharacter*, WhoDied);
 //DECLARE_MULTICAST_DELEGATE_OneParam(FDieSignature, AMyCharacter*);
+//DECLARE_MULTICAST_DELEGATE_OneParam(FCastDelegate, class UMyGameplayAbility*);
+
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(DelegateName, Param1Type, Param1Name)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCastDelegate, class UMyGameplayAbility*, CastingAbility);
+
 
 
 UCLASS(config=Game)
@@ -89,6 +94,8 @@ public:
 	//UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FDieSignature& GetReportDeathDelegate() override;
 	FDieSignature OnDieDelegate;
+	UPROPERTY(BlueprintAssignable, Category = "Abilities")
+	FCastDelegate OnCastDelegate;
 
 	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
