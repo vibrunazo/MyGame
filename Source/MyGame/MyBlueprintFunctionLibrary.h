@@ -57,6 +57,20 @@ struct FEffectContainer
 };
 
 
+USTRUCT(BlueprintType)
+struct FConditionalEffect
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// Apply this effect if the condition is true
+	FEffectContainer EffectToApply;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	// Apply the effect only if have an active effect with this tag
+	FGameplayTag ConditionTag;
+};
+
+
 /**
  * 
  */

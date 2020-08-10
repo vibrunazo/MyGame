@@ -22,6 +22,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "Abilities")
 	FGameplayTagContainer GetAbilityTags();
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Ability")
+	TArray<FConditionalEffect> ConditionalEffects;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<UAnimMontage*> MontagesToPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
