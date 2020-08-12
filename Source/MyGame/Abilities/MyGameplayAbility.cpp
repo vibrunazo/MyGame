@@ -342,7 +342,10 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
     FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y"));
     FGameplayTag LaunchZTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.z"));
     TArray<FGameplayEffectSpecHandle> Result = {};
-    for (auto &&Effect : EffectsToApply)
+    auto EffectsToCheck = EffectsToApply;
+    CheckConditionalEffects();
+    EffectsToCheck.Append(TempEffectsToApply);
+    for (auto &&Effect : EffectsToCheck)
     {
         if (!Effect.EffectClass)
         {
@@ -358,6 +361,20 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
         Result.Add(NewHandle);
     }
     return Result;
+}
+
+// Check if any of the Conditional Effects and update temporary effects from results
+void UMyGameplayAbility::CheckConditionalEffects()
+{
+    TempEffectsToApply.Empty();
+
+    for (auto&& Condition : ConditionalEffects)
+    {
+        if (Condition.EffectToApply.EffectClass == nullptr) { continue; }
+        UE_LOG(LogTemp, Warning, TEXT("Found conditional effect"));
+        TempEffectsToApply.Add(Condition.EffectToApply);
+    }
+
 }
 
 void UMyGameplayAbility::IncComboCount()

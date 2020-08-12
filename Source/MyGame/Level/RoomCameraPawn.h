@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "LevelBuilder.h"
 #include "GameFramework/Pawn.h"
 #include "RoomCameraPawn.generated.h"
 

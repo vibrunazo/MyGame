@@ -24,6 +24,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Base Ability")
 	TArray<FConditionalEffect> ConditionalEffects;
+	UPROPERTY()
+	// Temporary effects to apply, when some conditional effect is triggered
+	TArray<FEffectContainer> TempEffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<UAnimMontage*> MontagesToPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
@@ -107,6 +110,7 @@ protected:
 	UFUNCTION()
 	void OnEffectRemoveEvent(const FGameplayEventData Payload);
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
+	void CheckConditionalEffects();
 	void IncComboCount();
 	void ResetHitBoxes();
 	void ResetActiveEffects();
