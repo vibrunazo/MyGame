@@ -372,7 +372,9 @@ void UMyGameplayAbility::CheckConditionalEffects()
     {
         if (Condition.EffectToApply.EffectClass == nullptr) { continue; }
         UE_LOG(LogTemp, Warning, TEXT("Found conditional effect"));
-        TempEffectsToApply.Add(Condition.EffectToApply);
+        auto MyTags = GetAbilityTags();
+        auto EffectsThatMatchAbility = GetActorInfo().AbilitySystemComponent.Get()->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyEffectTags(MyTags));
+        if (EffectsThatMatchAbility.Num() > 0) TempEffectsToApply.Add(Condition.EffectToApply);
     }
 
 }
