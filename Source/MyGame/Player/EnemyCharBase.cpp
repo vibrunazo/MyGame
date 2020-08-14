@@ -32,9 +32,9 @@ void AEnemyCharBase::SetDefaultProperties()
     // HealthBarComp->SetHiddenInGame(true);
 }   
 
-void AEnemyCharBase::OnDamaged(AActor* SourceActor)
+void AEnemyCharBase::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect)
 {
-    Super::OnDamaged(SourceActor);
+    Super::OnDamaged(SourceActor, Damage, Effect);
     HealthBarComp->SetVisibility(true);
 
     APawn* SeenPawn = Cast<APawn>(SourceActor);

@@ -100,7 +100,7 @@ public:
 	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDamagedBP(AActor* SourceActor);
-	void OnDamaged(AActor* SourceActor) override;
+	void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void OnDie() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)

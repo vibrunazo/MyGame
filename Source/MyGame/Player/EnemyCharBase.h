@@ -18,7 +18,7 @@ public:
 	void SetDefaultProperties() override;
 	void BeginPlay() override;
 
-	void OnDamaged(AActor* SourceActor) override;
+	void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) override;
 
 	void SetOutline();
 

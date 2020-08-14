@@ -569,7 +569,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	}
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
-	UpdateHealthBar();
+	/*UpdateHealthBar();*/
 	return new FActiveGameplayEffectHandle(ActiveEffect);
 }
 
@@ -623,7 +623,7 @@ bool AMyCharacter::HasStunImmune()
 	return false;
 }
 
-void AMyCharacter::OnDamaged(AActor* SourceActor)
+void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect)
 {
 	// if (!ensure(GetHitMontage != nullptr)) return;
 	SetIsInCombat(true);
@@ -635,7 +635,11 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 		GetHitMontage = MyAnim->GetHitMontage;
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
-	if (!HasStunImmune()) PlayAnimMontage(GetHitMontage);
+	FGameplayTagContainer tags = FGameplayTagContainer();
+	Effect.GetAllAssetTags(tags);
+	UE_LOG(LogTemp, Warning, TEXT("damage effect, tags: %s"), *tags.ToString()); 
+	FGameplayTag HitStun = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
+	if (!HasStunImmune() && tags.HasTag(HitStun)) PlayAnimMontage(GetHitMontage);
 	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
 	
 	if (IsPlayerControlled())
@@ -646,7 +650,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor)
 			SourceChar->SetOutline();
 		}
 	}
-	
+	UpdateHealthBar();
 	OnDamagedBP(SourceActor);
 }
 
