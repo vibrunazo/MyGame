@@ -532,8 +532,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
-		if (HasStunImmune()) return nullptr;
-		else IncrementHitStunCount();
+		if (!HasStunImmune()) IncrementHitStunCount();
 	}
 	if (EffectTags.HasTag(KnockbackTag))
 	{
@@ -569,7 +568,7 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	}
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
-	/*UpdateHealthBar();*/
+	UpdateHealthBar();
 	return new FActiveGameplayEffectHandle(ActiveEffect);
 }
 
