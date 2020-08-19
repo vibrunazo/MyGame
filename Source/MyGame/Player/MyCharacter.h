@@ -58,6 +58,8 @@ public:
 	void ActivateAbilityByEvent(FString EventName);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void UpdateHealthBar();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void AddCooldownToHealthBar(float Duration);
 	/*UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FHealthUpdateSignature OnUpdatedHealth;*/
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -133,6 +135,7 @@ public:
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 	void OnSpeedChange(const FOnAttributeChangeData& Data);
+	void OnEffectApplied(UAbilitySystemComponent* SourceComp, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffect);
 	UFUNCTION()
 	void PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
 	void RemoveOutline();

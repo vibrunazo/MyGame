@@ -23,6 +23,8 @@ public:
 	void GetRatioFromHealth(float Health);
 	UFUNCTION(BlueprintCallable)
 	float GetHealth();
+	UFUNCTION(BlueprintImplementableEvent)
+	void AddCooldown(float Duration);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category ="HealthBar")
 	float Health;

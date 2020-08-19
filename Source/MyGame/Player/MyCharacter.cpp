@@ -247,6 +247,7 @@ void AMyCharacter::BeginPlay()
 	AttributeSetBase->SetDefense(Defense);
 	BaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetSpeedAttribute()).AddUObject(this, &AMyCharacter::OnSpeedChange);
+	AbilitySystem->OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &AMyCharacter::OnEffectApplied);
 	UpdateHealthBar();
 	// if (IsPlayerControlled()) 
 	// {
@@ -461,6 +462,7 @@ void AMyCharacter::UpdateHealthBar()
 	}
 	float OldHealthPct = OldHealth / AttributeSetBase->GetMaxHealth();
 	float NewHealthPct = NewHealth / AttributeSetBase->GetMaxHealth();
+	// TODO really? that's ridiculous, refactor this crap
 	if (NewHealthPct <= 0.75f && OldHealthPct > 0.75f)
 	{
 		ActivateAbilityByEvent("health75");
@@ -494,10 +496,29 @@ void AMyCharacter::UpdateHealthBar()
 
 }
 
+void AMyCharacter::AddCooldownToHealthBar(float Duration)
+{
+	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
+	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
+	if (HealthBar)
+	{
+		HealthBar->AddCooldown(Duration);
+	}
+}
+
 void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
 {
 	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed * AttributeSetBase->GetSpeed();
 	// UE_LOG(LogTemp, Warning, TEXT("My Speed changed to %f"), GetCharacterMovement()->MaxWalkSpeed);
+}
+
+void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)
+{
+	auto ActiveEffect = AbilitySystem->GetActiveGameplayEffect(ActiveEffectHandle);
+	if (!ActiveEffect) return;
+	float Duration = ActiveEffect->GetDuration();
+	UE_LOG(LogTemp, Warning, TEXT("On Effect Applied of duration: %f"), Duration);
+	if (Duration > 1.f) AddCooldownToHealthBar(Duration);
 }
 
 void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
