@@ -496,13 +496,14 @@ void AMyCharacter::UpdateHealthBar()
 
 }
 
-void AMyCharacter::AddCooldownToHealthBar(float Duration)
+
+void AMyCharacter::AddDurationToHealthBar(float Duration, FActiveGameplayEffectHandle ActiveEffectHandle)
 {
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar)
 	{
-		HealthBar->AddCooldown(Duration);
+		HealthBar->AddDurationToHealthBar(Duration, ActiveEffectHandle);
 	}
 }
 
@@ -518,7 +519,7 @@ void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FG
 	if (!ActiveEffect) return;
 	float Duration = ActiveEffect->GetDuration();
 	UE_LOG(LogTemp, Warning, TEXT("On Effect Applied of duration: %f"), Duration);
-	if (Duration > 1.f) AddCooldownToHealthBar(Duration);
+	if (Duration > 1.f) AddDurationToHealthBar(Duration, ActiveEffectHandle);
 }
 
 void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
