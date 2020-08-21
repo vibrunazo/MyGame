@@ -3,7 +3,7 @@
 
 #include "MyHealthBar.h"
 
-//#include "GameplayEffect.h"
+#include "GameplayEffect.h"
 
 void UMyHealthBar::GetRatioFromHealth(float NewHealth)
 {
@@ -20,7 +20,7 @@ float UMyHealthBar::GetHealth()
 /// </summary>
 /// <param name="Duration"></param>
 /// <param name="ActiveEffectHandle"></param>
-void UMyHealthBar::AddDurationToHealthBar(float Duration, FActiveGameplayEffectHandle ActiveEffectHandle)
+void UMyHealthBar::AddDurationToHealthBar(float Duration, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)
 {
     UUserWidget** OldWidget = MapOfBars.Find(ActiveEffectHandle);
     if (OldWidget)
@@ -28,6 +28,7 @@ void UMyHealthBar::AddDurationToHealthBar(float Duration, FActiveGameplayEffectH
         BP_ResetDurationBar(Duration, *OldWidget);
         return;
     }
-    UUserWidget* NewWidget = BP_AddNewDurationBar(Duration);
+    UMyGameplayEffectUIData* MyUI = Cast<UMyGameplayEffectUIData>(EffectSpec.Def->UIData);
+    UUserWidget* NewWidget = BP_AddNewDurationBar(Duration, MyUI);
     MapOfBars.Add(ActiveEffectHandle, NewWidget);
 }

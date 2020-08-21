@@ -497,13 +497,13 @@ void AMyCharacter::UpdateHealthBar()
 }
 
 
-void AMyCharacter::AddDurationToHealthBar(float Duration, FActiveGameplayEffectHandle ActiveEffectHandle)
+void AMyCharacter::AddDurationToHealthBar(float Duration, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)
 {
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	if (HealthBar)
 	{
-		HealthBar->AddDurationToHealthBar(Duration, ActiveEffectHandle);
+		HealthBar->AddDurationToHealthBar(Duration, EffectSpec, ActiveEffectHandle);
 	}
 }
 
@@ -519,7 +519,12 @@ void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FG
 	if (!ActiveEffect) return;
 	float Duration = ActiveEffect->GetDuration();
 	UE_LOG(LogTemp, Warning, TEXT("On Effect Applied of duration: %f"), Duration);
-	if (Duration > 1.f) AddDurationToHealthBar(Duration, ActiveEffectHandle);
+	if (Duration > 1.f) AddDurationToHealthBar(Duration, EffectSpec, ActiveEffectHandle);
+
+	auto ContextHandle = EffectSpec.GetEffectContext();
+	auto Context = ContextHandle.Get();
+
+	EffectSpec.Def->UIData;
 }
 
 void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)

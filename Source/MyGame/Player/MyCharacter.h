@@ -59,7 +59,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void UpdateHealthBar();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	void AddDurationToHealthBar(float Duration, FActiveGameplayEffectHandle ActiveEffectHandle);
+	void AddDurationToHealthBar(float Duration, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 	/*UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FHealthUpdateSignature OnUpdatedHealth;*/
 	UFUNCTION(BlueprintCallable, Category = Abilities)
