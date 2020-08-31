@@ -207,14 +207,17 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Abilities")
 	class USoundBase* DeathSound;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement")
-		FRotator WalkRotationRate = FRotator(0.f, 600.f, 0.f);
+	FRotator WalkRotationRate = FRotator(0.f, 600.f, 0.f);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement")
-		FRotator RunRotationRate = FRotator(0.f, 200.f, 0.f);
+	FRotator RunRotationRate = FRotator(0.f, 200.f, 0.f);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement")
-		float WalkAccel = 9000.f;
+	float WalkAccel = 9000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement")
-		float RunAccel = 3000.f;
-	
+	float RunAccel = 3000.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = NiagaraSystem, meta = (ToolTip = "The niagara system to spawn for the Punch Notifiy states"))
+	UNiagaraSystem* PunchSlash;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = NiagaraSystem, meta = (ToolTip = "The niagara system to spawn for the Kick Notifiy states"))
+	UNiagaraSystem* KickSlash;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
