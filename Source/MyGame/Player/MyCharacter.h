@@ -215,9 +215,13 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Character Movement")
 	float RunAccel = 3000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = NiagaraSystem, meta = (ToolTip = "The niagara system to spawn for the Punch Notifiy states"))
-	UNiagaraSystem* PunchSlash;
+	class UNiagaraSystem* PunchSlash;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = NiagaraSystem, meta = (ToolTip = "The niagara system to spawn for the Kick Notifiy states"))
-	UNiagaraSystem* KickSlash;
+	class UNiagaraSystem* KickSlash;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Woosh Sound", meta = (ToolTip = "The Woosh sound to play on Weak Punches"))
+	USoundBase* PunchWeakWoosh;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Woosh Sound", meta = (ToolTip = "The Woosh sound to play on Strong Punches"))
+	USoundBase* PunchStrongWoosh;
 
 	/** Base turn rate, in deg/sec. Other scaling may affect final turn rate. */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category=Camera)
