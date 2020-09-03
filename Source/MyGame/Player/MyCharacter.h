@@ -155,6 +155,8 @@ public:
 	TSubclassOf<class UCameraShake> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	class ARoomCameraPawn* CamPawnRef = nullptr;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (tooltip = "if < 0, starts with MaxHealth, else starts with InitialHealth every level"))
+	float InitialHealth = -1.f; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float MaxHealth = 100.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

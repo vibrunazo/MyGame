@@ -242,13 +242,11 @@ void AMyCharacter::BeginPlay()
 	if (!ensure(AttributeSetBase != nullptr)) return;
 	if (!ensure(GetCharacterMovement() != nullptr)) return;
 	AttributeSetBase->SetMaxHealth(MaxHealth);
-	AttributeSetBase->SetHealth(MaxHealth);
 	AttributeSetBase->SetAttack(Attack);
 	AttributeSetBase->SetDefense(Defense);
 	BaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetSpeedAttribute()).AddUObject(this, &AMyCharacter::OnSpeedChange);
 	AbilitySystem->OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &AMyCharacter::OnEffectApplied);
-	UpdateHealthBar();
 	// if (IsPlayerControlled()) 
 	// {
 	// 	Team = 1;
@@ -258,13 +256,19 @@ void AMyCharacter::BeginPlay()
 	//ResetBodyColor();
 	if (IsPlayerControlled() && GetMyGameInstance() && AttributeSetBase)
 	{
-		AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
+		if (InitialHealth < 0.f) AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
+		else AttributeSetBase->SetHealth(InitialHealth);
 		AttributeSetBase->SetMana(GetMyGameInstance()->Mana);
-		UpdateHealthBar();
 		GetMyGameInstance()->SetCharRef(this);
 		Inventory = &GetMyGameInstance()->Inventory;
 		ApplyAllItemEffects();
 	}
+	else
+	{
+		if (InitialHealth < 0.f) AttributeSetBase->SetHealth(MaxHealth);
+		else AttributeSetBase->SetHealth(InitialHealth);
+	}
+	UpdateHealthBar();
 	SetIsInCombat(true);
 }
 
@@ -559,7 +563,11 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
 		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
-		if (!HasStunImmune()) IncrementHitStunCount();
+		if (!HasStunImmune())
+		{
+			PlayAnimMontage(GetHitMontage);
+			IncrementHitStunCount();
+		}
 	}
 	if (EffectTags.HasTag(KnockbackTag))
 	{
@@ -664,8 +672,8 @@ void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectS
 	FGameplayTagContainer tags = FGameplayTagContainer();
 	Effect.GetAllAssetTags(tags);
 	UE_LOG(LogTemp, Warning, TEXT("damage effect, tags: %s"), *tags.ToString()); 
-	FGameplayTag HitStun = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
-	if (!HasStunImmune() && tags.HasTag(HitStun)) PlayAnimMontage(GetHitMontage);
+	/*FGameplayTag HitStun = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
+	if (!HasStunImmune() && tags.HasTag(HitStun)) PlayAnimMontage(GetHitMontage);*/
 	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
 	
 	if (IsPlayerControlled())

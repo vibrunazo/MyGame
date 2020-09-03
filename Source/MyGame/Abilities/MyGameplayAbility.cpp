@@ -334,13 +334,13 @@ void UMyGameplayAbility::LockToTarget()
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 {
-    FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
+    /*FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
     FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(TEXT("data.damage"));
     FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
     FGameplayTag LaunchTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch"));
     FGameplayTag LaunchXTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.x"));
     FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y"));
-    FGameplayTag LaunchZTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.z"));
+    FGameplayTag LaunchZTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.z"));*/
     TArray<FGameplayEffectSpecHandle> Result = {};
     auto EffectsToCheck = EffectsToApply;
     CheckConditionalEffects();
