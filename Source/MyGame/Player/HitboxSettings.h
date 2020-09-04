@@ -20,7 +20,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	FVector BoxExtent = FVector(30.f, 30.f, 30.f);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
-	FTransform HitboxTransform = FTransform(FVector());
+	FTransform HitboxTransform = FTransform();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	bool bIsSphere = true;
 };
