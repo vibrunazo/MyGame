@@ -1079,13 +1079,21 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 
 void AMyCharacter::SetIsInCombat(bool NewState)
 {
-	if (NewState && InCombatBuff && AbilitySystem)
+	if (!InCombatBuff || !AbilitySystem) return;
+	if (NewState)
 	{
-		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(InCombatBuff, 0.f, AbilitySystem->MakeEffectContext());
-		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
+		const FGameplayEffectSpecHandle CombatBuffHandle = AbilitySystem->MakeOutgoingSpec(InCombatBuff, 0.f, AbilitySystem->MakeEffectContext());
+		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(CombatBuffHandle.Data.Get()));
 		SetRunning(false);
+		// if I just got in combat, then also set the RUN button (101) to inactive and set its cooldown to the duration of the combat buff
+		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+		if (MyCont)
+		{
+			MyCont->SetAbilityKeyDown(101, false);
+			MyCont->ShowAbilityCooldown(101, TimeRequiredToRun + CombatBuffHandle.Data.Get()->GetDuration());
+		}
 	}
-	if (!NewState && InCombatBuff && AbilitySystem)
+	else
 	{
 		AbilitySystem->RemoveActiveGameplayEffectBySourceEffect(InCombatBuff, AbilitySystem);
 	}
@@ -1102,7 +1110,8 @@ bool AMyCharacter::IsInCombat()
 
 void AMyCharacter::SetRunning(bool NewState)
 {
-	if (NewState && RunBuff && AbilitySystem)
+	if (!RunBuff || !AbilitySystem) return;
+	if (NewState)
 	{
 		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(RunBuff, 0.f, AbilitySystem->MakeEffectContext());
 		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
@@ -1117,7 +1126,7 @@ void AMyCharacter::SetRunning(bool NewState)
 			MyCont->SetAbilityKeyDown(101, true);
 		}
 	}
-	if (!NewState && RunBuff && AbilitySystem)
+	else
 	{
 		AbilitySystem->RemoveActiveGameplayEffectBySourceEffect(RunBuff, AbilitySystem);
 		TimeHoldingRun = 0.f;
@@ -1126,12 +1135,12 @@ void AMyCharacter::SetRunning(bool NewState)
 			GetCharacterMovement()->RotationRate = WalkRotationRate;
 			GetCharacterMovement()->MaxAcceleration = WalkAccel;
 		}
-		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
-		if (MyCont)
-		{
-			MyCont->SetAbilityKeyDown(101, false);
-			MyCont->ShowAbilityCooldown(101, TimeRequiredToRun + 2.5f);
-		}
+		//AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+		//if (MyCont)
+		//{
+		//	MyCont->SetAbilityKeyDown(101, false);
+		//	//MyCont->ShowAbilityCooldown(101, TimeRequiredToRun + Handle.Data.Get()->GetDuration());
+		//}
 	}
 }
 
@@ -1144,6 +1153,10 @@ bool AMyCharacter::IsRunning()
 	return false;
 }
 
+/// <summary>
+/// Used by bots to walk slowly than normal speed while strafing around player in non aggressive AI mode.	
+/// </summary>
+/// <param name="NewState">Whether to activate walking or disable it</param>
 void AMyCharacter::SetWalking(bool NewState)
 {
 	if (NewState && WalkBuff && AbilitySystem)
