@@ -1130,6 +1130,7 @@ void AMyCharacter::SetRunning(bool NewState)
 		if (MyCont)
 		{
 			MyCont->SetAbilityKeyDown(101, false);
+			MyCont->ShowAbilityCooldown(101, TimeRequiredToRun + 2.5f);
 		}
 	}
 }

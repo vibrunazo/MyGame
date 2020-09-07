@@ -111,6 +111,11 @@ bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)
     return false;
 }
 
+void AMyPlayerController::ShowAbilityCooldown(uint8 Index, float Cooldown)
+{
+    if (HUDWidgetRef) HUDWidgetRef->BPUpdateCooldown(Index, Cooldown);
+}
+
 void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)
 {
     if (bIsLevelOver) return;

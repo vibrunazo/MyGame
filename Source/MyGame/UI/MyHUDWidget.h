@@ -23,6 +23,8 @@ public:
 	void BPUpdateMana(float NewMana);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateAbilityKey(uint8 Index, bool IsKeyDown);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
+	void BPUpdateCooldown(uint8 Index, float Cooldown);
 	UFUNCTION(BlueprintCallable, Category = "My HUD")
 	float GetHealth();
 	UFUNCTION(BlueprintCallable, Category = "My HUD")

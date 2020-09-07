@@ -31,6 +31,8 @@ public:
 	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	bool IsAbilityKeyDown(uint8 Index);
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	void ShowAbilityCooldown(uint8 Index, float Cooldown);
 
 	class AMyDefaultPawn* DefaultPawnRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
