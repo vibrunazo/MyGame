@@ -1111,6 +1111,11 @@ void AMyCharacter::SetRunning(bool NewState)
 			GetCharacterMovement()->RotationRate = RunRotationRate;
 			GetCharacterMovement()->MaxAcceleration = RunAccel;
 		}
+		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+		if (MyCont)
+		{
+			MyCont->SetAbilityKeyDown(101, true);
+		}
 	}
 	if (!NewState && RunBuff && AbilitySystem)
 	{
@@ -1120,6 +1125,11 @@ void AMyCharacter::SetRunning(bool NewState)
 		{
 			GetCharacterMovement()->RotationRate = WalkRotationRate;
 			GetCharacterMovement()->MaxAcceleration = WalkAccel;
+		}
+		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+		if (MyCont)
+		{
+			MyCont->SetAbilityKeyDown(101, false);
 		}
 	}
 }
