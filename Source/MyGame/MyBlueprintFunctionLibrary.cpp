@@ -51,6 +51,11 @@ void UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(AActor* Actor, TArray<F
     }
     
 }
+FActiveGameplayEffect UMyBlueprintFunctionLibrary::GetActiveEffectFromHandle(UAbilitySystemComponent* GAS, const FActiveGameplayEffectHandle Handle)
+{
+    auto we = GAS->GetActiveGameplayEffect(Handle);
+    return *we;
+}
 TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item)
 {
     IGetHit* Char = Cast<IGetHit>(Actor);
@@ -68,3 +73,5 @@ TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectC
     }
     return result;
 }
+/** Returns const pointer to the actual active gamepay effect structure */
+//const FActiveGameplayEffect* GetActiveGameplayEffect(const FActiveGameplayEffectHandle Handle) const;
