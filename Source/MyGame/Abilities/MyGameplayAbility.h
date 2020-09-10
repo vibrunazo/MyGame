@@ -52,9 +52,13 @@ public:
 	float ComboResetDelay = 2.00f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	FGameplayTagContainer TagsIcanCancel;
-	// if true, I can only cancel abilities with TagsIcanCancel if the last ability hits, so I can combo from the hit, if false then always cancel it
+	// if true, I can cancel abilities with TagsIcanCancel if the last ability hits, so I can combo from the hit, if false then always cancel it
+	// if false, abilities can cancel at any time. Which might cause button spam to cancel itself.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bNeedsHitToCancel = true;
+	// if true, I can also cancel abilities after the hitbox ends with the notify.hit.end tag, regardless if it hits or not
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	bool bCanCancelAfterHitboxEnds = false;
 	// if true, at the beginning of this ability, rotate the player towards the direction of controller input
 	// this will garantee that slow mesh rotation won't make the ability not target where the player is trying to point to
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")

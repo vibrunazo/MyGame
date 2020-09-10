@@ -522,7 +522,7 @@ void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FG
 	auto ActiveEffect = AbilitySystem->GetActiveGameplayEffect(ActiveEffectHandle);
 	if (!ActiveEffect) return;
 	float Duration = ActiveEffect->GetDuration();
-	UE_LOG(LogTemp, Warning, TEXT("On Effect Applied of duration: %f"), Duration);
+	//UE_LOG(LogTemp, Warning, TEXT("On Effect Applied of duration: %f"), Duration);
 	if (Duration > 1.f) AddDurationToHealthBar(Duration, EffectSpec, ActiveEffectHandle);
 
 	auto ContextHandle = EffectSpec.GetEffectContext();

@@ -205,17 +205,22 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
-    // UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
+     UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
-    if (!bHasHitConnected && bHasHitStarted) ResetComboCount();
-    if (bHasHitConnected && bHasHitStarted) bCanComboState = true;
+    if (!bHasHitConnected && bHasHitStarted && !bCanCancelAfterHitboxEnds) ResetComboCount();
+    if (bHasHitConnected && bHasHitStarted && !bCanCancelAfterHitboxEnds) bCanComboState = true;
+    if (bHasHitStarted && bCanCancelAfterHitboxEnds) {
+        IncComboCount();
+        LastComboTime = GetWorld()->GetTimeSeconds();
+        bHasHitConnected = true;
+    }
     bHasHitStarted = false;
     ResetHitBoxes();
 }
 
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
-    // UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+     UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitStarted) {
         // UE_LOG(LogTemp, Warning, TEXT("But has not started"));
@@ -378,7 +383,6 @@ void UMyGameplayAbility::CheckConditionalEffects()
     for (auto&& Condition : ConditionalEffects)
     {
         if (Condition.EffectToApply.EffectClass == nullptr) { continue; }
-        UE_LOG(LogTemp, Warning, TEXT("Found conditional effect"));
         auto MyTags = GetAbilityTags();
         auto EffectsThatMatchAbility = GetActorInfo().AbilitySystemComponent.Get()->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyEffectTags(MyTags));
         if (EffectsThatMatchAbility.Num() > 0) TempEffectsToApply.Add(Condition.EffectToApply);
