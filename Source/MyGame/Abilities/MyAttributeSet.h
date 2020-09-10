@@ -54,4 +54,8 @@ public:
 	UPROPERTY(Category = "Attributes | Speed", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData Speed;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Speed)
+
+	UPROPERTY(Category = "Attributes | AttackSpeed", EditAnywhere, BlueprintReadWrite)
+	FGameplayAttributeData AttackSpeed;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, AttackSpeed)
 };

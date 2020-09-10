@@ -59,7 +59,17 @@ float UMyUserWidget::GetSpeedAttr()
     UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
     if (MyGI && MyGI->PlayerCharRef && MyGI->PlayerCharRef->GetAttributes())
     {
-         return MyGI->PlayerCharRef->GetAttributes()->GetSpeed();
+        return MyGI->PlayerCharRef->GetAttributes()->GetSpeed();
+    }
+    return 0.0f;
+}
+float UMyUserWidget::GetAttackSpeedAttr()
+{
+    UGameInstance* GI = GetGameInstance();
+    UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
+    if (MyGI && MyGI->PlayerCharRef && MyGI->PlayerCharRef->GetAttributes())
+    {
+        return MyGI->PlayerCharRef->GetAttributes()->GetAttackSpeed();
     }
     return 0.0f;
 }

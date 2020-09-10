@@ -312,7 +312,7 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 	float length = 0.0f;
 	length = FMath::Abs(RightAxis)*FMath::Abs(RightAxis) + FMath::Abs(ForwardAxis)*FMath::Abs(ForwardAxis);
 	length = FMath::Sqrt(length);
-	if (length >= 0.7f)
+	if (length >= DoubleTapAxisDepth)
 	{
 		TryRun(DeltaSeconds);
 		// float CurAngle = GetInputAngle();

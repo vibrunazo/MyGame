@@ -29,6 +29,8 @@ public:
 	TArray<FEffectContainer> TempEffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<UAnimMontage*> MontagesToPlay;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	float MontagesSpeed = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<FEffectContainer> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
@@ -117,6 +119,7 @@ protected:
 	void ResetTarget(); 
 	void AcquireNewTarget();
 	void LockToTarget();
+	float GetAttackSpeed();
 
 	UPROPERTY()
 	TSubclassOf<class AHitBox> HitBoxClass;

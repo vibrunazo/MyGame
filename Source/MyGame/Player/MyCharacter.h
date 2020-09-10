@@ -185,8 +185,10 @@ public:
 	uint8 MaxStuns = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float StunImmuneCooldown = 5.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (ToolTip = "Time between taps that it counts as a double tap, in seconds. Used to calculate dash."))
 	float DoubleTapDelay = 0.1f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (ToolTip = "The gamepad Stick needs to move this far from full (1.0) to count as a tap. Used to calculate double tap for dash."))
+	float DoubleTapAxisDepth = 0.6f;
 	// How long do I need to press forward for, to start running
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float TimeRequiredToRun = 1.1f;

@@ -13,6 +13,7 @@ UMyAttributeSet::UMyAttributeSet()
     , Attack(1.0f)
     , Defense(1.0f)
     , Speed(1.0f)
+    , AttackSpeed(1.0f)
 {
 }
 

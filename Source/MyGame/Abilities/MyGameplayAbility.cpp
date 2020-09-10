@@ -113,7 +113,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     }
     GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
     GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(IsCancellingState);
-    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], 1.0f, MontageSection, false, 1.0f);
+    UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], GetAttackSpeed(), MontageSection, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnInterrupted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnCancelled.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
@@ -330,6 +330,13 @@ void UMyGameplayAbility::LockToTarget()
         InitialRotRate = FRotator(0.f, 600.f, 0.f);
         Move->RotationRate = FRotator(0.f, 0.f, 0.f);
     }
+}
+
+float UMyGameplayAbility::GetAttackSpeed()
+{
+    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
+    if (!MyChar || !MyChar->GetAttributes()) return 1.0f;
+    return MyChar->GetAttributes()->GetAttackSpeed() * MontagesSpeed;
 }
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
