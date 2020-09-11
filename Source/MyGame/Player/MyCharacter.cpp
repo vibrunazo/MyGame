@@ -292,7 +292,6 @@ void AMyCharacter::Tick(float DeltaSeconds)
 		CheckWalls();
 		CalculateDash(DeltaSeconds);
 	}
-
 }
 
 void AMyCharacter::OnConstruction(const FTransform& Transform)
@@ -300,7 +299,6 @@ void AMyCharacter::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	ResetBodyColor();
-
 }
 
 /// <summary>
@@ -330,6 +328,11 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 			{
 				if (GetController()) GetController()->SetControlRotation(CurVector.Rotation());
 				ActivateAbilityByEvent("dash");
+				AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+				if (MyCont)
+				{
+					MyCont->SetAbilityKeyDown(102, true);
+				}
 			}
 			else SetRunning(false);
 		}
@@ -887,6 +890,13 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 		GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 		GetMesh()->SetGenerateOverlapEvents(false);
+		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
+		if (MyCont)
+		{
+			// TODO, this is a terrible workaround
+			// cancel dash button in the UI
+			MyCont->SetAbilityKeyDown(102, false); 
+		}
 	}
 	else										// I'm falling
 	{
