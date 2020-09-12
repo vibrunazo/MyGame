@@ -22,7 +22,7 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateMana(float NewMana);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
-	void BPUpdateAbilityKey(uint8 Index, bool IsKeyDown);
+	void BPUpdateAbilityKey(uint8 Index, bool IsKeyDown, float Duration = 0.0f);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateCooldown(uint8 Index, float Cooldown);
 	UFUNCTION(BlueprintCallable, Category = "My HUD")

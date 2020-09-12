@@ -97,12 +97,18 @@ float AMyPlayerController::GetHUDHealth()
     return HUDWidgetRef->GetHealth();
 }
 
-void AMyPlayerController::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
+/// <summary>
+/// Tell the HUD to show this ability key as pressed.
+/// </summary>
+/// <param name="Index">What ability?</param>
+/// <param name="IsKeyDown">Is it pressed?</param>
+/// <param name="Duration">For how long should it be pressed? If zero, stays pressed until told otherwise. If > 0 then the action button sets a timer to automatically unpress after Duration seconds.</param>
+void AMyPlayerController::SetAbilityKeyDown(uint8 Index, bool IsKeyDown, float Duration)
 {
     if (Index < AbilityKeyStates.Num()) AbilityKeyStates[Index] = IsKeyDown;
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
     if (MyChar) MyChar->SetAbilityKeyDown(Index, IsKeyDown);
-    if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey(Index, IsKeyDown);
+    if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey(Index, IsKeyDown, Duration);
 }
 
 bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)

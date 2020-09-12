@@ -331,7 +331,7 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 				AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 				if (MyCont)
 				{
-					MyCont->SetAbilityKeyDown(102, true);
+					MyCont->SetAbilityKeyDown(102, true, 0.5f);
 				}
 			}
 			else SetRunning(false);
@@ -890,13 +890,6 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 		GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 		GetMesh()->SetGenerateOverlapEvents(false);
-		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
-		if (MyCont)
-		{
-			// TODO, this is a terrible workaround
-			// cancel dash button in the UI
-			MyCont->SetAbilityKeyDown(102, false); 
-		}
 	}
 	else										// I'm falling
 	{
