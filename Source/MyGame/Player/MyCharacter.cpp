@@ -331,7 +331,7 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 				AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 				if (MyCont)
 				{
-					MyCont->SetAbilityKeyDown(102, true, 0.5f);
+					MyCont->SetAbilityKeyDown((EInput)102, true, 0.5f);
 				}
 			}
 			else SetRunning(false);
@@ -414,7 +414,7 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	if (!HasControl() || !AbilitySystem) return;
 	for (auto &&Ability : Abilities)
 	{
-		if (Ability.Input == Index && Ability.EventName == "")
+		if (Ability.Input == (EInput)Index && Ability.EventName == "")
 		{
 			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
 			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
@@ -1092,7 +1092,7 @@ void AMyCharacter::SetIsInCombat(bool NewState)
 		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 		if (MyCont)
 		{
-			MyCont->SetAbilityKeyDown(101, false);
+			MyCont->SetAbilityKeyDown((EInput)101, false);
 			MyCont->ShowAbilityCooldown(101, TimeRequiredToRun + CombatBuffHandle.Data.Get()->GetDuration());
 		}
 	}
@@ -1126,7 +1126,7 @@ void AMyCharacter::SetRunning(bool NewState)
 		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 		if (MyCont)
 		{
-			MyCont->SetAbilityKeyDown(101, true);
+			MyCont->SetAbilityKeyDown((EInput)101, true);
 		}
 	}
 	else

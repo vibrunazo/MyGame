@@ -11,6 +11,25 @@
 #include "MyBlueprintFunctionLibrary.generated.h"
 
 
+UENUM(BlueprintType)
+enum class EInput : uint8
+{
+	Punch = 0,
+	Kick = 1,
+	Cast = 2,
+	Jump = 3,
+	SuperPunch = 10,
+	SuperKick = 11,
+	SuperCast = 12,
+	SuperJump = 13,
+	UltraPunch = 20,
+	UltraKick = 21,
+	UltraCast = 22,
+	UltraJump = 23,
+	Run = 101,
+	Dash = 102
+};
+
 USTRUCT(BlueprintType)
 struct FAbilityStruct
 {
@@ -20,7 +39,7 @@ struct FAbilityStruct
 	TSubclassOf<class UGameplayAbility> AbilityClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 Input;
+	EInput Input;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString EventName = "";

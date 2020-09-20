@@ -29,14 +29,14 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::Jump()
 {
-    SetAbilityKeyDown(100, true);
+    SetAbilityKeyDown((EInput)100, true);
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
     if (MyChar) MyChar->Jump();
 }
 
 void AMyPlayerController::StopJump()
 {
-    SetAbilityKeyDown(100, false);
+    SetAbilityKeyDown((EInput)100, false);
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
     if (MyChar) MyChar->StopJumping();
 }
@@ -103,12 +103,12 @@ float AMyPlayerController::GetHUDHealth()
 /// <param name="Index">What ability?</param>
 /// <param name="IsKeyDown">Is it pressed?</param>
 /// <param name="Duration">For how long should it be pressed? If zero, stays pressed until told otherwise. If > 0 then the action button sets a timer to automatically unpress after Duration seconds.</param>
-void AMyPlayerController::SetAbilityKeyDown(uint8 Index, bool IsKeyDown, float Duration)
+void AMyPlayerController::SetAbilityKeyDown(EInput Index, bool IsKeyDown, float Duration)
 {
-    if (Index < AbilityKeyStates.Num()) AbilityKeyStates[Index] = IsKeyDown;
+    if ((uint8)Index < AbilityKeyStates.Num()) AbilityKeyStates[(uint8)Index] = IsKeyDown;
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
-    if (MyChar) MyChar->SetAbilityKeyDown(Index, IsKeyDown);
-    if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey(Index, IsKeyDown, Duration);
+    if (MyChar) MyChar->SetAbilityKeyDown((uint8)Index, IsKeyDown);
+    if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)Index, IsKeyDown, Duration);
 }
 
 bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)
