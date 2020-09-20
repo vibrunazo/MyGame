@@ -122,6 +122,37 @@ void AMyPlayerController::ShowAbilityCooldown(uint8 Index, float Cooldown)
     if (HUDWidgetRef) HUDWidgetRef->BPUpdateCooldown(Index, Cooldown);
 }
 
+void AMyPlayerController::SetSuperMod(bool NewState)
+{
+    bSuperMod = NewState;
+}
+
+bool AMyPlayerController::GetSuperMod()
+{
+    return bSuperMod;
+}
+
+void AMyPlayerController::SetUltraMod(bool NewState)
+{
+    bUltraMod = NewState;
+}
+
+bool AMyPlayerController::GetUltraMod()
+{
+    return bUltraMod;
+}
+
+/// <summary>
+/// Returns how much to add to the input enum based on mods. For example, 1 is Kick, 11 is SuperKick, 21 is UltraKick.
+/// </summary>
+/// <returns>0 if no mod is pressed, 10 if Super mod is pressed, 20 is Ultra mod is pressed</returns>
+uint8 AMyPlayerController::GetModValue()
+{
+    if (GetUltraMod()) return 20;
+    if (GetSuperMod()) return 10;
+    return 0;
+}
+
 void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)
 {
     if (bIsLevelOver) return;

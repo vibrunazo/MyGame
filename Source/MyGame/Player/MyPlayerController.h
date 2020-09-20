@@ -35,6 +35,16 @@ public:
 	bool IsAbilityKeyDown(uint8 Index);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	void ShowAbilityCooldown(uint8 Index, float Cooldown);
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	void SetSuperMod(bool NewState);
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	bool GetSuperMod();
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	void SetUltraMod(bool NewState);
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	bool GetUltraMod();
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	uint8 GetModValue();
 
 	class AMyDefaultPawn* DefaultPawnRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
@@ -59,6 +69,8 @@ public:
 
 private:
 	TArray<bool> AbilityKeyStates = { false, false, false, false, false, false, false, false };
+	bool bSuperMod = false;
+	bool bUltraMod = false;
 
 protected:
 	void BeginPlay() override;

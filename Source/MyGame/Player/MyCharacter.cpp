@@ -411,10 +411,13 @@ void AMyCharacter::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
 
 void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 {
+	uint8 FinalIndex = Index;
+	AMyPlayerController* MyCont = GetController<AMyPlayerController>();
+	if (MyCont) FinalIndex += MyCont->GetModValue();
 	if (!HasControl() || !AbilitySystem) return;
 	for (auto &&Ability : Abilities)
 	{
-		if (Ability.Input == (EInput)Index && Ability.EventName == "")
+		if (Ability.Input == (EInput)FinalIndex && Ability.EventName == "")
 		{
 			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
 			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
