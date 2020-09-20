@@ -411,21 +411,36 @@ void AMyCharacter::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
 
 void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 {
-	uint8 FinalIndex = Index;
-	AMyPlayerController* MyCont = GetController<AMyPlayerController>();
-	if (MyCont) FinalIndex += MyCont->GetModValue();
 	if (!HasControl() || !AbilitySystem) return;
+	AMyPlayerController* MyCont = GetController<AMyPlayerController>();
+	TArray<uint8> InputsToCheck;
+	InputsToCheck.Add(Index);
+	if (MyCont && MyCont->GetSuperMod()) InputsToCheck.Add(Index + 10);
+	if (MyCont && MyCont->GetUltraMod()) InputsToCheck.Add(Index + 20);
+	TArray<FAbilityStruct> AbilitiesThatCanActivate;
 	for (auto &&Ability : Abilities)
 	{
-		if (Ability.Input == (EInput)FinalIndex && Ability.EventName == "")
+		if (InputsToCheck.Contains((uint8)Ability.Input) && Ability.EventName == "")
 		{
 			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
 			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
 			{
-				AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
+				AbilitiesThatCanActivate.Add(Ability);
 			}
 		}
 	}
+	if (AbilitiesThatCanActivate.Num() == 0) return;
+	uint8 BestAbilityScore = 0;
+	FAbilityStruct BestAbility;
+	for (auto&& Ability : AbilitiesThatCanActivate)
+	{
+		if ((uint8)Ability.Input >= BestAbilityScore)
+		{
+			BestAbility = Ability;
+			BestAbilityScore = (uint8)Ability.Input;
+		}
+	}
+	AbilitySystem->TryActivateAbilityByClass(BestAbility.AbilityClass, true);
 }
 
 void AMyCharacter::ActivateAbilityByEvent(FString EventName)
