@@ -407,6 +407,10 @@ void AMyCharacter::LearnAbility(FAbilityStruct Ability)
 	UE_LOG(LogTemp, Warning, TEXT("Learning Ability: %s"), *Ability.AbilityClass->GetName());
 	Abilities.Add(Ability);
 	GiveAbility(Ability.AbilityClass);
+	AMyPlayerController* MyCont = GetController<AMyPlayerController>();
+	if (!MyCont) return;
+	MyCont->UpdateHUDAbility(Ability, true);
+		//UMyHUDWidget* HUDWidgetRef
 }
 
 void AMyCharacter::LearnAbilities(TArray<struct FAbilityStruct> NewAbilities)
@@ -712,7 +716,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectS
 	// UE_LOG(LogTemp, Warning, TEXT("I was damaged"));
 	FGameplayTagContainer tags = FGameplayTagContainer();
 	Effect.GetAllAssetTags(tags);
-	UE_LOG(LogTemp, Warning, TEXT("damage effect, tags: %s"), *tags.ToString()); 
+	//UE_LOG(LogTemp, Warning, TEXT("damage effect, tags: %s"), *tags.ToString()); 
 	/*FGameplayTag HitStun = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
 	if (!HasStunImmune() && tags.HasTag(HitStun)) PlayAnimMontage(GetHitMontage);*/
 	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);

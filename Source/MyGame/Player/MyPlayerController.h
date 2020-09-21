@@ -36,6 +36,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	void ShowAbilityCooldown(uint8 Index, float Cooldown);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
+	void UpdateHUDAbility(FAbilityStruct Ability, bool NewState);
+	UFUNCTION(BlueprintCallable, Category = BaseController)
 	void SetSuperMod(bool NewState);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	bool GetSuperMod();

@@ -25,6 +25,8 @@ public:
 	void BPUpdateAbilityKey(uint8 Index, bool IsKeyDown, float Duration = 0.0f);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateCooldown(uint8 Index, float Cooldown);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
+	void BPUpdateActionSlot(EInput Index, bool NewState);
 	UFUNCTION(BlueprintCallable, Category = "My HUD")
 	float GetHealth();
 	UFUNCTION(BlueprintCallable, Category = "My HUD")
