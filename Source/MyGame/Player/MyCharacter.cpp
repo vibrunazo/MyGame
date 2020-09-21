@@ -7,6 +7,7 @@
 #include "../Abilities/LootComponent.h"
 #include "../Level/LevelBuilder.h"
 #include "../Props/ItemDataAsset.h"
+#include "../Props/LearnItemDataAsset.h"
 #include "../Props/Pickup.h"
 #include "../UI/MyHealthBar.h"
 
@@ -950,9 +951,14 @@ uint8 AMyCharacter::GetTeam()
 	return Team;
 }
 
+/// <summary>
+/// New Item was just picked up. Apply its effects, learn its skills.
+/// If it's not a consumable, then add it to the inventory.
+/// </summary>
+/// <param name="NewItem">The Item we just picked up</param>
 void AMyCharacter::AddItemToInventory(UItemDataAsset* NewItem)
 {
-	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, NewItem->EffectsToApply, NewItem);
+	ApplyOneItemEffect(NewItem);
 	if (!NewItem->bIsConsumable)
 	{
 		if (!Inventory) {
@@ -1011,12 +1017,26 @@ bool AMyCharacter::IsInAggroList(AActor* NewActor)
 	return false;
 }
 
+/// <summary>
+/// Applies all effects from all items in the inventory. Used at begin play to update the just created char with all the items.
+/// </summary>
 void AMyCharacter::ApplyAllItemEffects()
 {
 	for (auto &&Item : *Inventory)
 	{
-		UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, Item->EffectsToApply, Item);
+		ApplyOneItemEffect(Item);
 	}
+}
+
+/// <summary>
+/// Apply this one item to the character. Apply all effects from the Item and learn all skills from the item.
+/// </summary>
+/// <param name="NewItem">The Item to apply</param>
+void AMyCharacter::ApplyOneItemEffect(UItemDataAsset* NewItem)
+{
+	UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(this, NewItem->EffectsToApply, NewItem);
+	ULearnItemDataAsset* LearnData = Cast<ULearnItemDataAsset>(NewItem);
+	if (LearnData) LearnAbilities(LearnData->AbilitiesToLearn);
 }
 
 UMyAttributeSet* AMyCharacter::GetAttributes()

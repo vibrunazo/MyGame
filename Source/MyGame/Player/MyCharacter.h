@@ -132,6 +132,7 @@ public:
 	bool IsInAggroList(AActor* NewActor);
 
 	void ApplyAllItemEffects();
+	void ApplyOneItemEffect(class UItemDataAsset* NewItem);
 	void ApplyKnockBack(AActor* SourceActor, float Power);
 	void ApplyLaunchBack(AActor* SourceActor, FVector Power);
 	void OnDelayedLaunch();

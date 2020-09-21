@@ -4,7 +4,6 @@
 #include "Pickup.h"
 #include "PickupMeshActor.h"
 #include "ItemDataAsset.h"
-#include "LearnItemDataAsset.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "../Abilities/IGetHit.h"
@@ -98,8 +97,6 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	if (ItemData)
 	{
 		Char->AddItemToInventory(ItemData);
-		ULearnItemDataAsset* LearnData = Cast<ULearnItemDataAsset>(ItemData);
-		if (LearnData) Char->LearnAbilities(LearnData->AbilitiesToLearn);
 		// The UI Widget that shows in the world letting player know he picked up this item
 		if (WidgetActorClass)
 		{
