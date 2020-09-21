@@ -108,7 +108,18 @@ void AMyPlayerController::SetAbilityKeyDown(EInput Index, bool IsKeyDown, float 
     if ((uint8)Index < AbilityKeyStates.Num()) AbilityKeyStates[(uint8)Index] = IsKeyDown;
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
     if (MyChar) MyChar->SetAbilityKeyDown((uint8)Index, IsKeyDown);
-    if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)Index, IsKeyDown, Duration);
+    uint8 HUDIndex = (uint8)Index;
+    if (IsKeyDown)  // if I'm activating the skill
+    {               // then activate only the one with the specific mod
+        if ((uint8)Index < 100) HUDIndex += GetModValue();
+        if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)HUDIndex, IsKeyDown, Duration);
+    }
+    else            // if I'm deactivating
+    {               // then deactivate all mods
+        if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)Index, IsKeyDown, Duration);
+        if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)Index + 10, IsKeyDown, Duration);
+        if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)Index + 20, IsKeyDown, Duration);
+    }
 }
 
 bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)
