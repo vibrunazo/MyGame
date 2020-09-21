@@ -49,6 +49,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void GiveAbility(TSubclassOf<class UGameplayAbility> Ability);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void LearnAbility(struct FAbilityStruct Ability);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void LearnAbilities(TArray<struct FAbilityStruct> NewAbilities);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool GetAbilityKeyDown(uint8 Index);

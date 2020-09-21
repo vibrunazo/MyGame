@@ -397,6 +397,26 @@ void AMyCharacter::GiveAbility(TSubclassOf<class UGameplayAbility> Ability)
 	AbilitySystem->InitAbilityActorInfo(this, this);
 }
 
+void AMyCharacter::LearnAbility(FAbilityStruct Ability)
+{
+	if (!Ability.AbilityClass)
+	{
+		UE_LOG(LogTemp, Error, TEXT("trying to learn ability but no ability class found on struct"));
+		return;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("Learning Ability: %s"), *Ability.AbilityClass->GetName());
+	Abilities.Add(Ability);
+	GiveAbility(Ability.AbilityClass);
+}
+
+void AMyCharacter::LearnAbilities(TArray<struct FAbilityStruct> NewAbilities)
+{
+	for (auto&& Ability : NewAbilities)
+	{
+		LearnAbility(Ability);
+	}
+}
+
 bool AMyCharacter::GetAbilityKeyDown(uint8 Index)
 {
 	if (Index >= IsAbilityKeyDown.Num()) return false;

@@ -35,7 +35,6 @@ void AWidgetActor::SetWidgetText(UItemDataAsset* NewItem)
 {
 	if (WidgetComp)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Setting text on widget actor"));
 		UUserWidget* UW = WidgetComp->GetUserWidgetObject();
 		UPickupTextWidget* PuW = Cast<UPickupTextWidget>(UW);
 		if (PuW)
@@ -46,6 +45,5 @@ void AWidgetActor::SetWidgetText(UItemDataAsset* NewItem)
 	else
 	{
 		UE_LOG(LogTemp, Warning, TEXT("No Widget Comp on widget actor"));
-
 	}
 }

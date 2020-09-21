@@ -4,12 +4,14 @@
 #include "Pickup.h"
 #include "PickupMeshActor.h"
 #include "ItemDataAsset.h"
+#include "LearnItemDataAsset.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "../Abilities/IGetHit.h"
 #include "../Abilities/MyAttributeSet.h"
-#include "../UI/WidgetActor.h"
 #include "../Abilities/LootComponent.h"
+#include "../Player/MyCharacter.h"
+#include "../UI/WidgetActor.h"
 
 #include "AbilitySystemComponent.h"
 #include "UObject/ConstructorHelpers.h"
@@ -85,7 +87,7 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 {
 
 	// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *OverlappingActor->GetName(), *OtherActor->GetName());
-	IGetHit* Char = Cast<IGetHit>(OtherActor);
+	AMyCharacter* Char = Cast<AMyCharacter>(OtherActor);
 	if (!Char || Char->GetTeam() != TeamWhoCanPickup) return;
 	if (!bMaxHPCanPickup)
 	{
@@ -96,6 +98,8 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	if (ItemData)
 	{
 		Char->AddItemToInventory(ItemData);
+		ULearnItemDataAsset* LearnData = Cast<ULearnItemDataAsset>(ItemData);
+		if (LearnData) Char->LearnAbilities(LearnData->AbilitiesToLearn);
 		// The UI Widget that shows in the world letting player know he picked up this item
 		if (WidgetActorClass)
 		{
@@ -180,16 +184,6 @@ void APickup::ApplyItemData()
 	if (!ItemData) return;
 	UpdateFromItemData(ItemData);
 
-
-
-	/*if (ItemData->PickupActor)
-	{
-		APickup* Child = Cast<APickup>(ItemData->PickupActor->GetDefaultObject());
-		if (Child && Child->ItemData)
-		{
-			UpdateFromItemData(Child->ItemData);
-		}
-	}*/
 }
 
 void APickup::UpdateFromItemData(UItemDataAsset* NewItemData)

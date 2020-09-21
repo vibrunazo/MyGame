@@ -205,7 +205,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 {
-     UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
+     //UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitConnected && bHasHitStarted && !bCanCancelAfterHitboxEnds) ResetComboCount();
     if (bHasHitConnected && bHasHitStarted && !bCanCancelAfterHitboxEnds) bCanComboState = true;
@@ -220,7 +220,7 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
-     UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
+     //UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitStarted) {
         // UE_LOG(LogTemp, Warning, TEXT("But has not started"));
@@ -289,7 +289,7 @@ void UMyGameplayAbility::AcquireNewTarget()
     TArray < class AActor* > OutActors;
     UKismetSystemLibrary::ComponentOverlapActors(Box, Tran, ObjectTypes, AMyCharacter::StaticClass(), ActorsToIgnore, OutActors);
     //MyChar->TargetDetection->GetOverlappingActors(OutActors, AMyCharacter::StaticClass());
-    UE_LOG(LogTemp, Warning, TEXT("Looking for overlapped chars"));
+    //UE_LOG(LogTemp, Warning, TEXT("Looking for overlapped chars"));
     AMyCharacter* Closest = nullptr;
     float Best = 9000.f;
     for (auto&& Overlapped : OutActors)
