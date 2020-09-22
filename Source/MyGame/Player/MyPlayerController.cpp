@@ -29,14 +29,14 @@ void AMyPlayerController::SetupInputComponent()
 
 void AMyPlayerController::Jump()
 {
-    SetAbilityKeyDown((EInput)100, true);
+    UpdateHUDAbilityKey(EInput::Jump, true);
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
     if (MyChar) MyChar->Jump();
 }
 
 void AMyPlayerController::StopJump()
 {
-    SetAbilityKeyDown((EInput)100, false);
+    UpdateHUDAbilityKey(EInput::Jump, false);
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
     if (MyChar) MyChar->StopJumping();
 }
@@ -97,21 +97,33 @@ float AMyPlayerController::GetHUDHealth()
     return HUDWidgetRef->GetHealth();
 }
 
+
+void AMyPlayerController::SetAbilityKeyDown(EInput Index, bool IsKeyDown)
+{
+    if ((uint8)Index < AbilityKeyStates.Num()) AbilityKeyStates[(uint8)Index] = IsKeyDown;
+    AMyCharacter* MyChar = GetPawn<AMyCharacter>();
+    if (MyChar) MyChar->SetAbilityKeyDown((uint8)Index, IsKeyDown);
+    if (!IsKeyDown) UpdateHUDAbilityKey(Index, IsKeyDown);
+}
+
+bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)
+{
+    if (Index < AbilityKeyStates.Num()) return AbilityKeyStates[Index];
+    return false;
+}
+
 /// <summary>
 /// Tell the HUD to show this ability key as pressed.
 /// </summary>
 /// <param name="Index">What ability?</param>
 /// <param name="IsKeyDown">Is it pressed?</param>
 /// <param name="Duration">For how long should it be pressed? If zero, stays pressed until told otherwise. If > 0 then the action button sets a timer to automatically unpress after Duration seconds.</param>
-void AMyPlayerController::SetAbilityKeyDown(EInput Index, bool IsKeyDown, float Duration)
+void AMyPlayerController::UpdateHUDAbilityKey(EInput Index, bool IsKeyDown, float Duration)
 {
-    if ((uint8)Index < AbilityKeyStates.Num()) AbilityKeyStates[(uint8)Index] = IsKeyDown;
-    AMyCharacter* MyChar = GetPawn<AMyCharacter>();
-    if (MyChar) MyChar->SetAbilityKeyDown((uint8)Index, IsKeyDown);
     uint8 HUDIndex = (uint8)Index;
     if (IsKeyDown)  // if I'm activating the skill
     {               // then activate only the one with the specific mod
-        if ((uint8)Index < 100) HUDIndex += GetModValue();
+        //if ((uint8)Index < 100) HUDIndex += GetModValue();
         if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)HUDIndex, IsKeyDown, Duration);
     }
     else            // if I'm deactivating
@@ -120,12 +132,6 @@ void AMyPlayerController::SetAbilityKeyDown(EInput Index, bool IsKeyDown, float 
         if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)Index + 10, IsKeyDown, Duration);
         if (HUDWidgetRef) HUDWidgetRef->BPUpdateAbilityKey((uint8)Index + 20, IsKeyDown, Duration);
     }
-}
-
-bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)
-{
-    if (Index < AbilityKeyStates.Num()) return AbilityKeyStates[Index];
-    return false;
 }
 
 void AMyPlayerController::ShowAbilityCooldown(uint8 Index, float Cooldown)

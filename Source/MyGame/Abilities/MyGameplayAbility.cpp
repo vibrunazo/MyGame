@@ -92,7 +92,6 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     bHasHitConnected = false;
     bCanComboState = false;
     bHasHitStarted = false;
-    // ActorInfo->AvatarActor()->
     APawn* AvatarPawn = Cast<APawn>(GetAvatarActorFromActorInfo());
     if (bUpdateRotationFromController && AvatarPawn)
     {

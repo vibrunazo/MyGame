@@ -332,7 +332,7 @@ void AMyCharacter::CalculateDash(float DeltaSeconds)
 				AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 				if (MyCont)
 				{
-					MyCont->SetAbilityKeyDown((EInput)102, true, 0.5f);
+					MyCont->UpdateHUDAbilityKey((EInput)102, true, 0.5f);
 				}
 			}
 			else SetRunning(false);
@@ -443,6 +443,7 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	if (MyCont && MyCont->GetSuperMod()) InputsToCheck.Add(Index + 10);
 	if (MyCont && MyCont->GetUltraMod()) InputsToCheck.Add(Index + 20);
 	TArray<FAbilityStruct> AbilitiesThatCanActivate;
+	// first add all abilities that can activate from this input (ie punch) to a list
 	for (auto &&Ability : Abilities)
 	{
 		if (InputsToCheck.Contains((uint8)Ability.Input) && Ability.EventName == "")
@@ -454,6 +455,8 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 			}
 		}
 	}
+	// then, activate only the highest priority ability with that button
+	// ie. if pressing super mod + punch, will activate only the super punch, not regular punch
 	if (AbilitiesThatCanActivate.Num() == 0) return;
 	uint8 BestAbilityScore = 0;
 	FAbilityStruct BestAbility;
@@ -465,7 +468,9 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 			BestAbilityScore = (uint8)Ability.Input;
 		}
 	}
-	AbilitySystem->TryActivateAbilityByClass(BestAbility.AbilityClass, true);
+	bool Success = AbilitySystem->TryActivateAbilityByClass(BestAbility.AbilityClass, true);
+	if (MyCont) MyCont->UpdateHUDAbilityKey(BestAbility.Input, true);
+
 }
 
 void AMyCharacter::ActivateAbilityByEvent(FString EventName)
@@ -1154,7 +1159,7 @@ void AMyCharacter::SetIsInCombat(bool NewState)
 		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 		if (MyCont)
 		{
-			MyCont->SetAbilityKeyDown((EInput)101, false);
+			MyCont->UpdateHUDAbilityKey((EInput)101, false);
 			MyCont->ShowAbilityCooldown(101, TimeRequiredToRun + CombatBuffHandle.Data.Get()->GetDuration());
 		}
 	}
@@ -1188,7 +1193,7 @@ void AMyCharacter::SetRunning(bool NewState)
 		AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
 		if (MyCont)
 		{
-			MyCont->SetAbilityKeyDown((EInput)101, true);
+			MyCont->UpdateHUDAbilityKey((EInput)101, true);
 		}
 	}
 	else

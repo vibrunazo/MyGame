@@ -30,9 +30,11 @@ public:
 	void UpdateHUD(AMyCharacter* Char);
 	float GetHUDHealth();
 	UFUNCTION(BlueprintCallable, Category = BaseController)
-	void SetAbilityKeyDown(EInput Index, bool IsKeyDown, float Duration = 0.0f);
+	void SetAbilityKeyDown(EInput Index, bool IsKeyDown);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	bool IsAbilityKeyDown(uint8 Index);
+	UFUNCTION(BlueprintCallable, Category = BaseController)
+	void UpdateHUDAbilityKey(EInput Index, bool IsKeyDown, float Duration = 0.0f);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	void ShowAbilityCooldown(uint8 Index, float Cooldown);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
