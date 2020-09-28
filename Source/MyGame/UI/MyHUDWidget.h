@@ -27,6 +27,8 @@ public:
 	void BPUpdateCooldown(uint8 Index, float Cooldown);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateActionSlot(EInput Index, bool NewState);
+	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
+	void BPSetupAbility(FAbilityStruct NewAbility);
 	UFUNCTION(BlueprintCallable, Category = "My HUD")
 	float GetHealth();
 	UFUNCTION(BlueprintCallable, Category = "My HUD")

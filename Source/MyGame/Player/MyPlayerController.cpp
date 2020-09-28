@@ -141,7 +141,11 @@ void AMyPlayerController::ShowAbilityCooldown(uint8 Index, float Cooldown)
 
 void AMyPlayerController::UpdateHUDAbility(FAbilityStruct Ability, bool NewState)
 {
-    if (HUDWidgetRef) HUDWidgetRef->BPUpdateActionSlot(Ability.Input, NewState);
+    if (HUDWidgetRef)
+    {
+        HUDWidgetRef->BPSetupAbility(Ability);
+        HUDWidgetRef->BPUpdateActionSlot(Ability.Input, NewState);
+    }
 }
 
 void AMyPlayerController::SetSuperMod(bool NewState)
