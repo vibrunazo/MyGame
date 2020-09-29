@@ -54,6 +54,11 @@ void ARoomMaster::BeginPlay()
 void ARoomMaster::AddNewCharToRoom(AMyCharacter* Char)
 {
 	CharsToKill.Add(Char);
+	if (!Char)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Spawner could not bind to Char"));
+		return;
+	}
 	Char->OnDieDelegate.AddUObject(this, &ARoomMaster::OnCharDied);
 }
 
