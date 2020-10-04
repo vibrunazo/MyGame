@@ -13,7 +13,7 @@ struct FHitboxSettings
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "The socket or bone to attach the Hitbox", AnimNotifyBoneName = "true"))
 	TArray<FName> BoneNames = TArray<FName>();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	float SphereRadius = 40.0f;
