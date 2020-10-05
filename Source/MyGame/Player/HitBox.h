@@ -16,8 +16,6 @@ public:
 	// Sets default values for this actor's properties
 	AHitBox();
 	virtual void Tick(float DeltaTime) override;
-	UFUNCTION()
-	void OnHitboxBeginOverlap(AActor* OverlappingActor, AActor* OtherActor);
 
 	//void AddComponentsToBones(TArray<FName> Bones);
 	void AddComponentsFromContainer(class UHitboxesContainer* Container);
@@ -47,11 +45,14 @@ public:
 	class UNiagaraSystem* HitParticles;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UNiagaraSystem* BlockParticles;
-	TArray<AActor*> ActorsHit;
+	// Which Actors have I already hit and how many times have I hit each one?
+	TMap<AActor*, uint8> ActorsHit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UHitboxesContainer* Hitboxes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	TArray<UPrimitiveComponent*> HitComponents;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))
+	uint8 NumHits = 1;
 
 protected:
 	// Called when the game starts or when spawned

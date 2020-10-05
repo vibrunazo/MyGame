@@ -39,5 +39,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	TArray<FHitboxSettings> Hitboxes;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))
+	uint8 NumHits = 1;
 	
 };
