@@ -7,8 +7,11 @@
 #include "Animation/AnimNotifies/AnimNotifyState.h"
 #include "ANS_Hitbox.generated.h"
 
+
 /**
- * 
+ * A Hitbox Notify State. Used by the Anim Montage to set when in the animation the Hitbox is created and destroyed.
+ * Contains all the settings that will be stored on an UHitboxesContainer and passed as an Optional Object through an event
+ * that will be captured by the Gameplay Ability that will use it to create the Hitbox and initialize it.
  */
 UCLASS()
 class MYGAME_API UANS_Hitbox : public UAnimNotifyState
@@ -23,5 +26,7 @@ public:
 	TArray<FHitboxSettings> Hitboxes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))
 	uint8 NumHits = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "Cooldown between hits allowed against the same Actor."))
+	float HitCooldown = 0.1f;
 	
 };

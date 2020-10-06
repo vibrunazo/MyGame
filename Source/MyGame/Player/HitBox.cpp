@@ -57,15 +57,21 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 	//UE_LOG(LogTemp, Warning, TEXT("%s touched %s"), *GetInstigator()->GetName(), *Other->GetName());
 	//UE_LOG(LogTemp, Warning, TEXT("%s touched %s"), *OverlappedComp->GetName(), *OtherComp->GetFullName());
 	//UE_LOG(LogTemp, Warning, TEXT("component Z is %f"), OverlappedComp->GetRelativeLocation().Z);
+	if (!GetWorld()) return;
+	float CurTime = GetWorld()->GetTimeSeconds();
 	IGetHit* Target = nullptr;
 	Target = Cast<IGetHit>(Other);
 	IGetHit* Source = Cast<IGetHit>(GetInstigator());
 	if (!Target || !Source) return;
 	if (!ensure(GetInstigator() != nullptr)) return;
-	uint8 CurHitCount = ActorsHit.FindOrAdd(Other);
+	FEnemyHitState CurEnemyState = ActorsHit.FindOrAdd(Other);
+	uint8 CurHitCount = CurEnemyState.NumHits;
+	float LastHit = CurEnemyState.LastHitTime;
+	//uint8 CurHitCount = ActorsHit.FindOrAdd(Other);
 	bool bHaveIHitThisGuyTheMaxNumOfTimes = CurHitCount >= NumHits;
+	bool bHasEnoughTimePassedSinceLastHit = (CurTime - LastHit) > HitCooldown;
 	UE_LOG(LogTemp, Warning, TEXT("I hit someone, CurHitCount: %d, NumHits: %d"), CurHitCount, NumHits);
-	if (GetInstigator() != Other && Target->IsAlive() && !bHaveIHitThisGuyTheMaxNumOfTimes && Source->GetTeam() != Target->GetTeam() && GetWorld())
+	if (GetInstigator() != Other && Target->IsAlive() && !bHaveIHitThisGuyTheMaxNumOfTimes && bHasEnoughTimePassedSinceLastHit && Source->GetTeam() != Target->GetTeam())
 	{
 		FHitResult OutHit;
 		FCollisionQueryParams Params;
@@ -89,7 +95,10 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 			FRotator SparkRot = FRotator::ZeroRotator;
 			SparkRot.Yaw = OutHit.ImpactNormal.Rotation().Yaw;
 			// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *GetInstigator()->GetName(), *OtherActor->GetName());
-			ActorsHit.Emplace(Other, CurHitCount + 1);
+			CurEnemyState.NumHits = CurHitCount + 1;
+			CurEnemyState.LastHitTime = CurTime;
+			ActorsHit.Emplace(Other, CurEnemyState);
+			//ActorsHit.Emplace(Other, CurHitCount + 1);
 			FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), HitConnectTag, FGameplayEventData());
 			ApplyAllEffects(Target);
@@ -137,6 +146,7 @@ void AHitBox::AddComponentsFromContainer(UHitboxesContainer* Container)
 	//Hitboxes.Append(Container->Hitboxes);
 	Hitboxes = Container;
 	NumHits = Hitboxes->NumHits;
+	HitCooldown = Hitboxes->HitCooldown;
 	for (auto&& Settings : Container->Hitboxes)
 	{
 		AddComponentsFromSettings(Settings);

@@ -16,6 +16,7 @@ void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSeque
 	auto NewContainer = NewObject<UHitboxesContainer>(this);
 	NewContainer->Hitboxes = Hitboxes;
 	NewContainer->NumHits = NumHits;
+	NewContainer->HitCooldown = HitCooldown;
 	Payload.OptionalObject = Cast<UObject>(NewContainer);
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), HitStartTag, Payload);
 

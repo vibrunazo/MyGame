@@ -7,6 +7,25 @@
 #include "GameplayEffectTypes.h"
 #include "HitBox.generated.h"
 
+
+/**
+* Holds the current state for each enemy hit by a Hitbox Actor. Stored in a map in the Hitbox Actor.
+*/
+USTRUCT(BlueprintType)
+struct FEnemyHitState
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times did I hit this enemy already? So the Hitbox can know if I already hit it the max number of times and cannot hit it again."))
+		uint8 NumHits = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "When was the last time this enemy was hit? So the Hitbox can know if the cooldown is up and it can hit it again."))
+		float LastHitTime = 0.0f;
+};
+
+/**
+ * A Hitbox Actor. Can have multiple shape components (Box Component or Sphere Component).
+ */
 UCLASS()
 class MYGAME_API AHitBox : public AActor
 {
@@ -45,14 +64,17 @@ public:
 	class UNiagaraSystem* HitParticles;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UNiagaraSystem* BlockParticles;
-	// Which Actors have I already hit and how many times have I hit each one?
-	TMap<AActor*, uint8> ActorsHit;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UHitboxesContainer* Hitboxes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	TArray<UPrimitiveComponent*> HitComponents;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))
 	uint8 NumHits = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "Cooldown between hits allowed against the same Actor."))
+	float HitCooldown = 0.1f;
+
+	// Which Actors have I already hit and how many times have I hit each one?
+	TMap<AActor*, FEnemyHitState> ActorsHit;
 
 protected:
 	// Called when the game starts or when spawned

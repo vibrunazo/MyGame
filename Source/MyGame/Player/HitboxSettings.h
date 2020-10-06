@@ -7,6 +7,11 @@
 #include "HitboxSettings.generated.h"
 
 
+/**
+* Holds the settings for one of the Shape components (Box Component or Sphere Component) of the Hitbox Actor.
+* The Hitbox Actor will have an Array of this, because each Hitbox Actor can have multiple components.
+* Each Hitbox Component can be attached to a bone. If multiple bones are set, then multiple identical components are created created, one for each bone.
+*/
 USTRUCT(BlueprintType)
 struct FHitboxSettings
 {
@@ -26,7 +31,9 @@ public:
 };
 
 /**
- * 
+ * An UObject that can get passed around as the Optional Object from notifies.
+ * Is used by the Hitbox Notify State to send all the Hitbox properties to the Ability.
+ * Which will in turn pass this to the created Hitbox Actor that will use this to initialize its settings and control its behaviour.
  */
 UCLASS(BlueprintType)
 class MYGAME_API UHitboxesContainer : public UObject
@@ -41,5 +48,7 @@ public:
 	TArray<FHitboxSettings> Hitboxes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))
 	uint8 NumHits = 1;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "Cooldown between hits allowed against the same Actor."))
+	float HitCooldown = 0.1f;
 	
 };
