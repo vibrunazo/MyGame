@@ -94,6 +94,7 @@ AMyCharacter::AMyCharacter()
 	TargetDetection->SetBoxExtent(FVector(400.f, 300.f, 200.f));
 	TargetDetection->SetGenerateOverlapEvents(false);
 	TargetDetection->SetVisibility(false);
+	TargetDetection->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
 	PawnSenseComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
 	PawnSenseComp->OnSeePawn.AddDynamic(this, &AMyCharacter::OnPawnSeen);

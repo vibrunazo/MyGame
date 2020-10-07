@@ -286,7 +286,9 @@ void UMyGameplayAbility::AcquireNewTarget()
     TArray < AActor* > ActorsToIgnore = TArray < AActor* >();
     ActorsToIgnore.Add(GetAvatarActorFromActorInfo());
     TArray < class AActor* > OutActors;
+    Box->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
     UKismetSystemLibrary::ComponentOverlapActors(Box, Tran, ObjectTypes, AMyCharacter::StaticClass(), ActorsToIgnore, OutActors);
+    Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     //MyChar->TargetDetection->GetOverlappingActors(OutActors, AMyCharacter::StaticClass());
     //UE_LOG(LogTemp, Warning, TEXT("Looking for overlapped chars"));
     AMyCharacter* Closest = nullptr;
