@@ -585,6 +585,7 @@ void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FG
 
 void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
+	UE_LOG(LogTemp, Warning, TEXT("Pawn block tag changed"));
 	if (NewCount) GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 	else GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 }
