@@ -157,6 +157,7 @@ void UMyGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
     if (!MyChar) return;
     UCharacterMovementComponent* Move = Cast<UCharacterMovementComponent>(MyChar->GetMovementComponent());
     if (Move) Move->RotationRate = InitialRotRate;
+    UE_LOG(LogTemp, Warning, TEXT("EndAbility, set RotationRate to %s"), *InitialRotRate.ToString());
 
 }
 
@@ -319,11 +320,12 @@ void UMyGameplayAbility::AcquireNewTarget()
 /// </summary>
 void UMyGameplayAbility::LockToTarget()
 {
+    UE_LOG(LogTemp, Warning, TEXT("Ability Locking to target"));
     AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
     if (!MyChar) return;
+    InitialRotRate = FRotator(0.f, 600.f, 0.f);
     AActor* EnemyTarget = MyChar->GetTargetEnemy();
     if (!EnemyTarget) return;
-
     FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(MyChar->GetActorLocation(), EnemyTarget->GetActorLocation());
     NewRot.Pitch = MyChar->GetActorRotation().Pitch; NewRot.Roll = MyChar->GetActorRotation().Roll;
     MyChar->SetActorRotation(NewRot);
@@ -334,7 +336,6 @@ void UMyGameplayAbility::LockToTarget()
         // TODO should not be hard coded, but getting initial rot from movement component was failing sometimes
         // should get it from the character's walk rotation variables
         //InitialRotRate = Move->RotationRate;
-        InitialRotRate = FRotator(0.f, 600.f, 0.f);
         Move->RotationRate = FRotator(0.f, 0.f, 0.f);
     }
 }
