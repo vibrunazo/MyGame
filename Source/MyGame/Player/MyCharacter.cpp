@@ -1252,6 +1252,20 @@ bool AMyCharacter::IsWalking()
 	return false;
 }
 
+/// <summary>
+/// Returns if I am immune to projectiles. Checks the Actor for the tag status.immune.proj.
+/// </summary>
+/// <returns>True if immune to projectiles, false otherwise.</returns>
+bool AMyCharacter::IsProjectileImmune()
+{
+	FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("status.immune.proj"));
+	if (AbilitySystem->HasMatchingGameplayTag(ImmuneTag))
+	{
+		return true;
+	}
+	return false;
+}
+
 FDieSignature& AMyCharacter::GetReportDeathDelegate()
 {
 	return OnDieDelegate;

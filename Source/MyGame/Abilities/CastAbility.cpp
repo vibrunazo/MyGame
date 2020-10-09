@@ -46,6 +46,7 @@ void UCastAbility::OnCast(const FGameplayEventData Payload)
     NewHB->HitParticles = HitParticles;
     NewHB->BlockParticles = BlockParticles;
     NewHB->EffectsToApply = MakeSpecHandles();
+    NewHB->HitboxChannel = EHitboxChannel::Projectile;
     FHitboxSettings Settings = FHitboxSettings();
     Settings.SphereRadius = 40.f;
     Settings.bIsSphere = true;

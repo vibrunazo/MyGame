@@ -96,6 +96,8 @@ public:
 	void SetWalking(bool NewState);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsWalking();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool IsProjectileImmune() override;
 
 	//UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FDieSignature& GetReportDeathDelegate() override;

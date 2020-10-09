@@ -64,6 +64,11 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 	IGetHit* Source = Cast<IGetHit>(GetInstigator());
 	if (!Target || !Source) return;
 	if (!ensure(GetInstigator() != nullptr)) return;
+	if (HitboxChannel == EHitboxChannel::Projectile && Target->IsProjectileImmune())
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot hit target because it's immune to projectiles"));
+		return;
+	}
 	FEnemyHitState CurEnemyState = ActorsHit.FindOrAdd(Other);
 	uint8 CurHitCount = CurEnemyState.NumHits;
 	float LastHit = CurEnemyState.LastHitTime;

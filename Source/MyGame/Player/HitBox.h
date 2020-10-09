@@ -9,6 +9,18 @@
 
 
 /**
+* The type of attack damage this Hitbox does. Used to determine if it can hit the target. One enemy might be immune to weak attacks but vulnerable to casts, or vice versa.
+*/
+UENUM(BlueprintType)
+enum class EHitboxChannel : uint8
+{
+	Weak = 0,
+	Strong = 1,
+	Projectile = 2,
+	Jump = 3,
+};
+
+/**
 * Holds the current state for each enemy hit by a Hitbox Actor. Stored in a map in the Hitbox Actor.
 */
 USTRUCT(BlueprintType)
@@ -72,6 +84,8 @@ public:
 	uint8 NumHits = 1;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "Cooldown between hits allowed against the same Actor."))
 	float HitCooldown = 0.1f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "What type of attack this is. Used to determine if it can hit the target. One enemey might be invunerable to weak attacks."))
+	EHitboxChannel HitboxChannel = EHitboxChannel::Weak;
 
 	// Which Actors have I already hit and how many times have I hit each one?
 	TMap<AActor*, FEnemyHitState> ActorsHit;
