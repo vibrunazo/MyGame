@@ -53,8 +53,16 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 				FilteredLootTable.Add(Item);
 			}
 		}
-		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTable.Num() - 1);
-		result = FilteredLootTable[RandIndex].Item;
+		if (FilteredLootTable.Num() > 0)
+		{
+			int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTable.Num() - 1);
+			result = FilteredLootTable[RandIndex].Item;
+		}
+		else
+		{
+			int RandIndex = GI->RandomStream.RandRange(0, LootTable.Num() - 1);
+			result = LootTable[RandIndex].Item;
+		}
 	}
 	return result;
 }
