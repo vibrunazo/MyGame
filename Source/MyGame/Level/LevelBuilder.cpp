@@ -118,7 +118,11 @@ void ALevelBuilder::BuildGrid()
 			// all next rooms will always have regular enemies, unless it's the last room, then it's a boss room
 			if (i == NumRooms - 1) { Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Boss); }
 			//else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, -1);
-			else if (DooredRoom > 0 && i == DooredRoom) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
+			else if (DooredRoom > 0 && i == DooredRoom)
+			{
+				Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
+				Content.RoomReward = MinibossReward;
+			}
 			//else if (i > 1) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
 			else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 0);
 		}

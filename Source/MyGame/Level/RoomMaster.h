@@ -22,10 +22,14 @@ public:
 	UFUNCTION()
 	void OnCharDied(class AMyCharacter* WhoDied);
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
+	class ULootComponent* LootComponent;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBillboardComponent* Billboard;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = LevelBuilder, meta = (tooltip = "Chars that needs to be killed for the room to be considered clear and open its door. If empty, will automatically fill it with all actors found inside the room on Begin Play."))
 	TArray<class AMyCharacter*> CharsToKill;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilde, meta = (MakeEditWidget = true, tooltip = "Position in the Room where the rewards items should spawn when the room is cleared."))
+	FVector RewardPosition = FVector();
 	UPROPERTY()
 	TArray<class AGoal*> Goals;
 

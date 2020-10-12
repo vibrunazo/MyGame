@@ -3,6 +3,8 @@
 
 #include "RoomMaster.h"
 #include "Components/BillboardComponent.h"
+
+#include "../Abilities/LootComponent.h"
 #include "../Player/MyCharacter.h"
 #include "../Player/ReportDeath.h"
 #include "../MyGameInstance.h"
@@ -17,6 +19,8 @@ ARoomMaster::ARoomMaster()
 	
 	Billboard = CreateDefaultSubobject<UBillboardComponent>(TEXT("Dino"));
 	RootComponent = Billboard;
+
+	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 
 }
 
@@ -48,6 +52,7 @@ void ARoomMaster::BeginPlay()
 	ALevelBuilder* LBuilder = MyGI->GetLevelBuilder();
 	LevelBuilderRef = LBuilder;
 	LevelBuilderRef->RegisterRoomMaster(this, GetActorLocation());
+	LootComponent->LootTable = RoomStateRef->RoomReward;
 	
 }
 
@@ -120,5 +125,7 @@ void ARoomMaster::EnableGoals()
 	{
 		Goal->EnableGoal(true);
 	}
+
+	LootComponent->DropRandomItemAtLocation(RewardPosition + GetActorLocation());
 	
 }

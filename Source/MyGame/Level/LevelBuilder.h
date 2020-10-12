@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "RoomDataAsset.h"
+#include "../Abilities/LootComponent.h"
 #include "LevelBuilder.generated.h"
 
 UENUM(BlueprintType)
@@ -48,6 +49,9 @@ struct FRoomState
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsRoomCleared = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	TArray<FLootDrop> RoomReward;
 };
 
 USTRUCT()
@@ -148,6 +152,8 @@ public:
 	float RoomSizeY = 2000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder")
 	class USoundBase* LevelMusic;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
+	TArray<FLootDrop> MinibossReward;
 	UPROPERTY()
 	class UAudioComponent* LevelMusicRef = nullptr;
 	UPROPERTY()

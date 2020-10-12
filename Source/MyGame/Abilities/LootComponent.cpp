@@ -4,6 +4,7 @@
 #include "LootComponent.h"
 #include "../MyGameInstance.h"
 #include "../Props/ItemDataAsset.h"
+#include "../Props/Pickup.h"
 
 #include "Kismet/GameplayStatics.h"
 
@@ -56,4 +57,17 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 		result = FilteredLootTable[RandIndex].Item;
 	}
 	return result;
+}
+
+APickup* ULootComponent::DropRandomItemAtLocation(FVector Where)
+{
+		// UE_LOG(LogTemp, Warning, TEXT("dropping items"));
+	FVector Loc = Where;
+	FActorSpawnParameters params;
+	auto NewLoot = GetRandomItem();
+	if (!NewLoot) return nullptr;
+	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(NewLoot->PickupActor, Loc, FRotator::ZeroRotator, params);
+	NewPickup->SetItemData(NewLoot);
+	UE_LOG(LogTemp, Warning, TEXT("Lootcomponent dropped a %s"), *NewLoot->GetName());
+	return nullptr;
 }

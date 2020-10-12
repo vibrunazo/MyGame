@@ -29,6 +29,7 @@ public:
 	ULootComponent();
 
 	class UItemDataAsset* GetRandomItem();
+	class APickup* DropRandomItemAtLocation(FVector Where);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<FLootDrop> LootTable;

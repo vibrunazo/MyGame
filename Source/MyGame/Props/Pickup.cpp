@@ -121,7 +121,9 @@ void APickup::OnDelayedSpawn()
 	// BoxCollision->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	BoxCollision->SetSimulatePhysics(true);
 	// if I have an owner it means I was dropped by an enemy instead of by being placed in the map in the editor
-	if (GetOwner())
+	//if (GetOwner())
+	// bNetStartup is true when the actor was placed in the editor, false when spawned at runtime
+	if (!bNetStartup)
 	{
 		BoxCollision->AddImpulse(FVector(0.f, 0.5, 500.0f), NAME_None, true);
 		FVector SpawnLoc = FVector(GetActorLocation());
