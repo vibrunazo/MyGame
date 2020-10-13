@@ -34,6 +34,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<FLootDrop> LootTable;
 
+private:
+	bool DoAnyAbilitySlotOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList);
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;

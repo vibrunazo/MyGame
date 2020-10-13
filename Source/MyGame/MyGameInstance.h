@@ -31,6 +31,7 @@ public:
 	void StoreCharStats();
 	void SetCharRef(class AMyCharacter* NewRef);
 	TArray<FString> GetItemsICannotGetMoreOf();
+	TArray<struct FAbilityStruct> GetPlayerAbiliies();
 	void TeleportPlayer(FVector NewLocation);
 	void DoCamShake(float Intensity);
 

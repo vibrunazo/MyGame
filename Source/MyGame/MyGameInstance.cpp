@@ -60,6 +60,13 @@ TArray<FString> UMyGameInstance::GetItemsICannotGetMoreOf()
     return result;
 }
 
+TArray<struct FAbilityStruct> UMyGameInstance::GetPlayerAbiliies()
+{
+    TArray<struct FAbilityStruct> result = TArray<struct FAbilityStruct>();
+    if (!PlayerCharRef) return result;
+    return PlayerCharRef->Abilities;
+}
+
 void UMyGameInstance::TeleportPlayer(FVector NewLocation)
 {
     if (!PlayerCharRef) return;
