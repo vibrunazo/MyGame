@@ -65,6 +65,7 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(this));
 	if (LootTable.Num() == 0 || !GI) return result;
 	TArray<FLootDrop> FilteredLootTable = TArray<FLootDrop>();
+	TArray<FLootDrop> FilteredLootTableNotMaxed = TArray<FLootDrop>();
 	// gets items I am already maxed on
 	TArray<FString> ItemsToFilter = GI->GetItemsICannotGetMoreOf();
 	// get abilities I already have a slot for
@@ -82,20 +83,30 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 			// filter out learn items that teach abilties for slots I already know an ability 
 			if (DoAnyAbilitySlotOverlap(LearnItem->AbilitiesToLearn, MyAbilities)) IsAbilitySlotUsed = true;
 		}
-		// If this Item passes the tests, add it to filtered list
-		if (!IsMaxed && !IsAbilitySlotUsed)
+		// If this Item is not maxed, at it to the filtered list of not maxed items
+		if (!IsMaxed)
 		{
-			FilteredLootTable.Add(Item);
+			FilteredLootTableNotMaxed.Add(Item);
+			// If this Item passes all tests, add it to full filtered list
+			if (!IsAbilitySlotUsed)
+			{
+				FilteredLootTable.Add(Item);
+			}
 		}
 	}
-
 	// if the filtered list is not zero, then return an item from the filtered list
 	if (FilteredLootTable.Num() > 0)
 	{
 		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTable.Num() - 1);
 		result = FilteredLootTable[RandIndex].Item;
 	}
-	// else, if the filtered list is empty, return an item I already have anyway
+	// else, if the full filtered loot table is zero, but there are still items that I don't have, drop one of those even if it doesn't pass all tests, at least gets a new item
+	else if (FilteredLootTableNotMaxed.Num() > 0)
+	{
+		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTableNotMaxed.Num() - 1);
+		result = FilteredLootTableNotMaxed[RandIndex].Item;
+	}
+	// else, if all filtered lists are empty, return an item I already have anyway
 	else
 	{
 		int RandIndex = GI->RandomStream.RandRange(0, LootTable.Num() - 1);
