@@ -53,6 +53,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void LearnAbilities(TArray<struct FAbilityStruct> NewAbilities);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
+	void FindAndRemoveOverlappingAbilities(struct FAbilityStruct Ability);
+	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool GetAbilityKeyDown(uint8 Index);

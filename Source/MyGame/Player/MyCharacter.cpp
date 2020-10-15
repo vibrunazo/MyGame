@@ -406,6 +406,7 @@ void AMyCharacter::LearnAbility(FAbilityStruct Ability)
 		UE_LOG(LogTemp, Error, TEXT("trying to learn ability but no ability class found on struct"));
 		return;
 	}
+	FindAndRemoveOverlappingAbilities(Ability);
 	UE_LOG(LogTemp, Warning, TEXT("Learning Ability: %s"), *Ability.AbilityClass->GetName());
 	Abilities.Add(Ability);
 	GiveAbility(Ability.AbilityClass);
@@ -420,6 +421,32 @@ void AMyCharacter::LearnAbilities(TArray<struct FAbilityStruct> NewAbilities)
 	for (auto&& Ability : NewAbilities)
 	{
 		LearnAbility(Ability);
+	}
+}
+
+/// <summary>
+/// Look into the array list of learned Abilities for any Ability that overlaps the given AbilityToCompare. That is,
+/// a learned ability that has the same input slot as the given AbilityToCompare.
+/// Then removes the abilities found from the Abilities Array.
+/// </summary>
+/// <param name="AbilityToCompare">The given ability to compare its inputs to all learned abilities</param>
+void AMyCharacter::FindAndRemoveOverlappingAbilities(FAbilityStruct AbilityToCompare)
+{
+	TArray<FAbilityStruct> AbilitiesToRemove;
+	for (auto&& LearnedAbility : Abilities)
+	{
+		if (LearnedAbility.Input == AbilityToCompare.Input
+			&& LearnedAbility.EventName == AbilityToCompare.EventName
+			&& LearnedAbility.CanUseOnAir == AbilityToCompare.CanUseOnAir
+			&& LearnedAbility.CanUseOnGround == AbilityToCompare.CanUseOnGround)
+		{
+			AbilitiesToRemove.Add(LearnedAbility);
+		}
+	}
+	for (auto&& OldAbility : AbilitiesToRemove)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Removing Overlapping Ability: %s"), *OldAbility.AbilityClass->GetName());
+		Abilities.Remove(OldAbility);
 	}
 }
 

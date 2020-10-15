@@ -36,6 +36,7 @@ public:
 
 private:
 	bool DoAnyAbilitySlotOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList);
+	uint8 DoAnyAbilityOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList);
 
 protected:
 	// Called when the game starts

@@ -8,6 +8,7 @@
 #include "../Props/Pickup.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Abilities/GameplayAbility.h"
 
 // Sets default values for this component's properties
 ULootComponent::ULootComponent()
@@ -21,7 +22,7 @@ ULootComponent::ULootComponent()
 
 
 /// <summary>
-/// Compares 2 list of abilities and checks if any ability from one list shares a common Slot (Input button) with any ability of the second list.
+/// Compares 2 lists of abilities and checks if any ability from one list shares a common Slot (Input button) with any ability of the second list.
 /// Used to decide if an Item that teaches an ability should drop. If an item teaches an ability for a slot the player already has, it should not drop.
 /// LootComponent uses this to compare the list of abilities an Item can teach to the list of abilities the player already know.
 /// </summary>
@@ -38,6 +39,28 @@ bool ULootComponent::DoAnyAbilitySlotOverlap(TArray<struct FAbilityStruct> First
 		}
 	}
 	return false;
+}
+
+/// <summary>
+/// Compares 2 lists of abilities and check if any ability from one list overlap any ability from the second list.
+/// Will check both if the abilities share a common slot (input button) and also if the abilities are identical.
+/// LootComponent uses this to compare the list of abilities an Item can teach to the list of abilities the player already knows. 
+/// </summary>
+/// <param name="FirstList">The first list of abilities to compare</param>
+/// <param name="SecondList">The second list of abilities to compare</param>
+/// <returns>0 if no overlap is found. 1 if any ability from one list shares the same Slot as any ability from the second. 2 if any ability from one list is identical to any ability in the other list.</returns>
+uint8 ULootComponent::DoAnyAbilityOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList)
+{
+	uint8 result = 0;
+	for (auto&& FirstAbility : FirstList)
+	{
+		for (auto&& SecondAbility : SecondList)
+		{
+			if (FirstAbility.AbilityClass == SecondAbility.AbilityClass) return 2;
+			if (FirstAbility.Input == SecondAbility.Input) result = 1;
+		}
+	}
+	return result;
 }
 
 // Called when the game starts
@@ -65,6 +88,7 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 	UMyGameInstance* GI = Cast<UMyGameInstance>(UGameplayStatics::GetGameInstance(this));
 	if (LootTable.Num() == 0 || !GI) return result;
 	TArray<FLootDrop> FilteredLootTable = TArray<FLootDrop>();
+	TArray<FLootDrop> FilteredLootTableNewSpell = TArray<FLootDrop>();
 	TArray<FLootDrop> FilteredLootTableNotMaxed = TArray<FLootDrop>();
 	// gets items I am already maxed on
 	TArray<FString> ItemsToFilter = GI->GetItemsICannotGetMoreOf();
@@ -78,10 +102,14 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 		// now check if I should also filter by abillities slot to learn
 		ULearnItemDataAsset* LearnItem = Cast<ULearnItemDataAsset>(Item.Item);
 		bool IsAbilitySlotUsed = false;
+		bool IsAbilityAlreadyLearned = false;
 		if (LearnItem)
 		{
+			uint8 CheckAbilityOverlap = DoAnyAbilityOverlap(LearnItem->AbilitiesToLearn, MyAbilities);
 			// filter out learn items that teach abilties for slots I already know an ability 
-			if (DoAnyAbilitySlotOverlap(LearnItem->AbilitiesToLearn, MyAbilities)) IsAbilitySlotUsed = true;
+			if (CheckAbilityOverlap >= 1) IsAbilitySlotUsed = true;
+			// filter out learn items that teach an exact ability that I already know
+			if (CheckAbilityOverlap == 2) IsAbilityAlreadyLearned = true;
 		}
 		// If this Item is not maxed, at it to the filtered list of not maxed items
 		if (!IsMaxed)
@@ -93,14 +121,25 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 				FilteredLootTable.Add(Item);
 			}
 		}
+		// If teaches a new ability, even if maxed
+		if (!IsAbilityAlreadyLearned)
+		{
+			FilteredLootTableNewSpell.Add(Item);
+		}
 	}
-	// if the filtered list is not zero, then return an item from the filtered list
+	// if the filtered list is not zero, that is, if there are items that teach new spells on new slots, then return an item from the filtered list
 	if (FilteredLootTable.Num() > 0)
 	{
 		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTable.Num() - 1);
 		result = FilteredLootTable[RandIndex].Item;
 	}
-	// else, if the full filtered loot table is zero, but there are still items that I don't have, drop one of those even if it doesn't pass all tests, at least gets a new item
+	// else, if the full filtered loot table is zero, but there are still items that teach abilities I don't have, drop one of those even if it doesn't pass all tests, at least gets a new ability
+	else if (FilteredLootTableNewSpell.Num() > 0)
+	{
+		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTableNewSpell.Num() - 1);
+		result = FilteredLootTableNewSpell[RandIndex].Item;
+	}
+	// else, if neither the full filtered loot table or the new spell filter have anything, but there are still items that I don't have, drop one of those even if it doesn't pass all tests, at least gets a new item
 	else if (FilteredLootTableNotMaxed.Num() > 0)
 	{
 		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTableNotMaxed.Num() - 1);

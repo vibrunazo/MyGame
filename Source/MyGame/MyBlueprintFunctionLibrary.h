@@ -35,6 +35,8 @@ struct FAbilityStruct
 {
 	GENERATED_BODY()
 
+	int32 ID = 0;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSubclassOf<class UGameplayAbility> AbilityClass;
 
@@ -49,6 +51,20 @@ struct FAbilityStruct
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanUseOnAir = false;
+
+	friend bool operator==(const FAbilityStruct& first, const FAbilityStruct& second)
+	{
+		bool Result = first.AbilityClass == second.AbilityClass;
+		Result == Result && first.Input == second.Input;
+		Result == Result && first.EventName == second.EventName;
+		Result == Result && first.CanUseOnGround == second.CanUseOnGround;
+		Result == Result && first.CanUseOnAir == second.CanUseOnAir;
+		return Result;
+	}
+	friend uint32 GetTypeHash(const FAbilityStruct& Other)
+	{
+		return GetTypeHash(Other.ID);
+	}
 
 };
 USTRUCT(BlueprintType)
