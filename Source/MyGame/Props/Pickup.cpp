@@ -74,11 +74,13 @@ void APickup::BeginPlay()
 	}
 
 	FTimerHandle Handle;
-	GetWorldTimerManager().SetTimer(Handle, this, &APickup::OnDelayedSpawn, FMath::RandRange(0.05f, 0.3f), false);
-	// if I have an owner it means I was dropped by an enemy instead of by being placed in the map in the editor
-	if (GetOwner())
+	GetWorldTimerManager().SetTimer(Handle, this, &APickup::OnDelayedSpawn, FMath::RandRange(DelayedSpawnMin, DelayedSpawnMax), false);
+	// bNetStartup is true when the actor was placed in the editor, false when spawned at runtime
+	if (!bNetStartup)
 	{
 		AddActorLocalOffset(FVector(0.f, 0.f, 50.f));
+		FVector NewScale = FVector(0.01f, 0.01f, 0.01f);
+		RootComp->SetRelativeScale3D(NewScale);
 	}
 }
 
@@ -156,8 +158,8 @@ void APickup::OnTimelineCallback()
 	MyTimeline.GetTimelineLength();
 	float Cur = CurveScale->GetFloatValue(MyTimeline.GetPlaybackPosition());
 	FVector NewScale = FVector(Cur, Cur, Cur);
-	// UE_LOG(LogTemp, Warning, TEXT("timeline callback %f"), Cur);
 	RootComp->SetRelativeScale3D(NewScale);
+	//UE_LOG(LogTemp, Warning, TEXT("timeline callback %f"), Cur);
 }
 void APickup::OnTimelineUpdate()
 {

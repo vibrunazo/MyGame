@@ -61,7 +61,11 @@ public:
 	bool bMaxHPCanPickup = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	uint8 TeamWhoCanPickup = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup", meta = (ToolTip = "Time after the Item spawns that it takes to enable pickup by the player."))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup", meta = (ToolTip = "Time after the Item spawns that it becomes visible and starts spawn animation. Varies randomly between Min and Max."))
+	float DelayedSpawnMin = 0.1f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup", meta = (ToolTip = "Time after the Item spawns that it becomes visible and starts spawn animation. Varies randomly between Min and Max."))
+	float DelayedSpawnMax = 0.4f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup", meta = (ToolTip = "Time after the Item delayed spawn that it takes to enable pickup by the player."))
 	float PickupTime = 0.7f;
 	// UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Item Pickup")
 	TSubclassOf<class AWidgetActor> WidgetActorClass;
