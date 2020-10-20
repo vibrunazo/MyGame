@@ -10,6 +10,7 @@
 
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "AbilitySystemBlueprintLibrary.h"
 
 void AMyPlayerController::BeginPlay()
 {
@@ -103,7 +104,19 @@ void AMyPlayerController::SetAbilityKeyDown(EInput Index, bool IsKeyDown)
     if ((uint8)Index < AbilityKeyStates.Num()) AbilityKeyStates[(uint8)Index] = IsKeyDown;
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
     if (MyChar) MyChar->SetAbilityKeyDown((uint8)Index, IsKeyDown);
-    if (!IsKeyDown) UpdateHUDAbilityKey(Index, IsKeyDown);
+    if (!IsKeyDown)
+    {
+        UpdateHUDAbilityKey(Index, IsKeyDown);
+        if (MyChar)
+        {
+            FString TagString = FString::Printf(TEXT("input.release.%d"), (uint8)Index);
+            //TagString += (uint8)Index;
+            FName TagName = FName(*TagString);
+            FGameplayTag InputTag = FGameplayTag::RequestGameplayTag(TagName);
+            if (FGameplayTag::IsValidGameplayTagString(TagString)) UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MyChar, InputTag, FGameplayEventData());
+            UE_LOG(LogTemp, Warning, TEXT("sent gameplay event: %s"), *TagString);
+        }
+    }
 }
 
 bool AMyPlayerController::IsAbilityKeyDown(uint8 Index)

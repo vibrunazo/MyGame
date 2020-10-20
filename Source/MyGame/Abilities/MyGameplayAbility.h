@@ -83,6 +83,9 @@ public:
 	bool bStartsCombat = true;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	TArray < TEnumAsByte < EObjectTypeQuery > > TypesToTestTargetLock;
+	// When this gameplay event tag is fired on this Actor, this ability should cancel its active section of the montage and go into recovery
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	FGameplayTag TagThatDeactivateMe;
 
 private:
 	UPROPERTY()
@@ -121,6 +124,8 @@ protected:
 	void OnEffectApplyEvent(const FGameplayEventData Payload);
 	UFUNCTION()
 	void OnEffectRemoveEvent(const FGameplayEventData Payload);
+	UFUNCTION()
+	void OnDeactivateEvent(const FGameplayEventData Payload);
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
 	void CheckConditionalEffects();
 	void IncComboCount();

@@ -148,6 +148,10 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     UAbilityTask_WaitGameplayEvent* EffectRemoveTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, EffectRemoveTag);
     EffectRemoveTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnEffectRemoveEvent);
     EffectRemoveTask->ReadyForActivation();
+
+    UAbilityTask_WaitGameplayEvent* DeactivateTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, TagThatDeactivateMe);
+    DeactivateTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnDeactivateEvent);
+    DeactivateTask->ReadyForActivation();
     
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 }
@@ -354,6 +358,13 @@ float UMyGameplayAbility::GetAttackSpeed()
     AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
     if (!MyChar || !MyChar->GetAttributes()) return 1.0f;
     return MyChar->GetAttributes()->GetAttackSpeed() * MontagesSpeed;
+}
+
+void UMyGameplayAbility::OnDeactivateEvent(const FGameplayEventData Payload)
+{
+    UE_LOG(LogTemp, Warning, TEXT("Deactivating ability"));
+    //MontageJumpToSection(TEXT("Recovery"));
+    MontageSetNextSectionName(TEXT("Active"), TEXT("Recovery"));
 }
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
