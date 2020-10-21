@@ -145,6 +145,11 @@ void AHitBox::Tick(float DeltaTime)
 //	}
 //}
 
+void AHitBox::SetOwningAbility(UMyGameplayAbility* NewOwner)
+{
+	OwningAbility = NewOwner;
+}
+
 void AHitBox::AddComponentsFromContainer(UHitboxesContainer* Container)
 {
 	if (!Container) return;

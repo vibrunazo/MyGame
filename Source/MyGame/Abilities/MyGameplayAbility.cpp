@@ -92,6 +92,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     bHasHitConnected = false;
     bCanComboState = false;
     bHasHitStarted = false;
+    CurHits = 0;
     APawn* AvatarPawn = Cast<APawn>(GetAvatarActorFromActorInfo());
     if (bUpdateRotationFromController && AvatarPawn)
     {
@@ -206,6 +207,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     if (OO) {
         UHitboxesContainer* Settings = (UHitboxesContainer*)(Payload.OptionalObject);
         if (!ensure(Settings != nullptr)) return;
+        NewHB->SetOwningAbility(this);
         NewHB->AddComponentsFromContainer(Settings);
     }
 
@@ -229,7 +231,6 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 {
-     //UE_LOG(LogTemp, Warning, TEXT("Hit connected"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitStarted) {
         // UE_LOG(LogTemp, Warning, TEXT("But has not started"));
@@ -238,6 +239,9 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
     IncComboCount();
     LastComboTime = GetWorld()->GetTimeSeconds();
     bHasHitConnected = true;
+    CurHits++;
+     UE_LOG(LogTemp, Warning, TEXT("Hit connected, CurHits: %d, MaxHits: %d"), CurHits, MaxHits);
+    if (MaxHits && CurHits >= MaxHits) MontageSetNextSectionName(TEXT("Active"), TEXT("Recovery"));
     IGetHit *Source = Cast<IGetHit>(GetAvatarActorFromActorInfo());
 	if (!Source) return;
     Source->OnHitPause(HitPause);

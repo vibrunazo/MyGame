@@ -86,6 +86,9 @@ public:
 	// When this gameplay event tag is fired on this Actor, this ability should cancel its active section of the montage and go into recovery
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	FGameplayTag TagThatDeactivateMe;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	// If > 0, will change montage section to Recovery as soon as the ability hits enemies this many times
+	int MaxHits = 0;
 
 private:
 	UPROPERTY()
@@ -102,6 +105,8 @@ private:
 	float LastComboTime = 0.0f;
 	UPROPERTY()
 	bool bHasHitStarted = false;
+	// How many times this ability already hit the enemy since it started, used to deactivate the ability if it has a set limit of MaxHits
+	int CurHits = 0;
 
 protected:
 /** Returns true if this ability can be activated right now. Has no side effects */

@@ -49,6 +49,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	//void AddComponentsToBones(TArray<FName> Bones);
+	void SetOwningAbility(class UMyGameplayAbility* NewOwner);
 	void AddComponentsFromContainer(class UHitboxesContainer* Container);
 	void AddComponentsFromSettings(struct FHitboxSettings Settings); 
 	void AddOneComponentFromBone(FHitboxSettings Settings, FName Bone);
@@ -96,5 +97,6 @@ protected:
 
 	void ApplyAllEffects(class IGetHit* Target);
 	void ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target);
+	class UMyGameplayAbility* OwningAbility;
 
 };
