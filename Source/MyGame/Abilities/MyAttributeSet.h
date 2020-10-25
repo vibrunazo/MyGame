@@ -58,4 +58,8 @@ public:
 	UPROPERTY(Category = "Attributes | AttackSpeed", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData AttackSpeed;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, AttackSpeed)
+
+	UPROPERTY(Category = "Attributes | RotSpeed", EditAnywhere, BlueprintReadWrite)
+	FGameplayAttributeData RotSpeed;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, RotSpeed)
 };

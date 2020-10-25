@@ -248,6 +248,7 @@ void AMyCharacter::BeginPlay()
 	AttributeSetBase->SetDefense(Defense);
 	BaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
 	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetSpeedAttribute()).AddUObject(this, &AMyCharacter::OnSpeedChange);
+	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetRotSpeedAttribute()).AddUObject(this, &AMyCharacter::OnRotSpeedChange);
 	AbilitySystem->OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &AMyCharacter::OnEffectApplied);
 	// if (IsPlayerControlled()) 
 	// {
@@ -594,6 +595,20 @@ void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
 {
 	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed * AttributeSetBase->GetSpeed();
 	// UE_LOG(LogTemp, Warning, TEXT("My Speed changed to %f"), GetCharacterMovement()->MaxWalkSpeed);
+}
+
+void AMyCharacter::OnRotSpeedChange(const FOnAttributeChangeData& Data)
+{
+	UpdateRotationRate();
+}
+
+// updates the Character Movement Rotation rate to the correct amount based on whether we're walking/running and on the RotSpeed Attribute
+// Called everytime a buff changes our RotSpeed Attribute and every time we change between walking/running
+void AMyCharacter::UpdateRotationRate()
+{
+	if (!AttributeSetBase || !GetCharacterMovement()) return;
+	if (IsRunning()) GetCharacterMovement()->RotationRate = RunRotationRate * AttributeSetBase->GetRotSpeed();
+	else GetCharacterMovement()->RotationRate = WalkRotationRate * AttributeSetBase->GetRotSpeed();
 }
 
 void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle)

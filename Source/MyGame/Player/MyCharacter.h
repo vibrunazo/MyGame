@@ -144,6 +144,8 @@ public:
 	void OnHitPauseEnd();
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 	void OnSpeedChange(const FOnAttributeChangeData& Data);
+	void OnRotSpeedChange(const FOnAttributeChangeData& Data);
+	void UpdateRotationRate();
 	void OnEffectApplied(UAbilitySystemComponent* SourceComp, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffect);
 	UFUNCTION()
 	void PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
