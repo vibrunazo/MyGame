@@ -125,6 +125,10 @@ public:
 	static void RemoveEffectsFromActor(AActor* Actor, TArray<FActiveGameplayEffectHandle> ActiveEffects);
 	UFUNCTION(BlueprintCallable, Category = "MyLibrary")
 	static FActiveGameplayEffect GetActiveEffectFromHandle(UAbilitySystemComponent* GAS, const FActiveGameplayEffectHandle Handle);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "MyLibrary")
+	static UGameplayAbility* GetAnimatingAbilityFromActor(AActor* OnActor);
+	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "MyLibrary")
+	static UGameplayAbility* GetAnimatingAbility(UAbilitySystemComponent* GAS);
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// static TSubclassOf<class UCameraShake> CamShakeClass;

@@ -89,6 +89,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	// If > 0, will change montage section to Recovery as soon as the ability hits enemies this many times
 	int MaxHits = 0;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	// Will multiply Root motion by this much
+	FVector RootMotionScale = FVector(1.f, 1.f, 1.f);
 
 private:
 	UPROPERTY()

@@ -7,6 +7,8 @@
 #include "AbilitySystemComponent.h"
 #include "Props/ItemDataAsset.h"
 
+#include "AbilitySystemInterface.h"
+
 
 /// <summary>
 /// Used by Items and self apply notify. Abilities have their own version of this
@@ -55,6 +57,18 @@ FActiveGameplayEffect UMyBlueprintFunctionLibrary::GetActiveEffectFromHandle(UAb
 {
     auto we = GAS->GetActiveGameplayEffect(Handle);
     return *we;
+}
+UGameplayAbility* UMyBlueprintFunctionLibrary::GetAnimatingAbilityFromActor(AActor* OnActor)
+{
+    if (!OnActor) return nullptr;
+    IAbilitySystemInterface* GASInterface = Cast<IAbilitySystemInterface>(OnActor);
+    if (!GASInterface) return nullptr;
+    return GetAnimatingAbility(GASInterface->GetAbilitySystemComponent());
+}
+UGameplayAbility* UMyBlueprintFunctionLibrary::GetAnimatingAbility(UAbilitySystemComponent* GAS)
+{
+    if (!GAS) return nullptr;
+    return GAS->GetAnimatingAbility();
 }
 TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item)
 {
