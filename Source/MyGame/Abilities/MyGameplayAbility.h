@@ -90,6 +90,9 @@ public:
 	// If > 0, will change montage section to Recovery as soon as the ability hits enemies this many times
 	int MaxHits = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
+	// If true, will directly skip montage section to Recovery from Active instead of waiting for Active to end
+	bool bSkipToRecovery = false;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	// Will multiply Root motion by this much
 	FVector RootMotionScale = FVector(1.f, 1.f, 1.f);
 

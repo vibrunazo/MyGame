@@ -241,7 +241,12 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
     bHasHitConnected = true;
     CurHits++;
      UE_LOG(LogTemp, Warning, TEXT("Hit connected, CurHits: %d, MaxHits: %d"), CurHits, MaxHits);
-    if (MaxHits && CurHits >= MaxHits) MontageSetNextSectionName(TEXT("Active"), TEXT("Recovery"));
+     if (MaxHits && CurHits >= MaxHits)
+     {
+         UE_LOG(LogTemp, Warning, TEXT("true"));
+         if (bSkipToRecovery) MontageJumpToSection(TEXT("Recovery"));
+         else MontageSetNextSectionName(TEXT("Active"), TEXT("Recovery"));
+     }
     IGetHit *Source = Cast<IGetHit>(GetAvatarActorFromActorInfo());
 	if (!Source) return;
     Source->OnHitPause(HitPause);
