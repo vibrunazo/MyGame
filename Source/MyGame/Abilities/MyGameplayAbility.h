@@ -69,15 +69,12 @@ public:
 	// if true, at the beginning of this ability, will reset the current target before acquiring a new one
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bResetTarget = false;
-	// if true, at the beginning of this ability, rotate towards the current target and IF there's a target, prevents player from changing rotation until ability ends
+	// if true, at the beginning of this ability, rotate towards the current target
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bLockRotationToTarget = false;
 	// if true, at the beginning of this ability, acquires a new target: the nearest target that overlaps the target detection box
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bAqcuireNewTargetFromDetectionBox = false;
-	// if true, lock rotation regardless of targetting
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
-	bool bAlwaysLockRot = false;
 	// If true, activating this ability puts the user in Combat
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bStartsCombat = true;
@@ -95,6 +92,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	// Will multiply Root motion by this much
 	FVector RootMotionScale = FVector(1.f, 1.f, 1.f);
+	// These effects will always be applied when the ability starts and will be removed when the ability ends
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Ability")
+	TArray<FEffectContainer> EffectsToApplyToSelf;
 
 private:
 	UPROPERTY()
@@ -145,8 +145,9 @@ protected:
 	void ResetTarget(); 
 	void AcquireNewTarget();
 	void LockToTarget();
-	void LockRot();
 	float GetAttackSpeed();
+	void ApplySelfEffects();
+	void RemoveSelfEffects();
 
 	UPROPERTY()
 	TSubclassOf<class AHitBox> HitBoxClass;
@@ -155,6 +156,6 @@ protected:
 	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> ActiveEffects = {};
 	UPROPERTY()
-	FRotator InitialRotRate = FRotator();
+	TArray<FActiveGameplayEffectHandle> ActiveSelfEffects = {};
 	
 };
