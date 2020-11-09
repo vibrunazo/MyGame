@@ -74,6 +74,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool HasControl();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
+	bool HasMoveControl();
+	UFUNCTION(BlueprintCallable, Category = Abilities)
 	class UMyGameInstance* GetMyGameInstance();
 	bool HasStunImmune();
 	UFUNCTION(BlueprintCallable, Category = Abilities)

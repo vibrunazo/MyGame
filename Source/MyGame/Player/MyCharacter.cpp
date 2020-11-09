@@ -194,7 +194,7 @@ void AMyCharacter::LookUpAtRate(float Rate)
 void AMyCharacter::MoveForward(float Value)
 {
 	ForwardAxis = Value;
-	if ((Controller != NULL) && (Value != 0.0f) && HasControl())
+	if ((Controller != NULL) && (Value != 0.0f) && HasMoveControl())
 	{
 		// find out which way is forward
 		// const FRotator Rotation = Controller->GetControlRotation();
@@ -212,7 +212,7 @@ void AMyCharacter::MoveForward(float Value)
 void AMyCharacter::MoveRight(float Value)
 {
 	RightAxis = Value;
-	if ( (Controller != NULL) && (Value != 0.0f)  && HasControl())
+	if ( (Controller != NULL) && (Value != 0.0f)  && HasMoveControl())
 	{
 		// find out which way is right
 		// const FRotator Rotation = Controller->GetControlRotation();
@@ -1163,6 +1163,18 @@ bool AMyCharacter::HasControl()
 		return false;
 	}
 	return bHasControl;
+}
+
+bool AMyCharacter::HasMoveControl()
+{
+	FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
+	FGameplayTag NoControlTag = FGameplayTag::RequestGameplayTag(TEXT("status.nocontrol"));
+	FGameplayTag NoMoveTag = FGameplayTag::RequestGameplayTag(TEXT("status.nomove"));
+	if (AbilitySystem->HasMatchingGameplayTag(HitStunTag) || AbilitySystem->HasMatchingGameplayTag(NoControlTag) || AbilitySystem->HasMatchingGameplayTag(NoMoveTag))
+	{
+		return false;
+	}
+	return true;
 }
 
 
