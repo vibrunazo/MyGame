@@ -97,6 +97,7 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 	// loop through all Items that I could potentially drop
 	for (auto&& Item : LootTable)
 	{
+		if (!Item.Item) continue;
 		// filter out the items I'm maxed on
 		bool IsMaxed = ItemsToFilter.Contains(Item.Item->ItemName.ToString());
 		// now check if I should also filter by abillities slot to learn
@@ -162,7 +163,12 @@ APickup* ULootComponent::DropRandomItemAtLocation(FVector Where)
 	auto NewLoot = GetRandomItem();
 	if (!NewLoot) return nullptr;
 	APickup* NewPickup = GetWorld()->SpawnActor<APickup>(NewLoot->PickupActor, Loc, FRotator::ZeroRotator, params);
+	if (!NewPickup)
+	{
+		UE_LOG(LogTemp, Error, TEXT("Lootcomponent could not spawn a pickup for %s"), *NewLoot->GetName());
+		return nullptr;
+	}
 	NewPickup->SetItemData(NewLoot);
 	UE_LOG(LogTemp, Warning, TEXT("Lootcomponent dropped a %s"), *NewLoot->GetName());
-	return nullptr;
+	return NewPickup;
 }

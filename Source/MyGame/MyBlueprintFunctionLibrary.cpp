@@ -35,7 +35,7 @@ FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToC
         // NewHandle.Data.Get()->dis;
         NewHandle.Data.Get()->SetSetByCallerMagnitude(Mag.GameplayTag, Mag.Magnitude);
     }
-    return *Char->OnGetHitByEffect(NewHandle, nullptr);
+    return Char->OnGetHitByEffect(NewHandle, nullptr);
     
     // FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
     //    NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);

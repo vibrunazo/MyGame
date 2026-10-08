@@ -131,8 +131,10 @@ public:
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBoxComponent* RoomBounds;
 	TArray<FAssetData> AssetDataList;
-	TArray<class URoomDataAsset*> RoomList;
-	TArray<class ADoor*> DoorList;
+	UPROPERTY()
+	TArray<TObjectPtr<class URoomDataAsset>> RoomList;
+	UPROPERTY()
+	TArray<TObjectPtr<class ADoor>> DoorList;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	int32 NumRooms = 7;

@@ -51,8 +51,13 @@ void ARoomMaster::BeginPlay()
 	if (!ensure(MyGI != nullptr)) return;
 	ALevelBuilder* LBuilder = MyGI->GetLevelBuilder();
 	LevelBuilderRef = LBuilder;
+	if (!LevelBuilderRef)
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s: no LevelBuilder registered, room will not be tracked"), *GetName());
+		return;
+	}
 	LevelBuilderRef->RegisterRoomMaster(this, GetActorLocation());
-	LootComponent->LootTable = RoomStateRef->RoomReward;
+	if (RoomStateRef) LootComponent->LootTable = RoomStateRef->RoomReward;
 	
 }
 
@@ -107,7 +112,7 @@ void ARoomMaster::OnCharDied(AMyCharacter* WhoDied)
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s died lol noob"), *WhoDied->GetName());
 
-	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
+	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
 	{
 		if (!ensure(LevelBuilderRef != nullptr)) return;
 		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());

@@ -13,7 +13,6 @@
 #include "../UI/WidgetActor.h"
 
 #include "AbilitySystemComponent.h"
-#include "UObject/ConstructorHelpers.h"
 #include "TimerManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
@@ -50,8 +49,8 @@ APickup::APickup()
 	OnActorBeginOverlap.AddDynamic(this, &APickup::OnPickupBeginOverlap);
 	// Blueprint'/Game/UI/BP_WidgetActor.BP_WidgetActor'
 	// Blueprint'/Game/UI/BP_UMGActor.BP_UMGActor'
-	static ConstructorHelpers::FClassFinder<AWidgetActor> WABPClass(TEXT("/Game/UI/BP_UMGActor"));
-	WidgetActorClass = WABPClass.Class;
+	// Soft path: loading Blueprints from a native constructor deadlocks UE5's loader
+	WidgetActorClass = TSoftClassPtr<AWidgetActor>(FSoftObjectPath(TEXT("/Game/UI/BP_UMGActor.BP_UMGActor_C")));
 
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 
@@ -100,12 +99,12 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	{
 		Char->AddItemToInventory(ItemData);
 		// The UI Widget that shows in the world letting player know he picked up this item
-		if (WidgetActorClass)
+		if (UClass* WidgetClass = WidgetActorClass.LoadSynchronous())
 		{
 			FVector Loc = GetActorLocation();
 			FActorSpawnParameters params;
 			params.Owner = this;
-			AWidgetActor* NewWidget = GetWorld()->SpawnActor<AWidgetActor>(WidgetActorClass, Loc, FRotator::ZeroRotator, params);
+			AWidgetActor* NewWidget = GetWorld()->SpawnActor<AWidgetActor>(WidgetClass, Loc, FRotator::ZeroRotator, params);
 			if (NewWidget)
 			{
 				NewWidget->SetWidgetText(ItemData);

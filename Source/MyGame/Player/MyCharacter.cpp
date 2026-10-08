@@ -29,7 +29,6 @@
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/ArrowComponent.h"
-#include "UObject/ConstructorHelpers.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Materials/MaterialInstanceDynamic.h"
@@ -123,21 +122,10 @@ void AMyCharacter::SetDefaultProperties()
 	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, -140.0f));
 	HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
 
-	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
-	if (!Anim)
-	{
-		static ConstructorHelpers::FClassFinder<UMyAnimInstance> AnimClassFinder(TEXT("/Game/Anims/ABP_CharAnim"));
-    	TSubclassOf<UMyAnimInstance> AnimClass = AnimClassFinder.Class;
-		GetMesh()->SetAnimInstanceClass(AnimClass);
-	}
-	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
-	if (MyAnim) 
-	{
-		GetHitMontage = MyAnim->GetHitMontage;
-	} 
-	static ConstructorHelpers::FClassFinder<AController> AIClassFinder(TEXT("/Game/Blueprints/AI/BP_AIController"));
-    TSubclassOf<AController> AIClass = AIClassFinder.Class;
-	AIControllerClass = AIClass;
+	// Soft paths only: loading Blueprints from a native constructor deadlocks UE5's loader.
+	// Resolved in OnConstruction / PostInitializeComponents.
+	DefaultAnimClass = TSoftClassPtr<UAnimInstance>(FSoftObjectPath(TEXT("/Game/Anims/ABP_CharAnim.ABP_CharAnim_C")));
+	DefaultAIControllerClass = TSoftClassPtr<AController>(FSoftObjectPath(TEXT("/Game/Blueprints/AI/BP_AIController.BP_AIController_C")));
 	Team = 0;
 }
 
@@ -228,6 +216,16 @@ void AMyCharacter::MoveRight(float Value)
 	}
 }
 
+void AMyCharacter::PostInitializeComponents()
+{
+	// Still the engine default means this Blueprint didn't choose a controller; must be set before Super spawns it
+	if (AIControllerClass == GetDefault<APawn>()->AIControllerClass && !DefaultAIControllerClass.IsNull())
+	{
+		AIControllerClass = DefaultAIControllerClass.LoadSynchronous();
+	}
+	Super::PostInitializeComponents();
+}
+
 UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
 {
 	return AbilitySystem;
@@ -300,6 +298,10 @@ void AMyCharacter::Tick(float DeltaSeconds)
 void AMyCharacter::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
+	if (!GetMesh()->GetAnimClass() && !DefaultAnimClass.IsNull())
+	{
+		GetMesh()->SetAnimInstanceClass(DefaultAnimClass.LoadSynchronous());
+	}
 	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	ResetBodyColor();
 }
@@ -631,13 +633,13 @@ void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 New
 	else GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 }
 
-FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
+FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
 	FGameplayTagContainer EffectTags;
 	// NewEffect.Data->GetAllGrantedTags(EffectTags);
-	if (!ensure(NewEffect.Data)) return nullptr;
-	if (!ensure(AbilitySystem)) return nullptr;
+	if (!ensure(NewEffect.Data)) return FActiveGameplayEffectHandle();
+	if (!ensure(AbilitySystem)) return FActiveGameplayEffectHandle();
 	// if (!NewEffect.Data || !AbilitySystem) { return nullptr; }
 	NewEffect.Data->GetAllAssetTags(EffectTags);
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
@@ -693,12 +695,12 @@ FActiveGameplayEffectHandle* AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecH
 	// so we should NOT call ApplyGameplayEffectSpecToSelf
 	if (EffectTags.HasTag(NoApplyTag))
 	{
-		return new FActiveGameplayEffectHandle();
+		return FActiveGameplayEffectHandle();
 	}
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
 	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
 	UpdateHealthBar();
-	return new FActiveGameplayEffectHandle(ActiveEffect);
+	return ActiveEffect;
 }
 
 /* Removes the outline of an enemy character by setting the custom depth stencil back to zero.

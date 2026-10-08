@@ -20,7 +20,8 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyUserWidget> InitialWidget;
-	class UMyUserWidget* InitialWidgetRef;
+	UPROPERTY()
+	TObjectPtr<class UMyUserWidget> InitialWidgetRef;
 
 	
 };

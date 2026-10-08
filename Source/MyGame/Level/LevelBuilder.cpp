@@ -68,6 +68,8 @@ void ALevelBuilder::BeginPlay()
 	SetAssetListFromRegistry();
 	BuildGrid();
 	SpawnLevels();
+	// Nothing is streaming in (e.g. no room assets matched), so don't stay frozen waiting for it
+	if (CountOfLevelsThatDidntFinishLoading == 0) GetWorldSettings()->SetTimeDilation(1.0f);
 
 	if (LevelMusic) LevelMusicRef = UGameplayStatics::SpawnSound2D(GetWorld(), LevelMusic);
 	UE_LOG(LogTemp, Warning, TEXT("Grid: %s"), *DebugGrid());
@@ -329,11 +331,8 @@ AWall* ALevelBuilder::SpawnWallAtLocDirSettings(FTransform Where, ERoomDirection
 {
 	FVector Loc = Where.GetLocation();
 	FRotator Rot = Where.Rotator();
-	if (!Settings) 
-	{
-		FWallSettings NewSettings = FWallSettings();
-		Settings = &NewSettings;
-	}
+	FWallSettings DefaultSettings;
+	if (!Settings) Settings = &DefaultSettings;
 	switch (Pos)
 	{
 	case ERoomDirection::Top:
@@ -365,11 +364,8 @@ AWall* ALevelBuilder::SpawnWallAtLocDirSettings(FTransform Where, ERoomDirection
 AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 {
 	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
-	if (Settings == nullptr) 
-	{
-		FWallSettings NewSettings = FWallSettings();
-		Settings = &NewSettings;
-	}
+	FWallSettings DefaultSettings;
+	if (!Settings) Settings = &DefaultSettings;
 	FVector Loc = Where.GetLocation();
 	FActorSpawnParameters params;
 	params.bNoFail = true;
@@ -459,6 +455,7 @@ URoomDataAsset* ALevelBuilder::AddTreasureRoomNextTo(FCoord Coord)
 	}
 	FRoomState Content; Content.RoomType = FilteredRooms[0];
 	TArray<FCoord> FreeCoords = FindFreeNeighbors(Coord);
+	if (FreeCoords.Num() == 0) return nullptr;
 	FCoord TreasureCoord = FreeCoords[0];
 	if (IsAnyNeighborOfType(TreasureCoord, ERoomType::Boss)) 
 	{
@@ -737,6 +734,11 @@ FRoomState* ALevelBuilder::GetRoomStateFromLoc(FVector Location)
 void ALevelBuilder::RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Location)
 {
 	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
+	if (!Room || !NewRoomMaster)
+	{
+		UE_LOG(LogTemp, Error, TEXT("RegisterRoomMaster: no room in the grid at %s"), *Location.ToString());
+		return;
+	}
 	Room->RoomMasterRef = NewRoomMaster;
 	NewRoomMaster->RoomStateRef = Room;
 }
@@ -796,7 +798,7 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, ERoomDirection Dir)
 	// TODO this fails on coord 0,0 because game starts before room master spawns
 	if (!Master) return;
 	//UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
-	if (!Room->bIsRoomCleared && Room->RoomType->bIsDoored && !Master->AreAllCharsDead())
+	if (!Room->bIsRoomCleared && Room->RoomType && Room->RoomType->bIsDoored && !Master->AreAllCharsDead())
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("closing doors"));
 		TeleportPlayerInsideRoom(Location);

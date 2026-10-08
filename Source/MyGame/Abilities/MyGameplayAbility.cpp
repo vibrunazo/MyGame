@@ -12,7 +12,6 @@
 // #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "Animation/AnimMontage.h"
 #include "GameplayTagContainer.h"
-#include "UObject/ConstructorHelpers.h"
 #include "GameplayEffect.h"
 #include "EffectEventSettings.h"
 // #include "../MyBlueprintFunctionLibrary.h"
@@ -27,8 +26,8 @@
 
 UMyGameplayAbility::UMyGameplayAbility()
 {
-    static ConstructorHelpers::FClassFinder<AActor> HitBoxClassFinder(TEXT("/Game/Blueprints/Chars/BP_HitBox"));
-    HitBoxClass = HitBoxClassFinder.Class;
+    // Soft path: loading Blueprints from a native constructor deadlocks UE5's loader
+    HitBoxClass = TSoftClassPtr<AHitBox>(FSoftObjectPath(TEXT("/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C")));
 }
 
 bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const
@@ -196,7 +195,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     params.bNoFail = true;
     params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
     params.Owner = GetAvatarActorFromActorInfo();
-    AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Loc, FRotator::ZeroRotator, params);
+    AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(GetHitBoxClass(), Loc, FRotator::ZeroRotator, params);
     NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
     NewHB->HitSound = HitSound;
     NewHB->BlockSound = BlockSound;
@@ -206,7 +205,7 @@ void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
     // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
     const UObject* OO = Payload.OptionalObject;
     if (OO) {
-        UHitboxesContainer* Settings = (UHitboxesContainer*)(Payload.OptionalObject);
+        const UHitboxesContainer* Settings = Cast<UHitboxesContainer>(Payload.OptionalObject);
         if (!ensure(Settings != nullptr)) return;
         NewHB->SetOwningAbility(this);
         NewHB->AddComponentsFromContainer(Settings);
@@ -272,7 +271,6 @@ void UMyGameplayAbility::OnEffectRemoveEvent(const FGameplayEventData Payload)
 
 void UMyGameplayAbility::ResetActiveEffects()
 {
-    if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability received effect remove event"));
     if (ActiveEffects.Num() > 0)
     {
         UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(GetAvatarActorFromActorInfo(), ActiveEffects);
@@ -401,8 +399,8 @@ TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
     {
         if (!Effect.EffectClass)
         {
-            UE_LOG(LogTemp, Warning, TEXT("no class"));
-            break;
+            UE_LOG(LogTemp, Warning, TEXT("%s: effect container without an effect class"), *GetName());
+            continue;
         }
         FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect.EffectClass);
         for (auto &&Mag : Effect.Magnitudes)
@@ -462,6 +460,12 @@ void UMyGameplayAbility::UpdateCombo()
     }
     // if (!bHasHitConnected || GetWorld()->GetTimeSeconds() > LastComboTime + ComboResetDelay) ResetCombo();
     // UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
+}
+
+UClass* UMyGameplayAbility::GetHitBoxClass()
+{
+    UClass* Loaded = HitBoxClass.LoadSynchronous();
+    return Loaded ? Loaded : AHitBox::StaticClass();
 }
 
 void UMyGameplayAbility::ResetHitBoxes()

@@ -50,22 +50,28 @@ public:
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	uint8 GetModValue();
 
-	class AMyDefaultPawn* DefaultPawnRef;
+	UPROPERTY()
+	TObjectPtr<class AMyDefaultPawn> DefaultPawnRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyUserWidget> GameOverWidget;
-	class UMyUserWidget* GameOverWidgetRef;
+	UPROPERTY()
+	TObjectPtr<class UMyUserWidget> GameOverWidgetRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyUserWidget> LevelClearedWidget;
-	class UMyUserWidget* LevelClearedWidgetRef;
+	UPROPERTY()
+	TObjectPtr<class UMyUserWidget> LevelClearedWidgetRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyUserWidget> PauseWidget;
-	class UMyUserWidget* PauseWidgetRef;
+	UPROPERTY()
+	TObjectPtr<class UMyUserWidget> PauseWidgetRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyHUDWidget> HUDWidget;
-	class UMyHUDWidget* HUDWidgetRef;
+	UPROPERTY()
+	TObjectPtr<class UMyHUDWidget> HUDWidgetRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = BaseController)
 	TSubclassOf<class UMyUserWidget> IntroWidget;
-	class UMyUserWidget* IntroWidgetRef;
+	UPROPERTY()
+	TObjectPtr<class UMyUserWidget> IntroWidgetRef;
 
 	bool bIsLevelOver = false;
 	bool bIsPaused = false;

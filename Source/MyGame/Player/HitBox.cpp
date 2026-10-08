@@ -3,6 +3,7 @@
 
 #include "HitBox.h"
 #include "HitboxSettings.h"
+#include "../Abilities/MyGameplayAbility.h"
 #include "../Abilities/IGetHit.h"
 
 #include "Components/SphereComponent.h"
@@ -150,7 +151,7 @@ void AHitBox::SetOwningAbility(UMyGameplayAbility* NewOwner)
 	OwningAbility = NewOwner;
 }
 
-void AHitBox::AddComponentsFromContainer(UHitboxesContainer* Container)
+void AHitBox::AddComponentsFromContainer(const UHitboxesContainer* Container)
 {
 	if (!Container) return;
 	//Hitboxes.Append(Container->Hitboxes);

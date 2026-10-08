@@ -50,7 +50,7 @@ public:
 
 	//void AddComponentsToBones(TArray<FName> Bones);
 	void SetOwningAbility(class UMyGameplayAbility* NewOwner);
-	void AddComponentsFromContainer(class UHitboxesContainer* Container);
+	void AddComponentsFromContainer(const class UHitboxesContainer* Container);
 	void AddComponentsFromSettings(struct FHitboxSettings Settings); 
 	void AddOneComponentFromBone(FHitboxSettings Settings, FName Bone);
 	class USphereComponent* AddHitSphere(float SphereRadius);
@@ -77,8 +77,8 @@ public:
 	class UNiagaraSystem* HitParticles;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UNiagaraSystem* BlockParticles;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
-	class UHitboxesContainer* Hitboxes;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hitbox")
+	TObjectPtr<const class UHitboxesContainer> Hitboxes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	TArray<UPrimitiveComponent*> HitComponents;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))
@@ -89,7 +89,8 @@ public:
 	EHitboxChannel HitboxChannel = EHitboxChannel::Weak;
 
 	// Which Actors have I already hit and how many times have I hit each one?
-	TMap<AActor*, FEnemyHitState> ActorsHit;
+	UPROPERTY()
+	TMap<TObjectPtr<AActor>, FEnemyHitState> ActorsHit;
 
 protected:
 	// Called when the game starts or when spawned
@@ -97,6 +98,6 @@ protected:
 
 	void ApplyAllEffects(class IGetHit* Target);
 	void ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target);
-	class UMyGameplayAbility* OwningAbility;
+	TWeakObjectPtr<class UMyGameplayAbility> OwningAbility;
 
 };

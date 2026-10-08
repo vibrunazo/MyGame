@@ -44,6 +44,7 @@ public:
 	void Jump() override;
 	void FellOutOfWorld(const UDamageType& dmgType) override;
 	void OnConstruction(const FTransform& Transform) override;
+	void PostInitializeComponents() override;
 
 	virtual void SetDefaultProperties();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -109,7 +110,7 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Abilities")
 	FCastDelegate OnCastDelegate;
 
-	FActiveGameplayEffectHandle* OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
+	FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDamagedBP(AActor* SourceActor);
 	void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) override;
@@ -189,6 +190,12 @@ public:
 	class UBoxComponent* TargetDetection;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	uint8 Team = 0;
+	// Used when the mesh has no anim class of its own
+	UPROPERTY(EditDefaultsOnly, Category = "Defaults")
+	TSoftClassPtr<UAnimInstance> DefaultAnimClass;
+	// Used when this Blueprint leaves AIControllerClass at the engine default
+	UPROPERTY(EditDefaultsOnly, Category = "Defaults")
+	TSoftClassPtr<AController> DefaultAIControllerClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	bool StunImmune = false;
 	uint8 HitStunCount = 0;
@@ -259,14 +266,16 @@ private:
 	float GetInputAngle();
 	void DropItems();
 	
-	UAnimMontage *GetHitMontage;
+	UPROPERTY()
+	TObjectPtr<UAnimMontage> GetHitMontage;
 	float ForwardAxis = 0.0f;
 	float RightAxis = 0.0f;
 	float LastInputApexTime = -990.0f;
 	float LastInputZeroTime = -990.0f;
 	FVector LastInputVector = FVector(0.0f, 0.0f, 0.0f);
 	FVector LastLaunchBack = FVector(0.0f, 0.0f, 0.0f);
-	class UMyGameInstance* MyGIRef;
+	UPROPERTY()
+	TObjectPtr<class UMyGameInstance> MyGIRef;
 	FVector LastGroundLocation = FVector();
 	UPROPERTY()
 	AActor* TargetEnemy = nullptr;

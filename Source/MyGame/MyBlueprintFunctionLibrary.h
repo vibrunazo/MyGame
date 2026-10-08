@@ -54,12 +54,11 @@ struct FAbilityStruct
 
 	friend bool operator==(const FAbilityStruct& first, const FAbilityStruct& second)
 	{
-		bool Result = first.AbilityClass == second.AbilityClass;
-		Result == Result && first.Input == second.Input;
-		Result == Result && first.EventName == second.EventName;
-		Result == Result && first.CanUseOnGround == second.CanUseOnGround;
-		Result == Result && first.CanUseOnAir == second.CanUseOnAir;
-		return Result;
+		return first.AbilityClass == second.AbilityClass
+			&& first.Input == second.Input
+			&& first.EventName == second.EventName
+			&& first.CanUseOnGround == second.CanUseOnGround
+			&& first.CanUseOnAir == second.CanUseOnAir;
 	}
 	friend uint32 GetTypeHash(const FAbilityStruct& Other)
 	{

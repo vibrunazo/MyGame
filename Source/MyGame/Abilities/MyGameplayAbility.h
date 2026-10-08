@@ -149,8 +149,9 @@ protected:
 	void ApplySelfEffects();
 	void RemoveSelfEffects();
 
-	UPROPERTY()
-	TSubclassOf<class AHitBox> HitBoxClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Hitbox")
+	TSoftClassPtr<class AHitBox> HitBoxClass;
+	UClass* GetHitBoxClass();
 	UPROPERTY()
 	class AHitBox* HitBoxRef = nullptr;
 	UPROPERTY()
