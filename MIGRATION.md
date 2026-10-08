@@ -1,5 +1,31 @@
 # MyGame → Unreal Engine 5.8 migration plan
 
+## Status (2026-10-08)
+
+**Phase 1 is done on branch `ue58`.** The project compiles in 5.8. 145 of 148 Blueprints compile; the other three are `ThirdPersonCharacter` (a dead template) and `IconFire`/`IconDefense` (see below). Play-tested headless through the Unreal MCP:
+- the level generates
+- all rooms stream in
+- punches hit, enemies hit back, and knockback works
+- clearing rooms kills enemies
+- the doored miniboss room drops its reward (`DA_LearnFireball`)
+- the boss room's goal is present
+
+Found and fixed along the way, beyond the original plan:
+- Native constructors loaded Blueprints through `ConstructorHelpers`, which deadlocks UE5's loader on the `EnemyCharBase` CDO. They now use soft class refs resolved at runtime.
+- Character bones didn't refresh when not rendered. Hitboxes are bone-attached, so off-screen enemies, and every character in a headless test, attacked with frozen bones. Characters now use `AlwaysTickPoseAndRefreshBones`.
+- UE 5.8 flagged uninitialized struct fields (`FMagnitudePair::Magnitude`, `FLootDrop`, `FAbilityStruct::Input`, `FBuffUI::Color`).
+
+**Play-testing toolset.** `Content/Python/mygame_tools` adds the `MyGameTools` MCP toolset: player state, press ability inputs, teleport, list characters/actors, spawn FX, and set test attributes. It has no arbitrary code or console execution, on purpose.
+
+**Open items from Phase 1:**
+- **Cascade → Niagara:** the automatic conversion of `P_Impact_Player_Weak_small` isn't faithful. Lifetime, size and loop curves map to unsupported dynamic inputs, and the result renders differently and lingers. It needs a hand-built Niagara version compared frame by frame. Until then `GetHit_Montage` keeps the Cascade original and the Cascade plugin stays enabled. The two sprite master materials were fixed for Niagara use either way.
+- **`IconFire`/`IconDefense`:** GE UI data can no longer be a Blueprint class (it's a GE component now). The data survived inside `GE_FireDot`/`GE_StunImmune`. Swap those for native `MyGameplayEffectUIData` components; deleting the two Blueprints afterwards is your call.
+- **No mass resave.** Assets that load with problems would lose data: `LevelTest01` (placed enemies fail to load), 4 AdvancedLocomotion animations (bone bindings) and `ThirdPersonCharacter`. Assets get saved as they're edited instead.
+- **Fire sounds already silent:** `Fire01Loop_Cue`, `Fire01Once_Cue` and `FireWhoosh_Cue` reference StarterContent audio, which `.gitignore` excludes.
+- **Rendering:** room maps bring several directional lights that compete for forward shading. There's no baked lighting (`*_BuiltData` is git-ignored), and the navmesh is generated at runtime (`RuntimeGeneration=Dynamic`).
+- **Data quirks:** 3 ability entries use `Input = 200`, which isn't an `EInput` value and now loads as `EInput_MAX`. Enemy montages lack the `ComboStart` section the combo code jumps to. Both predate the migration.
+- **Unexplained death:** the player died in the boss fight despite a 100k-HP test cheat (the cheat bypasses GAS). Look at this together with the collision bug in Phase 2.
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.
