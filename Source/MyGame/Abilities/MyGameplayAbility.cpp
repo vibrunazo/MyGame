@@ -443,7 +443,7 @@ void UMyGameplayAbility::IncComboCount()
 
 FGameplayTagContainer UMyGameplayAbility::GetAbilityTags()
 {
-    return AbilityTags;
+    return GetAssetTags();
 }
 
 void UMyGameplayAbility::ResetComboCount()
@@ -466,6 +466,6 @@ void UMyGameplayAbility::UpdateCombo()
 
 void UMyGameplayAbility::ResetHitBoxes()
 {
-    if (!HitBoxRef || !HitBoxRef->IsValidLowLevel() || !GetAvatarActorFromActorInfo() || !GetAvatarActorFromActorInfo()->IsValidLowLevel()) return;
+    if (!IsValid(HitBoxRef) || !IsValid(GetAvatarActorFromActorInfo())) return;
     HitBoxRef->Destroy();
 }

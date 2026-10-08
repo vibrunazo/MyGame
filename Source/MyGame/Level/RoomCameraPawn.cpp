@@ -251,17 +251,17 @@ void ARoomCameraPawn::TryRegisterEnterRoomEvent()
 
 void ARoomCameraPawn::OnEnterRoom(FRoomState NewRoom)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Running Enter Room event on RoomCamera, Room: %s, left: %d, right: %d"), *NewRoom.RoomType->LevelAddress.ToString(), NewRoom.Walls.Contains(EDirection::Left), NewRoom.Walls.Contains(EDirection::Right));
+	UE_LOG(LogTemp, Warning, TEXT("Running Enter Room event on RoomCamera, Room: %s, left: %d, right: %d"), *NewRoom.RoomType->LevelAddress.ToString(), NewRoom.Walls.Contains(ERoomDirection::Left), NewRoom.Walls.Contains(ERoomDirection::Right));
 	// if I just came from a room that had a wall in the direction that I'm facing, then reset the rot interp
 	if ((TimeInCurrentDirection > 0.f && bIsWalledRight) || (TimeInCurrentDirection < 0.f && bIsWalledLeft))
 	{
 		RotSource = ViewLoc;
 		RotLerpAlpha = 0.1f;
 	}
-	bIsWalledLeft = NewRoom.Walls.Contains(EDirection::Left);
-	bIsWalledRight = NewRoom.Walls.Contains(EDirection::Right);
-	bIsWalledTop = NewRoom.Walls.Contains(EDirection::Top);
-	bIsWalledBottom = NewRoom.Walls.Contains(EDirection::Bottom);
+	bIsWalledLeft = NewRoom.Walls.Contains(ERoomDirection::Left);
+	bIsWalledRight = NewRoom.Walls.Contains(ERoomDirection::Right);
+	bIsWalledTop = NewRoom.Walls.Contains(ERoomDirection::Top);
+	bIsWalledBottom = NewRoom.Walls.Contains(ERoomDirection::Bottom);
 	CurrentRoomRef = &NewRoom;
 	// TODO get and record current room position from passed parameter from level builder
 
@@ -269,8 +269,8 @@ void ARoomCameraPawn::OnEnterRoom(FRoomState NewRoom)
 	CurrentRoomSize = FVector(GetLevelBuilder()->RoomSizeX, GetLevelBuilder()->RoomSizeX, 0.f);
 	float RoomSizeX = CurrentRoomSize.X;
 	float RoomSizeY = CurrentRoomSize.Y;
-	int16 NewX = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().X, RoomSizeX);
-	int16 NewY = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().Y, RoomSizeY);
+	int16 NewX = FMath::RoundToInt(PlayerRef->GetActorLocation().X / RoomSizeX);
+	int16 NewY = FMath::RoundToInt(PlayerRef->GetActorLocation().Y / RoomSizeY);
 	CurrentRoomPosition = FVector(NewX * RoomSizeX, NewY * RoomSizeY, 0.f);
 	UE_LOG(LogTemp, Warning, TEXT("updated room position to %s: "), *CurrentRoomPosition.ToString());*/
 
@@ -285,8 +285,8 @@ FVector ARoomCameraPawn::GetRoomDistance()
 	float RoomSizeY = 2000.f;
 	RoomSizeX = GetRoomSize().X;
 	RoomSizeY = GetRoomSize().Y;
-	int16 NewX = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().X, RoomSizeX);
-	int16 NewY = FMath::DivideAndRoundNearest(PlayerRef->GetActorLocation().Y, RoomSizeY);
+	int16 NewX = FMath::RoundToInt(PlayerRef->GetActorLocation().X / RoomSizeX);
+	int16 NewY = FMath::RoundToInt(PlayerRef->GetActorLocation().Y / RoomSizeY);
 	RoomDistance = FVector(NewX * RoomSizeX, NewY * RoomSizeY, 0.f);
 	return RoomDistance;
 }

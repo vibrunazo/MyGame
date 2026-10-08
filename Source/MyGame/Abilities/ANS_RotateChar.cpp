@@ -3,22 +3,22 @@
 
 #include "ANS_RotateChar.h"
 
-void UANS_RotateChar::NotifyTick(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float FrameDeltaTime)
+void UANS_RotateChar::NotifyTick(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float FrameDeltaTime, const FAnimNotifyEventReference& EventReference)
 {
 	if (MeshComp->IsSimulatingPhysics()) return;
 	FRotator CurrentRotation = RotationSpeed * FrameDeltaTime * 360.f;
 	FRotator LastRotation = MeshComp->GetRelativeRotation();
 	//UE_LOG(LogTemp, Warning, TEXT("Notify Ticking, last rot: %s"), *LastRotation.ToString());
 	MeshComp->AddLocalRotation(CurrentRotation);
-	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime);
+	Super::NotifyTick(MeshComp, Animation, FrameDeltaTime, EventReference);
 }
 
 
-void UANS_RotateChar::NotifyEnd(USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation)
+void UANS_RotateChar::NotifyEnd(USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	if (MeshComp->IsSimulatingPhysics()) return;
 	MeshComp->SetRelativeRotation(FRotator(0.f, 270.f, 0.f));
 	FRotator LastRotation = MeshComp->GetRelativeRotation();
 	//UE_LOG(LogTemp, Warning, TEXT("Notify Ending, last rot: %s"), *LastRotation.ToString());
-	Super::NotifyEnd(MeshComp, Animation);
+	Super::NotifyEnd(MeshComp, Animation, EventReference);
 }

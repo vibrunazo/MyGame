@@ -622,7 +622,6 @@ void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FG
 	auto ContextHandle = EffectSpec.GetEffectContext();
 	auto Context = ContextHandle.Get();
 
-	EffectSpec.Def->UIData;
 }
 
 void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
@@ -894,11 +893,6 @@ bool AMyCharacter::IsAlive()
 	return AttributeSetBase->GetHealth() > 0;
 }
 
-bool AMyCharacter::IsValidLowLevel()
-{
-	return Super::IsValidLowLevel();
-}
-
 void AMyCharacter::OnHitPause(float Duration)
 {
 	CustomTimeDilation = 0.01f;
@@ -946,7 +940,7 @@ UMyGameInstance* AMyCharacter::GetMyGameInstance()
 	return MyGIRef;
 }
 
-TSubclassOf<UCameraShake> AMyCharacter::GetCamShake()	
+TSubclassOf<UCameraShakeBase> AMyCharacter::GetCamShake()	
 {
 	if (!CamShakeClass)
 	{

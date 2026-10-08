@@ -131,5 +131,5 @@ public:
 	static UGameplayAbility* GetAnimatingAbility(UAbilitySystemComponent* GAS);
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	// static TSubclassOf<class UCameraShake> CamShakeClass;
+	// static TSubclassOf<class UCameraShakeBase> CamShakeClass;
 };

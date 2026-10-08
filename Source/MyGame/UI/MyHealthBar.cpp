@@ -28,7 +28,7 @@ void UMyHealthBar::AddDurationToHealthBar(float Duration, const FGameplayEffectS
         BP_ResetDurationBar(Duration, *OldWidget);
         return;
     }
-    UMyGameplayEffectUIData* MyUI = Cast<UMyGameplayEffectUIData>(EffectSpec.Def->UIData);
+    const UMyGameplayEffectUIData* MyUI = EffectSpec.Def->FindComponent<UMyGameplayEffectUIData>();
     UUserWidget* NewWidget = BP_AddNewDurationBar(Duration, MyUI);
     MapOfBars.Add(ActiveEffectHandle, NewWidget);
 }

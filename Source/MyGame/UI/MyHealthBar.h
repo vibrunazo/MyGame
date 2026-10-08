@@ -27,7 +27,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	float GetHealth();
 	UFUNCTION(BlueprintImplementableEvent)
-	UUserWidget* BP_AddNewDurationBar(float Duration, class UMyGameplayEffectUIData* UIData);
+	UUserWidget* BP_AddNewDurationBar(float Duration, const class UMyGameplayEffectUIData* UIData);
 	UFUNCTION(BlueprintImplementableEvent)
 	void BP_ResetDurationBar(float Duration, UUserWidget* BarRef);
 	void AddDurationToHealthBar(float Duration, const FGameplayEffectSpec& EffectSpec, struct FActiveGameplayEffectHandle ActiveEffectHandle);

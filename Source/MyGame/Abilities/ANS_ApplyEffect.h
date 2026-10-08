@@ -16,8 +16,8 @@ class MYGAME_API UANS_ApplyEffect : public UAnimNotifyState
 	GENERATED_BODY()
 
 public:
-	void NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration) override;
-	void NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation) override;
+	void NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference) override;
+	void NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, const FAnimNotifyEventReference& EventReference) override;
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "ANS Apply Effect")
 	TArray<FEffectContainer> EffectsToApply;

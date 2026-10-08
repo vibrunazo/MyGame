@@ -3,9 +3,9 @@
 
 #include "AN_Hitstart.h"
 
-void UAN_Hitstart::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation)
+void UAN_Hitstart::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	UE_LOG(LogTemp, Warning, TEXT("AN HitStart Notify"));
 
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation, EventReference);
 }

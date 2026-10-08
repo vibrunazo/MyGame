@@ -8,7 +8,7 @@
 #include "AbilitySystemComponent.h"
 
 
-void UANS_ApplyEffect::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration)
+void UANS_ApplyEffect::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
     // UE_LOG(LogTemp, Warning, TEXT("Im a notify beginning"));
     AActor* MyActor = MeshComp->GetOwner();
@@ -28,7 +28,7 @@ void UANS_ApplyEffect::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSeque
     // ActiveEffects = UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(MyActor, EffectsToApply);
 }
 
-void UANS_ApplyEffect::NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation)
+void UANS_ApplyEffect::NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, const FAnimNotifyEventReference& EventReference)
 {
     // UE_LOG(LogTemp, Warning, TEXT("Im a notify ending"));
     AActor* MyActor = MeshComp->GetOwner();

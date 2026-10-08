@@ -22,7 +22,7 @@ class MYGAME_API UANS_PlaySlash : public UAnimNotifyState_TimedNiagaraEffect
 	GENERATED_BODY()
 
 public:
-	virtual void NotifyBegin(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float TotalDuration) override;
+	virtual void NotifyBegin(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference) override;
 
 	UPROPERTY(EditAnywhere, Category = NiagaraSystem, meta = (ToolTip = "The location to spawn the Slash Trail Effect"))
 	ESlash SlashLocation;

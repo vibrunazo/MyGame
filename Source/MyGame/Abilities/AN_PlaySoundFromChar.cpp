@@ -5,7 +5,7 @@
 
 #include "../Player/MyCharacter.h"
 
-void UAN_PlaySoundFromChar::Notify(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation)
+void UAN_PlaySoundFromChar::Notify(class USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, const FAnimNotifyEventReference& EventReference)
 {
 	AMyCharacter* Char = Cast<AMyCharacter>(MeshComp->GetOwner());
 	if (Char)
@@ -26,5 +26,5 @@ void UAN_PlaySoundFromChar::Notify(class USkeletalMeshComponent* MeshComp, class
 			break;
 		}
 	}
-	Super::Notify(MeshComp, Animation);
+	Super::Notify(MeshComp, Animation, EventReference);
 }

@@ -237,6 +237,6 @@ void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Ta
 {
 	//if (!Target || !Target->IsValidLowLevel() || !IsValid((UObject*)Target)) return;
 	if (!Target) return;
-	if (!Target->IsValidLowLevel()) return;
+	if (!IsValid(Target->_getUObject())) return;
 	Target->OnGetHitByEffect(Effect, GetOwner());
 }

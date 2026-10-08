@@ -70,7 +70,7 @@ public:
 	FHealthUpdateSignature OnUpdatedHealth;*/
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void OnPawnSeen(APawn* SeenPawn);
-	TSubclassOf<class UCameraShake> GetCamShake();
+	TSubclassOf<class UCameraShakeBase> GetCamShake();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool HasControl();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -121,7 +121,6 @@ public:
 	uint8 GetTeam() override;
 	UMyAttributeSet* GetAttributes() override;
 	FTransform GetProjectileSpawn() override;
-	bool IsValidLowLevel() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddItemToInventory(class UItemDataAsset* NewItem) override;
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = Abilities)
@@ -165,7 +164,7 @@ public:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TArray<FLootDrop> LootTable;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	TSubclassOf<class UCameraShake> CamShakeClass;
+	TSubclassOf<class UCameraShakeBase> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	class ARoomCameraPawn* CamPawnRef = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (tooltip = "if < 0, starts with MaxHealth, else starts with InitialHealth every level"))

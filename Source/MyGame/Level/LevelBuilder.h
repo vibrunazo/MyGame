@@ -9,7 +9,7 @@
 #include "LevelBuilder.generated.h"
 
 UENUM(BlueprintType)
-enum class EDirection : uint8
+enum class ERoomDirection : uint8
 {
 	Left,
 	Right,
@@ -45,7 +45,7 @@ struct FRoomState
 	class ARoomMaster* RoomMasterRef = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<EDirection> Walls = {};
+	TArray<ERoomDirection> Walls = {};
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool bIsRoomCleared = false;
@@ -111,9 +111,9 @@ public:
 	FRoomState* GetRoomStateFromCoord(FCoord Coord);
 	FRoomState* GetRoomStateFromLoc(FVector Location);
 	class AWall* GetBottomWallFromLoc(FVector Location);
-	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, EDirection Dir);
-	void OnUpdateCharCoord(FVector Location, EDirection Dir=EDirection::Bottom);
-	void HideWall(FCoord Coord, EDirection Dir=EDirection::Bottom);
+	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, ERoomDirection Dir);
+	void OnUpdateCharCoord(FVector Location, ERoomDirection Dir=ERoomDirection::Bottom);
+	void HideWall(FCoord Coord, ERoomDirection Dir=ERoomDirection::Bottom);
 	void HideOneWall(AWall* ThisWall);
 	void SetRoomClearedAtLoc(FVector Location);
 	void OpenDoors();
@@ -187,21 +187,21 @@ private:
 	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
 	class URoomDataAsset* AddTreasureRoom();
 	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
-	class ADoor* SpawnDoor(FCoord Where, EDirection Dir);
+	class ADoor* SpawnDoor(FCoord Where, ERoomDirection Dir);
 	class AWall* SpawnWall(FTransform Where, FWallSettings* Settings = nullptr);
-	class AWall* SpawnWallAtLocDirSettings(FTransform Where, EDirection Pos, FWallSettings* Settings = nullptr);
-	class AWall* TrySpawnWallCoordDir(TPair<FCoord, FRoomState> &Tile, EDirection Pos, bool Doored);
-	class AWall* TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, EDirection Pos, FWallSettings* Settings = nullptr);
-	class AWall* TrySpawnEdgeWallAtCoord(TPair<FCoord, FRoomState> &Tile, EDirection Pos);
-	FTransform GetWallLocFromGridAndDir(FCoord Coord, EDirection Dir);
+	class AWall* SpawnWallAtLocDirSettings(FTransform Where, ERoomDirection Pos, FWallSettings* Settings = nullptr);
+	class AWall* TrySpawnWallCoordDir(TPair<FCoord, FRoomState> &Tile, ERoomDirection Pos, bool Doored);
+	class AWall* TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, ERoomDirection Pos, FWallSettings* Settings = nullptr);
+	class AWall* TrySpawnEdgeWallAtCoord(TPair<FCoord, FRoomState> &Tile, ERoomDirection Pos);
+	FTransform GetWallLocFromGridAndDir(FCoord Coord, ERoomDirection Dir);
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
-	FString GetWallID(FCoord Coord, EDirection Dir);
-	FCoord GetNeighbor(FCoord From, EDirection To);
-	bool IsNeighborFree(FCoord From, EDirection To);
+	FString GetWallID(FCoord Coord, ERoomDirection Dir);
+	FCoord GetNeighbor(FCoord From, ERoomDirection To);
+	bool IsNeighborFree(FCoord From, ERoomDirection To);
 	bool IsAnyNeighborOfType(FCoord From, ERoomType Type);
 	bool IsTileOfType(FCoord Tile, ERoomType Type);
 	TArray<FCoord> GetAllNeighborsCoords(FCoord From);
-	EDirection GetOppositeDirection(EDirection From);
+	ERoomDirection GetOppositeDirection(ERoomDirection From);
 	TArray<FCoord> FindFreeNeighbors(FCoord From);
 	// class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 	UFUNCTION()

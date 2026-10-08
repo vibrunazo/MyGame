@@ -36,7 +36,7 @@ public:
 	void DoCamShake(float Intensity);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
-	TSubclassOf<class UCameraShake> CamShakeClass;
+	TSubclassOf<class UCameraShakeBase> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UGameplayEffect> StunImmuneEffectRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)

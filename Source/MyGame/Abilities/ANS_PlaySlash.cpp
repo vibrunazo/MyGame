@@ -4,7 +4,7 @@
 #include "ANS_PlaySlash.h"
 #include "../Player/MyCharacter.h"
 
-void UANS_PlaySlash::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float TotalDuration)
+void UANS_PlaySlash::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 	AMyCharacter* Char = Cast<AMyCharacter>(MeshComp->GetOwner());
 	if (Char)
@@ -23,6 +23,6 @@ void UANS_PlaySlash::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSe
 		
 	}
 
-	Super::NotifyBegin(MeshComp, Animation, TotalDuration);
+	Super::NotifyBegin(MeshComp, Animation, TotalDuration, EventReference);
 
 }

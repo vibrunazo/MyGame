@@ -11,7 +11,7 @@
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 #include "Engine/LevelStreaming.h"
-#include "AssetRegistryModule.h"
+#include "AssetRegistry/AssetRegistryModule.h"
 #include "Engine/StaticMeshActor.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/WorldSettings.h"
@@ -19,17 +19,17 @@
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
 
-TArray<EDirection> ALLDIRECTIONS = {EDirection::Left, EDirection::Right, EDirection::Bottom, EDirection::Top};
-int8 GetXFromDir(EDirection Dir)
+TArray<ERoomDirection> ALLDIRECTIONS = {ERoomDirection::Left, ERoomDirection::Right, ERoomDirection::Bottom, ERoomDirection::Top};
+int8 GetXFromDir(ERoomDirection Dir)
 {
-	if (Dir == EDirection::Top) return 1;
-	if (Dir == EDirection::Bottom) return -1;
+	if (Dir == ERoomDirection::Top) return 1;
+	if (Dir == ERoomDirection::Bottom) return -1;
 	return 0;
 }
-int8 GetYFromDir(EDirection Dir)
+int8 GetYFromDir(ERoomDirection Dir)
 {
-	if (Dir == EDirection::Right) return 1;
-	if (Dir == EDirection::Left) return -1;
+	if (Dir == ERoomDirection::Right) return 1;
+	if (Dir == ERoomDirection::Left) return -1;
 	return 0;
 }
 
@@ -106,7 +106,7 @@ void ALevelBuilder::BuildGrid()
 		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
 		if (NumRooms > 3 && i % 5 == 0)
 		{
-			DooredRoom = RandomStream->RandRange(0, 4) + FMath::FloorToInt(i / 5) * 5;
+			DooredRoom = RandomStream->RandRange(0, 4) + (i / 5) * 5;
 			DooredRoom = FMath::Clamp((int)DooredRoom, 2, NumRooms -2);
 			UE_LOG(LogTemp, Warning, TEXT("DooredRoom = %d, i = %d"), DooredRoom, i);
 		}
@@ -143,12 +143,12 @@ void ALevelBuilder::BuildGrid()
 			// if(FMath::RandBool())
 			if (RandomStream->RandRange(0, 1))
 			{
-				if (IsNeighborFree(Coord, EDirection::Top)) x++;
+				if (IsNeighborFree(Coord, ERoomDirection::Top)) x++;
 				else x--;
 			}
 			else
 			{
-				if (IsNeighborFree(Coord, EDirection::Bottom)) x--;
+				if (IsNeighborFree(Coord, ERoomDirection::Bottom)) x--;
 				else x++;
 			}
 		}
@@ -257,7 +257,7 @@ void ALevelBuilder::BuildWalls(TPair<FCoord, FRoomState> &Tile)
 
 // Try to Spawn a Wall at this Tile on the Grid in direction Dir. Will not create the wall if it already exists
 // Creates a WallSettings and set its Doored type and calls TryToGenerateWallAtGrid with that Settings
-AWall* ALevelBuilder::TrySpawnWallCoordDir(TPair<FCoord, FRoomState> &Tile, EDirection Dir, bool Doored = false)
+AWall* ALevelBuilder::TrySpawnWallCoordDir(TPair<FCoord, FRoomState> &Tile, ERoomDirection Dir, bool Doored = false)
 {
 	FCoord Where = Tile.Key;
 	AWall* result = nullptr;
@@ -279,7 +279,7 @@ AWall* ALevelBuilder::TrySpawnWallCoordDir(TPair<FCoord, FRoomState> &Tile, EDir
 	return result;
 }
 // Try to Create a Wall at this Grid Coord to direction Dir. Will not create the wall if it already exists
-AWall* ALevelBuilder::TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, EDirection Dir, FWallSettings* Settings)
+AWall* ALevelBuilder::TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, ERoomDirection Dir, FWallSettings* Settings)
 {
 	FCoord Where = Tile.Key;
 	FString ID = GetWallID(Where, Dir);
@@ -297,7 +297,7 @@ AWall* ALevelBuilder::TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, 
 		//UE_LOG(LogTemp, Warning, TEXT("Adding wall at %s, Dir: %d"), *Where.ToString(), Dir);
 		if (!Tile.Value.Walls.Contains(Dir)) Tile.Value.Walls.Add(Dir);
 		FRoomState* Neighbor = Grid.Find(GetNeighbor(Where, Dir));
-		EDirection OppositeDir = GetOppositeDirection(Dir);
+		ERoomDirection OppositeDir = GetOppositeDirection(Dir);
 		if (Neighbor && !Neighbor->Walls.Contains(OppositeDir)) Neighbor->Walls.Add(OppositeDir);
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("Generated wall of ID: %s, total %d walls"), *ID, AllWalls.Num());
@@ -310,7 +310,7 @@ AWall* ALevelBuilder::TrySpawnWallFromSettings(TPair<FCoord, FRoomState>& Tile, 
 /// <param name="Tile">Tile Coordinate to spawn the Wall at</param>
 /// <param name="Pos">Direction from Coordinate to Spawn Wall at</param>
 /// <returns>The spawned AWall if successful, nullptr if it already exists</returns>
-AWall* ALevelBuilder::TrySpawnEdgeWallAtCoord(TPair<FCoord, FRoomState> &Tile, EDirection Pos)
+AWall* ALevelBuilder::TrySpawnEdgeWallAtCoord(TPair<FCoord, FRoomState> &Tile, ERoomDirection Pos)
 {
 	FCoord Where = Tile.Key;
 	FCoord SideCoord = GetNeighbor(Where, Pos);
@@ -325,7 +325,7 @@ AWall* ALevelBuilder::TrySpawnEdgeWallAtCoord(TPair<FCoord, FRoomState> &Tile, E
 
 /* Spawns a wall in the room centered in Transform Where, the wall will be at Direction Pos of that room
 Will use given Wall Settings but will edit the Settings length depending on Room Size */
-AWall* ALevelBuilder::SpawnWallAtLocDirSettings(FTransform Where, EDirection Pos, FWallSettings* Settings)
+AWall* ALevelBuilder::SpawnWallAtLocDirSettings(FTransform Where, ERoomDirection Pos, FWallSettings* Settings)
 {
 	FVector Loc = Where.GetLocation();
 	FRotator Rot = Where.Rotator();
@@ -336,23 +336,23 @@ AWall* ALevelBuilder::SpawnWallAtLocDirSettings(FTransform Where, EDirection Pos
 	}
 	switch (Pos)
 	{
-	case EDirection::Top:
+	case ERoomDirection::Top:
 		Loc.X += RoomSizeX/2;
 		Settings->Length = RoomSizeY;
 		break;
 
-	case EDirection::Bottom:
+	case ERoomDirection::Bottom:
 		Loc.X -= RoomSizeX/2;
 		Settings->Length = RoomSizeY;
 		break;
 	
-	case EDirection::Left:
+	case ERoomDirection::Left:
 		Loc.Y -= RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		Settings->Length = RoomSizeX;
 		break;
 	
-	case EDirection::Right:
+	case ERoomDirection::Right:
 		Loc.Y += RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		Settings->Length = RoomSizeX;
@@ -383,7 +383,7 @@ AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 	return NewWall;
 }
 
-ADoor* ALevelBuilder::SpawnDoor(FCoord Where, EDirection Dir)
+ADoor* ALevelBuilder::SpawnDoor(FCoord Where, ERoomDirection Dir)
 {
 	FTransform DoorTran = GetWallLocFromGridAndDir(Where, Dir);
 	FVector Loc = DoorTran.GetLocation();
@@ -408,7 +408,7 @@ void ALevelBuilder::SetAssetListFromRegistry()
 	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
 	TArray<FAssetData> OutAssets;
 	const UClass* RoomClass = URoomDataAsset::StaticClass();
-	AssetRegistryModule.Get().GetAssetsByClass(RoomClass->GetFName(), OutAssets);
+	AssetRegistryModule.Get().GetAssetsByClass(RoomClass->GetClassPathName(), OutAssets);
 	AssetDataList = OutAssets;
 	// UE_LOG(LogTemp, Warning, TEXT("Found %d"), AssetDataList.Num());
 	for (auto &&AssetData : AssetDataList)
@@ -572,26 +572,26 @@ FVector ALevelBuilder::GetLocFromGrid(FCoord Coord)
 	return FVector(RoomSizeX * (float)Coord.X, RoomSizeY * (float)Coord.Y, 0.0f);
 }
 
-FTransform ALevelBuilder::GetWallLocFromGridAndDir(FCoord Coord, EDirection Dir)
+FTransform ALevelBuilder::GetWallLocFromGridAndDir(FCoord Coord, ERoomDirection Dir)
 {
 	FVector Loc = GetLocFromGrid(Coord);
 	FRotator Rot = FRotator::ZeroRotator;
 	switch (Dir)
 	{
-	case EDirection::Top:
+	case ERoomDirection::Top:
 		Loc.X += RoomSizeX/2;
 		break;
 
-	case EDirection::Bottom:
+	case ERoomDirection::Bottom:
 		Loc.X -= RoomSizeX/2;
 		break;
 	
-	case EDirection::Left:
+	case ERoomDirection::Left:
 		Loc.Y -= RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		break;
 	
-	case EDirection::Right:
+	case ERoomDirection::Right:
 		Loc.Y += RoomSizeY/2;
 		Rot.Yaw = 90.0f;
 		break;
@@ -602,8 +602,8 @@ FTransform ALevelBuilder::GetWallLocFromGridAndDir(FCoord Coord, EDirection Dir)
 
 FCoord ALevelBuilder::GetGridFromLoc(FVector Location)
 {
-	int16 NewX = FMath::DivideAndRoundNearest(Location.X, RoomSizeX);
-	int16 NewY = FMath::DivideAndRoundNearest(Location.Y, RoomSizeY);
+	int16 NewX = FMath::RoundToInt(Location.X / RoomSizeX);
+	int16 NewY = FMath::RoundToInt(Location.Y / RoomSizeY);
 	return FCoord(NewX, NewY);
 }
 
@@ -624,18 +624,16 @@ FString ALevelBuilder::GetWallID(FCoord Coord1, FCoord Coord2)
 	FString s2 = Coord2.ToString();
 	if (s1 < s2) return s1 + 'x' + s2;
 	else return s2 + 'x' + s1;
-
-	return FString();
 }
 
-FString ALevelBuilder::GetWallID(FCoord Coord, EDirection Dir)
+FString ALevelBuilder::GetWallID(FCoord Coord, ERoomDirection Dir)
 {
 	return GetWallID(Coord, GetNeighbor(Coord, Dir));
 }
 
 /* Returns the Grid Coord of the Neighbor of this Coord From to direction To
  */
-FCoord ALevelBuilder::GetNeighbor(FCoord From, EDirection To)
+FCoord ALevelBuilder::GetNeighbor(FCoord From, ERoomDirection To)
 {
 	return FCoord(From.X + GetXFromDir(To), From.Y + GetYFromDir(To));
 }
@@ -643,7 +641,7 @@ FCoord ALevelBuilder::GetNeighbor(FCoord From, EDirection To)
 /* Returns true if the neighbor From this Coord To this direction does not have any 
 Rooms in the Grid yet
  */
-bool ALevelBuilder::IsNeighborFree(FCoord From, EDirection To)
+bool ALevelBuilder::IsNeighborFree(FCoord From, ERoomDirection To)
 {
 	FCoord NeighborCoord = GetNeighbor(From, To);
 	// if(Grid.Contains(NeighborCoord)) true;
@@ -695,27 +693,27 @@ TArray<FCoord> ALevelBuilder::GetAllNeighborsCoords(FCoord From)
 }
 
 /// <summary>
-/// Returns what the EDirection is the opposite of From. For example, Left is opposite of Right.
+/// Returns what the ERoomDirection is the opposite of From. For example, Left is opposite of Right.
 /// Used by wall spawning to figure what direction to add wall data to both tiles the wall is between.
 /// </summary>
 /// <param name="From">Direction to get the opposite from</param>
 /// <returns>The opposite direction of From</returns>
-EDirection ALevelBuilder::GetOppositeDirection(EDirection From)
+ERoomDirection ALevelBuilder::GetOppositeDirection(ERoomDirection From)
 {
 	switch (From)
 	{
-	case EDirection::Left:
-		return EDirection::Right;
-	case EDirection::Right:
-		return EDirection::Left;
-	case EDirection::Bottom:
-		return EDirection::Top;
-	case EDirection::Top:
-		return EDirection::Bottom;
+	case ERoomDirection::Left:
+		return ERoomDirection::Right;
+	case ERoomDirection::Right:
+		return ERoomDirection::Left;
+	case ERoomDirection::Bottom:
+		return ERoomDirection::Top;
+	case ERoomDirection::Top:
+		return ERoomDirection::Bottom;
 	default:
 		break;
 	}
-	return EDirection();
+	return ERoomDirection();
 }
 
 FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)
@@ -768,10 +766,10 @@ URoomDataAsset* ALevelBuilder::GetRoomFromCoord(FCoord Coord)
 
 AWall* ALevelBuilder::GetBottomWallFromLoc(FVector Location)
 {
-	return GetWallRefFromCoordAndDir(GetGridFromLoc(Location), EDirection::Bottom);
+	return GetWallRefFromCoordAndDir(GetGridFromLoc(Location), ERoomDirection::Bottom);
 }
 	
-AWall* ALevelBuilder::GetWallRefFromCoordAndDir(FCoord Coord, EDirection Dir)
+AWall* ALevelBuilder::GetWallRefFromCoordAndDir(FCoord Coord, ERoomDirection Dir)
 {
 	// UE_LOG(LogTemp, Warning, TEXT("Requested wall on %s"), *Coord.ToString());
 	FString ID = GetWallID(Coord, Dir);
@@ -782,7 +780,7 @@ AWall* ALevelBuilder::GetWallRefFromCoordAndDir(FCoord Coord, EDirection Dir)
 
 // Try to hide walls on the Grid at this Location
 // Called from the Character Every tick with the Actor location
-void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
+void ALevelBuilder::OnUpdateCharCoord(FVector Location, ERoomDirection Dir)
 {
 	FCoord Coord = GetGridFromLoc(Location);
 	if (Coord == LastEnteredRoomCoord) return;
@@ -809,7 +807,7 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, EDirection Dir)
 }
 
 // Try to Hide walls on this Grid Tile
-void ALevelBuilder::HideWall(FCoord Coord, EDirection Dir)
+void ALevelBuilder::HideWall(FCoord Coord, ERoomDirection Dir)
 {
 	// Unhide all Walls
 	for (auto &&Wall : HiddenWalls)
@@ -824,12 +822,12 @@ void ALevelBuilder::HideWall(FCoord Coord, EDirection Dir)
 	AWall* ThisWall = GetWallRefFromCoordAndDir(Coord, Dir);
 	// Hide wall in given coord
 	HideOneWall(ThisWall);
-	FCoord RightCoord = GetNeighbor(Coord, EDirection::Right);
+	FCoord RightCoord = GetNeighbor(Coord, ERoomDirection::Right);
 	AWall* RightWall = GetWallRefFromCoordAndDir(RightCoord, Dir);
 	URoomDataAsset* RightRoom = GetRoomFromCoord(RightCoord);
 	// if room to the right is not doored, then hide it too
 	if (RightRoom && !RightRoom->bIsDoored)	HideOneWall(RightWall);
-	FCoord LeftCoord = GetNeighbor(Coord, EDirection::Left);
+	FCoord LeftCoord = GetNeighbor(Coord, ERoomDirection::Left);
 	AWall* LeftWall = GetWallRefFromCoordAndDir(LeftCoord, Dir);
 	URoomDataAsset* LeftRoom = GetRoomFromCoord(LeftCoord);
 	// if room to the left is not doored, then hide it too

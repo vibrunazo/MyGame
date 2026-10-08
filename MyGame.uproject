@@ -1,21 +1,13 @@
 {
 	"FileVersion": 3,
-	"EngineAssociation": "4.25",
+	"EngineAssociation": "5.8",
 	"Category": "",
 	"Description": "",
 	"Modules": [
 		{
 			"Name": "MyGame",
 			"Type": "Runtime",
-			"LoadingPhase": "Default",
-			"AdditionalDependencies": [
-				"GameplayAbilities",
-				"Engine",
-				"CoreUObject",
-				"UMG",
-				"AIModule",
-				"NiagaraAnimNotifies"
-			]
+			"LoadingPhase": "Default"
 		}
 	],
 	"Plugins": [
@@ -24,11 +16,11 @@
 			"Enabled": true
 		},
 		{
-			"Name": "ModelContextProtocol",
+			"Name": "EnhancedInput",
 			"Enabled": true
 		},
 		{
-			"Name": "AllToolsets",
+			"Name": "PCG",
 			"Enabled": true
 		},
 		{
@@ -36,18 +28,23 @@
 			"Enabled": true
 		},
 		{
-			"Name": "NiagaraExtras",
+			"Name": "Cascade",
 			"Enabled": true
 		},
 		{
-			"Name": "Linter",
-			"Enabled": false,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/ca0639af6339476da86fa3bcf15de8ec"
+			"Name": "CascadeToNiagaraConverter",
+			"Enabled": true,
+			"TargetAllowList": [
+				"Editor"
+			]
 		},
 		{
-			"Name": "ST_ExportPNG",
-			"Enabled": true,
-			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/230db584ce5749f284945d3286c745fa"
+			"Name": "ModelContextProtocol",
+			"Enabled": true
+		},
+		{
+			"Name": "AllToolsets",
+			"Enabled": true
 		}
 	]
 }
