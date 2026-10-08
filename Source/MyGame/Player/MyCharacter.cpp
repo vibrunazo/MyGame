@@ -116,6 +116,8 @@ void AMyCharacter::SetDefaultProperties()
 	GetMesh()->SetGenerateOverlapEvents(true);
 	GetMesh()->SetRelativeLocation(FVector(0.0f, 0.0f, -92.0f));
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
+	// Hitboxes ride on bones, so bones must update even when the mesh isn't rendered (off-screen enemies, headless tests)
+	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
 	// DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	// if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
 
