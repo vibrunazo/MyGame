@@ -13,10 +13,10 @@ struct FLootDrop
 	GENERATED_BODY()
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	class UItemDataAsset* Item;
+	class UItemDataAsset* Item = nullptr;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 DropRate;
+	uint8 DropRate = 0;
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

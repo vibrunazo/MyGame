@@ -41,7 +41,7 @@ struct FAbilityStruct
 	TSubclassOf<class UGameplayAbility> AbilityClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EInput Input;
+	EInput Input = EInput::Punch;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FString EventName = "";
@@ -75,7 +75,7 @@ struct FMagnitudePair
 	FGameplayTag GameplayTag;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Magnitude;
+	float Magnitude = 0.f;
 };
 
 USTRUCT(BlueprintType)

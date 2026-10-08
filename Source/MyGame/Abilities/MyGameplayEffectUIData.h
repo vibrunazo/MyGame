@@ -17,7 +17,7 @@ struct FBuffUI
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName Description;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FLinearColor Color;
+	FLinearColor Color = FLinearColor::White;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	struct FSlateBrush Icon;
 };
