@@ -153,6 +153,35 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def spawn_fx(asset_path: str, x: float, y: float, z: float, scale: float = 1.0) -> str:
+        """Spawns a Niagara or Cascade particle system at a PIE world location (e.g. to compare effects).
+
+        Args:
+            asset_path: The NiagaraSystem or ParticleSystem asset path.
+            x: World X.
+            y: World Y.
+            z: World Z.
+            scale: Uniform scale.
+
+        Returns:
+            The spawned component's path.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        asset = unreal.load_asset(asset_path)
+        loc = unreal.Vector(x, y, z)
+        size = unreal.Vector(scale, scale, scale)
+        if isinstance(asset, unreal.NiagaraSystem):
+            comp = unreal.NiagaraFunctionLibrary.spawn_system_at_location(world, asset, loc, unreal.Rotator(), size)
+        elif isinstance(asset, unreal.ParticleSystem):
+            comp = unreal.GameplayStatics.spawn_emitter_at_location(world, asset, loc, unreal.Rotator(), size)
+        else:
+            raise RuntimeError(f"not a particle system: {asset_path}")
+        return comp.get_path_name() if comp else ""
+
+    @toolset_registry.tool_call
+    @staticmethod
     def list_actors(class_path: str) -> str:
         """Lists PIE actors of a class (subclasses included) with path and location.
 
