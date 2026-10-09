@@ -44,7 +44,7 @@ Found and fixed along the way, beyond the original plan:
   - Replaced abilities are cleared from the ability system.
 - **Attributes:** Health and Mana are clamped in `PreAttributeChange`; lowering max health or mana lowers the current value.
 - **Level walk:** never overwrites a room when both vertical neighbors are taken.
-- **GE UI data:** `GE_FireDot` and `GE_StunImmune` use native UI data components. The `IconFire` and `IconDefense` Blueprints are unreferenced; deleting them is your call.
+- **GE UI data:** `GE_FireDot` and `GE_StunImmune` use native UI data components. The UI data (icon, name, color) shows correctly in game: the FireDot bar gets the flame icon and StunImmune the shield. `IconFire` and `IconDefense` are kept: nothing gets deleted before full parity with the 4.25 game is proven.
 - **Deferred to Phase 4:** `RoomStateRef` (a raw pointer into the grid map; the grid isn't modified after rooms spawn, so it's safe today).
 - **Kept:** `ServerTravel` for next-level travel (it works in standalone).
 
