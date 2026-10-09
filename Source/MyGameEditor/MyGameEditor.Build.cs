@@ -6,7 +6,7 @@ public class MyGameEditor : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "GameplayAbilities", "MyGame" });
 		PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd" });
 	}
 }
