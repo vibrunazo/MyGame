@@ -191,7 +191,10 @@ The steps:
 
 ## Phase 6: optional
 
-- Rendering: the fixed top-down cameras may not need Lumen; decide by look and performance.
+- **Lighting overhaul (after parity is confirmed):** the current lights are prototypes. Any change moves the look away from the 2020 video, which is still the reference for parity checks, so it waits until parity is done.
+  1. **Fully dynamic lighting.** Rooms are assembled at runtime and the main lights are already Movable, so baking adds work (per-machine bakes, re-saved maps) for almost no gain. Set `r.AllowStaticLighting=False` and make the room lights Movable. That removes `*_BuiltData`, Lightmass and the importance volume.
+  2. **An explicit mood.** Drive the blue with the height fog color and post-process grading directly. Give the sky light a fixed sky cubemap, or use real-time capture, instead of capturing a sky sphere the camera never sees. Use one sun plus the sky light, and fold the fill light (`LightSource3`) into the sky light. Remove the deprecated `AtmosphericFog`, with your OK.
+  3. **Lumen as a high-settings option.** It adds bounce light, light from emissive effects (Fire Hands, pickups) and sky occlusion. It needs a DX12/SM6 GPU and costs several ms per frame. The look must still hold with GI off (`r.DynamicGlobalIlluminationMethod=0`) for low-end PCs and handhelds. Compare captures of the same room both ways, plus GPU frame times, and pick by eye.
 - Asset audit, with **no deletions without your OK**. For each test-named asset, list its referencers from the asset registry and say whether a live path reaches it (a map, a character's `Abilities`, a `DA_Learn*`, a loot table). Candidates: ThirdPersonCPP, BSPtest, `GA_Test*` (it may be the real punch), `RT_*`, `ChildActorTest`/`ParentActorTest`, AdvancedLocomotionV4.
 
 ## Decisions
