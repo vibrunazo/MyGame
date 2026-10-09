@@ -136,6 +136,23 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def set_input_mods(super_mod: bool, ultra_mod: bool) -> str:
+        """Holds or releases the Super (Shift/R1) and Ultra (Ctrl/R2) modifiers on the player controller.
+
+        Args:
+            super_mod: Hold the Super modifier.
+            ultra_mod: Hold the Ultra modifier.
+
+        Returns:
+            The controller's modifier state as JSON.
+        """
+        controller = _player().get_controller()
+        controller.set_super_mod(super_mod)
+        controller.set_ultra_mod(ultra_mod)
+        return json.dumps({"super": controller.get_super_mod(), "ultra": controller.get_ultra_mod()})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def jump_player() -> str:
         """Makes the PIE player jump, as the jump button would.
 
