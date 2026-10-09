@@ -33,17 +33,6 @@
 			"Enabled": true
 		},
 		{
-			"Name": "Cascade",
-			"Enabled": true
-		},
-		{
-			"Name": "CascadeToNiagaraConverter",
-			"Enabled": true,
-			"TargetAllowList": [
-				"Editor"
-			]
-		},
-		{
 			"Name": "ModelContextProtocol",
 			"Enabled": true
 		},
