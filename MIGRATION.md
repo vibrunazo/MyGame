@@ -27,6 +27,27 @@ Found and fixed along the way, beyond the original plan:
 - **Data quirks:** 3 ability entries use `Input = 200`, which isn't an `EInput` value and now loads as `EInput_MAX`. Enemy montages lack the `ComboStart` section the combo code jumps to. Both predate the migration.
 - **Unexplained death:** the player died in the boss fight despite a 100k-HP test cheat (the cheat bypasses GAS). Look at this together with the collision bug in Phase 2.
 
+## Phase 2 status (2026-10-09): done
+
+- **Pawn collision stuck off:** fixed.
+  - **Cause:** `Tat_Montage` applied `GE_NoPawnBlock` (plus speed and projectile immunity) with a duration of −1, which means forever. Only a broadcast "remove" event ended it.
+  - **Fix:** `ANS_ApplyEffect` now owns its effects per character and caps them at the notify's length + 2 s. `AMyCharacter::RefreshPawnCollision` is the only code that sets pawn collision. It waits up to 0.3 s for overlapping characters to separate, then steps out sideways.
+  - **Verified:** 36 stress trials (plain, cancel, jump, retrigger) with no stuck collision and no falls through the floor.
+- **"Unexplained boss death":** not a game bug. My test cheat zeroed attributes (`GameplayAttributeData(value)` ignores the value); fixed.
+- **Fire Hands → `GE_FireDot`:** conditional effects ignored their `ConditionTag`, so fire damage-over-time never triggered. Fixed and verified in game.
+- **Boss abilities:** they used input `200`, which 5.8 loaded as `EInput_MAX`. It's now `EInput::None = 200`.
+- **Abilities:**
+  - Combo-cancel detection moved to `PreActivate` (no tag side effects in `CanActivateAbility`).
+  - `ComboStart` is only used when the montage has that section.
+  - The ability ends once, not once per montage delegate.
+  - Ability-system actor info is initialized once.
+  - Replaced abilities are cleared from the ability system.
+- **Attributes:** Health and Mana are clamped in `PreAttributeChange`; lowering max health or mana lowers the current value.
+- **Level walk:** never overwrites a room when both vertical neighbors are taken.
+- **GE UI data:** `GE_FireDot` and `GE_StunImmune` use native UI data components. The `IconFire` and `IconDefense` Blueprints are unreferenced; deleting them is your call.
+- **Deferred to Phase 4:** `RoomStateRef` (a raw pointer into the grid map; the grid isn't modified after rooms spawn, so it's safe today).
+- **Kept:** `ServerTravel` for next-level travel (it works in standalone).
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.
