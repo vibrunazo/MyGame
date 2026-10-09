@@ -1,0 +1,27 @@
+{
+ "files": {
+  "fire_whoosh_01_eq.wav": {
+   "tool": "audio.eq.dsp",
+   "model": null,
+   "license": null,
+   "created": "2026-10-08T21:53:04",
+   "params": {
+    "ceiling": -1.0,
+    "format": "wav",
+    "inputs": [
+     "D:\\docs\\Unreal Projects\\MyGame\\SourceArt\\sfx\\fire\\fire_whoosh_01.wav"
+    ],
+    "band": [
+     "lowpass:6000"
+    ]
+   },
+   "source": "D:\\docs\\Unreal Projects\\MyGame\\SourceArt\\sfx\\fire\\fire_whoosh_01.wav",
+   "duration_seconds": 1.191,
+   "sample_rate": 44100,
+   "channels": 2,
+   "peak_dbfs": -1.54,
+   "rms_dbfs": -21.95
+  }
+ },
+ "generator": "D:\\docs\\assets\\generator"
+}

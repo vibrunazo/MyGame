@@ -1,0 +1,11 @@
+{
+  "args": {"samples": 4, "steps": 150},
+  "jobs": [
+    {"name": "fire_loop", "seed": 1101, "duration": 8.0,
+     "prompt": "steady crackling campfire burning, close up, continuous roaring flames and small crackles, even level, game sound effect"},
+    {"name": "fire_once", "seed": 2201, "duration": 2.5,
+     "prompt": "sudden fire ignition burst, flames whooshing alight with a short crackle tail, punchy game sound effect"},
+    {"name": "fire_whoosh", "seed": 3301, "duration": 1.5,
+     "prompt": "fast fiery punch whoosh, swinging fist trailing flames, short airy swoosh with fire crackle, game sound effect"}
+  ]
+}
