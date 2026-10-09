@@ -15,6 +15,7 @@ struct FLootDrop
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UItemDataAsset* Item = nullptr;
 
+	/** Relative weight against the other candidates. Items at 0 only drop when every candidate is at 0. */
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	uint8 DropRate = 0;
 };
@@ -28,6 +29,7 @@ public:
 	// Sets default values for this component's properties
 	ULootComponent();
 
+	UFUNCTION(BlueprintCallable, Category = Loot)
 	class UItemDataAsset* GetRandomItem();
 	class APickup* DropRandomItemAtLocation(FVector Where);
 
@@ -37,6 +39,7 @@ public:
 private:
 	bool DoAnyAbilitySlotOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList);
 	uint8 DoAnyAbilityOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList);
+	static class UItemDataAsset* PickWeighted(const TArray<FLootDrop>& Candidates, FRandomStream& Stream);
 
 protected:
 	// Called when the game starts

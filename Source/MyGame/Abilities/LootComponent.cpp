@@ -129,30 +129,31 @@ UItemDataAsset* ULootComponent::GetRandomItem()
 		}
 	}
 	// if the filtered list is not zero, that is, if there are items that teach new spells on new slots, then return an item from the filtered list
-	if (FilteredLootTable.Num() > 0)
-	{
-		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTable.Num() - 1);
-		result = FilteredLootTable[RandIndex].Item;
-	}
+	if (FilteredLootTable.Num() > 0) result = PickWeighted(FilteredLootTable, GI->RandomStream);
 	// else, if the full filtered loot table is zero, but there are still items that teach abilities I don't have, drop one of those even if it doesn't pass all tests, at least gets a new ability
-	else if (FilteredLootTableNewSpell.Num() > 0)
-	{
-		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTableNewSpell.Num() - 1);
-		result = FilteredLootTableNewSpell[RandIndex].Item;
-	}
+	else if (FilteredLootTableNewSpell.Num() > 0) result = PickWeighted(FilteredLootTableNewSpell, GI->RandomStream);
 	// else, if neither the full filtered loot table or the new spell filter have anything, but there are still items that I don't have, drop one of those even if it doesn't pass all tests, at least gets a new item
-	else if (FilteredLootTableNotMaxed.Num() > 0)
-	{
-		int RandIndex = GI->RandomStream.RandRange(0, FilteredLootTableNotMaxed.Num() - 1);
-		result = FilteredLootTableNotMaxed[RandIndex].Item;
-	}
+	else if (FilteredLootTableNotMaxed.Num() > 0) result = PickWeighted(FilteredLootTableNotMaxed, GI->RandomStream);
 	// else, if all filtered lists are empty, return an item I already have anyway
-	else
-	{
-		int RandIndex = GI->RandomStream.RandRange(0, LootTable.Num() - 1);
-		result = LootTable[RandIndex].Item;
-	}
+	else result = PickWeighted(LootTable, GI->RandomStream);
 	return result;
+}
+
+/// <summary>
+/// Picks one candidate, weighted by DropRate. Candidates at 0 are skipped unless every candidate is at 0, then the pick is uniform.
+/// </summary>
+UItemDataAsset* ULootComponent::PickWeighted(const TArray<FLootDrop>& Candidates, FRandomStream& Stream)
+{
+	int32 TotalWeight = 0;
+	for (const FLootDrop& Drop : Candidates) TotalWeight += Drop.DropRate;
+	if (TotalWeight == 0) return Candidates[Stream.RandRange(0, Candidates.Num() - 1)].Item;
+	int32 Roll = Stream.RandRange(1, TotalWeight);
+	for (const FLootDrop& Drop : Candidates)
+	{
+		Roll -= Drop.DropRate;
+		if (Roll <= 0) return Drop.Item;
+	}
+	return Candidates.Last().Item;
 }
 
 APickup* ULootComponent::DropRandomItemAtLocation(FVector Where)

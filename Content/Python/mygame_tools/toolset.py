@@ -337,5 +337,32 @@ class MyGameTools(unreal.ToolsetDefinition):
              "location": _vec(a.get_actor_location()), "hidden": a.is_hidden_ed() if hasattr(a, "is_hidden_ed") else None}
             for a in unreal.GameplayStatics.get_all_actors_of_class(world, cls)])
 
+    @toolset_registry.tool_call
+    @staticmethod
+    def roll_loot(actor_path: str, rolls: int) -> str:
+        """Rolls an actor's LootComponent (e.g. a room's RoomMaster) without spawning anything, filtered by what the player knows.
+
+        Args:
+            actor_path: Full path of a PIE actor that has a LootComponent.
+            rolls: How many times to roll.
+
+        Returns:
+            JSON: the loot table (item, drop rate) and how often each item came up.
+        """
+        actor = unreal.find_object(None, actor_path)
+        if not actor:
+            raise RuntimeError(f"no actor at {actor_path}")
+        loot = actor.get_component_by_class(unreal.LootComponent)
+        if not loot:
+            raise RuntimeError(f"{actor_path} has no LootComponent")
+        counts = {}
+        for _ in range(max(1, rolls)):
+            item = loot.get_random_item()
+            name = item.get_name() if item else "None"
+            counts[name] = counts.get(name, 0) + 1
+        table = [{"item": d.get_editor_property("item").get_name() if d.get_editor_property("item") else None,
+                  "drop_rate": d.get_editor_property("drop_rate")} for d in loot.get_editor_property("loot_table")]
+        return json.dumps({"table": table, "counts": counts})
+
 
 registration = Registration([MyGameTools])
