@@ -18,6 +18,22 @@ UMyAttributeSet::UMyAttributeSet()
 {
 }
 
+// Every change to a current value (effects, buffs expiring, direct sets) passes here: keep Health and Mana in range
+void UMyAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+    Super::PreAttributeChange(Attribute, NewValue);
+    if (Attribute == GetHealthAttribute()) NewValue = FMath::Clamp(NewValue, 0.f, GetMaxHealth());
+    else if (Attribute == GetManaAttribute()) NewValue = FMath::Clamp(NewValue, 0.f, GetMaxMana());
+}
+
+// Losing max health/mana (a buff ending) must pull the current value down with it
+void UMyAttributeSet::PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue)
+{
+    Super::PostAttributeChange(Attribute, OldValue, NewValue);
+    if (Attribute == GetMaxHealthAttribute() && GetHealth() > NewValue) SetHealth(NewValue);
+    else if (Attribute == GetMaxManaAttribute() && GetMana() > NewValue) SetMana(NewValue);
+}
+
 bool UMyAttributeSet::PreGameplayEffectExecute(struct FGameplayEffectModCallbackData & Data)
 {
     if (GetHealth() <= 0)

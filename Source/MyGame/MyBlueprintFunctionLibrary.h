@@ -27,7 +27,9 @@ enum class EInput : uint8
 	UltraCast = 22,
 	UltraJump = 23,
 	Run = 101,
-	Dash = 102
+	Dash = 102,
+	// Not bound to a button: activated by events, AI or ability triggers
+	None = 200
 };
 
 USTRUCT(BlueprintType)

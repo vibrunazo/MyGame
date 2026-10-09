@@ -121,6 +121,21 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def give_item(item_asset_path: str) -> str:
+        """Gives the PIE player an item as picking it up would (e.g. "/Game/Blueprints/Items/DA_ItemFireHands").
+
+        Args:
+            item_asset_path: An ItemDataAsset.
+
+        Returns:
+            The player's state afterwards, as JSON.
+        """
+        char = _player()
+        char.add_item_to_inventory(unreal.load_asset(item_asset_path))
+        return MyGameTools.pie_player_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
     def jump_player() -> str:
         """Makes the PIE player jump, as the jump button would.
 

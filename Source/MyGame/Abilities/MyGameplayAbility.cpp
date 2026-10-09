@@ -35,8 +35,6 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
     FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
     // This tag should be used when the ability is in a State where other abilties can cancel its animation to combo into some other ability
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
-    // This tag will be set as soon as an ability is cancelled into another, so that the next ability knows that it's starting from a cancel, so that it can move the montage section to ComboStart
-    FGameplayTag IsCancellingState = FGameplayTag::RequestGameplayTag(TEXT("combo.iscancelling"));
     // If I'm in the middle of an attack
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
@@ -46,9 +44,6 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
             // check if I need a combo hit to cancel and if I have hit, by checking if the CanCancelState Tag was applied by any ability
             if (bNeedsHitToCancel && ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(CanCancelState))
             {
-                // Add tag to actor to let the next ability know it's comming from a cancelled ability
-                // TODO check if super is true before doing this?
-                ActorInfo->AbilitySystemComponent.Get()->AddLooseGameplayTag(IsCancellingState);
                 // it can be cancelled so call Super to do regular checks if I can cast this ability 
                 return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
             }
@@ -63,6 +58,18 @@ bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Han
     }
     // if not in an attack just perform regular checks to see if the ability can be activated and activate it
     return Super::CanActivateAbility(Handle, ActorInfo, SourceTags, TargetTags, OptionalRelevantTags);
+}
+
+void UMyGameplayAbility::PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData)
+{
+    // Decide before Super cancels the attack we're cancelling (its state.attacking / combo.cancancel go with it):
+    // an ability started from a hit-confirmed cancel plays its montage from the ComboStart section
+    const UAbilitySystemComponent* ASC = ActorInfo->AbilitySystemComponent.Get();
+    bStartedFromComboCancel = bNeedsHitToCancel && ASC
+        && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(TEXT("state.attacking")))
+        && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel")))
+        && ASC->HasAnyMatchingGameplayTags(TagsIcanCancel);
+    Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
 }
 
 void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo * ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData * TriggerEventData)
@@ -105,15 +112,12 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     ApplySelfEffects();
 
     FName MontageSection = NAME_None;
-    //if (bIsInComboState) MontageSection = "ComboStart";
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
-    FGameplayTag IsCancellingState = FGameplayTag::RequestGameplayTag(TEXT("combo.iscancelling"));
-    if (ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(IsCancellingState) && bNeedsHitToCancel)
+    if (bStartedFromComboCancel && MontagesToPlay[CurrentComboCount]->IsValidSectionName(TEXT("ComboStart")))
     {
         MontageSection = "ComboStart";
     }
     GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
-    GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(IsCancellingState);
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], GetAttackSpeed(), MontageSection, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnInterrupted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
@@ -161,6 +165,8 @@ void UMyGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 
 void UMyGameplayAbility::OnMontageComplete()
 {
+    // bound to Completed, Interrupted, Cancelled and BlendOut: only the first one ends the ability
+    if (!IsActive()) return;
     bHasHitConnected = false;
     bHasHitStarted = false;
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
@@ -382,10 +388,10 @@ void UMyGameplayAbility::CheckConditionalEffects()
 
     for (auto&& Condition : ConditionalEffects)
     {
-        if (Condition.EffectToApply.EffectClass == nullptr) { continue; }
-        auto MyTags = GetAbilityTags();
-        auto EffectsThatMatchAbility = GetActorInfo().AbilitySystemComponent.Get()->GetActiveEffects(FGameplayEffectQuery::MakeQuery_MatchAnyEffectTags(MyTags));
-        if (EffectsThatMatchAbility.Num() > 0) TempEffectsToApply.Add(Condition.EffectToApply);
+        if (Condition.EffectToApply.EffectClass == nullptr || !Condition.ConditionTag.IsValid()) { continue; }
+        // e.g. buff.firetouch from the Fire Hands item adds GE_FireDot to every hit; the tag may be an asset or granted tag
+        const FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FGameplayTagContainer(Condition.ConditionTag));
+        if (GetActorInfo().AbilitySystemComponent->GetActiveEffects(Query).Num() > 0) TempEffectsToApply.Add(Condition.EffectToApply);
     }
 
 }

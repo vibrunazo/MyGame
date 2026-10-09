@@ -237,6 +237,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	if(!AbilitySystem) return;
+	AbilitySystem->InitAbilityActorInfo(this, this);
 	AbilitySystem->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
 	for (auto &&Ability : Abilities)
 	{
@@ -399,11 +400,18 @@ void AMyCharacter::FellOutOfWorld(const UDamageType& dmgType)
 
 void AMyCharacter::GiveAbility(TSubclassOf<class UGameplayAbility> Ability)
 {
-	if (HasAuthority() && Ability)
+	// the same class can be learned again (another item with it); one spec is enough
+	if (HasAuthority() && Ability && !AbilitySystem->FindAbilitySpecFromClass(Ability))
 	{
 		AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0));
 	}
-	AbilitySystem->InitAbilityActorInfo(this, this);
+}
+
+void AMyCharacter::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+	// refresh the ASC's actor info (player controller) now that we have a controller
+	if (AbilitySystem) AbilitySystem->InitAbilityActorInfo(this, this);
 }
 
 void AMyCharacter::LearnAbility(FAbilityStruct Ability)
@@ -454,6 +462,13 @@ void AMyCharacter::FindAndRemoveOverlappingAbilities(FAbilityStruct AbilityToCom
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Removing Overlapping Ability: %s"), *OldAbility.AbilityClass->GetName());
 		Abilities.Remove(OldAbility);
+		// the replaced ability must leave the ASC too, unless it's being re-learned or another slot uses the same class
+		const bool bStillUsed = OldAbility.AbilityClass == AbilityToCompare.AbilityClass
+			|| Abilities.ContainsByPredicate([&](const FAbilityStruct& A) { return A.AbilityClass == OldAbility.AbilityClass; });
+		if (FGameplayAbilitySpec* Spec = bStillUsed ? nullptr : AbilitySystem->FindAbilitySpecFromClass(OldAbility.AbilityClass))
+		{
+			AbilitySystem->ClearAbility(Spec->Handle);
+		}
 	}
 }
 

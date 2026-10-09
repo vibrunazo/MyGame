@@ -111,12 +111,15 @@ private:
 	float LastComboTime = 0.0f;
 	UPROPERTY()
 	bool bHasHitStarted = false;
+	// Set in PreActivate: this activation cancelled a hit-confirmed attack, so the montage starts at ComboStart
+	bool bStartedFromComboCancel = false;
 	// How many times this ability already hit the enemy since it started, used to deactivate the ability if it has a set limit of MaxHits
 	int CurHits = 0;
 
 protected:
 /** Returns true if this ability can be activated right now. Has no side effects */
 	virtual bool CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags, const FGameplayTagContainer* TargetTags, OUT FGameplayTagContainer* OptionalRelevantTags) const override;
+	virtual void PreActivate(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, FOnGameplayAbilityEnded::FDelegate* OnGameplayAbilityEndedDelegate, const FGameplayEventData* TriggerEventData = nullptr) override;
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 		const FGameplayAbilityActorInfo * ActorInfo,
 		const FGameplayAbilityActivationInfo ActivationInfo,

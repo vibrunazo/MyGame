@@ -25,6 +25,8 @@ class MYGAME_API UMyAttributeSet : public UAttributeSet
 public:
 	UMyAttributeSet();
 	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData & Data) override;
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
+	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
 	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
 
 	UPROPERTY(Category = "Attributes | Health", EditAnywhere, BlueprintReadWrite)

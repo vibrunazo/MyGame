@@ -13,7 +13,7 @@ void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSeque
 	FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));
 	FGameplayEventData Payload = FGameplayEventData();
 	//auto NewContainer = new UHitboxesContainer(Hitboxes);
-	auto NewContainer = NewObject<UHitboxesContainer>(this);
+	auto NewContainer = NewObject<UHitboxesContainer>(GetTransientPackage());
 	NewContainer->Hitboxes = Hitboxes;
 	NewContainer->NumHits = NumHits;
 	NewContainer->HitCooldown = HitCooldown;

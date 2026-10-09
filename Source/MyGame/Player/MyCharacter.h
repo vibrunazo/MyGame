@@ -44,6 +44,7 @@ public:
 	void Jump() override;
 	void FellOutOfWorld(const UDamageType& dmgType) override;
 	void OnConstruction(const FTransform& Transform) override;
+	void PossessedBy(AController* NewController) override;
 	void PostInitializeComponents() override;
 
 	virtual void SetDefaultProperties();

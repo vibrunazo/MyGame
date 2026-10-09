@@ -143,16 +143,14 @@ void ALevelBuilder::BuildGrid()
 			// UE_LOG(LogTemp, Warning, TEXT("Chose Vert"));
 			ChanceOfGoingRight += IncWhenChoseVert;
 			// if(FMath::RandBool())
-			if (RandomStream->RandRange(0, 1))
-			{
-				if (IsNeighborFree(Coord, ERoomDirection::Top)) x++;
-				else x--;
-			}
-			else
-			{
-				if (IsNeighborFree(Coord, ERoomDirection::Bottom)) x--;
-				else x++;
-			}
+			// try the random vertical side, then the other one; if both already have rooms, go right
+			// (always free: the walk never goes left), so the next room never overwrites an existing one
+			const bool bTopFirst = RandomStream->RandRange(0, 1) != 0;
+			const ERoomDirection First = bTopFirst ? ERoomDirection::Top : ERoomDirection::Bottom;
+			const ERoomDirection Second = bTopFirst ? ERoomDirection::Bottom : ERoomDirection::Top;
+			if (IsNeighborFree(Coord, First)) x += bTopFirst ? 1 : -1;
+			else if (IsNeighborFree(Coord, Second)) x += bTopFirst ? -1 : 1;
+			else y++;
 		}
 
 		// else x--;
