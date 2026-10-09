@@ -161,6 +161,7 @@ Keep the design: an ability is a montage list plus effect containers plus anim-n
 | Hitbox: `ANS_Hitbox` → event → ability spawns `AHitBox` | Keep the flow, but make it an AbilityTask that owns the overlap shapes. Settings travel as an `FInstancedStruct` payload, not a `NewObject`. Effects are applied with `ApplyGameplayEffectSpecToTarget` and real target data. |
 | Stats set in `BeginPlay`, ~40 `RequestGameplayTag(TEXT("..."))` calls | Init from a GE/DataTable, an `IncomingDamage` meta attribute, `PreAttributeChange` clamps, and native tags via `UE_DEFINE_GAMEPLAY_TAG` |
 | `UPawnSensingComponent` | AIPerception (sight). Keep the BT/EQS assets. |
+| Buff UI metadata (name, description, color, icon) lived in Blueprint subclasses of the GE UI data (`IconFire`, `IconDefense`); since 5.3 that's a GE component, so Phase 2 copied the values into each effect | A `UBuffUIDataAsset` (primary data asset) per buff as the single source of truth: `DA_BuffUI_Fire`, `DA_BuffUI_StunImmune` with the exact current values. Description becomes `FText`, ready for a future mouse-over tooltip. Each GE's UI component references its data asset instead of holding a copy, and `WBP_DurationBar` reads through it. Verify the flame and shield bars in game. Keep `IconFire`/`IconDefense` until parity is confirmed. |
 
 ## Phase 4: the level generator and PCG
 
