@@ -17,7 +17,7 @@
 /// <param name="Container"></param>
 /// <param name="Item"></param>
 /// <returns></returns>
-FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item)
+FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item, float MaxDuration)
 {
     UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();
     if (!ensure(GAS != nullptr)) return FActiveGameplayEffectHandle();
@@ -34,6 +34,18 @@ FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToC
     {
         // NewHandle.Data.Get()->dis;
         NewHandle.Data.Get()->SetSetByCallerMagnitude(Mag.GameplayTag, Mag.Magnitude);
+    }
+    // A negative or zero duration on a HasDuration effect means "forever"; when the caller bounds the effect
+    // (e.g. an anim notify state's length), never let it outlive that bound
+    FGameplayEffectSpec& Spec = *NewHandle.Data.Get();
+    if (MaxDuration > 0.f && Spec.Def->DurationPolicy == EGameplayEffectDurationType::HasDuration)
+    {
+        float Duration = -1.f;
+        Spec.Def->DurationMagnitude.AttemptCalculateMagnitude(Spec, Duration, false, -1.f);
+        if (Duration <= 0.f || Duration > MaxDuration)
+        {
+            Spec.SetDuration(MaxDuration, true);
+        }
     }
     return Char->OnGetHitByEffect(NewHandle, nullptr);
     
@@ -77,12 +89,12 @@ TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectC
     return ApplyAllEffectContainersToChar(Char, Containers, Item);
 }
 
-TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item)
+TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item, float MaxDuration)
 {
     TArray<FActiveGameplayEffectHandle> result = {};
     for (auto &&Container : Containers)
     {
-        FActiveGameplayEffectHandle NewActiveEffect = ApplyEffectContainerToChar(Char, Container, Item);
+        FActiveGameplayEffectHandle NewActiveEffect = ApplyEffectContainerToChar(Char, Container, Item, MaxDuration);
         result.Add(NewActiveEffect);
     }
     return result;

@@ -3,44 +3,29 @@
 
 #include "ANS_ApplyEffect.h"
 #include "IGetHit.h"
-#include "EffectEventSettings.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "AbilitySystemComponent.h"
 
 
 void UANS_ApplyEffect::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
-    // UE_LOG(LogTemp, Warning, TEXT("Im a notify beginning"));
-    AActor* MyActor = MeshComp->GetOwner();
-    IGetHit* MyChar = Cast<IGetHit>(MyActor);
-    if (MyChar)
-    {
-        UAbilitySystemComponent* GAS = MyChar->GetAbilitySystemComponent();
-        FGameplayEventData Payload = FGameplayEventData();
-        UEffectEventSettings* Settings = NewObject<UEffectEventSettings>(this);
-        // UEffectEventSettings Settings = UEffectEventSettings(FObjectInitializer::Get());
-        Settings->EffectsToApply = EffectsToApply;
-        Payload.OptionalObject = Settings;
-        FGameplayTag EffectApplyTag = FGameplayTag::RequestGameplayTag(TEXT("notify.effect.apply"));
-        GAS->HandleGameplayEvent(EffectApplyTag, &Payload);
-    }
-    // ActiveEffects.Add(UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(MyActor, EffectsToApply));
-    // ActiveEffects = UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(MyActor, EffectsToApply);
+    IGetHit* MyChar = MeshComp ? Cast<IGetHit>(MeshComp->GetOwner()) : nullptr;
+    if (!MyChar) return;
+    // NotifyEnd removes these; the cap only guarantees they expire if it never comes (death, a skipped section).
+    // It's in world time while the montage can be slowed by attack speed and hit pauses, hence the slack.
+    const float SafetyCap = TotalDuration + 2.f;
+    TArray<FActiveGameplayEffectHandle>& Active = ActiveEffectsByMesh.FindOrAdd(MeshComp);
+    Active.Append(UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(MyChar, EffectsToApply, nullptr, SafetyCap));
 }
 
 void UANS_ApplyEffect::NotifyEnd(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, const FAnimNotifyEventReference& EventReference)
 {
-    // UE_LOG(LogTemp, Warning, TEXT("Im a notify ending"));
-    AActor* MyActor = MeshComp->GetOwner();
-    // UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(MyActor, ActiveEffects.Pop(true));
-    // ActiveEffects = {};
-    IGetHit* MyChar = Cast<IGetHit>(MyActor);
-    if (MyChar)
+    TArray<FActiveGameplayEffectHandle> Active;
+    if (!ActiveEffectsByMesh.RemoveAndCopyValue(MeshComp, Active)) return;
+    if (MeshComp) UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(MeshComp->GetOwner(), Active);
+    // drop entries for meshes that were destroyed mid-notify
+    for (auto It = ActiveEffectsByMesh.CreateIterator(); It; ++It)
     {
-        UAbilitySystemComponent* GAS = MyChar->GetAbilitySystemComponent();
-        FGameplayEventData Payload = FGameplayEventData();
-        FGameplayTag EffectRemoveTag = FGameplayTag::RequestGameplayTag(TEXT("notify.effect.remove"));
-        GAS->HandleGameplayEvent(EffectRemoveTag, &Payload);
+        if (!It->Key.IsValid()) It.RemoveCurrent();
     }
-
 }

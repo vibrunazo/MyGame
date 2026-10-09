@@ -132,16 +132,11 @@ protected:
 	UFUNCTION()
 	void OnHitConnect(const FGameplayEventData Payload);
 	UFUNCTION()
-	void OnEffectApplyEvent(const FGameplayEventData Payload);
-	UFUNCTION()
-	void OnEffectRemoveEvent(const FGameplayEventData Payload);
-	UFUNCTION()
 	void OnDeactivateEvent(const FGameplayEventData Payload);
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
 	void CheckConditionalEffects();
 	void IncComboCount();
 	void ResetHitBoxes();
-	void ResetActiveEffects();
 	void ResetTarget(); 
 	void AcquireNewTarget();
 	void LockToTarget();
@@ -154,8 +149,6 @@ protected:
 	UClass* GetHitBoxClass();
 	UPROPERTY()
 	class AHitBox* HitBoxRef = nullptr;
-	UPROPERTY()
-	TArray<FActiveGameplayEffectHandle> ActiveEffects = {};
 	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> ActiveSelfEffects = {};
 	

@@ -13,6 +13,7 @@
 
 //#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Engine/OverlapResult.h"
 #include "Components/InputComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
@@ -103,7 +104,6 @@ AMyCharacter::AMyCharacter()
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 
-	if (AbilitySystem) AbilitySystem->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
 
 	SetDefaultProperties();
 }
@@ -237,6 +237,7 @@ void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	if(!AbilitySystem) return;
+	AbilitySystem->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
 	for (auto &&Ability : Abilities)
 	{
 		GiveAbility(Ability.AbilityClass);
@@ -273,6 +274,7 @@ void AMyCharacter::BeginPlay()
 	}
 	UpdateHealthBar();
 	SetIsInCombat(true);
+	RefreshPawnCollision();
 }
 
 
@@ -630,9 +632,66 @@ void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FG
 
 void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Pawn block tag changed"));
-	if (NewCount) GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-	else GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+	RefreshPawnCollision();
+}
+
+// The only place that sets the capsule's response to other pawns: ignore them while dead, airborne or
+// while an effect grants status.nopawnblock (moves that pass through enemies); block otherwise
+void AMyCharacter::RefreshPawnCollision()
+{
+	UCapsuleComponent* Capsule = GetCapsuleComponent();
+	const bool bIgnorePawns = !IsAlive()
+		|| (GetCharacterMovement() && GetCharacterMovement()->IsFalling())
+		|| (AbilitySystem && AbilitySystem->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock"))));
+	if (bIgnorePawns)
+	{
+		GetWorldTimerManager().ClearTimer(PawnBlockRetryTimer);
+		PawnBlockWaitStart = -1.f;
+		Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+		return;
+	}
+	// Blocking again while inside another character makes movement shove the capsules apart, which can push
+	// one into level geometry. Wait briefly for them to separate; if they don't (an enemy standing in us),
+	// step out sideways ourselves, swept so we never go through walls
+	if (const ACharacter* Other = FindOverlappingCharacter())
+	{
+		const float Now = GetWorld()->GetTimeSeconds();
+		if (PawnBlockWaitStart < 0.f) PawnBlockWaitStart = Now;
+		if (Now - PawnBlockWaitStart < 0.3f)
+		{
+			GetWorldTimerManager().SetTimer(PawnBlockRetryTimer, this, &AMyCharacter::RefreshPawnCollision, 0.05f, false);
+			return;
+		}
+		StepOutOf(Other);
+	}
+	PawnBlockWaitStart = -1.f;
+	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
+}
+
+const ACharacter* AMyCharacter::FindOverlappingCharacter() const
+{
+	const UCapsuleComponent* Capsule = GetCapsuleComponent();
+	TArray<FOverlapResult> Overlaps;
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(PawnOverlap), false, this);
+	GetWorld()->OverlapMultiByObjectType(Overlaps, Capsule->GetComponentLocation(), Capsule->GetComponentQuat(),
+		FCollisionObjectQueryParams(ECollisionChannel::ECC_Pawn), Capsule->GetCollisionShape(), Params);
+	for (const FOverlapResult& Overlap : Overlaps)
+	{
+		const ACharacter* Other = Cast<ACharacter>(Overlap.GetActor());
+		// only other characters' capsules count; their meshes overlap pawns by design
+		if (Other && Overlap.GetComponent() == Other->GetCapsuleComponent()) return Other;
+	}
+	return nullptr;
+}
+
+void AMyCharacter::StepOutOf(const ACharacter* Other)
+{
+	FVector Away = GetActorLocation() - Other->GetActorLocation();
+	Away.Z = 0.f;
+	if (!Away.Normalize()) Away = -GetActorForwardVector().GetSafeNormal2D();
+	const float Needed = GetCapsuleComponent()->GetScaledCapsuleRadius() + Other->GetCapsuleComponent()->GetScaledCapsuleRadius()
+		- FVector::Dist2D(GetActorLocation(), Other->GetActorLocation()) + 2.f;
+	if (Needed > 0.f) SetActorLocation(GetActorLocation() + Away * Needed, true);
 }
 
 FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
@@ -830,7 +889,7 @@ void AMyCharacter::OnDie()
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	// GetMesh()->SetPhysicsLinearVelocity(FVector(200.f, 0.f, 5000.f));
-	GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
+	RefreshPawnCollision();
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
 
@@ -977,7 +1036,6 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);
 		AbilitySystem->UnBlockAbilitiesWithTags(GroundTagContainer);
 		AbilitySystem->CancelAbilities(&FlyingTagContainer);
-		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
 		GetCapsuleComponent()->SetGenerateOverlapEvents(true);
 		GetMesh()->SetGenerateOverlapEvents(false);
 	}
@@ -986,11 +1044,11 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 		AbilitySystem->BlockAbilitiesWithTags(GroundTagContainer);
 		AbilitySystem->UnBlockAbilitiesWithTags(FlyingTagContainer);
 		AbilitySystem->CancelAbilities(&GroundTagContainer);
-		GetCapsuleComponent()->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
 		GetCapsuleComponent()->SetGenerateOverlapEvents(false);
 		GetMesh()->SetGenerateOverlapEvents(true);
 		LastGroundLocation = GetActorLocation();
 	}
+	RefreshPawnCollision();
 }
 
 uint8 AMyCharacter::GetTeam()

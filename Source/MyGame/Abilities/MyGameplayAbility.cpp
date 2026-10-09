@@ -13,7 +13,6 @@
 #include "Animation/AnimMontage.h"
 #include "GameplayTagContainer.h"
 #include "GameplayEffect.h"
-#include "EffectEventSettings.h"
 // #include "../MyBlueprintFunctionLibrary.h"
 #include "Engine/World.h"
 #include "TimerManager.h"
@@ -125,8 +124,6 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));;
     FGameplayTag HitEndTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.end"));
     FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
-    FGameplayTag EffectApplyTag = FGameplayTag::RequestGameplayTag(TEXT("notify.effect.apply"));
-    FGameplayTag EffectRemoveTag = FGameplayTag::RequestGameplayTag(TEXT("notify.effect.remove"));
 
     UAbilityTask_WaitGameplayEvent* HitStartTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitStartTag);
     HitStartTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitStart);
@@ -140,14 +137,6 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     HitConnectTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitConnect);
     HitConnectTask->ReadyForActivation();
 
-    UAbilityTask_WaitGameplayEvent* EffectApplyTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, EffectApplyTag);
-    EffectApplyTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnEffectApplyEvent);
-    EffectApplyTask->ReadyForActivation();
-
-    UAbilityTask_WaitGameplayEvent* EffectRemoveTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, EffectRemoveTag);
-    EffectRemoveTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnEffectRemoveEvent);
-    EffectRemoveTask->ReadyForActivation();
-
     UAbilityTask_WaitGameplayEvent* DeactivateTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, TagThatDeactivateMe);
     DeactivateTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnDeactivateEvent);
     DeactivateTask->ReadyForActivation();
@@ -159,7 +148,6 @@ void UMyGameplayAbility::EndAbility(const FGameplayAbilitySpecHandle Handle, con
 {
     Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 
-    ResetActiveEffects();
     RemoveSelfEffects();
     // try to unlock rotation
     /*if (!bLockRotationToTarget && !bAlwaysLockRot) return;
@@ -178,7 +166,6 @@ void UMyGameplayAbility::OnMontageComplete()
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
-    ResetActiveEffects();
     FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
     GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
 }
@@ -251,31 +238,6 @@ void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
 	if (!Source) return;
     Source->OnHitPause(HitPause);
     
-}
-
-void UMyGameplayAbility::OnEffectApplyEvent(const FGameplayEventData Payload)
-{
-     //if (((AMyCharacter*)GetAvatarActorFromActorInfo())->IsPlayerControlled()) UE_LOG(LogTemp, Warning, TEXT("Ability receied effect apply event"));
-    UE_LOG(LogTemp, Warning, TEXT("Ability receied effect apply event"));
-    //ResetActiveEffects();
-    const UEffectEventSettings* Settings = Cast<UEffectEventSettings>(Payload.OptionalObject);
-    if (Settings)
-    {
-        ActiveEffects.Append(UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(GetAvatarActorFromActorInfo(), Settings->EffectsToApply));
-    }
-}
-void UMyGameplayAbility::OnEffectRemoveEvent(const FGameplayEventData Payload)
-{
-    ResetActiveEffects();
-}
-
-void UMyGameplayAbility::ResetActiveEffects()
-{
-    if (ActiveEffects.Num() > 0)
-    {
-        UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(GetAvatarActorFromActorInfo(), ActiveEffects);
-        ActiveEffects = {};
-    }
 }
 
 void UMyGameplayAbility::ResetTarget()

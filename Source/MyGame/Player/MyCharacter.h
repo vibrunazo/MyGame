@@ -151,6 +151,12 @@ public:
 	void OnEffectApplied(UAbilitySystemComponent* SourceComp, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffect);
 	UFUNCTION()
 	void PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
+	UFUNCTION()
+	void RefreshPawnCollision();
+	const ACharacter* FindOverlappingCharacter() const;
+	void StepOutOf(const ACharacter* Other);
+	FTimerHandle PawnBlockRetryTimer;
+	float PawnBlockWaitStart = -1.f;
 	void RemoveOutline();
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;

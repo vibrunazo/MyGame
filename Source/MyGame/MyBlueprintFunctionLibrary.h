@@ -115,11 +115,12 @@ class MYGAME_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	
 public:
 	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	static FActiveGameplayEffectHandle ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item = nullptr);
+	// MaxDuration > 0 caps HasDuration effects (including "forever" ones with a negative duration)
+	static FActiveGameplayEffectHandle ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item = nullptr, float MaxDuration = -1.f);
 
 	UFUNCTION(BlueprintCallable, Category="MyLibrary")
 	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr);
-	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr);
+	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr, float MaxDuration = -1.f);
 	UFUNCTION(BlueprintCallable, Category="MyLibrary")
 	static void RemoveEffectsFromActor(AActor* Actor, TArray<FActiveGameplayEffectHandle> ActiveEffects);
 	UFUNCTION(BlueprintCallable, Category = "MyLibrary")

@@ -33,6 +33,12 @@ def _vec(v: unreal.Vector):
     return [round(v.x, 1), round(v.y, 1), round(v.z, 1)]
 
 
+def _pawn_response(char):
+    """The capsule's collision response to the Pawn channel (Block / Overlap / Ignore)."""
+    capsule = char.get_editor_property("capsule_component")
+    return str(capsule.get_collision_response_to_channel(unreal.CollisionChannel.ECC_PAWN)).split(".")[-1].rstrip(">").split(":")[0]
+
+
 @unreal.uclass()
 class MyGameTools(unreal.ToolsetDefinition):
     """MyGame play-testing hooks: press the PIE player's ability inputs and read its state."""
@@ -46,7 +52,8 @@ class MyGameTools(unreal.ToolsetDefinition):
             JSON snapshot of the player character.
         """
         char = _player()
-        state = {"actor": char.get_name(), "location": _vec(char.get_actor_location())}
+        state = {"actor": char.get_name(), "location": _vec(char.get_actor_location()),
+                 "pawn_collision": _pawn_response(char)}
         movement = char.get_editor_property("character_movement")
         if movement:
             state["movement_mode"] = str(movement.get_editor_property("movement_mode"))
@@ -94,6 +101,37 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def learn_item_abilities(item_asset_path: str) -> str:
+        """Gives the PIE player the abilities of a learn item (e.g. "/Game/Blueprints/Items/DA_LearnTat"), as picking it up would.
+
+        Args:
+            item_asset_path: A LearnItemDataAsset.
+
+        Returns:
+            JSON list of the abilities learned (class and input slot).
+        """
+        char = _player()
+        item = unreal.load_asset(item_asset_path)
+        abilities = list(item.get_editor_property("abilities_to_learn"))
+        char.learn_abilities(abilities)
+        return json.dumps([{"ability": a.get_editor_property("ability_class").get_name(),
+                            "input": str(a.get_editor_property("input")), "event": a.get_editor_property("event_name"),
+                            "ground": a.get_editor_property("can_use_on_ground"), "air": a.get_editor_property("can_use_on_air")}
+                           for a in abilities])
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def jump_player() -> str:
+        """Makes the PIE player jump, as the jump button would.
+
+        Returns:
+            The player's state right after the jump, as JSON.
+        """
+        _player().jump()
+        return MyGameTools.pie_player_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
     def teleport_player(x: float, y: float, z: float) -> str:
         """Moves the PIE player to a world location (e.g. into another room).
 
@@ -126,6 +164,7 @@ class MyGameTools(unreal.ToolsetDefinition):
             entry = {"actor": char.get_name(), "path": char.get_path_name(), "class": char.get_class().get_name(),
                      "location": _vec(char.get_actor_location()), "team": char.get_editor_property("team")}
             attributes = char.get_editor_property("attribute_set_base")
+            entry["pawn_collision"] = _pawn_response(char)
             if attributes:
                 entry["health"] = attributes.get_editor_property("health").get_editor_property("current_value")
             chars.append(entry)
@@ -148,7 +187,9 @@ class MyGameTools(unreal.ToolsetDefinition):
         """
         char = _player()
         attributes = char.get_editor_property("attribute_set_base")
-        attributes.set_editor_property(attribute.lower(), unreal.GameplayAttributeData(value))
+        # GameplayAttributeData(value) silently zeroes both fields; set them by name
+        data = unreal.GameplayAttributeData(base_value=value, current_value=value)
+        attributes.set_editor_property(attribute.lower(), data)
         return MyGameTools.pie_player_state()
 
     @toolset_registry.tool_call
@@ -179,6 +220,33 @@ class MyGameTools(unreal.ToolsetDefinition):
         else:
             raise RuntimeError(f"not a particle system: {asset_path}")
         return comp.get_path_name() if comp else ""
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def floor_height(x: float, y: float, from_z: float = 1000.0) -> str:
+        """Traces straight down at (x, y) in the PIE world against world geometry to find the floor.
+
+        Args:
+            x: World X.
+            y: World Y.
+            from_z: Height to trace down from; start just above the spot so roofs and ceilings aren't hit.
+
+        Returns:
+            JSON {"hit": bool, "z": floor height, "actor": what was hit}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        start, end = unreal.Vector(x, y, from_z), unreal.Vector(x, y, -5000)
+        # world geometry only (WorldStatic, WorldDynamic), so characters standing there don't count as floor
+        hit = unreal.SystemLibrary.line_trace_single_for_objects(
+            world, start, end, [unreal.ObjectTypeQuery.OBJECT_TYPE_QUERY1, unreal.ObjectTypeQuery.OBJECT_TYPE_QUERY2],
+            False, [], unreal.DrawDebugTrace.NONE, True)
+        if not hit:
+            return json.dumps({"hit": False})
+        t = hit.to_tuple()
+        # HitResult tuple: (blocking_hit, initial_overlap, time, distance, location, impact_point, normal, impact_normal, phys_mat, hit_actor, ...)
+        return json.dumps({"hit": bool(t[0]), "z": round(t[4].z, 1), "actor": t[9].get_name() if t[9] else None})
 
     @toolset_registry.tool_call
     @staticmethod
