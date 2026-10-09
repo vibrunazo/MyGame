@@ -265,6 +265,41 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def health_bar_durations(actor_path: str) -> str:
+        """Lists the duration bars (buff/debuff timers) on a character's health bar widget and the icon each one shows.
+
+        Args:
+            actor_path: Full path of a MyCharacter in the PIE world (see list_characters).
+
+        Returns:
+            JSON list of bars: widget class, parent panel, effect UI name, icon texture and color.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        widget = char.get_editor_property("health_bar_comp").get_user_widget_object()
+        if not widget:
+            return json.dumps({"error": "health bar widget not created"})
+        bars = []
+        for handle, bar in widget.get_editor_property("map_of_bars").items():
+            if not bar:
+                bars.append({"bar": None})  # effects without UI data get no bar
+                continue
+            entry = {"bar": bar.get_class().get_name(), "in_panel": bool(bar.get_parent())}
+            with contextlib.suppress(Exception):
+                ui = bar.get_editor_property("BuffUI")
+                buff = ui.get_editor_property("buff_ui") if ui else None
+                if buff:
+                    icon = buff.get_editor_property("icon")
+                    res = icon.get_editor_property("resource_object")
+                    entry.update({"ui_class": ui.get_class().get_name(), "name": str(buff.get_editor_property("name")),
+                                  "icon": res.get_path_name() if res else None,
+                                  "color": str(buff.get_editor_property("color"))})
+            bars.append(entry)
+        return json.dumps(bars)
+
+    @toolset_registry.tool_call
+    @staticmethod
     def list_actors(class_path: str) -> str:
         """Lists PIE actors of a class (subclasses included) with path and location.
 
