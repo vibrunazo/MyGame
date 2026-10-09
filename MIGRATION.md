@@ -34,7 +34,7 @@ Found and fixed along the way, beyond the original plan:
   - **Fix:** `ANS_ApplyEffect` now owns its effects per character and caps them at the notify's length + 2 s. `AMyCharacter::RefreshPawnCollision` is the only code that sets pawn collision. It waits up to 0.3 s for overlapping characters to separate, then steps out sideways.
   - **Verified:** 36 stress trials (plain, cancel, jump, retrigger) with no stuck collision and no falls through the floor.
 - **"Unexplained boss death":** not a game bug. My test cheat zeroed attributes (`GameplayAttributeData(value)` ignores the value); fixed.
-- **Fire Hands → `GE_FireDot`:** conditional effects ignored their `ConditionTag`, so fire damage-over-time never triggered. Fixed and verified in game.
+- **Conditional effects (Fire Hands → `GE_FireDot`):** this already worked in the original. It matched active effects against the ability's own tags, so `GE_FirePunch` (`activate.punch`) set punches on fire but not kicks. The flaw was narrower: an ability with no tags matched any effect, and `ConditionTag` was unused. A conditional effect now needs an active effect with the condition tag **and** one of the ability's tags. Verified: punch without Fire Hands doesn't burn, punch with Fire Hands burns, kick with Fire Hands doesn't burn. (An intermediate commit, 9054d20, briefly made kicks burn too.)
 - **Boss abilities:** they used input `200`, which 5.8 loaded as `EInput_MAX`. It's now `EInput::None = 200`.
 - **Abilities:**
   - Combo-cancel detection moved to `PreActivate` (no tag side effects in `CanActivateAbility`).

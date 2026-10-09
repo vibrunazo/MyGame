@@ -389,9 +389,21 @@ void UMyGameplayAbility::CheckConditionalEffects()
     for (auto&& Condition : ConditionalEffects)
     {
         if (Condition.EffectToApply.EffectClass == nullptr || !Condition.ConditionTag.IsValid()) { continue; }
-        // e.g. buff.firetouch from the Fire Hands item adds GE_FireDot to every hit; the tag may be an asset or granted tag
+        // Needs an active effect that has the condition tag and also one of this ability's tags: Fire Hands
+        // (GE_FirePunch: buff.firetouch + activate.punch) sets punches on fire, not kicks
+        UAbilitySystemComponent* ASC = GetActorInfo().AbilitySystemComponent.Get();
         const FGameplayEffectQuery Query = FGameplayEffectQuery::MakeQuery_MatchAnyOwningTags(FGameplayTagContainer(Condition.ConditionTag));
-        if (GetActorInfo().AbilitySystemComponent->GetActiveEffects(Query).Num() > 0) TempEffectsToApply.Add(Condition.EffectToApply);
+        for (const FActiveGameplayEffectHandle& Handle : ASC->GetActiveEffects(Query))
+        {
+            const FActiveGameplayEffect* Active = ASC->GetActiveGameplayEffect(Handle);
+            FGameplayTagContainer EffectTags;
+            if (Active) Active->Spec.GetAllAssetTags(EffectTags);
+            if (EffectTags.HasAny(GetAssetTags()))
+            {
+                TempEffectsToApply.Add(Condition.EffectToApply);
+                break;
+            }
+        }
     }
 
 }
