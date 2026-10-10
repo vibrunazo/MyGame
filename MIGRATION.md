@@ -27,7 +27,8 @@ Found and fixed along the way, beyond the original plan:
 - **Darker, greyer scene than the 2020 video (fixed):** `SkyLight_1` is now intensity 13 with tint (0.75, 0.83, 1.0), picked against the video. `LightSource2` (the main light) has `ForwardShadingPriority` 1, and `LightSource3` (fill) is no longer an atmosphere sun light, which clears the "multiple directional lights competing" warning. Baked lighting stays out of git: each machine rebakes, and the look doesn't depend on it.
   The cause: baked lighting isn't it. Both directional lights are Movable, and a 2026-10-09 rebuild of all room maps changed nothing visible. The blue look came from the height fog's volumetric fog, which is lit by the Stationary sky light (captured scene, intensity 5). In 4.25 the `AtmosphericFog` actor hazed the sky sphere bright blue, and the sky light captured that. UE5 loads `AtmosphericFog` as a physically based SkyAtmosphere that doesn't touch the sky sphere, so the capture is the sphere's own dark navy (`colors determined by sun position` off, zenith ≈ 0.004/0.013/0.036). The result is a dim, grey volumetric fog. PIE tests of the floor band at RGB mean: now (63,61,70); sky light 15 (≈ video); sky light 13 with tint (0.6,0.72,1.0) is closest; video (45,61,146). Volumetric fog off gives a washed-out cyan.
 - **Data quirks:** 3 ability entries use `Input = 200`, which isn't an `EInput` value and now loads as `EInput_MAX`. Enemy montages lack the `ComboStart` section the combo code jumps to. Both predate the migration.
-- **Uppercut (fixed 2026-10-09):** since Sep 2020 it's no longer a starting ability, and by Nov 2020 its start-room book was gone. Its only source was `MinibossReward` (Uppercut 1, the other 5 books 0). But `FLootDrop::DropRate` had been ignored since the May 2020 loot refactor, so the pick was random. Now `GetRandomItem` keeps its tiers (items for an empty button first) and picks within a tier by `DropRate`; a tier whose weights are all 0 stays uniform, so tables left at the default behave as before. Test: a fresh player gets Uppercut 300/300 from the miniboss table; with Super+Punch already filled (Smash or Charge Punch), the drop is one of Tat, Kkk or Fireball. **Testing aid:** a 6th start-room book, `BP_Pickup_Uppercut` at (400, 300), teaches Uppercut. Keep it or remove it once Uppercut testing is done (your call).
+- **Uppercut (fixed 2026-10-09):** since Sep 2020 it's no longer a starting ability, and by Nov 2020 its start-room book was gone. Its only source was `MinibossReward` (Uppercut 1, the other 5 books 0). But `FLootDrop::DropRate` had been ignored since the May 2020 loot refactor, so the pick was random. Now `GetRandomItem` keeps its tiers (items for an empty button first) and picks within a tier by `DropRate`; a tier whose weights are all 0 stays uniform, so tables left at the default behave as before. Test: a fresh player gets Uppercut 300/300 from the miniboss table; with Super+Punch already filled (Smash or Charge Punch), the drop is one of Tat, Kkk or Fireball. **Testing aid, kept on purpose:** a 6th start-room book, `BP_Pickup_Uppercut` at (400, 300), teaches Uppercut. The start-room books stay as a way to debug abilities; decide on them before shipping.
+- **Run Punch book titled "None" (fixed 2026-10-09):** book covers take the title and picture from the ability's `AbilityUIdata`, not from the item. `GA_PunchRun` (added Oct 30, 2020) never got its UI data. It now has the name "Run Punch" and the description "Runs and punches", matching `DA_LearnRunPunch`. It still has **no icon**: `Content/tex` has none for it, so its cover and HUD slot show no picture.
 - **Unexplained death:** the player died in the boss fight despite a 100k-HP test cheat (the cheat bypasses GAS). Look at this together with the collision bug in Phase 2.
 
 ## Phase 2 status (2026-10-09): done
@@ -190,7 +191,20 @@ The steps:
 2. Keyboard and gamepad both work.
 3. Package a Win64 build and smoke-test it.
 
-## Phase 6: optional
+## Phase 6: the camera
+
+After the migration and the code fixes (Phases 3 to 5). Every tester called the camera the worst part of the game: it moves too much. Your 2020 attempts (May to June: lerped position from the player's place in the room, rotation targets, ease-in-out, wall clamps, offset acceleration) made it worse, not better.
+
+- `ARoomCameraPawn` (`Source/MyGame/Level/RoomCameraPawn.*`, `BP_RoomCameraPawn`) is about 290 lines with ~20 tuning knobs (lerp speed, rotation speed and offset, X/Y ratios, a FoV range, 4 wall clamps, offset acceleration) and two follow functions (`FollowPlayer`, `FollowPlayer2`).
+- Plan: first measure what the camera does. Record its position, rotation and FoV per frame during scripted test runs (walking across a room, combat back and forth, dashes, room transitions), and plot how far and how often it moves relative to the player. Then rebuild it from beat 'em up conventions:
+  - mostly fixed per room, with a dead zone so small moves and attack lunges don't move it;
+  - critically damped smoothing (no overshoot);
+  - no rotation during play, or very little;
+  - framing that keeps the player and the enemies in view instead of chasing the player.
+  Candidates are UE's camera modifiers or a slimmed-down pawn; pick whichever is simpler.
+- Compare old and new with the same recorded runs (numbers first, then short clips) and let you pick by feel; play testing decides, not the metrics.
+
+## Phase 7: optional
 
 - **Lighting overhaul (after parity is confirmed):** the current lights are prototypes. Any change moves the look away from the 2020 video, which is still the reference for parity checks, so it waits until parity is done.
   1. **Fully dynamic lighting.** Rooms are assembled at runtime and the main lights are already Movable, so baking adds work (per-machine bakes, re-saved maps) for almost no gain. Set `r.AllowStaticLighting=False` and make the room lights Movable. That removes `*_BuiltData`, Lightmass and the importance volume.
