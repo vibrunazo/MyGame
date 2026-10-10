@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Containers/Ticker.h"
 #include "RoomDataAsset.h"
 #include "LevelLayout.h"
 #include "../Abilities/LootComponent.h"
@@ -104,8 +105,6 @@ public:
 	ALevelBuilder();
 	void OnConstruction(const FTransform & Transform) override;
 
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category="LevelBuilder")
-	class ULevelStreaming* OnBPCreateLevelByName(FName LevelName);
 	void RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Location);
 	void OnEnterRoom(FRoomState NewRoom);
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
@@ -200,6 +199,9 @@ private:
 	// class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 	UFUNCTION()
 	void OnLoadedOneLevel();
+	void OnLoadingTimedOut();
+	// A core ticker, not a world timer: world timers run on dilated time, and the world is frozen while rooms stream
+	FTSTicker::FDelegateHandle LoadingTimeout;
 
 	UPROPERTY()
 	TArray<class AWall*> HiddenWalls;
@@ -209,6 +211,7 @@ private:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 
 };

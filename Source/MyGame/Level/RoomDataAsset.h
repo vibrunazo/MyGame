@@ -25,10 +25,9 @@ class MYGAME_API URoomDataAsset : public UPrimaryDataAsset
 	GENERATED_BODY()
 
 public:
-	FName GetAutoLevelAddress();
-
+	// The room's map, streamed in as a level instance at the room's grid cell
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
-	FName LevelAddress = "Game/Maps/Rooms/Room01";
+	TSoftObjectPtr<UWorld> Level;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)
 	ERoomType RoomType = ERoomType::Empty;
 	UPROPERTY(BlueprintReadOnly, EditAnywhere)

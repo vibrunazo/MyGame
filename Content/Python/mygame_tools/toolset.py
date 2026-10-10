@@ -423,8 +423,8 @@ class MyGameTools(unreal.ToolsetDefinition):
         for ls in unreal.ObjectIterator(unreal.LevelStreaming):
             if ls.get_world() != world or not ls.get_loaded_level():
                 continue  # LevelPersistent also lists every room map as an unloaded sublevel
-            wa = ls.get_editor_property("world_asset")
-            rooms.append({"map": wa.get_name() if wa else None, "coord": coord(ls.get_editor_property("level_transform").translation),
+            # a level instance lives in a unique package (…_LevelInstance_N) but its world keeps the map's name
+            rooms.append({"map": ls.get_loaded_level().get_outer().get_name(), "coord": coord(ls.get_editor_property("level_transform").translation),
                           "visible": ls.is_level_visible()})
         actors = lambda path: unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, path))
         walls = [{"at": [round(w.get_actor_location().x), round(w.get_actor_location().y)], "doored": w.get_editor_property("is_doored"),

@@ -230,9 +230,7 @@ void AHitBox::ApplyAllEffects(class IGetHit* Target)
 
 void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
 {
-	//if (!Target || !Target->IsValidLowLevel() || !IsValid((UObject*)Target)) return;
-	if (!Target) return;
-	if (!IsValid(Target->_getUObject())) return;
+	if (!Target || !IsValid(Cast<UObject>(Target))) return;
 	// reactions push the target along the attacker's facing: for a projectile that's the projectile, not its caster
 	if (Effect.Data.IsValid())
 	{

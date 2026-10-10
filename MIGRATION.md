@@ -96,6 +96,12 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
 **Steps:**
 1. **Done:** the level regression above.
 2. **Done:** `FLevelLayoutGenerator` (`Level/LevelLayout.*`) plans the run with no world: params, catalogue and seed in, `FLevelLayout` out (cells, room assets, miniboss reward). It's a faithful port of the walk, the room picks and the treasure placement, drawing from the stream in the same order. `ALevelBuilder::BuildGrid` just fills its grid from it, and about 150 lines of picking code left the builder. The three seeded levels are unchanged. Automation tests (`MyGameEditor`, `MyGame.Layout.*`): determinism over 500 seeds; the rules over 10,000 layouts of 4 to 13 rooms (unique cells, a connected walk that never goes left, start/boss/fight rooms, doored rooms placed and spaced right, the treasure room touching the walk and not the boss); and an empty catalogue doesn't crash. All pass, 0 rule breaks. The walk can't overlap (it never goes left), so the planned backtracking isn't needed.
+3. **Done:** C++ streaming.
+   - `URoomDataAsset::Level` (`TSoftObjectPtr<UWorld>`) replaces `LevelAddress` and the name-derived map. It's filled on all 33 `DA_Room*` assets.
+   - `ALevelBuilder::SpawnRoom` streams each room with `ULevelStreamingDynamic::LoadLevelInstanceBySoftObjectPtr`. The BP function `OnBPCreateLevelByName` and its `Iterator` variable are gone from `BP_LevelBuilder`.
+   - The game still freezes (time dilation 0) until every room is in. A 15 s real-time timeout (a core ticker: world timers run on the frozen clock) unfreezes it if a room stalls.
+   - The three seeded levels and the ability regression are unchanged. `level_state` reads a room's map from its loaded world, because an instance's package is uniquely named.
+   - A loading widget waits for Phase 5's game loop.
 
 ## Starting point
 

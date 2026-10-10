@@ -6,11 +6,11 @@
 #include "Wall.h"
 #include "RoomMaster.h"
 #include "../MyGameInstance.h"
-#include "../MyGameInstance.h"
 
 #include "Components/BillboardComponent.h"
 #include "Components/BoxComponent.h"
 #include "Engine/LevelStreaming.h"
+#include "Engine/LevelStreamingDynamic.h"
 #include "AssetRegistry/AssetRegistryModule.h"
 #include "Engine/StaticMeshActor.h"
 #include "Components/StaticMeshComponent.h"
@@ -59,7 +59,6 @@ void ALevelBuilder::OnConstruction(const FTransform & Transform)
 void ALevelBuilder::BeginPlay()
 {
 	Super::BeginPlay();
-	// ULevelStreaming* NewLevel = OnBPCreateLevelByName(NewRoom->LevelAddress);
 
 	GetWorldSettings()->SetTimeDilation(0.0f);
 	// RandomStream = FRandomStream(RandomSeed);
@@ -68,12 +67,23 @@ void ALevelBuilder::BeginPlay()
 	SetAssetListFromRegistry();
 	BuildGrid();
 	SpawnLevels();
-	// Nothing is streaming in (e.g. no room assets matched), so don't stay frozen waiting for it
+	// The game stays frozen until every room has streamed in: unfreeze when nothing streams, and don't wait forever
 	if (CountOfLevelsThatDidntFinishLoading == 0) GetWorldSettings()->SetTimeDilation(1.0f);
+	else LoadingTimeout = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateWeakLambda(this, [this](float)
+	{
+		OnLoadingTimedOut();
+		return false;
+	}), 15.f);
 
 	if (LevelMusic) LevelMusicRef = UGameplayStatics::SpawnSound2D(GetWorld(), LevelMusic);
 	UE_LOG(LogTemp, Warning, TEXT("Grid: %s"), *DebugGrid());
 	// GenerateRoom();
+}
+
+void ALevelBuilder::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	FTSTicker::GetCoreTicker().RemoveTicker(LoadingTimeout);
+	Super::EndPlay(EndPlayReason);
 }
 
 /* Plans the run's rooms (FLevelLayoutGenerator) and fills the Grid with them */
@@ -108,50 +118,45 @@ void ALevelBuilder::SpawnLevels()
 	{
 		ULevelStreaming* NewRoom = SpawnRoom(Tile.Key, Tile.Value.RoomType);
 		Tile.Value.RoomRef = NewRoom;
-		// UE_LOG(LogTemp, Warning, TEXT("created %s room at %s"), *Tile.Value.RoomType->LevelAddress.ToString(), *Tile.Key.ToString());
 		BuildWalls(Tile);
 		FString RoomAddress = "invalid";
-		if (Tile.Value.RoomType) RoomAddress = Tile.Value.RoomType->LevelAddress.ToString();
+		if (Tile.Value.RoomType) RoomAddress = Tile.Value.RoomType->Level.GetAssetName();
 		FString line = FString::Printf(TEXT("Coord: %s, Room: %s, Walls: %d"), *Tile.Key.ToString(), *RoomAddress, Tile.Value.Walls.Num());
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *line);
 	}
 	
 }
 
-/* Spawns one room at Where Coords using RoomType DataAsset. Will load the streaming level for
-that DataAsset, load it and set it visible to spawn it in the world. Returns a pointer to the
-Streaming Level that it spawned. */
+/* Streams one room's map in as a level instance at the Where grid cell. Returns its streaming level */
 ULevelStreaming* ALevelBuilder::SpawnRoom(FCoord Where, class URoomDataAsset* RoomType)
 {
-	ULevelStreaming* NewRoom = nullptr;
-	if (RoomType) NewRoom = OnBPCreateLevelByName(RoomType->GetAutoLevelAddress());
-	// UE_LOG(LogTemp, Warning, TEXT("AddressO: %s"), *RoomType->LevelAddress.ToString());
-	// UE_LOG(LogTemp, Warning, TEXT("AddressA: %s"), *RoomType->GetAutoLevelAddress().ToString());
-	// ULevelStreaming* NewRoom = OnBPCreateLevelByName(RoomType->LevelAddress);
-	if (NewRoom)
+	if (!RoomType || RoomType->Level.IsNull()) return nullptr;
+	bool bSuccess = false;
+	ULevelStreamingDynamic* NewRoom = ULevelStreamingDynamic::LoadLevelInstanceBySoftObjectPtr(this, RoomType->Level, GetLocFromGrid(Where), FRotator::ZeroRotator, bSuccess);
+	if (!NewRoom)
 	{
-		NewRoom->LevelTransform.SetLocation(GetLocFromGrid(Where));
-		// NewRoom->LevelTransform.SetScale3D(FVector(0.1f, 2.f, 1.0f));
-		// NewRoom->LevelTransform.SetToRelativeTransform();
-		// NewRoom->LevelTransform.SetRotation(FQuat(FRotator(45.f, 45.f, 45.f)));
-		// NewRoom->LevelTransform.SetScale3D(FVector(RoomSizeX/RoomType->RoomSize.X, RoomSizeY/RoomType->RoomSize.Y, 1.0f));
-		NewRoom->SetShouldBeVisible(true);
-		NewRoom->SetShouldBeLoaded(true);
-		// UE_LOG(LogTemp, Warning, TEXT("Loaded new level, is loaded: %d"), NewRoom->IsLevelLoaded());
-		NewRoom->OnLevelLoaded.AddDynamic(this, &ALevelBuilder::OnLoadedOneLevel);
-		CountOfLevelsThatDidntFinishLoading++;
+		UE_LOG(LogTemp, Error, TEXT("Could not stream %s for %s"), *RoomType->Level.ToString(), *RoomType->GetName());
+		return nullptr;
 	}
+	NewRoom->OnLevelLoaded.AddDynamic(this, &ALevelBuilder::OnLoadedOneLevel);
+	CountOfLevelsThatDidntFinishLoading++;
 	return NewRoom;
 }
 
-/* Callback function bound to 'OnLevelLoaded' event of a newly loaded room, this function will be called 
-when the level actually finishes loading. Because the event has no parameters, it's impossible to know which
-level exactly finished loading. So we have to check all of them, every time. */
+// A room stalled: start rather than stay frozen
+void ALevelBuilder::OnLoadingTimedOut()
+{
+	UE_LOG(LogTemp, Error, TEXT("%d rooms didn't finish streaming in after 15 s; starting anyway"), CountOfLevelsThatDidntFinishLoading);
+	GetWorldSettings()->SetTimeDilation(1.0f);
+}
+
+// Bound to each streamed room's OnLevelLoaded; unfreezes the game when the last one is in
 void ALevelBuilder::OnLoadedOneLevel()
 {
 	CountOfLevelsThatDidntFinishLoading--;
 	if (CountOfLevelsThatDidntFinishLoading == 0)
 	{
+		FTSTicker::GetCoreTicker().RemoveTicker(LoadingTimeout);
 		GetWorldSettings()->SetTimeDilation(1.0f);
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("new level is loaded, %d levels left to load"), CountOfLevelsThatDidntFinishLoading);
@@ -286,7 +291,6 @@ AWall* ALevelBuilder::SpawnWallAtLocDirSettings(FTransform Where, ERoomDirection
 /* Spawns a new AWall exactly at World Transform Where with given Wall Settings */
 AWall* ALevelBuilder::SpawnWall(FTransform Where, FWallSettings* Settings)
 {
-	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
 	FWallSettings DefaultSettings;
 	if (!Settings) Settings = &DefaultSettings;
 	FVector Loc = Where.GetLocation();
@@ -336,7 +340,6 @@ void ALevelBuilder::SetAssetListFromRegistry()
 		if (NewRoom)
 		{
 			RoomList.Add(NewRoom);
-			// UE_LOG(LogTemp, Warning, TEXT("Found Room %s"), *NewRoom->LevelAddress.ToString());
 		}
 	}
 
@@ -353,7 +356,7 @@ FString ALevelBuilder::DebugGrid()
 	for (auto&& Tile : Grid)
 	{
 		FString RoomAddress = "invalid";
-		if (Tile.Value.RoomType) RoomAddress = Tile.Value.RoomType->LevelAddress.ToString();
+		if (Tile.Value.RoomType) RoomAddress = Tile.Value.RoomType->Level.GetAssetName();
 		FString line = FString::Printf(TEXT("Coord: %s, Room: %s, Walls: %d"), *Tile.Key.ToString(), *RoomAddress, Tile.Value.Walls.Num());
 		UE_LOG(LogTemp, Warning, TEXT("%s"), *line);
 		result.Append(line);
@@ -548,7 +551,6 @@ void ALevelBuilder::OnUpdateCharCoord(FVector Location, ERoomDirection Dir)
 	ARoomMaster* Master = Room->RoomMasterRef;
 	// TODO this fails on coord 0,0 because game starts before room master spawns
 	if (!Master) return;
-	//UE_LOG(LogTemp, Warning, TEXT("Room? %d, Room: %s, isDoored: %d"), (Room != nullptr), *Room->RoomType->LevelAddress.ToString(), Room->RoomType->bIsDoored);
 	if (!Room->bIsRoomCleared && Room->RoomType && Room->RoomType->bIsDoored && !Master->AreAllCharsDead())
 	{
 		//UE_LOG(LogTemp, Warning, TEXT("closing doors"));
