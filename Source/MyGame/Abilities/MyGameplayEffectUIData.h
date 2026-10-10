@@ -22,14 +22,17 @@ struct FBuffUI
 	struct FSlateBrush Icon;
 };
 
-/**
- * 
- */
+// Points a gameplay effect at its UBuffUIDataAsset (the UI's single source for that buff)
 UCLASS()
 class MYGAME_API UMyGameplayEffectUIData : public UGameplayEffectUIData
 {
 	GENERATED_BODY()
 public:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Buff UI")
-	FBuffUI BuffUI;
+	// The buff's UI: icon, name, color, description
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Buff UI")
+	TObjectPtr<class UBuffUIDataAsset> BuffUIAsset;
+
+	// The asset's values as the struct the widgets read (empty when no asset is set)
+	UFUNCTION(BlueprintPure, Category = "Buff UI")
+	FBuffUI GetBuffUI() const;
 };

@@ -4,8 +4,6 @@
 #include "Sound/SoundNodeRandom.h"
 #include "Sound/SoundNodeWavePlayer.h"
 #include "Sound/SoundWave.h"
-#include "GameplayEffect.h"
-#include "Abilities/MyGameplayEffectUIData.h"
 
 bool UMyGameEditorLibrary::RebuildSoundCueFromWaves(USoundCue* Cue, const TArray<USoundWave*>& Waves, bool bLooping)
 {
@@ -49,30 +47,4 @@ bool UMyGameEditorLibrary::RebuildSoundCueFromWaves(USoundCue* Cue, const TArray
 	Cue->PostEditChange();
 	Cue->MarkPackageDirty();
 	return true;
-}
-
-int32 UMyGameEditorLibrary::ReplaceBlueprintUIDataWithNative(TSubclassOf<UGameplayEffect> EffectClass)
-{
-	UGameplayEffect* Effect = EffectClass ? EffectClass->GetDefaultObject<UGameplayEffect>() : nullptr;
-	FArrayProperty* Prop = FindFProperty<FArrayProperty>(UGameplayEffect::StaticClass(), TEXT("GEComponents"));
-	if (!Effect || !Prop) return 0;
-	// GEComponents is protected; the array is reached through reflection like the details panel does
-	TArray<TObjectPtr<UGameplayEffectComponent>>& Components = *Prop->ContainerPtrToValuePtr<TArray<TObjectPtr<UGameplayEffectComponent>>>(Effect);
-	int32 Replaced = 0;
-	Effect->Modify();
-	for (TObjectPtr<UGameplayEffectComponent>& Component : Components)
-	{
-		const UMyGameplayEffectUIData* Old = Cast<UMyGameplayEffectUIData>(Component);
-		if (!Old || Old->GetClass() == UMyGameplayEffectUIData::StaticClass()) continue;
-		UMyGameplayEffectUIData* Native = NewObject<UMyGameplayEffectUIData>(Effect, NAME_None, Effect->GetMaskedFlags(RF_PropagateToSubObjects) | RF_Transactional);
-		Native->BuffUI = Old->BuffUI;
-		Component = Native;
-		++Replaced;
-	}
-	if (Replaced)
-	{
-		Effect->PostEditChange();
-		Effect->MarkPackageDirty();
-	}
-	return Replaced;
 }

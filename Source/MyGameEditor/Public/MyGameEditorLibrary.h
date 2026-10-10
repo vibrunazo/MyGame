@@ -6,7 +6,6 @@
 
 class USoundCue;
 class USoundWave;
-class UGameplayEffect;
 
 /**
  * Editor-only helpers for scripts (Python commandlets, editor utilities) where the engine exposes no scripting API.
@@ -25,11 +24,4 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Audio")
 	static bool RebuildSoundCueFromWaves(USoundCue* Cue, const TArray<USoundWave*>& Waves, bool bLooping);
 
-	/**
-	 * GE UI data became a GE component in UE 5.3, and Blueprint subclasses of it no longer compile. Replaces such
-	 * components on a GameplayEffect class's defaults with a native UMyGameplayEffectUIData holding the same BuffUI.
-	 * Returns how many were replaced.
-	 */
-	UFUNCTION(BlueprintCallable, Category = "MyGame|Effects")
-	static int32 ReplaceBlueprintUIDataWithNative(TSubclassOf<UGameplayEffect> EffectClass);
 };

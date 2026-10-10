@@ -321,6 +321,29 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def effect_buff_ui(effect_class_path: str) -> str:
+        """What a gameplay effect's buff bar shows: its UI data component's GetBuffUI() (name, color, icon).
+
+        Args:
+            effect_class_path: A GameplayEffect Blueprint class, e.g. "/Game/Abilities/GE_FireDot.GE_FireDot_C".
+
+        Returns:
+            JSON {"asset", "name", "description", "color", "icon"}.
+        """
+        cls = unreal.load_class(None, effect_class_path)
+        cdo = unreal.get_default_object(cls)
+        comp = next((c for c in cdo.get_editor_property("ge_components") if isinstance(c, unreal.MyGameplayEffectUIData)), None)
+        if not comp:
+            return json.dumps({"error": "no MyGameplayEffectUIData component"})
+        ui = comp.get_buff_ui()
+        icon = ui.get_editor_property("icon").get_editor_property("resource_object")
+        asset = comp.get_editor_property("buff_ui_asset")
+        return json.dumps({"asset": asset.get_path_name() if asset else None, "name": str(ui.get_editor_property("name")),
+                           "description": str(ui.get_editor_property("description")), "color": str(ui.get_editor_property("color")),
+                           "icon": icon.get_path_name() if icon else None})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def jump_player() -> str:
         """Makes the PIE player jump, as the jump button would.
 
@@ -492,8 +515,8 @@ class MyGameTools(unreal.ToolsetDefinition):
                 continue
             entry = {"bar": bar.get_class().get_name(), "in_panel": bool(bar.get_parent())}
             with contextlib.suppress(Exception):
-                ui = bar.get_editor_property("BuffUI")
-                buff = ui.get_editor_property("buff_ui") if ui else None
+                ui = bar.get_editor_property("BuffUI")  # the widget's variable: the effect's UI data component
+                buff = ui.get_buff_ui() if ui else None
                 if buff:
                     icon = buff.get_editor_property("icon")
                     res = icon.get_editor_property("resource_object")
