@@ -105,17 +105,19 @@ public:
 	ALevelBuilder();
 	void OnConstruction(const FTransform & Transform) override;
 
-	void RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Location);
+	// Links a room master to the room whose streamed map it's in; returns that room, or null
+	FRoomState* RegisterRoomMaster(ARoomMaster* NewRoomMaster);
+	// The room streamed in as this level, or null
+	FRoomState* GetRoomStateOfLevel(const ULevel* Level);
 	void OnEnterRoom(FRoomState NewRoom);
 	class URoomDataAsset* GetRoomFromCoord(FCoord Coord);
 	FRoomState* GetRoomStateFromCoord(FCoord Coord);
-	FRoomState* GetRoomStateFromLoc(FVector Location);
 	class AWall* GetBottomWallFromLoc(FVector Location);
 	class AWall* GetWallRefFromCoordAndDir(FCoord Coord, ERoomDirection Dir);
 	void OnUpdateCharCoord(FVector Location, ERoomDirection Dir=ERoomDirection::Bottom);
 	void HideWall(FCoord Coord, ERoomDirection Dir=ERoomDirection::Bottom);
 	void HideOneWall(AWall* ThisWall);
-	void SetRoomClearedAtLoc(FVector Location);
+	void SetRoomCleared(FRoomState& Room);
 	void OpenDoors();
 	void CloseDoors();
 	void TeleportPlayerInsideRoom(FVector NewLocation);

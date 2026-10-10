@@ -93,14 +93,11 @@ private:
 	void FollowPlayer2(float DeltaTime);
 	FVector GetRoomDistance(); 
 	FVector GetRoomSize(); 
-	class UMyGameInstance* GetMyGameInstance();
 	class ALevelBuilder* GetLevelBuilder();
 	void TryRegisterEnterRoomEvent();
 	UFUNCTION()
 	void OnEnterRoom(struct FRoomState NewRoom);
 
-	UPROPERTY()
-	class UMyGameInstance* MyGameInstanceRef = nullptr;
 	UPROPERTY()
 	class ALevelBuilder* LevelBuilderRef = nullptr;
 	bool bIsRoomEnterRegistered = false;

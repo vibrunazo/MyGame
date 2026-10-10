@@ -4,6 +4,7 @@
 #include "RoomCameraPawn.h"
 //#include "LevelBuilder.h"
 #include "../MyGameInstance.h"
+#include "RunSubsystem.h"
 #include "../Player/MyCharacter.h"
 
 #include "Camera/CameraComponent.h"
@@ -56,7 +57,7 @@ void ARoomCameraPawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (PlayerRef && GetMyGameInstance() && GetLevelBuilder())
+	if (PlayerRef && GetLevelBuilder())
 	{
 		TryRegisterEnterRoomEvent();
 		FollowPlayer2(DeltaTime);
@@ -197,46 +198,17 @@ void ARoomCameraPawn::FollowPlayer2(float DeltaTime)
 	//DrawDebugDirectionalArrow(GetWorld(), PlayerRef->GetActorLocation(), PlayerRef->GetActorLocation() + OffsetTimeVector * 100.f, 5.f, FColor::Red);
 }
 
-/* Returns a FVector with the room size. Will try to get this value from the LevelBuilder placed in the world.
-If it finds the LevelBuilder will record a reference to it to use in future calls.
-If it fails defaults to 2000x2000x0 Room Size. */
+// The level builder's room size; 2000 x 2000 without one
 FVector ARoomCameraPawn::GetRoomSize()
 {
-	FVector RoomSize = FVector(2000.f, 2000.f, 0.f);
-	if (!LevelBuilderRef)
-	{
-		TArray<AActor*> OutActors;
-		// TODO DON'T DO THIS WTF
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), ALevelBuilder::StaticClass(), OutActors);
-		if (OutActors.Num() > 0) LevelBuilderRef = Cast<ALevelBuilder>(OutActors[0]);
-	}
-	if (LevelBuilderRef) RoomSize = FVector(LevelBuilderRef->RoomSizeX, LevelBuilderRef->RoomSizeY, 0.f);
-	return RoomSize;
-}
-
-UMyGameInstance* ARoomCameraPawn::GetMyGameInstance()
-{
-	if (MyGameInstanceRef) return MyGameInstanceRef;
-	UMyGameInstance* result = Cast<UMyGameInstance>(GetGameInstance());
-	if (result)
-	{
-		MyGameInstanceRef = result;
-		return result;
-	}
-	return nullptr;
+	if (ALevelBuilder* Builder = GetLevelBuilder()) return FVector(Builder->RoomSizeX, Builder->RoomSizeY, 0.f);
+	return FVector(2000.f, 2000.f, 0.f);
 }
 
 ALevelBuilder* ARoomCameraPawn::GetLevelBuilder()
 {
-	if (LevelBuilderRef) return LevelBuilderRef;
-	if (!GetMyGameInstance()) return nullptr;
-	ALevelBuilder* result = Cast<ALevelBuilder>(GetMyGameInstance()->GetLevelBuilder());
-	if (result)
-	{
-		LevelBuilderRef = result;
-		return result;
-	}
-	return nullptr;
+	if (!LevelBuilderRef) LevelBuilderRef = URunSubsystem::GetLevelBuilder(this);
+	return LevelBuilderRef;
 }
 
 void ARoomCameraPawn::TryRegisterEnterRoomEvent()

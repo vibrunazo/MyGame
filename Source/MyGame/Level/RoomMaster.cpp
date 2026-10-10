@@ -7,8 +7,8 @@
 #include "../Abilities/LootComponent.h"
 #include "../Player/MyCharacter.h"
 #include "../Player/ReportDeath.h"
-#include "../MyGameInstance.h"
 #include "LevelBuilder.h"
+#include "RunSubsystem.h"
 #include "Goal.h"
 
 // Sets default values
@@ -47,17 +47,13 @@ void ARoomMaster::BeginPlay()
 		}
 
 	}
-	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
-	if (!ensure(MyGI != nullptr)) return;
-	ALevelBuilder* LBuilder = MyGI->GetLevelBuilder();
-	LevelBuilderRef = LBuilder;
+	LevelBuilderRef = URunSubsystem::GetLevelBuilder(this);
 	if (!LevelBuilderRef)
 	{
-		UE_LOG(LogTemp, Error, TEXT("%s: no LevelBuilder registered, room will not be tracked"), *GetName());
+		UE_LOG(LogTemp, Error, TEXT("%s: no LevelBuilder in this world, room will not be tracked"), *GetName());
 		return;
 	}
-	LevelBuilderRef->RegisterRoomMaster(this, GetActorLocation());
-	if (RoomStateRef) LootComponent->LootTable = RoomStateRef->RoomReward;
+	if (FRoomState* Room = LevelBuilderRef->RegisterRoomMaster(this)) LootComponent->LootTable = Room->RoomReward;
 	
 }
 
@@ -76,6 +72,11 @@ void ARoomMaster::AddNewCharToRoom(AMyCharacter* Char)
 void ARoomMaster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+FRoomState* ARoomMaster::GetRoomState() const
+{
+	return LevelBuilderRef ? LevelBuilderRef->GetRoomStateOfLevel(GetLevel()) : nullptr;
 }
 
 bool ARoomMaster::AreAllCharsDead()
@@ -112,10 +113,10 @@ void ARoomMaster::OnCharDied(AMyCharacter* WhoDied)
 {
 	UE_LOG(LogTemp, Warning, TEXT("%s died lol noob"), *WhoDied->GetName());
 
-	if (!bIsDoorOpen && RoomStateRef && RoomStateRef->RoomType && RoomStateRef->RoomType->bIsDoored && AreAllCharsDead())
+	FRoomState* Room = GetRoomState();
+	if (!bIsDoorOpen && Room && Room->RoomType && Room->RoomType->bIsDoored && AreAllCharsDead())
 	{
-		if (!ensure(LevelBuilderRef != nullptr)) return;
-		LevelBuilderRef->SetRoomClearedAtLoc(GetActorLocation());
+		LevelBuilderRef->SetRoomCleared(*Room);
 
 		EnableGoals();
 		bIsDoorOpen = true;

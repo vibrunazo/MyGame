@@ -4,7 +4,6 @@
 #include "Spawner.h"
 #include "../MyGameInstance.h"
 #include "../Player/MyCharacter.h"
-#include "../Level/LevelBuilder.h"
 #include "../Level/RoomMaster.h"
 
 
@@ -29,18 +28,13 @@ ASpawner::ASpawner()
 
 void ASpawner::TryToUpdateRoomMasterRef()
 {
-	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
-	if (MyGI)
+	// the room master that shares this spawner's room map (it may not have begun play yet)
+	for (AActor* Actor : GetLevel()->Actors)
 	{
-		ALevelBuilder* LB = MyGI->GetLevelBuilder();
-		if (LB)
+		if (ARoomMaster* Master = Cast<ARoomMaster>(Actor))
 		{
-			FRoomState* RS = LB->GetRoomStateFromLoc(GetActorLocation());
-			if (RS)
-			{
-				RoomMasterRef = RS->RoomMasterRef;
-				return;
-			}
+			RoomMasterRef = Master;
+			return;
 		}
 	}
 	UE_LOG(LogTemp, Error, TEXT("failed to update room master ref on %s"), *GetName());

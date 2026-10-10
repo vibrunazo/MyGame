@@ -5,6 +5,7 @@
 #include "Door.h"
 #include "Wall.h"
 #include "RoomMaster.h"
+#include "RunSubsystem.h"
 #include "../MyGameInstance.h"
 
 #include "Components/BillboardComponent.h"
@@ -64,7 +65,7 @@ void ALevelBuilder::BeginPlay()
 	// RandomStream = FRandomStream(RandomSeed);
 	// if (!RandomSeed) RandomStream.GenerateNewSeed();
 
-	if (UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance())) MyGI->SetLevelBuilderRef(this);
+	GetWorld()->GetSubsystem<URunSubsystem>()->SetLevelBuilder(this);
 	LoadRoomCatalogue();
 	BuildGrid();
 	SpawnLevels();
@@ -465,27 +466,26 @@ FRoomState* ALevelBuilder::GetRoomStateFromCoord(FCoord Coord)
 	return GS;
 }
 
-FRoomState* ALevelBuilder::GetRoomStateFromLoc(FVector Location)
+FRoomState* ALevelBuilder::GetRoomStateOfLevel(const ULevel* Level)
 {
-	return GetRoomStateFromCoord(GetGridFromLoc(Location));
+	if (!Level) return nullptr;
+	for (auto&& Tile : Grid)
+	{
+		if (Tile.Value.RoomRef && Tile.Value.RoomRef->GetLoadedLevel() == Level) return &Tile.Value;
+	}
+	return nullptr;
 }
 
-/// <summary>
-/// Registers a RoomMaster in the RoomState of the Room in this Location.
-/// Called by the RoomMater at its BeginPlay
-/// </summary>
-/// <param name="NewRoomMaster">The RoomMaster to register</param>
-/// <param name="Location">Where the RoomMaster is so I can place its reference in the appropriate Room in the Grid.</param>
-void ALevelBuilder::RegisterRoomMaster(ARoomMaster* NewRoomMaster, FVector Location)
+FRoomState* ALevelBuilder::RegisterRoomMaster(ARoomMaster* NewRoomMaster)
 {
-	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
-	if (!Room || !NewRoomMaster)
+	FRoomState* Room = NewRoomMaster ? GetRoomStateOfLevel(NewRoomMaster->GetLevel()) : nullptr;
+	if (!Room)
 	{
-		UE_LOG(LogTemp, Error, TEXT("RegisterRoomMaster: no room in the grid at %s"), *Location.ToString());
-		return;
+		UE_LOG(LogTemp, Error, TEXT("RegisterRoomMaster: %s isn't in a streamed room"), *GetNameSafe(NewRoomMaster));
+		return nullptr;
 	}
 	Room->RoomMasterRef = NewRoomMaster;
-	NewRoomMaster->RoomStateRef = Room;
+	return Room;
 }
 
 /// <summary>
@@ -591,13 +591,9 @@ void ALevelBuilder::HideOneWall(AWall* ThisWall)
 	}
 }
 
-void ALevelBuilder::SetRoomClearedAtLoc(FVector Location)
+void ALevelBuilder::SetRoomCleared(FRoomState& Room)
 {
-	FRoomState* Room = GetRoomStateFromCoord(GetGridFromLoc(Location));
-	if (Room)
-	{
-		Room->bIsRoomCleared = true;
-	}
+	Room.bIsRoomCleared = true;
 	OpenDoors();
 }
 

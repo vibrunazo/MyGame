@@ -7,6 +7,7 @@
 #include "../MyGameInstance.h"
 #include "../Abilities/LootComponent.h"
 #include "../Level/LevelBuilder.h"
+#include "../Level/RunSubsystem.h"
 #include "../Props/ItemDataAsset.h"
 #include "../Props/LearnItemDataAsset.h"
 #include "../Props/Pickup.h"
@@ -1188,9 +1189,7 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 		SetTargetEnemy(NewTarget);
 	}
 
-	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
-	if (!MyGI) return;
-	ALevelBuilder* Builder = MyGI->GetLevelBuilder();
+	ALevelBuilder* Builder = URunSubsystem::GetLevelBuilder(this);
 	if (!Builder) return;
 	Builder->AggroRoom(NewTarget, GetActorLocation());
 	if (AggroSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), AggroSound, GetActorLocation());
@@ -1320,10 +1319,7 @@ FDieSignature& AMyCharacter::GetReportDeathDelegate()
 
 void AMyCharacter::CheckWalls()
 {
-	UGameInstance* GI = GetGameInstance();
-	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
-	if (!MyGI) return;
-	ALevelBuilder* Builder = MyGI->GetLevelBuilder();
+	ALevelBuilder* Builder = URunSubsystem::GetLevelBuilder(this);
 	if (!Builder) return;
 	Builder->OnUpdateCharCoord(GetActorLocation());
 	// AStaticMeshActor* SM = Builder->GetBottomWallFromLoc(GetActorLocation());

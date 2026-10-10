@@ -2,7 +2,6 @@
 
 
 #include "MyGameInstance.h"
-#include "Level/LevelBuilder.h"
 #include "Player/MyCharacter.h"
 #include "Props/ItemDataAsset.h"
 #include "Level/RoomCameraPawn.h"
@@ -21,10 +20,6 @@ void UMyGameInstance::Init()
     NewGame();
 }
 
-ALevelBuilder* UMyGameInstance::GetLevelBuilder()
-{
-    return LevelBuilderRef;
-}
 	
 void UMyGameInstance::SetCharRef(AMyCharacter* NewRef)
 {
@@ -121,9 +116,4 @@ void UMyGameInstance::StoreCharStats()
         Health = PlayerCharRef->GetAttributes()->GetHealth();
         Mana = PlayerCharRef->GetAttributes()->GetMana();
     }
-}
-
-void UMyGameInstance::SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder)
-{
-    LevelBuilderRef = NewLevelBuilder;
 }

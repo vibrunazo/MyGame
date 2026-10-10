@@ -105,6 +105,12 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
 4. **Done:** the room catalogue comes from the Asset Manager.
    - `RoomDataAsset` is a primary asset type, and `ALevelBuilder::LoadRoomCatalogue` loads it sorted by asset name, so a seed gives the same level on any machine. The local asset-registry order was already alphabetical, so the seeded levels didn't change.
    - The room data assets are `CookRule=AlwaysCook`, and their soft map references cook with them.
+5. **Done:** `URunSubsystem` (a world subsystem) and rooms found by their level.
+   - The subsystem holds a weak pointer to this world's level builder; `URunSubsystem::GetLevelBuilder` (BlueprintPure) replaces `UMyGameInstance::GetLevelBuilder`. The game instance outlives worlds, so its pointer dangled across `ServerTravel`.
+   - Callers moved: the character (aggro, walls), the camera (its "DON'T DO THIS" actor search is gone too), room masters, and the three `MyFuncLib` BP functions.
+   - A room master registers with the room whose streamed map holds it (`GetRoomStateOfLevel`), not by its world position. It looks its room up when needed instead of keeping a raw `FRoomState*` into the grid.
+   - A spawner's room master is the one in its own map, so the order the actors begin play in doesn't matter.
+   - Levels, the doored flow and the ability regression are unchanged, and the camera still follows. The grid itself stays in `ALevelBuilder`; the Phase 5 game loop decides what run state moves into the subsystem.
 
 ## Starting point
 

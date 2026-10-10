@@ -37,7 +37,8 @@ public:
 	bool bAggroed = false;
 	UPROPERTY()
 	class ALevelBuilder* LevelBuilderRef = nullptr;
-	struct FRoomState* RoomStateRef = nullptr;
+	// This room's state in the level builder's grid: the room whose streamed map holds this room master
+	struct FRoomState* GetRoomState() const;
 
 private:
 	void EnableGoals();

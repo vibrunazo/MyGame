@@ -19,9 +19,6 @@ public:
 
 	void Init() override;
 
-	UFUNCTION(BlueprintCallable, BlueprintPure, Category="MyGI")
-	class ALevelBuilder* GetLevelBuilder();
-	void SetLevelBuilderRef(class ALevelBuilder* NewLevelBuilder);
 	UFUNCTION(BlueprintCallable, Category="MyGI")
 	void OnGameOver();
 	UFUNCTION(BlueprintCallable, Category="MyGI")
@@ -56,9 +53,4 @@ public:
 	int32 RandomSeed = 0;
 	UPROPERTY()
 	FRandomStream RandomStream;
-
-private:
-	UPROPERTY()
-	class ALevelBuilder* LevelBuilderRef = nullptr;
-
 };
