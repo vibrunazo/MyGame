@@ -404,6 +404,63 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def level_state() -> str:
+        """The generated level as the world sees it: streamed rooms (map, grid coordinate, loaded), walls, doors,
+        room masters, enemies per room and the time dilation. Read from actors and streaming levels only, so it
+        works whatever builds the level.
+
+        Returns:
+            JSON {"rooms", "walls", "doors", "room_masters", "enemies", "time_dilation"}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        builders = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.LevelBuilder"))
+        sx = builders[0].get_editor_property("room_size_x") if builders else 2000.0
+        sy = builders[0].get_editor_property("room_size_y") if builders else 2000.0
+        coord = lambda v: [round(v.x / sx), round(v.y / sy)]
+        rooms = []
+        for ls in unreal.ObjectIterator(unreal.LevelStreaming):
+            if ls.get_world() != world or not ls.get_loaded_level():
+                continue  # LevelPersistent also lists every room map as an unloaded sublevel
+            wa = ls.get_editor_property("world_asset")
+            rooms.append({"map": wa.get_name() if wa else None, "coord": coord(ls.get_editor_property("level_transform").translation),
+                          "visible": ls.is_level_visible()})
+        actors = lambda path: unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, path))
+        walls = [{"at": [round(w.get_actor_location().x), round(w.get_actor_location().y)], "doored": w.get_editor_property("is_doored"),
+                  "height": w.get_editor_property("height")} for w in actors("/Script/MyGame.Wall")]
+        doors = [{"at": [round(d.get_actor_location().x), round(d.get_actor_location().y)],
+                  "open": d.get_editor_property("box_collision").get_collision_enabled() == unreal.CollisionEnabled.NO_COLLISION}
+                 for d in actors("/Script/MyGame.Door")]
+        masters = [{"coord": coord(m.get_actor_location()), "chars": len(m.get_editor_property("chars_to_kill"))}
+                   for m in actors("/Script/MyGame.RoomMaster")]
+        enemies = {}
+        for c in actors("/Script/MyGame.MyCharacter"):
+            if c.get_editor_property("team") == 1:
+                k = ",".join(map(str, coord(c.get_actor_location())))
+                enemies[k] = enemies.get(k, 0) + 1
+        return json.dumps({"room_size": [sx, sy], "rooms": rooms, "walls": walls, "doors": doors, "room_masters": masters, "enemies": enemies,
+                           "time_dilation": unreal.GameplayStatics.get_global_time_dilation(world)})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def kill_character(actor_path: str) -> str:
+        """Kills a PIE character through its normal death (OnDie: room masters, loot and doors react).
+
+        Args:
+            actor_path: Full path of a PIE character.
+
+        Returns:
+            JSON {"actor", "alive"}.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        char.on_die()
+        return json.dumps({"actor": char.get_name(), "alive": char.is_alive()})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def jump_player() -> str:
         """Makes the PIE player jump, as the jump button would.
 

@@ -77,6 +77,22 @@ Parity: you can't recall anything from the 4.25 game that's still missing, so th
 
 **Smash firing on its own (fixed 2026-10-10):** the player's `GA_Smash` carried the boss's triggers (`status.health.75/50/25`), so with Smash learned, dropping below 75% health made the player smash on its own. Your call: abilities must not trigger themselves; the boss should smash because its AI decides to. The triggers are removed from `GA_Smash`; `health_75_with_smash` now checks that nothing fires.
 
+## Phase 4 status (started 2026-10-10)
+
+**Regression:** `Tests/level_regression.py` records a seeded level as the world shows it, from actors and streaming levels, so it works whatever builds the level:
+- room maps per grid cell, walls (position, doorway), doors
+- room masters with their enemy counts, enemies per room
+- that streaming unfroze the game
+- the doored-room flow: walking in locks the doors; killing the room's enemies opens them and drops rewards
+
+Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json`; two fresh captures matched. The persistent level's builder uses 1400 × 2000 rooms.
+
+**Found while reading the code:**
+- A room's map comes from its data asset's name (`DA_Room01-10` → `Room01-10`), not from `LevelAddress`, which is wrong on several assets and only feeds the logs.
+- Rooms are instances of sublevels registered in LevelPersistent, created by `BP_LevelBuilder::OnBPCreateLevelByName`.
+- The room catalogue comes from an asset-registry scan whose order isn't guaranteed, and the random room picks index into it. So a seed may not give the same level on another machine.
+- A walled room gets a door on each edge facing another room; outer edges keep a solid wall.
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.
