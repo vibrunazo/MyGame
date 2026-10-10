@@ -33,6 +33,8 @@ namespace MyGameplayTags
 
 	// Sent to a character to make it dash; GA_Dash triggers on it
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Dash);
+	// A hit landed (sound and sparks); UGCN_HitImpact
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Hit_Impact);
 
 	// Released ability buttons, sent as gameplay events (index = EInput: Punch, Kick, Cast, Jump)
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_0);

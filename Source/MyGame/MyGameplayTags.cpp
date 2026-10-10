@@ -27,6 +27,7 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, "notify.projectile.cast");
 
 	UE_DEFINE_GAMEPLAY_TAG(Event_Dash, "event.dash");
+	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, "GameplayCue.hit.impact");
 
 	UE_DEFINE_GAMEPLAY_TAG(Input_Release_0, "input.release.0");
 	UE_DEFINE_GAMEPLAY_TAG(Input_Release_1, "input.release.1");

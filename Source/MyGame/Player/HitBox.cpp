@@ -99,8 +99,6 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 			//DrawDebugPoint(GetWorld(), OutHit.ImpactPoint, 10.f, FColor::Red, false, 2.f);
 			//UE_LOG(LogTemp, Warning, TEXT("hit? %d, %s"), DidIHit, *OutHit.ToString());
 			//UE_LOG(LogTemp, Warning, TEXT("sweep? %d, %s"), bFromSweep, *SweepResult.ToString());
-			FRotator SparkRot = FRotator::ZeroRotator;
-			SparkRot.Yaw = OutHit.ImpactNormal.Rotation().Yaw;
 			// UE_LOG(LogTemp, Warning, TEXT("%s Overlapped %s"), *GetInstigator()->GetName(), *OtherActor->GetName());
 			CurEnemyState.NumHits = CurHitCount + 1;
 			CurEnemyState.LastHitTime = CurTime;
@@ -109,19 +107,17 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 			FGameplayTag HitConnectTag = MyGameplayTags::Notify_Hit_Connect;
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), HitConnectTag, FGameplayEventData());
 			ApplyAllEffects(Target);
-			UAbilitySystemComponent* GAS = Target->GetAbilitySystemComponent();
-			FGameplayTag HitStunImmuneTag = MyGameplayTags::Status_StunImmune;
-			if (GAS && GAS->HasMatchingGameplayTag(HitStunImmuneTag))
+			// sound and sparks: a stun-immune target blocks
+			if (UAbilitySystemComponent* GAS = Target->GetAbilitySystemComponent())
 			{
-				if (BlockSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), BlockSound, GetActorLocation());
-				else if (HitSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
-				if (BlockParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BlockParticles, OutHit.ImpactPoint, SparkRot);
-				else if (HitParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitParticles, OutHit.ImpactPoint, SparkRot);
-			}
-			else
-			{
-				if (HitSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), HitSound, GetActorLocation());
-				if (HitParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), HitParticles, OutHit.ImpactPoint, SparkRot);
+				FGameplayCueParameters Cue;
+				Cue.Location = OutHit.ImpactPoint;
+				Cue.Normal = OutHit.ImpactNormal;
+				Cue.SourceObject = this;
+				Cue.EffectCauser = GetOwner();
+				Cue.Instigator = GetInstigator();
+				Cue.RawMagnitude = GAS->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune) ? 1.f : 0.f;
+				GAS->ExecuteGameplayCue(MyGameplayTags::GameplayCue_Hit_Impact, Cue);
 			}
 		}
 		else UE_LOG(LogTemp, Warning, TEXT("Hittrace failed"));
