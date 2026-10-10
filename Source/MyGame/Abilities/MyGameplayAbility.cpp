@@ -118,7 +118,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     {
         MontageSection = "ComboStart";
     }
-    GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
+    GetActorInfo().AbilitySystemComponent.Get()->SetLooseGameplayTagCount(CanCancelState, 0);
     UAbilityTask_PlayMontageAndWait* Task = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, NAME_None, MontagesToPlay[CurrentComboCount], GetAttackSpeed(), MontageSection, false, 1.0f);
     Task->OnCompleted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->OnInterrupted.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
@@ -174,7 +174,7 @@ void UMyGameplayAbility::OnMontageComplete()
     ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
     FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;
-    GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
+    GetActorInfo().AbilitySystemComponent.Get()->SetLooseGameplayTagCount(CanCancelState, 0);
 }
 
 void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
@@ -409,11 +409,13 @@ void UMyGameplayAbility::CheckConditionalEffects()
 
 }
 
+// Opens the combo window. combo.cancancel is on/off, not a counter: a multi-hit move opening it on every hit used
+// to leave it on after the move ended, letting any attack cancel any other without landing a hit
 void UMyGameplayAbility::IncComboCount()
 {
     bIsInComboState = true;
     FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;
-    GetActorInfo().AbilitySystemComponent.Get()->AddLooseGameplayTag(CanCancelState);
+    GetActorInfo().AbilitySystemComponent.Get()->SetLooseGameplayTagCount(CanCancelState, 1);
     if (bHasHitConnected) return;
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;
     else ResetComboCount();

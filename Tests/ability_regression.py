@@ -102,8 +102,14 @@ def run_scenario(name, actions, duration, player, dummy, away_from_dummy=False):
         time.sleep(SAMPLE)
     end_dummy = tool("character_state", actor_path=dummy["path"])
     end_player = tool("pie_player_state")
+    # a combo window must close with the attack (combo.cancancel left behind lets any attack cancel any other):
+    # look once the player's abilities have ended
+    t1 = time.time()
+    while active_abilities(player) and time.time() - t1 < 3.0:
+        time.sleep(0.1)
+    lingering = sorted(t for t in active_tags(player) if t.startswith("combo."))
     gap = [round(a - b, 1) for a, b in zip(start_dummy["location"], start_player["location"])]
-    return {"scenario": name, "start_gap": gap, "start_yaw": [start_player["yaw"], start_player["control_yaw"]],
+    return {"scenario": name, "lingering": lingering, "start_gap": gap, "start_yaw": [start_player["yaw"], start_player["control_yaw"]],
             "timeline": timeline, "abilities": sorted(seen),
             "dummy_damage": round(start_dummy["health"] - end_dummy["health"], 1),
             "dummy_tags": sorted(dummy_tags), "dummy_rise": round(dummy_z - start_dummy["location"][2], 1),
@@ -169,7 +175,7 @@ def scenarios():
     # a learned Smash must not fire by itself when health crosses 75% (it used to carry the boss's triggers)
     yield "health_75_with_smash", [(0.0, learn("DA_LearnSmash")), (0.2, set_player_health(700.0))], 2.0
     # last: the item stays in the inventory and the burn outlasts the reset
-    yield "fire_hands_punch", [(0.0, lambda: tool("give_item", item_asset_path=ITEMS + "DA_ItemFireHands"))] + tap("Punch", 0.2), 4.0
+    yield "fire_hands_punch", [(0.0, lambda: tool("give_item", item_asset_path=ITEMS + "DA_ItemFireHands"))] + tap("Punch", 0.2), 6.0
 
 
 def set_dummy(attribute, value):
@@ -301,7 +307,8 @@ def outcome(s):
             "mana": s["player_mana"],
             "jumped": s["player_rise"] > 50, "moved": s.get("player_moved", 0) > 100,
             "player_tags": s.get("player_tags"), "dummy_tags": s.get("dummy_tags"),
-            "damage": None if s["scenario"] in VARIABLE_DAMAGE else s["dummy_damage"]}
+            "damage": None if s["scenario"] in VARIABLE_DAMAGE else s["dummy_damage"],
+            "lingering": s.get("lingering")}
 
 
 # held combos and multi-hit moves land a varying number of hits; everything else deals the same damage every run
