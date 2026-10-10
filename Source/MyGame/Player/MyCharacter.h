@@ -58,6 +58,11 @@ public:
 	void FindAndRemoveOverlappingAbilities(struct FAbilityStruct Ability);
 	// Air moves carry activate.flyingattack (and are blocked on the ground); everything else is a ground move
 	static bool IsAirAbility(TSubclassOf<class UGameplayAbility> AbilityClass);
+#if WITH_EDITOR
+	// PIE test hook: sets an attribute's base value through the ability system (modifiers and damage see it)
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	void SetAttributeBaseForTest(FGameplayAttribute Attribute, float Value);
+#endif
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
 	UFUNCTION(BlueprintCallable, Category = Abilities)

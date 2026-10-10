@@ -40,6 +40,13 @@ def _inject(action_name, value_type, value):
     _player().get_controller().inject_test_input(action, unreal.Vector2D(x, y), value is not None)
 
 
+def _set_attribute(char, attribute, value):
+    """Sets a MyAttributeSet attribute's base value through the ability system (effects and damage see it)."""
+    attr = unreal.GameplayAttribute()
+    attr.import_text(f'(AttributeName="{attribute}",Attribute=/Script/MyGame.MyAttributeSet:{attribute},AttributeOwner=None)')
+    char.set_attribute_base_for_test(attr, value)
+
+
 def _pawn_response(char):
     """The capsule's collision response to the Pawn channel (Block / Overlap / Ignore)."""
     capsule = char.get_editor_property("capsule_component")
@@ -262,13 +269,14 @@ class MyGameTools(unreal.ToolsetDefinition):
         if attributes:
             state["health"] = attributes.get_editor_property("health").get_editor_property("current_value")
             state["mana"] = attributes.get_editor_property("mana").get_editor_property("current_value")
+            state["defense"] = attributes.get_editor_property("defense").get_editor_property("current_value")
         asc = char.get_editor_property("ability_system")
         return json.dumps(state)
 
     @toolset_registry.tool_call
     @staticmethod
     def set_character_attribute(actor_path: str, attribute: str, value: float) -> str:
-        """Test cheat: sets base and current value of any PIE character's attribute, bypassing GameplayEffects.
+        """Test cheat: sets any PIE character's attribute base value through the ability system.
 
         Args:
             actor_path: Full path of a PIE character.
@@ -281,8 +289,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         char = unreal.find_object(None, actor_path)
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
-        data = unreal.GameplayAttributeData(base_value=value, current_value=value)
-        char.get_editor_property("attribute_set_base").set_editor_property(attribute.lower(), data)
+        _set_attribute(char, attribute, value)
         return MyGameTools.character_state(actor_path)
 
     @toolset_registry.tool_call
@@ -417,9 +424,7 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def set_player_attribute(attribute: str, value: float) -> str:
-        """Test cheat: sets base and current value of a player attribute (e.g. "Health", "MaxHealth").
-
-        Writes the attribute data directly, bypassing GameplayEffects, so use it only to set up tests.
+        """Test cheat: sets a player attribute's base value (e.g. "Health", "MaxHealth") through the ability system.
 
         Args:
             attribute: Attribute name on MyAttributeSet.
@@ -428,11 +433,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         Returns:
             The player's state afterwards, as JSON.
         """
-        char = _player()
-        attributes = char.get_editor_property("attribute_set_base")
-        # GameplayAttributeData(value) silently zeroes both fields; set them by name
-        data = unreal.GameplayAttributeData(base_value=value, current_value=value)
-        attributes.set_editor_property(attribute.lower(), data)
+        _set_attribute(_player(), attribute, value)
         return MyGameTools.pie_player_state()
 
     @toolset_registry.tool_call

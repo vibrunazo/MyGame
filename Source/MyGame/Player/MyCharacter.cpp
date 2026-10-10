@@ -445,6 +445,14 @@ void AMyCharacter::FindAndRemoveOverlappingAbilities(FAbilityStruct AbilityToCom
 	}
 }
 
+#if WITH_EDITOR
+void AMyCharacter::SetAttributeBaseForTest(FGameplayAttribute Attribute, float Value)
+{
+	if (AbilitySystem && Attribute.IsValid()) AbilitySystem->SetNumericAttributeBase(Attribute, Value);
+	UpdateHealthBar();
+}
+#endif
+
 bool AMyCharacter::IsAirAbility(TSubclassOf<UGameplayAbility> AbilityClass)
 {
 	return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);

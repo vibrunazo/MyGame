@@ -66,6 +66,7 @@ def reset(player, dummy):
         tool("set_player_attribute", attribute=a, value=v)
     for a in ("MaxHealth", "Health"):
         tool("set_character_attribute", actor_path=dummy["path"], attribute=a, value=1000.0)
+    tool("set_character_attribute", actor_path=dummy["path"], attribute="Defense", value=dummy["defense"])
     place(dummy, DUMMY_SPOT[0] - 95)
 
 
@@ -96,7 +97,8 @@ def run_scenario(name, actions, duration, player, dummy, away_from_dummy=False):
         dummy_z = max(dummy_z, d["location"][2])
         ps = tool("pie_player_state")
         player_z = max(player_z, ps["location"][2])
-        player_tags.update(t for t in active_tags(player) if t.startswith(("state.", "status.")))
+        # state.combat is a timed buff that can outlast the previous scenario: noise
+        player_tags.update(t for t in active_tags(player) if t.startswith(("state.", "status.")) and t != "state.combat")
         time.sleep(SAMPLE)
     end_dummy = tool("character_state", actor_path=dummy["path"])
     end_player = tool("pie_player_state")
@@ -161,8 +163,19 @@ def scenarios():
     yield "cast_fireball", [(0.0, learn("DA_LearnFireball"))] + tap("Cast", 0.2), 1.8
     # punch right after the super move: plain punch still works when Super isn't held
     yield "punch_after_learning", tap("Punch", 0.0), 1.5
-    # does a learned Smash fire by itself when health crosses 75%? (GA_Smash has the boss's health triggers)
+    # damage path: a punch against Defense 2 (the exec scales by Attack / Defense), and Fire Hands' damage over time
+    yield "punch_vs_defense2", [(0.0, set_dummy("Defense", 2.0))] + tap("Punch", 0.2), 1.5
+    # a learned Smash must not fire by itself when health crosses 75% (it used to carry the boss's triggers)
     yield "health_75_with_smash", [(0.0, learn("DA_LearnSmash")), (0.2, set_player_health(700.0))], 2.0
+    # last: the item stays in the inventory and the burn outlasts the reset
+    yield "fire_hands_punch", [(0.0, lambda: tool("give_item", item_asset_path=ITEMS + "DA_ItemFireHands"))] + tap("Punch", 0.2), 4.0
+
+
+def set_dummy(attribute, value):
+    return lambda: tool("set_character_attribute", actor_path=DUMMY[0]["path"], attribute=attribute, value=value)
+
+
+DUMMY = [None]
 
 
 def set_player_health(value):
@@ -189,6 +202,7 @@ def pick_dummy():
         raise RuntimeError("no living enemy to use as a dummy")
     dummy = sorted(enemies, key=lambda c: c["class"])[0]
     freeze_enemies()
+    dummy["defense"] = tool("character_state", actor_path=dummy["path"])["defense"]
     return dummy
 
 
@@ -197,6 +211,7 @@ def run(out):
     player_path = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
     PLAYER_PATH[0] = player_path
     dummy = pick_dummy()
+    DUMMY[0] = dummy
     results = {"dummy": dummy["class"], "scenarios": []}
     for name, actions, duration, *start_room in scenarios():
         r = run_scenario(name, actions, duration, player_path, dummy, bool(start_room))
@@ -229,7 +244,12 @@ def outcome(s):
     return {"montages": sorted({k.split(":")[0] for k in s["timeline"]}), "abilities": s["abilities"],
             "hit": s["dummy_damage"] > 0, "launched": s["dummy_rise"] > 20, "mana": s["player_mana"],
             "jumped": s["player_rise"] > 50, "moved": s.get("player_moved", 0) > 100,
-            "player_tags": s.get("player_tags"), "dummy_tags": s.get("dummy_tags")}
+            "player_tags": s.get("player_tags"), "dummy_tags": s.get("dummy_tags"),
+            "damage": None if s["scenario"] in VARIABLE_DAMAGE else s["dummy_damage"]}
+
+
+# held combos and multi-hit moves land a varying number of hits; everything else deals the same damage every run
+VARIABLE_DAMAGE = {"punch_hold", "kick_hold", "super_kick_tat"}
 
 
 def diff(a_path, b_path):
