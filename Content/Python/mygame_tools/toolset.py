@@ -97,17 +97,17 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def activate_ability_event(event_name: str) -> str:
-        """Activates the player's abilities registered under an event name (e.g. "dash").
+    def dash_player(forward: float = 0.0, right: float = 0.0) -> str:
+        """Makes the PIE player dash, as a double tap would (zero direction keeps the current facing).
 
         Args:
-            event_name: The FAbilityStruct EventName to trigger.
+            forward: Direction along world +X.
+            right: Direction along world +Y.
 
         Returns:
-            The player's state right after activation, as JSON.
+            The player's state right after, as JSON.
         """
-        char = _player()
-        char.activate_ability_by_event(event_name)
+        _player().dash(unreal.Vector2D(forward, right))
         return MyGameTools.pie_player_state()
 
     @toolset_registry.tool_call
@@ -126,7 +126,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         abilities = list(item.get_editor_property("abilities_to_learn"))
         char.learn_abilities(abilities)
         return json.dumps([{"ability": a.get_editor_property("ability_class").get_name(),
-                            "input": str(a.get_editor_property("input")), "event": a.get_editor_property("event_name"),
+                            "input": str(a.get_editor_property("input")),
                             "ground": a.get_editor_property("can_use_on_ground"), "air": a.get_editor_property("can_use_on_air")}
                            for a in abilities])
 
@@ -181,7 +181,7 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def move_input(forward: float, right: float) -> str:
-        """Holds the move stick (IA_Move) at a direction until called again; 0, 0 lets go.
+        """Holds the move stick (IA_Move and IA_Dash) at a direction until called again; 0, 0 lets go.
 
         Args:
             forward: -1..1 along world +X.
@@ -191,7 +191,9 @@ class MyGameTools(unreal.ToolsetDefinition):
             The player's state afterwards, as JSON.
         """
         held = (forward, right) if forward or right else None
+        # a real key or stick feeds both actions; IA_Dash fires on a double tap
         _inject("Move", unreal.InputActionValueType.AXIS2D, held)
+        _inject("Dash", unreal.InputActionValueType.AXIS2D, held)
         return MyGameTools.pie_player_state()
 
     @toolset_registry.tool_call
@@ -234,6 +236,9 @@ class MyGameTools(unreal.ToolsetDefinition):
             sensing.set_sensing_updates_enabled(enabled)
         if enabled:
             brain.restart_logic()
+            # with sensing off while frozen it may never have seen the player; show it now so it engages at once
+            with contextlib.suppress(Exception):
+                char.on_pawn_seen(_player())
         else:
             brain.stop_logic("test dummy")
             controller.stop_movement()  # a move the tree already started keeps going otherwise

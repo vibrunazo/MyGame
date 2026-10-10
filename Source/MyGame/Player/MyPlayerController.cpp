@@ -37,6 +37,7 @@ void AMyPlayerController::SetupInputComponent()
         Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnMove);
         Input->BindAction(MoveAction, ETriggerEvent::Completed, this, &AMyPlayerController::OnMove);
     }
+    if (DashAction) Input->BindAction(DashAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnDash);
     for (const FAbilityInputBinding& Binding : AbilityInputs)
     {
         if (!Binding.Action) continue;
@@ -76,6 +77,11 @@ void AMyPlayerController::InjectTestInput(UInputAction* Action, FVector2D Value,
 void AMyPlayerController::OnMove(const FInputActionValue& Value)
 {
     if (AMyCharacter* MyChar = GetPawn<AMyCharacter>()) MyChar->SetMoveInput(Value.Get<FVector2D>());
+}
+
+void AMyPlayerController::OnDash(const FInputActionValue& Value)
+{
+    if (AMyCharacter* MyChar = GetPawn<AMyCharacter>()) MyChar->Dash(Value.Get<FVector2D>());
 }
 
 void AMyPlayerController::OnAbilityInput(EInput Slot, bool bPressed)

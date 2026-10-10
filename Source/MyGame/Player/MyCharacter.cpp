@@ -284,7 +284,7 @@ void AMyCharacter::Tick(float DeltaSeconds)
 	if (IsPlayerControlled())
 	{
 		CheckWalls();
-		CalculateDash(DeltaSeconds);
+		UpdateRun(DeltaSeconds);
 	}
 }
 
@@ -300,53 +300,40 @@ void AMyCharacter::OnConstruction(const FTransform& Transform)
 }
 
 /// <summary>
-/// Calculates if I should dash this tick
+/// Running from the move input: holding a direction out of combat starts running, a quick tap in another direction stops it
 /// </summary>
-void AMyCharacter::CalculateDash(float DeltaSeconds)
+void AMyCharacter::UpdateRun(float DeltaSeconds)
 {
-	// TODO move to controller
-	float length = 0.0f;
-	length = FMath::Abs(RightAxis)*FMath::Abs(RightAxis) + FMath::Abs(ForwardAxis)*FMath::Abs(ForwardAxis);
-	length = FMath::Sqrt(length);
-	if (length >= DoubleTapAxisDepth)
+	const FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
+	const float Now = GetWorld()->GetTimeSeconds();
+	if (CurVector.Size2D() < DoubleTapAxisDepth)
 	{
-		TryRun(DeltaSeconds);
-		// float CurAngle = GetInputAngle();
-		// float Delta = FMath::FindDeltaAngleDegrees(CurAngle, 45.0f);
-		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
-		// LastInputZeroTime > LastInputApexTime means this is a tap and not a hold
-		// So if this a tap AND the time before last tap was short
-		if (GetWorld()->GetTimeSeconds() - LastInputApexTime < DoubleTapDelay && LastInputZeroTime > LastInputApexTime)
-		{
-			float cos = CurVector.CosineAngle2D(LastInputVector);
-			float acos = UKismetMathLibrary::DegAcos(cos);
-			// UE_LOG(LogTemp, Warning, TEXT("Forward: %f, Right: %f, len: %f, angle: %f"), ForwardAxis, RightAxis, length, acos);
-			// if the angle between last tap and current tap is less than 20 degrees
-			if (acos <= 20)
-			{
-				if (GetController()) GetController()->SetControlRotation(CurVector.Rotation());
-				ActivateAbilityByEvent("dash");
-				AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
-				if (MyCont)
-				{
-					MyCont->UpdateHUDAbilityKey((EInput)102, true, 0.5f);
-				}
-			}
-			else SetRunning(false);
-		}
-		// if this is a tap and not a hold
-		if (LastInputZeroTime > LastInputApexTime)
-		{
-			LastInputVector = CurVector;
-			LastInputApexTime = GetWorld()->GetTimeSeconds();
-		}
+		LastInputZeroTime = Now;
+		return;
 	}
-	else
+	TryRun(DeltaSeconds);
+	// LastInputZeroTime > LastInputApexTime: the stick came back from neutral, so this is a new tap
+	if (LastInputZeroTime > LastInputApexTime)
 	{
-		LastInputZeroTime = GetWorld()->GetTimeSeconds();
-		/*SetRunning(false);*/
+		if (Now - LastInputApexTime < DoubleTapDelay && UKismetMathLibrary::DegAcos(CurVector.CosineAngle2D(LastInputVector)) > 20.f)
+		{
+			SetRunning(false);
+		}
+		LastInputVector = CurVector;
+		LastInputApexTime = Now;
 	}
+}
 
+void AMyCharacter::Dash(FVector2D Direction)
+{
+	// ground only, like its old ability entry (ground yes, air no)
+	if (!HasControl() || !AbilitySystem || GetCharacterMovement()->IsFalling()) return;
+	if (GetController() && !Direction.IsNearlyZero()) GetController()->SetControlRotation(FVector(Direction, 0.f).Rotation());
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, MyGameplayTags::Event_Dash, FGameplayEventData());
+	if (AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController()))
+	{
+		MyCont->UpdateHUDAbilityKey(EInput::Dash, true, 0.5f);
+	}
 }
 
 void AMyCharacter::TryRun(float DeltaSeconds)
@@ -439,7 +426,6 @@ void AMyCharacter::FindAndRemoveOverlappingAbilities(FAbilityStruct AbilityToCom
 	for (auto&& LearnedAbility : Abilities)
 	{
 		if (LearnedAbility.Input == AbilityToCompare.Input
-			&& LearnedAbility.EventName == AbilityToCompare.EventName
 			&& LearnedAbility.CanUseOnAir == AbilityToCompare.CanUseOnAir
 			&& LearnedAbility.CanUseOnGround == AbilityToCompare.CanUseOnGround)
 		{
@@ -484,7 +470,7 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	// first add all abilities that can activate from this input (ie punch) to a list
 	for (auto &&Ability : Abilities)
 	{
-		if (InputsToCheck.Contains((uint8)Ability.Input) && Ability.EventName == "")
+		if (InputsToCheck.Contains((uint8)Ability.Input))
 		{
 			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
 			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
@@ -509,22 +495,6 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	bool Success = AbilitySystem->TryActivateAbilityByClass(BestAbility.AbilityClass, true);
 	if (MyCont) MyCont->UpdateHUDAbilityKey(BestAbility.Input, true);
 
-}
-
-void AMyCharacter::ActivateAbilityByEvent(FString EventName)
-{
-	if (!HasControl() || !AbilitySystem) return;
-	for (auto &&Ability : Abilities)
-	{
-		if (Ability.EventName == EventName)
-		{
-			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
-			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
-			{
-				AbilitySystem->TryActivateAbilityByClass(Ability.AbilityClass, true);
-			}
-		}
-	}
 }
 
 void AMyCharacter::UpdateHealthBar()
@@ -558,31 +528,26 @@ void AMyCharacter::UpdateHealthBar()
 	// TODO really? that's ridiculous, refactor this crap
 	if (NewHealthPct <= 0.75f && OldHealthPct > 0.75f)
 	{
-		ActivateAbilityByEvent("health75");
 		FGameplayTag HealthTag = MyGameplayTags::Status_Health_75;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.7f && OldHealthPct > 0.7f)
 	{
-		ActivateAbilityByEvent("health70");
 		FGameplayTag HealthTag = MyGameplayTags::Status_Health_70;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.5f && OldHealthPct > 0.5f)
 	{
-		ActivateAbilityByEvent("health50");
 		FGameplayTag HealthTag = MyGameplayTags::Status_Health_50;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.3f && OldHealthPct > 0.3f)
 	{
-		ActivateAbilityByEvent("health30");
 		FGameplayTag HealthTag = MyGameplayTags::Status_Health_30;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.25f && OldHealthPct > 0.25f)
 	{
-		ActivateAbilityByEvent("health25");
 		FGameplayTag HealthTag = MyGameplayTags::Status_Health_25;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}

@@ -103,6 +103,9 @@ public:
 	TObjectPtr<UInputAction> MoveAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
 	TArray<FAbilityInputBinding> AbilityInputs;
+	// Same keys as MoveAction with a Directional Double Tap trigger
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
+	TObjectPtr<UInputAction> DashAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
 	TObjectPtr<UInputAction> SuperModAction;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input)
@@ -124,6 +127,7 @@ protected:
 	void Jump();
 	void StopJump();
 	void OnMove(const struct FInputActionValue& Value);
+	void OnDash(const struct FInputActionValue& Value);
 	void OnAbilityInput(EInput Slot, bool bPressed);
 	void OnShowFPS();
 };

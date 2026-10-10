@@ -29,6 +29,9 @@ namespace MyGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Connect);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Projectile_Cast);
 
+	// Sent to a character to make it dash; GA_Dash triggers on it
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Dash);
+
 	// Released ability buttons, sent as gameplay events (index = EInput: Punch, Kick, Cast, Jump)
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_0);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_1);

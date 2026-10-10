@@ -64,8 +64,9 @@ public:
 	void ActivateAbilityByInput(uint8 Index);
 	// Movement input for this frame from the controller's move action: X = forward (world +X), Y = right (world +Y)
 	void SetMoveInput(FVector2D Value);
+	// Dashes towards Direction (world X/Y; zero keeps the current facing) by sending event.dash to the ability system
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	void ActivateAbilityByEvent(FString EventName);
+	void Dash(FVector2D Direction);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void UpdateHealthBar();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -213,9 +214,11 @@ public:
 	uint8 MaxStuns = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float StunImmuneCooldown = 5.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (ToolTip = "Time between taps that it counts as a double tap, in seconds. Used to calculate dash."))
+	// The dash's double tap is IA_Dash's Directional Double Tap trigger; these two only drive running:
+	// holding past DoubleTapAxisDepth runs, and a quick tap in another direction within DoubleTapDelay stops it
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (ToolTip = "Seconds between taps for a quick turn to stop running."))
 	float DoubleTapDelay = 0.1f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (ToolTip = "The gamepad Stick needs to move this far from full (1.0) to count as a tap. Used to calculate double tap for dash."))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (ToolTip = "How far the stick must go (0..1) to count as held or tapped."))
 	float DoubleTapAxisDepth = 0.6f;
 	// How long do I need to press forward for, to start running
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
@@ -270,7 +273,7 @@ private:
 	FVector KnockBackVector;
 	void CheckWalls();
 	void IncrementHitStunCount();
-	void CalculateDash(float DeltaSeconds);
+	void UpdateRun(float DeltaSeconds);
 	void TryRun(float DeltaSeconds);
 	float GetInputAngle();
 	void DropItems();

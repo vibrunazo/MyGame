@@ -28,6 +28,11 @@ def action(name, value_type, when_paused=False):
 
 BOOL, AXIS2D = unreal.InputActionValueType.BOOLEAN, unreal.InputActionValueType.AXIS2D
 move = action("IA_Move", AXIS2D)
+dash = action("IA_Dash", AXIS2D)
+double_tap = unreal.new_object(unreal.InputTriggerDirectionalDoubleTap, outer=dash)
+double_tap.set_editor_properties({"tap_window": 0.6, "tap_depth": 0.6, "max_angle": 20.0})
+dash.set_editor_property("triggers", [double_tap])
+unreal.EditorAssetLibrary.save_loaded_asset(dash)
 buttons = {n: action(f"IA_{n}", BOOL) for n in ("Punch", "Kick", "Cast", "Jump", "SuperMod", "UltraMod", "ShowFPS")}
 buttons["Pause"] = action("IA_Pause", BOOL, when_paused=True)
 
@@ -59,13 +64,21 @@ def add(act, key_name, mods=()):
 
 swap = lambda: modifier(unreal.InputModifierSwizzleAxis, order=unreal.InputAxisSwizzle.YXZ)
 neg = lambda: modifier(unreal.InputModifierNegate)
-# X = forward, Y = right (the old MoveForward / MoveRight axes)
-add(move, "W")
-add(move, "S", [neg()])
-add(move, "D", [swap()])
-add(move, "A", [swap(), neg()])
-# stick: X = right, Y = up; swap so up drives forward. Axial 0.25 dead zone like the old axis config
-add(move, "Gamepad_Left2D", [modifier(unreal.InputModifierDeadZone, type=unreal.DeadZoneType.AXIAL, lower_threshold=0.25), swap()])
+
+
+def add_directions(act):
+    """X = forward, Y = right (the old MoveForward / MoveRight axes)."""
+    add(act, "W")
+    add(act, "S", [neg()])
+    add(act, "D", [swap()])
+    add(act, "A", [swap(), neg()])
+    # stick: X = right, Y = up; swap so up drives forward. Axial 0.25 dead zone like the old axis config
+    add(act, "Gamepad_Left2D", [modifier(unreal.InputModifierDeadZone, type=unreal.DeadZoneType.AXIAL, lower_threshold=0.25), swap()])
+
+
+add_directions(move)
+# dash: the same directions, firing on a double tap (window and depth match BP_Char's old DoubleTapDelay / DoubleTapAxisDepth)
+add_directions(dash)
 
 for name, keys in {
     "Punch": ["Left", "NumPadZero", "Gamepad_FaceButton_Left"],

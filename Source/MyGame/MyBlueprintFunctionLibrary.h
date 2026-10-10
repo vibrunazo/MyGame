@@ -46,9 +46,6 @@ struct FAbilityStruct
 	EInput Input = EInput::Punch;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FString EventName = "";
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	bool CanUseOnGround = true;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
@@ -58,7 +55,6 @@ struct FAbilityStruct
 	{
 		return first.AbilityClass == second.AbilityClass
 			&& first.Input == second.Input
-			&& first.EventName == second.EventName
 			&& first.CanUseOnGround == second.CanUseOnGround
 			&& first.CanUseOnAir == second.CanUseOnAir;
 	}

@@ -134,7 +134,7 @@ def scenarios():
     yield "kick_hold", [(0.0, press("Kick")), (2.4, press("Kick", False))], 3.2
     yield "jump_kick", tap("Jump", 0.0, 0.2) + tap("Kick", 0.25), 1.8
     yield "jump_punch", tap("Jump", 0.0, 0.2) + tap("Punch", 0.25), 1.8
-    yield "dash", [(0.0, lambda: tool("activate_ability_event", event_name="dash"))], 1.2, True
+    yield "dash", [(0.0, lambda: tool("dash_player"))], 1.2, True
     # movement through IA_Move (away from the dummy, along -X)
     yield "walk_back", [(0.0, move(-1.0)), (1.0, move(0.0))], 1.4, True
     yield "dash_double_tap", [(0.0, double_tap(-1.0))], 1.2, True
