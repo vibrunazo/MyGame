@@ -90,7 +90,7 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
 **Found while reading the code:**
 - A room's map comes from its data asset's name (`DA_Room01-10` → `Room01-10`), not from `LevelAddress`, which is wrong on several assets and only feeds the logs.
 - Rooms are instances of sublevels registered in LevelPersistent, created by `BP_LevelBuilder::OnBPCreateLevelByName`.
-- The room catalogue comes from an asset-registry scan whose order isn't guaranteed, and the random room picks index into it. So a seed may not give the same level on another machine.
+- The room catalogue came from an asset-registry scan whose order isn't guaranteed, and the random room picks index into it. So a seed might not have given the same level on another machine (fixed in step 4).
 - A walled room gets a door on each edge facing another room; outer edges keep a solid wall.
 
 **Steps:**
@@ -102,6 +102,9 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
    - The game still freezes (time dilation 0) until every room is in. A 15 s real-time timeout (a core ticker: world timers run on the frozen clock) unfreezes it if a room stalls.
    - The three seeded levels and the ability regression are unchanged. `level_state` reads a room's map from its loaded world, because an instance's package is uniquely named.
    - A loading widget waits for Phase 5's game loop.
+4. **Done:** the room catalogue comes from the Asset Manager.
+   - `RoomDataAsset` is a primary asset type, and `ALevelBuilder::LoadRoomCatalogue` loads it sorted by asset name, so a seed gives the same level on any machine. The local asset-registry order was already alphabetical, so the seeded levels didn't change.
+   - The room data assets are `CookRule=AlwaysCook`, and their soft map references cook with them.
 
 ## Starting point
 

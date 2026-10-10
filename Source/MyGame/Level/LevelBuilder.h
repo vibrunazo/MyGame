@@ -130,7 +130,7 @@ public:
 	class UBillboardComponent* BBComp;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadOnly, Category = LevelBuilder)
 	class UBoxComponent* RoomBounds;
-	TArray<FAssetData> AssetDataList;
+	// Every room data asset, sorted by name so a seed gives the same level on every machine
 	UPROPERTY()
 	TArray<TObjectPtr<class URoomDataAsset>> RoomList;
 	UPROPERTY()
@@ -183,7 +183,7 @@ private:
 	FString DebugGrid();
 	void BuildWalls(TPair<FCoord, FRoomState> &Tile);
 	class ULevelStreaming* SpawnRoom(FCoord Where, class URoomDataAsset* RoomType);
-	void SetAssetListFromRegistry();
+	void LoadRoomCatalogue();
 	class ADoor* SpawnDoor(FCoord Where, ERoomDirection Dir);
 	class AWall* SpawnWall(FTransform Where, FWallSettings* Settings = nullptr);
 	class AWall* SpawnWallAtLocDirSettings(FTransform Where, ERoomDirection Pos, FWallSettings* Settings = nullptr);

@@ -11,7 +11,7 @@
 #include "Components/BoxComponent.h"
 #include "Engine/LevelStreaming.h"
 #include "Engine/LevelStreamingDynamic.h"
-#include "AssetRegistry/AssetRegistryModule.h"
+#include "Engine/AssetManager.h"
 #include "Engine/StaticMeshActor.h"
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/WorldSettings.h"
@@ -64,7 +64,8 @@ void ALevelBuilder::BeginPlay()
 	// RandomStream = FRandomStream(RandomSeed);
 	// if (!RandomSeed) RandomStream.GenerateNewSeed();
 
-	SetAssetListFromRegistry();
+	if (UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance())) MyGI->SetLevelBuilderRef(this);
+	LoadRoomCatalogue();
 	BuildGrid();
 	SpawnLevels();
 	// The game stays frozen until every room has streamed in: unfreeze when nothing streams, and don't wait forever
@@ -326,28 +327,18 @@ ADoor* ALevelBuilder::SpawnDoor(FCoord Where, ERoomDirection Dir)
 	return NewDoor;
 }
 
-void ALevelBuilder::SetAssetListFromRegistry()
+void ALevelBuilder::LoadRoomCatalogue()
 {
-	FAssetRegistryModule& AssetRegistryModule = FModuleManager::LoadModuleChecked<FAssetRegistryModule>("AssetRegistry");
-	TArray<FAssetData> OutAssets;
-	const UClass* RoomClass = URoomDataAsset::StaticClass();
-	AssetRegistryModule.Get().GetAssetsByClass(RoomClass->GetClassPathName(), OutAssets);
-	AssetDataList = OutAssets;
-	// UE_LOG(LogTemp, Warning, TEXT("Found %d"), AssetDataList.Num());
-	for (auto &&AssetData : AssetDataList)
+	UAssetManager& AssetManager = UAssetManager::Get();
+	TArray<FPrimaryAssetId> RoomIds;
+	AssetManager.GetPrimaryAssetIdList(URoomDataAsset::StaticClass()->GetFName(), RoomIds);
+	RoomIds.Sort([](const FPrimaryAssetId& A, const FPrimaryAssetId& B) { return A.PrimaryAssetName.LexicalLess(B.PrimaryAssetName); });
+	RoomList.Reset();
+	for (const FPrimaryAssetId& Id : RoomIds)
 	{
-		URoomDataAsset* NewRoom = Cast<URoomDataAsset>(AssetData.GetAsset());
-		if (NewRoom)
-		{
-			RoomList.Add(NewRoom);
-		}
+		if (URoomDataAsset* Room = Cast<URoomDataAsset>(AssetManager.GetPrimaryAssetPath(Id).TryLoad())) RoomList.Add(Room);
+		else UE_LOG(LogTemp, Error, TEXT("Room %s didn't load"), *Id.ToString());
 	}
-
-	UGameInstance* GI = GetGameInstance();
-	if (!GI) return;
-	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GI);
-	if (!MyGI) return;
-	MyGI->SetLevelBuilderRef(this);
 }
 
 FString ALevelBuilder::DebugGrid()
