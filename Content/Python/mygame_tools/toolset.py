@@ -255,12 +255,13 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def ai_target(actor_path: str, clear: bool = False) -> str:
+    def ai_target(actor_path: str, clear: bool = False, set_player: bool = False) -> str:
         """An AI character's blackboard target (TargetChar): who it is after. Optionally forgets it first.
 
         Args:
             actor_path: Full path of a PIE AI character.
             clear: Clear the target (and the character's TargetEnemy) instead of reading it.
+            set_player: Make the PIE player its target (blackboard and TargetEnemy) without waking its AI.
 
         Returns:
             JSON {"target": actor name or null}.
@@ -275,6 +276,9 @@ class MyGameTools(unreal.ToolsetDefinition):
         if clear:
             bb.clear_value("TargetChar")
             char.set_target_enemy(None)
+        if set_player:
+            bb.set_value_as_object("TargetChar", _player())
+            char.set_target_enemy(_player())
         target = bb.get_value_as_object("TargetChar")
         return json.dumps({"target": target.get_name() if target else None})
 
@@ -379,6 +383,24 @@ class MyGameTools(unreal.ToolsetDefinition):
         return json.dumps({"asset": asset.get_path_name() if asset else None, "name": str(ui.get_editor_property("name")),
                            "description": str(ui.get_editor_property("description")), "color": str(ui.get_editor_property("color")),
                            "icon": icon.get_path_name() if icon else None})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def activate_ability_class(actor_path: str, ability_class_path: str) -> str:
+        """Tries to activate one of a character's granted abilities by class (as an AI or trigger would).
+
+        Args:
+            actor_path: Full path of a PIE character.
+            ability_class_path: e.g. "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C".
+
+        Returns:
+            JSON {"activated": bool}.
+        """
+        char = unreal.find_object(None, actor_path)
+        cls = unreal.load_class(None, ability_class_path)
+        if not char or not cls:
+            raise RuntimeError("actor or ability class not found")
+        return json.dumps({"activated": char.get_editor_property("ability_system").try_activate_ability_by_class(cls, True)})
 
     @toolset_registry.tool_call
     @staticmethod

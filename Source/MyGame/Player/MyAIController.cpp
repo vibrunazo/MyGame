@@ -7,6 +7,8 @@
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
 #include "Perception/AISenseConfig_Sight.h"
+#include "AbilitySystemComponent.h"
+#include "AbilitySystemGlobals.h"
 
 AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer)
 	: Super(ObjectInitializer.SetDefaultSubobjectClass<UCrowdFollowingComponent>(TEXT("PathFollowingComponent")))
@@ -40,4 +42,41 @@ void AMyAIController::OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus)
 	APawn* SeenPawn = Cast<APawn>(Actor);
 	if (!Stimulus.WasSuccessfullySensed() || !SeenPawn || !SeenPawn->IsPlayerControlled()) return;
 	if (AMyCharacter* Me = GetPawn<AMyCharacter>()) Me->OnPawnSeen(SeenPawn);
+}
+
+void AMyAIController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	RespondedEvents.Reset();
+	for (const FAIEventResponse& Response : EventResponses) RespondedEvents.AddTag(Response.Event);
+	PawnAbilitySystem = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(InPawn);
+	if (PawnAbilitySystem.IsValid() && !RespondedEvents.IsEmpty())
+	{
+		PawnEventHandle = PawnAbilitySystem->AddGameplayEventTagContainerDelegate(RespondedEvents,
+			FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &AMyAIController::OnPawnGameplayEvent));
+	}
+}
+
+void AMyAIController::OnUnPossess()
+{
+	if (PawnAbilitySystem.IsValid() && PawnEventHandle.IsValid())
+	{
+		PawnAbilitySystem->RemoveGameplayEventTagContainerDelegate(RespondedEvents, PawnEventHandle);
+	}
+	PawnEventHandle.Reset();
+	PawnAbilitySystem.Reset();
+	Super::OnUnPossess();
+}
+
+void AMyAIController::OnPawnGameplayEvent(FGameplayTag Event, const FGameplayEventData* Payload)
+{
+	if (!PawnAbilitySystem.IsValid()) return;
+	for (const FAIEventResponse& Response : EventResponses)
+	{
+		if (!Response.Event.MatchesTagExact(Event)) continue;
+		for (const TSubclassOf<UGameplayAbility>& Ability : Response.Abilities)
+		{
+			if (Ability) PawnAbilitySystem->TryActivateAbilityByClass(Ability);
+		}
+	}
 }

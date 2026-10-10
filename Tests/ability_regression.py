@@ -218,12 +218,42 @@ def run(out):
         r = run_scenario(name, actions, duration, player_path, dummy, bool(start_room))
         print(json.dumps(r))
         results["scenarios"].append(r)
+    results["boss"] = boss_phases()
+    print(json.dumps(results["boss"]))
     results["sight"] = sight_checks(dummy)
     print(json.dumps(results["sight"]))
     results["enemy_attack"] = enemy_attack(dummy)
     print(json.dumps(results["enemy_attack"]))
     with open(out, "w") as f:
         json.dump(results, f, indent=1)
+
+
+def boss_phases(seconds=4.0):
+    """Drops the boss (AI frozen, the player as its target) below 75%, 50% and 25% health. Its phase moves are instant
+    abilities, so each phase records their results: summoned characters, the boss's effects and its montages."""
+    boss = next((c for c in tool("list_characters") if "Boss" in c["class"] and c.get("health", 0) > 0), None)
+    if not boss:
+        return {"error": "no boss"}
+    tool("set_ai_enabled", actor_path=boss["path"], enabled=False)
+    tool("ai_target", actor_path=boss["path"], set_player=True)
+    tool("set_character_attribute", actor_path=boss["path"], attribute="MaxHealth", value=1000.0)
+    tool("set_character_attribute", actor_path=boss["path"], attribute="Health", value=1000.0)
+    tool("refresh_health", actor_path=boss["path"])
+    phases = {}
+    for pct in (74, 49, 24):
+        before = len(tool("list_characters"))
+        tool("set_character_attribute", actor_path=boss["path"], attribute="Health", value=pct * 10.0)
+        tool("refresh_health", actor_path=boss["path"])
+        montages, effects, t0 = set(), set(), time.time()
+        while time.time() - t0 < seconds:
+            m = tool("character_state", actor_path=boss["path"])["montage"]
+            if m: montages.add(m)
+            for e in call_tool(GAS, "GetActiveEffects", {"actor": {"refPath": boss["path"]}}):
+                effects.add(str(e.get("effectName", e))[:60] if isinstance(e, dict) else str(e)[:60])
+            time.sleep(0.1)
+        phases[f"below_{pct + 1}"] = {"summoned": len(tool("list_characters")) - before, "montages": sorted(montages), "effects": sorted(effects)}
+        freeze_enemies()  # summons
+    return phases
 
 
 def sight_checks(dummy, seconds=2.0):
@@ -298,6 +328,9 @@ def diff(a_path, b_path):
                 continue
             print(f"{name}.{k}: {oa[k]} -> {ob[k]}")
             same = False
+    if A.get("boss") and B.get("boss") and A["boss"] != B["boss"]:
+        print(f"boss: {A['boss']} -> {B['boss']}")
+        same = False
     if A.get("sight") and B.get("sight") and A["sight"] != B["sight"]:
         print(f"sight: {A['sight']} -> {B['sight']}")
         same = False
