@@ -94,8 +94,11 @@ void UMyGameInstance::NewGame()
     Inventory.Empty();
 
     // TODO this might be called after the game is over, before the new game actually starts, which might cause random stream to desync?
-    RandomStream = FRandomStream(RandomSeed);
-	if (!RandomSeed) RandomStream.GenerateNewSeed();
+    // -Seed=N on the command line replays a run (bug reports, tests); otherwise RandomSeed, 0 meaning a new one
+    int32 Seed = RandomSeed;
+    FParse::Value(FCommandLine::Get(), TEXT("Seed="), Seed);
+    RandomStream = FRandomStream(Seed);
+	if (!Seed) RandomStream.GenerateNewSeed();
     UE_LOG(LogTemp, Warning, TEXT("GameInstance Random Seed: %d"), RandomStream.GetCurrentSeed());
 	UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
 }

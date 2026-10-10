@@ -50,7 +50,9 @@
     "PunchR_Montage:Default",
     "PunchR_Montage:ComboStart",
     "PunchL_Montage:Default",
-    "PunchL_Montage:ComboStart"
+    "PunchL_Montage:ComboStart",
+    "PunchR_Montage:Default",
+    "PunchR_Montage:ComboStart"
    ],
    "abilities": [
     "GA_BasicPunches"
@@ -91,7 +93,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 44.2,
+   "dummy_rise": 45.4,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking"
@@ -127,7 +129,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 45.4,
+   "dummy_rise": 44.2,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking"
@@ -158,7 +160,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 78.8,
+   "dummy_rise": 81.3,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -166,7 +168,7 @@
     "status.hitstun"
    ],
    "player_moved": 0.0,
-   "player_rise": 211.4
+   "player_rise": 202.0
   },
   {
    "scenario": "jump_punch",
@@ -243,7 +245,7 @@
    "player_tags": [
     "state.running"
    ],
-   "player_moved": 513.3,
+   "player_moved": 543.1,
    "player_rise": 0.0
   },
   {
@@ -295,7 +297,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 77.5,
+   "dummy_rise": 79.9,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -317,7 +319,6 @@
    ],
    "timeline": [
     "PunchRunR_Montage:Startup",
-    "PunchRunR_Montage:ComboStart",
     "PunchRunR_Montage:Recovery"
    ],
    "abilities": [
@@ -360,7 +361,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 326.5,
+   "dummy_rise": 325.3,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking"
@@ -397,7 +398,7 @@
     "status.nomove",
     "status.nopawnblock"
    ],
-   "player_moved": 154.4,
+   "player_moved": 148.0,
    "player_rise": 0.0
   },
   {

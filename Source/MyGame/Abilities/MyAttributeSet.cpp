@@ -78,24 +78,25 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
 		TargetActor = Data.Target.AbilityActorInfo->AvatarActor.Get();
 	}
 
-    if (Data.EvaluatedData.Attribute == GetHealthAttribute())
-	{
-        // Handle other health changes such as from healing or direct modifiers
-		// First clamp it
-        float DamageValue = Data.EvaluatedData.Magnitude;
-        /*FGameplayTagContainer tags = FGameplayTagContainer();
-        Data.EffectSpec.GetAllAssetTags(tags);
-        UE_LOG(LogTemp, Warning, TEXT("damage effect, tags: %s"), *tags.ToString());*/
-		SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
-        IGetHit* HeWhoGetsHit = Cast<IGetHit>(TargetActor);
-        if (HeWhoGetsHit && DamageValue < 0)
+    // All damage arrives here (DamageExec, damage over time): the one place Health goes down from a hit
+    if (Data.EvaluatedData.Attribute == GetIncomingDamageAttribute())
+    {
+        const float Damage = GetIncomingDamage();
+        SetIncomingDamage(0.f);
+        if (Damage > 0.f)
         {
-            HeWhoGetsHit->OnDamaged(SourceActor, DamageValue, Data.EffectSpec);
-            if (GetHealth() == 0)
+            SetHealth(FMath::Clamp(GetHealth() - Damage, 0.0f, GetMaxHealth()));
+            if (IGetHit* HeWhoGetsHit = Cast<IGetHit>(TargetActor))
             {
-                HeWhoGetsHit->OnDie();
+                HeWhoGetsHit->OnDamaged(SourceActor, -Damage, Data.EffectSpec);
+                if (GetHealth() <= 0.f) HeWhoGetsHit->OnDie();
             }
         }
+    }
+    // healing and other direct Health changes
+    else if (Data.EvaluatedData.Attribute == GetHealthAttribute())
+    {
+        SetHealth(FMath::Clamp(GetHealth(), 0.0f, GetMaxHealth()));
     }
 
     if (Data.EvaluatedData.Attribute == GetManaAttribute())

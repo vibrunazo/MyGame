@@ -64,4 +64,10 @@ public:
 	UPROPERTY(Category = "Attributes | RotSpeed", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData RotSpeed;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, RotSpeed)
+
+	// Meta attribute: damage about to be taken (positive). Damage effects write it; PostGameplayEffectExecute turns it
+	// into lost Health and resets it, so it never holds a value between executions
+	UPROPERTY(Category = "Attributes | Meta", BlueprintReadOnly)
+	FGameplayAttributeData IncomingDamage;
+	ATTRIBUTE_ACCESSORS(UMyAttributeSet, IncomingDamage)
 };
