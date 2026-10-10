@@ -126,6 +126,8 @@ protected:
 	virtual void SetupInputComponent() override;
 	void Jump();
 	void StopJump();
+	// The pawn while it takes input: null after death or the level-clear flag (both clear bHasControl)
+	class AMyCharacter* GetControlledChar() const;
 	void OnMove(const struct FInputActionValue& Value);
 	void OnDash(const struct FInputActionValue& Value);
 	void OnAbilityInput(EInput Slot, bool bPressed);

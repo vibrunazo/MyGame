@@ -250,6 +250,7 @@ The steps:
 
 1. The loop: main menu → run → rooms → doored miniboss → treasure → boss → next floor (difficulty +1), and death → game over → new run.
 2. Keyboard and gamepad both work.
+   - **TODO, play-test:** no control after the level-clear flag. You fixed this in 2020 (`OnLevelWin` disables the character's input). Phase 3 broke it by moving input to the controller's Enhanced Input bindings, which the character's `DisableInput` doesn't reach. **Fixed 2026-10-10:** the controller ignores move, dash and ability presses once `bHasControl` is off (after the flag, or after death). An MCP check moved the player 0 units after the flag, and the ability regression is unchanged. Confirm in a real play-test.
 3. Package a Win64 build and smoke-test it.
 
 ## Phase 6: the camera

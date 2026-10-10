@@ -74,18 +74,26 @@ void AMyPlayerController::InjectTestInput(UInputAction* Action, FVector2D Value,
 }
 #endif
 
+AMyCharacter* AMyPlayerController::GetControlledChar() const
+{
+    AMyCharacter* MyChar = GetPawn<AMyCharacter>();
+    return MyChar && MyChar->bHasControl ? MyChar : nullptr;
+}
+
 void AMyPlayerController::OnMove(const FInputActionValue& Value)
 {
-    if (AMyCharacter* MyChar = GetPawn<AMyCharacter>()) MyChar->SetMoveInput(Value.Get<FVector2D>());
+    if (AMyCharacter* MyChar = GetControlledChar()) MyChar->SetMoveInput(Value.Get<FVector2D>());
 }
 
 void AMyPlayerController::OnDash(const FInputActionValue& Value)
 {
-    if (AMyCharacter* MyChar = GetPawn<AMyCharacter>()) MyChar->Dash(Value.Get<FVector2D>());
+    if (AMyCharacter* MyChar = GetControlledChar()) MyChar->Dash(Value.Get<FVector2D>());
 }
 
 void AMyPlayerController::OnAbilityInput(EInput Slot, bool bPressed)
 {
+    // releases still go through, so nothing stays held
+    if (bPressed && !GetControlledChar()) return;
     if (Slot == EInput::Jump)
     {
         if (bPressed) Jump();
