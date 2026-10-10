@@ -2,6 +2,7 @@
 
 
 #include "HitBox.h"
+#include "../MyGameplayTags.h"
 #include "HitboxSettings.h"
 #include "../Abilities/MyGameplayAbility.h"
 #include "../Abilities/IGetHit.h"
@@ -105,11 +106,11 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 			CurEnemyState.LastHitTime = CurTime;
 			ActorsHit.Emplace(Other, CurEnemyState);
 			//ActorsHit.Emplace(Other, CurHitCount + 1);
-			FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
+			FGameplayTag HitConnectTag = MyGameplayTags::Notify_Hit_Connect;
 			UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), HitConnectTag, FGameplayEventData());
 			ApplyAllEffects(Target);
 			UAbilitySystemComponent* GAS = Target->GetAbilitySystemComponent();
-			FGameplayTag HitStunImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("status.stunimmune"));
+			FGameplayTag HitStunImmuneTag = MyGameplayTags::Status_StunImmune;
 			if (GAS && GAS->HasMatchingGameplayTag(HitStunImmuneTag))
 			{
 				if (BlockSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), BlockSound, GetActorLocation());

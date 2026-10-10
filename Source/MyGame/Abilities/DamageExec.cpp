@@ -2,6 +2,7 @@
 
 
 #include "DamageExec.h"
+#include "../MyGameplayTags.h"
 #include "MyAttributeSet.h"
 #include "AbilitySystemComponent.h"
 
@@ -77,8 +78,8 @@ void UDamageExec::Execute_Implementation(const FGameplayEffectCustomExecutionPar
 	// float Damage = 0.f;
 	// ExecutionParams.AttemptCalculateCapturedAttributeMagnitude(DamageStatics().DamageDef, EvaluationParameters, Damage);
     // SetByCaller Damage
-    // FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(FName("data.damage"));
-    FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(TEXT("data.damage"));
+    // FGameplayTag DamageTag = MyGameplayTags::Data_Damage;
+    FGameplayTag DamageTag = MyGameplayTags::Data_Damage;
     float Damage = Spec.GetSetByCallerMagnitude(DamageTag, true, -1.0f);
 	//float Damage = FMath::Max<float>(SetDamage, 0.0f);
 

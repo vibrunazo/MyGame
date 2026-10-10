@@ -2,6 +2,7 @@
 
 
 #include "CastAbility.h"
+#include "../MyGameplayTags.h"
 #include "ICastProjectile.h"
 #include "../Player/MyProjectile.h"
 #include "../Player/HitBox.h"
@@ -14,7 +15,7 @@ void UCastAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle, cons
     // UE_LOG(LogTemp, Warning, TEXT("Cast ability Activated"));
     Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-    FGameplayTag CastTag = FGameplayTag::RequestGameplayTag(TEXT("notify.projectile.cast"));
+    FGameplayTag CastTag = MyGameplayTags::Notify_Projectile_Cast;
     UAbilityTask_WaitGameplayEvent* CastTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, CastTag);
     CastTask->EventReceived.AddDynamic(this, &UCastAbility::OnCast);
     CastTask->ReadyForActivation();

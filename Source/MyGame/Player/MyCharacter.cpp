@@ -1,6 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "MyCharacter.h"
+#include "../MyGameplayTags.h"
 #include "EnemyCharBase.h"
 #include "MyPlayerController.h"
 #include "../MyGameInstance.h"
@@ -238,7 +239,7 @@ void AMyCharacter::BeginPlay()
 	Super::BeginPlay();
 	if(!AbilitySystem) return;
 	AbilitySystem->InitAbilityActorInfo(this, this);
-	AbilitySystem->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
+	AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
 	for (auto &&Ability : Abilities)
 	{
 		GiveAbility(Ability.AbilityClass);
@@ -571,31 +572,31 @@ void AMyCharacter::UpdateHealthBar()
 	if (NewHealthPct <= 0.75f && OldHealthPct > 0.75f)
 	{
 		ActivateAbilityByEvent("health75");
-		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.75"));
+		FGameplayTag HealthTag = MyGameplayTags::Status_Health_75;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.7f && OldHealthPct > 0.7f)
 	{
 		ActivateAbilityByEvent("health70");
-		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.70"));
+		FGameplayTag HealthTag = MyGameplayTags::Status_Health_70;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.5f && OldHealthPct > 0.5f)
 	{
 		ActivateAbilityByEvent("health50");
-		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.50"));
+		FGameplayTag HealthTag = MyGameplayTags::Status_Health_50;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.3f && OldHealthPct > 0.3f)
 	{
 		ActivateAbilityByEvent("health30");
-		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.30"));
+		FGameplayTag HealthTag = MyGameplayTags::Status_Health_30;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 	if (NewHealthPct <= 0.25f && OldHealthPct > 0.25f)
 	{
 		ActivateAbilityByEvent("health25");
-		FGameplayTag HealthTag = FGameplayTag::RequestGameplayTag(TEXT("status.health.25"));
+		FGameplayTag HealthTag = MyGameplayTags::Status_Health_25;
 		UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, HealthTag, FGameplayEventData());
 	}
 
@@ -657,7 +658,7 @@ void AMyCharacter::RefreshPawnCollision()
 	UCapsuleComponent* Capsule = GetCapsuleComponent();
 	const bool bIgnorePawns = !IsAlive()
 		|| (GetCharacterMovement() && GetCharacterMovement()->IsFalling())
-		|| (AbilitySystem && AbilitySystem->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock"))));
+		|| (AbilitySystem && AbilitySystem->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));
 	if (bIgnorePawns)
 	{
 		GetWorldTimerManager().ClearTimer(PawnBlockRetryTimer);
@@ -719,18 +720,18 @@ FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHa
 	// if (!NewEffect.Data || !AbilitySystem) { return nullptr; }
 	NewEffect.Data->GetAllAssetTags(EffectTags);
 	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
-	// FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
+	// FGameplayTag HitstunTag = MyGameplayTags::Status_HitStun;
 	// the 'data.noapply' tag let's us know this effect only has side effects, and doesn't modify any attributes
 	// so we should NOT call ApplyGameplayEffectSpecToSelf
-	FGameplayTag NoApplyTag = FGameplayTag::RequestGameplayTag(TEXT("data.noapply"));
-	FGameplayTag HitstunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
-	FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
-	FGameplayTag CamShakeTag = FGameplayTag::RequestGameplayTag(TEXT("data.camshake"));
+	FGameplayTag NoApplyTag = MyGameplayTags::Data_NoApply;
+	FGameplayTag HitstunTag = MyGameplayTags::Data_HitStun;
+	FGameplayTag KnockbackTag = MyGameplayTags::Data_Knockback;
+	FGameplayTag CamShakeTag = MyGameplayTags::Data_CamShake;
 	//FGameplayTag NoPawnBlockTag = FGameplayTag::RequestGameplayTag(TEXT("data.nopawnblock"));
-	FGameplayTag LaunchTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch")); 
-	FGameplayTag LaunchXTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.x")); 
-	FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y")); 
-	FGameplayTag LaunchZTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.z")); 
+	FGameplayTag LaunchTag = MyGameplayTags::Data_Launch; 
+	FGameplayTag LaunchXTag = MyGameplayTags::Data_Launch_X; 
+	FGameplayTag LaunchYTag = MyGameplayTags::Data_Launch_Y; 
+	FGameplayTag LaunchZTag = MyGameplayTags::Data_Launch_Z; 
 	// {{TagName="data.knockback" },500.000000}
 	if (EffectTags.HasTag(HitstunTag)) 
 	{
@@ -753,7 +754,7 @@ FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHa
 	}
 	/*if (EffectTags.HasTag(NoPawnBlockTag))
 	{
-		AbilitySystem->RegisterGameplayTagEvent(FGameplayTag::RequestGameplayTag(FName("status.nopawnblock")), EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
+		AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
 	}*/
 	if (EffectTags.HasTag(LaunchTag)) 
 	// if (EffectTags.HasTag(LaunchTag) && !StunImmune) 
@@ -812,7 +813,7 @@ void AMyCharacter::IncrementHitStunCount()
 		HitStunCount = 0;
 		TSubclassOf<UGameplayEffect> StunImmuneEffect = GetMyGameInstance()->StunImmuneEffectRef;
 		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(StunImmuneEffect, 0.f, AbilitySystem->MakeEffectContext());
-		FGameplayTag StunImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("data.stunimmune"));
+		FGameplayTag StunImmuneTag = MyGameplayTags::Data_StunImmune;
 		Handle.Data.Get()->SetSetByCallerMagnitude(StunImmuneTag, StunImmuneCooldown);
 		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
 	}
@@ -821,7 +822,7 @@ void AMyCharacter::IncrementHitStunCount()
 /* Returns true if the Character is immune to stun. Checks if the Char has the Gameplay Tag status.stunimmune */
 bool AMyCharacter::HasStunImmune()
 {
-	FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("status.stunimmune"));
+	FGameplayTag ImmuneTag = MyGameplayTags::Status_StunImmune;
     if(AbilitySystem->HasMatchingGameplayTag(ImmuneTag))
 	{
 		return true;
@@ -844,7 +845,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectS
 	FGameplayTagContainer tags = FGameplayTagContainer();
 	Effect.GetAllAssetTags(tags);
 	//UE_LOG(LogTemp, Warning, TEXT("damage effect, tags: %s"), *tags.ToString()); 
-	/*FGameplayTag HitStun = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
+	/*FGameplayTag HitStun = MyGameplayTags::Data_HitStun;
 	if (!HasStunImmune() && tags.HasTag(HitStun)) PlayAnimMontage(GetHitMontage);*/
 	//UGameplayStatics::PlayWorldCameraShake(GetWorld(), GetCamShake(), GetActorLocation(), 0.0f, CamShakeRange);
 	
@@ -1042,9 +1043,9 @@ void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
 void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode)
 {
 	Super::OnMovementModeChanged(PrevMovementMode, PrevCustomMode);
-	FGameplayTag FlyingTag = FGameplayTag::RequestGameplayTag(TEXT("activate.flyingattack"));
+	FGameplayTag FlyingTag = MyGameplayTags::Activate_FlyingAttack;
 	FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(FlyingTag);
-	FGameplayTag GroundTag = FGameplayTag::RequestGameplayTag(TEXT("activate.groundattack"));
+	FGameplayTag GroundTag = MyGameplayTags::Activate_GroundAttack;
 	FGameplayTagContainer GroundTagContainer = FGameplayTagContainer(GroundTag);
 	if (!GetMovementComponent()->IsFalling())	// I'm on ground
 	{
@@ -1207,7 +1208,7 @@ void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
 	
 	TSubclassOf<UGameplayEffect> NoControlEffect = GetMyGameInstance()->NoControlEffectRef;
 	const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(NoControlEffect, 0.f, AbilitySystem->MakeEffectContext());
-	FGameplayTag NoControlTag = FGameplayTag::RequestGameplayTag(TEXT("data.nocontrol"));
+	FGameplayTag NoControlTag = MyGameplayTags::Data_NoControl;
 	Handle.Data.Get()->SetSetByCallerMagnitude(NoControlTag, 0.5f);
 	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
 	// UE_LOG(LogTemp, Warning, TEXT("Applying Launch: %s"), *Power.ToString());
@@ -1227,8 +1228,8 @@ FTransform AMyCharacter::GetProjectileSpawn()
 
 bool AMyCharacter::HasControl()
 {
-	FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
-	FGameplayTag NoControlTag = FGameplayTag::RequestGameplayTag(TEXT("status.nocontrol"));
+	FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;
+	FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;
     if(AbilitySystem->HasMatchingGameplayTag(HitStunTag) || AbilitySystem->HasMatchingGameplayTag(NoControlTag))
 	{
 		return false;
@@ -1238,9 +1239,9 @@ bool AMyCharacter::HasControl()
 
 bool AMyCharacter::HasMoveControl()
 {
-	FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("status.hitstun"));
-	FGameplayTag NoControlTag = FGameplayTag::RequestGameplayTag(TEXT("status.nocontrol"));
-	FGameplayTag NoMoveTag = FGameplayTag::RequestGameplayTag(TEXT("status.nomove"));
+	FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;
+	FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;
+	FGameplayTag NoMoveTag = MyGameplayTags::Status_NoMove;
 	if (AbilitySystem->HasMatchingGameplayTag(HitStunTag) || AbilitySystem->HasMatchingGameplayTag(NoControlTag) || AbilitySystem->HasMatchingGameplayTag(NoMoveTag))
 	{
 		return false;
@@ -1383,7 +1384,7 @@ bool AMyCharacter::IsWalking()
 /// <returns>True if immune to projectiles, false otherwise.</returns>
 bool AMyCharacter::IsProjectileImmune()
 {
-	FGameplayTag ImmuneTag = FGameplayTag::RequestGameplayTag(TEXT("status.immune.proj"));
+	FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;
 	if (AbilitySystem->HasMatchingGameplayTag(ImmuneTag))
 	{
 		return true;

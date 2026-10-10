@@ -214,6 +214,7 @@ class MyGameTools(unreal.ToolsetDefinition):
             brain.restart_logic()
         else:
             brain.stop_logic("test dummy")
+            controller.stop_movement()  # a move the tree already started keeps going otherwise
         return json.dumps({"actor": char.get_name(), "ai_running": brain.is_running()})
 
     @toolset_registry.tool_call

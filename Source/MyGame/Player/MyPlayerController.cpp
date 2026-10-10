@@ -2,6 +2,7 @@
 
 
 #include "MyPlayerController.h"
+#include "../MyGameplayTags.h"
 #include "MyCharacter.h"
 #include "MyDefaultPawn.h"
 #include "../UI/MyUserWidget.h"
@@ -107,14 +108,12 @@ void AMyPlayerController::SetAbilityKeyDown(EInput Index, bool IsKeyDown)
     if (!IsKeyDown)
     {
         UpdateHUDAbilityKey(Index, IsKeyDown);
-        if (MyChar)
+        // abilities waiting for their button to be let go (charge moves) listen for input.release.<slot>
+        static const FGameplayTag ReleaseTags[] = { MyGameplayTags::Input_Release_0, MyGameplayTags::Input_Release_1,
+            MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };
+        if (MyChar && (uint8)Index < UE_ARRAY_COUNT(ReleaseTags))
         {
-            FString TagString = FString::Printf(TEXT("input.release.%d"), (uint8)Index);
-            //TagString += (uint8)Index;
-            FName TagName = FName(*TagString);
-            FGameplayTag InputTag = FGameplayTag::RequestGameplayTag(TagName);
-            if (FGameplayTag::IsValidGameplayTagString(TagString)) UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MyChar, InputTag, FGameplayEventData());
-            UE_LOG(LogTemp, Warning, TEXT("sent gameplay event: %s"), *TagString);
+            UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MyChar, ReleaseTags[(uint8)Index], FGameplayEventData());
         }
     }
 }

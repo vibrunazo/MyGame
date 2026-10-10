@@ -2,6 +2,7 @@
 
 
 #include "MyGameplayAbility.h"
+#include "../MyGameplayTags.h"
 #include "IGetHit.h"
 #include "../Player/MyCharacter.h"
 #include "../Player/HitBox.h"
@@ -32,9 +33,9 @@ UMyGameplayAbility::UMyGameplayAbility()
 bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const
 {
     //UE_LOG(LogTemp, Warning, TEXT("Trying Ability: %s on %s"), *GetName(), *GetAvatarActorFromActorInfo()->GetName());
-    FGameplayTag AttackTag = FGameplayTag::RequestGameplayTag(TEXT("state.attacking"));
+    FGameplayTag AttackTag = MyGameplayTags::State_Attacking;
     // This tag should be used when the ability is in a State where other abilties can cancel its animation to combo into some other ability
-    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;
     // If I'm in the middle of an attack
     if(ActorInfo->AbilitySystemComponent.Get()->HasMatchingGameplayTag(AttackTag))
     {
@@ -66,8 +67,8 @@ void UMyGameplayAbility::PreActivate(const FGameplayAbilitySpecHandle Handle, co
     // an ability started from a hit-confirmed cancel plays its montage from the ComboStart section
     const UAbilitySystemComponent* ASC = ActorInfo->AbilitySystemComponent.Get();
     bStartedFromComboCancel = bNeedsHitToCancel && ASC
-        && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(TEXT("state.attacking")))
-        && ASC->HasMatchingGameplayTag(FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel")))
+        && ASC->HasMatchingGameplayTag(MyGameplayTags::State_Attacking)
+        && ASC->HasMatchingGameplayTag(MyGameplayTags::Combo_CanCancel)
         && ASC->HasAnyMatchingGameplayTags(TagsIcanCancel);
     Super::PreActivate(Handle, ActorInfo, ActivationInfo, OnGameplayAbilityEndedDelegate, TriggerEventData);
 }
@@ -112,7 +113,7 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     ApplySelfEffects();
 
     FName MontageSection = NAME_None;
-    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;
     if (bStartedFromComboCancel && MontagesToPlay[CurrentComboCount]->IsValidSectionName(TEXT("ComboStart")))
     {
         MontageSection = "ComboStart";
@@ -125,9 +126,9 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     Task->OnBlendOut.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
 
-    FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));;
-    FGameplayTag HitEndTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.end"));
-    FGameplayTag HitConnectTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.connect"));
+    FGameplayTag HitStartTag = MyGameplayTags::Notify_Hit_Start;;
+    FGameplayTag HitEndTag = MyGameplayTags::Notify_Hit_End;
+    FGameplayTag HitConnectTag = MyGameplayTags::Notify_Hit_Connect;
 
     UAbilityTask_WaitGameplayEvent* HitStartTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitStartTag);
     HitStartTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitStart);
@@ -172,7 +173,7 @@ void UMyGameplayAbility::OnMontageComplete()
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
-    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;
     GetActorInfo().AbilitySystemComponent.Get()->RemoveLooseGameplayTag(CanCancelState);
 }
 
@@ -352,13 +353,13 @@ void UMyGameplayAbility::OnDeactivateEvent(const FGameplayEventData Payload)
 
 TArray<FGameplayEffectSpecHandle> UMyGameplayAbility::MakeSpecHandles()
 {
-    /*FGameplayTag HitStunTag = FGameplayTag::RequestGameplayTag(TEXT("data.hitstun"));
-    FGameplayTag DamageTag = FGameplayTag::RequestGameplayTag(TEXT("data.damage"));
-    FGameplayTag KnockbackTag = FGameplayTag::RequestGameplayTag(TEXT("data.knockback"));
-    FGameplayTag LaunchTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch"));
-    FGameplayTag LaunchXTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.x"));
-    FGameplayTag LaunchYTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.y"));
-    FGameplayTag LaunchZTag = FGameplayTag::RequestGameplayTag(TEXT("data.launch.z"));*/
+    /*FGameplayTag HitStunTag = MyGameplayTags::Data_HitStun;
+    FGameplayTag DamageTag = MyGameplayTags::Data_Damage;
+    FGameplayTag KnockbackTag = MyGameplayTags::Data_Knockback;
+    FGameplayTag LaunchTag = MyGameplayTags::Data_Launch;
+    FGameplayTag LaunchXTag = MyGameplayTags::Data_Launch_X;
+    FGameplayTag LaunchYTag = MyGameplayTags::Data_Launch_Y;
+    FGameplayTag LaunchZTag = MyGameplayTags::Data_Launch_Z;*/
     TArray<FGameplayEffectSpecHandle> Result = {};
     auto EffectsToCheck = EffectsToApply;
     CheckConditionalEffects();
@@ -411,7 +412,7 @@ void UMyGameplayAbility::CheckConditionalEffects()
 void UMyGameplayAbility::IncComboCount()
 {
     bIsInComboState = true;
-    FGameplayTag CanCancelState = FGameplayTag::RequestGameplayTag(TEXT("combo.cancancel"));
+    FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;
     GetActorInfo().AbilitySystemComponent.Get()->AddLooseGameplayTag(CanCancelState);
     if (bHasHitConnected) return;
     if (CurrentComboCount + 1 < MontagesToPlay.Num()) ++CurrentComboCount;

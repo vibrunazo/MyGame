@@ -2,6 +2,7 @@
 
 
 #include "ANS_Hitbox.h"
+#include "../MyGameplayTags.h"
 #include "../Player/HitBox.h"
 //#include "../Player/HitboxSettings.h"
 
@@ -10,7 +11,7 @@
 void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 
-	FGameplayTag HitStartTag = FGameplayTag::RequestGameplayTag(TEXT("notify.hit.start"));
+	FGameplayTag HitStartTag = MyGameplayTags::Notify_Hit_Start;
 	FGameplayEventData Payload = FGameplayEventData();
 	//auto NewContainer = new UHitboxesContainer(Hitboxes);
 	auto NewContainer = NewObject<UHitboxesContainer>(GetTransientPackage());
