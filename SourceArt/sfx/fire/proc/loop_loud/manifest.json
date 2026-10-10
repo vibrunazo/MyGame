@@ -1,0 +1,30 @@
+{
+ "files": {
+  "fire_loop_04_eq_loop_0-6.41791.wav": {
+   "tool": "audio.clip.dsp",
+   "model": null,
+   "license": null,
+   "created": "2026-10-10T17:57:17",
+   "params": {
+    "start": 0.0,
+    "fade_in": 0.0,
+    "fade_out": 0.0,
+    "curve": "cosine",
+    "ceiling": -1.0,
+    "format": "wav",
+    "inputs": [
+     "D:\\docs\\Unreal Projects\\MyGame\\SourceArt\\sfx\\fire\\proc\\loop_medium\\fire_loop_04_eq_loop.wav"
+    ],
+    "end": 6.417914,
+    "lufs": -22.0
+   },
+   "source": "D:\\docs\\Unreal Projects\\MyGame\\SourceArt\\sfx\\fire\\proc\\loop_medium\\fire_loop_04_eq_loop.wav",
+   "duration_seconds": 6.418,
+   "sample_rate": 44100,
+   "channels": 2,
+   "peak_dbfs": -1.01,
+   "rms_dbfs": -23.6
+  }
+ },
+ "generator": "D:\\docs\\assets\\generator"
+}
