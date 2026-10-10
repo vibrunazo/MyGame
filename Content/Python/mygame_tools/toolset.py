@@ -47,6 +47,13 @@ def _set_attribute(char, attribute, value):
     char.set_attribute_base_for_test(attr, value)
 
 
+def _set_senses(char, controller, enabled):
+    """Switches an AI's sight (AI Perception on its controller) on or off."""
+    perception = controller.get_ai_perception_component() if controller else None
+    if perception:
+        perception.set_sense_enabled(unreal.AISense_Sight, enabled)
+
+
 def _pawn_response(char):
     """The capsule's collision response to the Pawn channel (Block / Overlap / Ignore)."""
     capsule = char.get_editor_property("capsule_component")
@@ -216,12 +223,13 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def set_ai_enabled(actor_path: str, enabled: bool) -> str:
+    def set_ai_enabled(actor_path: str, enabled: bool, show_player: bool = True) -> str:
         """Stops or restarts a character's AI logic (behavior tree), e.g. to use an enemy as a still test dummy.
 
         Args:
             actor_path: Full path of a PIE character.
-            enabled: False stops its behavior tree; True restarts it.
+            enabled: False stops its behavior tree and senses; True restarts them.
+            show_player: When enabling, also hand it the player as its target right away (skip seeing).
 
         Returns:
             JSON {"actor", "ai_running"}.
@@ -233,19 +241,42 @@ class MyGameTools(unreal.ToolsetDefinition):
         brain = controller.get_editor_property("brain_component") if controller else None
         if not brain:
             raise RuntimeError(f"{actor_path} has no AI brain")
-        # sensing too: seeing the player aggroes the whole room, which restarts frozen trees
-        sensing = char.get_editor_property("pawn_sense_comp")
-        if sensing:
-            sensing.set_sensing_updates_enabled(enabled)
+        # senses too: seeing the player aggroes the whole room, which restarts frozen trees
+        _set_senses(char, controller, enabled)
         if enabled:
             brain.restart_logic()
-            # with sensing off while frozen it may never have seen the player; show it now so it engages at once
-            with contextlib.suppress(Exception):
-                char.on_pawn_seen(_player())
+            if show_player:  # with senses off while frozen it may never have seen the player
+                with contextlib.suppress(Exception):
+                    char.on_pawn_seen(_player())
         else:
             brain.stop_logic("test dummy")
             controller.stop_movement()  # a move the tree already started keeps going otherwise
         return json.dumps({"actor": char.get_name(), "ai_running": brain.is_running()})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def ai_target(actor_path: str, clear: bool = False) -> str:
+        """An AI character's blackboard target (TargetChar): who it is after. Optionally forgets it first.
+
+        Args:
+            actor_path: Full path of a PIE AI character.
+            clear: Clear the target (and the character's TargetEnemy) instead of reading it.
+
+        Returns:
+            JSON {"target": actor name or null}.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        controller = char.get_controller()
+        bb = controller.get_editor_property("blackboard") if controller else None
+        if not bb:
+            raise RuntimeError(f"{actor_path} has no blackboard")
+        if clear:
+            bb.clear_value("TargetChar")
+            char.set_target_enemy(None)
+        target = bb.get_value_as_object("TargetChar")
+        return json.dumps({"target": target.get_name() if target else None})
 
     @toolset_registry.tool_call
     @staticmethod
@@ -261,7 +292,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         char = unreal.find_object(None, actor_path)
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
-        state = {"actor": char.get_name(), "location": _vec(char.get_actor_location())}
+        state = {"actor": char.get_name(), "location": _vec(char.get_actor_location()), "yaw": round(char.get_actor_rotation().yaw, 1)}
         anim = char.get_editor_property("mesh").get_anim_instance()
         montage = anim.get_current_active_montage() if anim else None
         state["montage"] = montage.get_name() if montage else None
@@ -379,7 +410,7 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def teleport_actor(actor_path: str, x: float, y: float, z: float) -> str:
+    def teleport_actor(actor_path: str, x: float, y: float, z: float, yaw: float = -999.0) -> str:
         """Moves any PIE actor (e.g. a frozen enemy used as a dummy) to a world location.
 
         Args:
@@ -387,6 +418,7 @@ class MyGameTools(unreal.ToolsetDefinition):
             x: World X.
             y: World Y.
             z: World Z.
+            yaw: World yaw to face (0 = +X); -999 keeps the current facing.
 
         Returns:
             The actor's new location as JSON.
@@ -395,6 +427,12 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not actor:
             raise RuntimeError(f"no actor at {actor_path}")
         actor.set_actor_location(unreal.Vector(x, y, z), False, True)
+        if yaw != -999.0:
+            rot = unreal.Rotator(roll=0.0, pitch=0.0, yaw=yaw)
+            actor.set_actor_rotation(rot, True)
+            controller = actor.get_controller() if hasattr(actor, "get_controller") else None
+            if controller:  # enemies turn with their controller (bUseControllerRotationYaw)
+                controller.set_control_rotation(rot)
         return json.dumps(_vec(actor.get_actor_location()))
 
     @toolset_registry.tool_call

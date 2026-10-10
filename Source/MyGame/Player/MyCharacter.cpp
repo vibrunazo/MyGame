@@ -28,7 +28,6 @@
 #include "Engine/World.h"
 #include "TimerManager.h"
 //#include "Kismet/GameplayStatics.h"
-#include "Perception/PawnSensingComponent.h"
 #include "AIController.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "Components/ArrowComponent.h"
@@ -98,8 +97,6 @@ AMyCharacter::AMyCharacter()
 	TargetDetection->SetVisibility(false);
 	TargetDetection->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
-	PawnSenseComp = CreateDefaultSubobject<UPawnSensingComponent>(TEXT("Pawn Sensing"));
-	PawnSenseComp->OnSeePawn.AddDynamic(this, &AMyCharacter::OnPawnSeen);
 
 	// Our ability system component.
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));

@@ -218,10 +218,34 @@ def run(out):
         r = run_scenario(name, actions, duration, player_path, dummy, bool(start_room))
         print(json.dumps(r))
         results["scenarios"].append(r)
+    results["sight"] = sight_checks(dummy)
+    print(json.dumps(results["sight"]))
     results["enemy_attack"] = enemy_attack(dummy)
     print(json.dumps(results["enemy_attack"]))
     with open(out, "w") as f:
         json.dump(results, f, indent=1)
+
+
+def sight_checks(dummy, seconds=2.0):
+    """Does a woken enemy notice the player on its own? In front at 500 (yes), facing away (no), in front at 900 (no)."""
+    results = {}
+    # the one that should notice goes last: noticing aggroes the room, which outlasts the reset
+    for name, dummy_yaw, gap in (("behind_500", 0.0, 500.0), ("front_900", 180.0, 900.0), ("front_500", 180.0, 500.0)):
+        reset(None, dummy)
+        x, y = DUMMY_SPOT
+        tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=floor_z(), yaw=dummy_yaw)
+        tool("teleport_player", x=x - gap, y=y, z=floor_z())
+        tool("ai_target", actor_path=dummy["path"], clear=True)
+        time.sleep(0.3)
+        tool("set_ai_enabled", actor_path=dummy["path"], enabled=True, show_player=False)
+        t0, seen = time.time(), None
+        while time.time() - t0 < seconds and not seen:
+            seen = tool("ai_target", actor_path=dummy["path"])["target"]
+            time.sleep(0.1)
+        tool("set_ai_enabled", actor_path=dummy["path"], enabled=False)
+        tool("ai_target", actor_path=dummy["path"], clear=True)
+        results[name] = bool(seen)
+    return results
 
 
 def enemy_attack(dummy, seconds=6.0):
@@ -274,6 +298,9 @@ def diff(a_path, b_path):
                 continue
             print(f"{name}.{k}: {oa[k]} -> {ob[k]}")
             same = False
+    if A.get("sight") and B.get("sight") and A["sight"] != B["sight"]:
+        print(f"sight: {A['sight']} -> {B['sight']}")
+        same = False
     ea, eb = A.get("enemy_attack"), B.get("enemy_attack")
     if ea and eb and (set(ea["enemy_montages"]) != set(eb["enemy_montages"]) or (ea["player_damage"] > 0) != (eb["player_damage"] > 0)):
         print(f"enemy_attack: {ea} -> {eb}")

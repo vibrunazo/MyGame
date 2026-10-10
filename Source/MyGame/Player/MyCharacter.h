@@ -82,6 +82,7 @@ public:
 	void AddDurationToHealthBar(float Duration, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffectHandle);
 	/*UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FHealthUpdateSignature OnUpdatedHealth;*/
+	// The AI controller's perception saw SeenPawn (players only)
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void OnPawnSeen(APawn* SeenPawn);
 	TSubclassOf<class UCameraShakeBase> GetCamShake();
@@ -202,8 +203,6 @@ public:
 	// TSubclassOf<class UUserWidget> HealthBarWidget;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UWidgetComponent* HealthBarComp;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
-	class UPawnSensingComponent* PawnSenseComp;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	class UArrowComponent* SpawnArrow;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)

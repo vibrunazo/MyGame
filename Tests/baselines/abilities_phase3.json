@@ -93,8 +93,8 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 45.7,
-   "dummy_pushed": 343.5,
+   "dummy_rise": 45.0,
+   "dummy_pushed": 343.3,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking"
@@ -162,7 +162,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 81.3,
+   "dummy_rise": 81.5,
    "dummy_pushed": 343.7,
    "player_mana": 0.0,
    "player_tags": [
@@ -171,7 +171,7 @@
     "status.hitstun"
    ],
    "player_moved": 0.0,
-   "player_rise": 211.4
+   "player_rise": 207.9
   },
   {
    "scenario": "jump_punch",
@@ -278,7 +278,7 @@
     "state.running",
     "status.nocontrol"
    ],
-   "player_moved": 336.5,
+   "player_moved": 329.9,
    "player_rise": 0.0
   },
   {
@@ -304,8 +304,8 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 78.8,
-   "dummy_pushed": 339.6,
+   "dummy_rise": 77.4,
+   "dummy_pushed": 339.7,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -327,7 +327,6 @@
    ],
    "timeline": [
     "PunchRunR_Montage:Startup",
-    "PunchRunR_Montage:ComboStart",
     "PunchRunR_Montage:Recovery"
    ],
    "abilities": [
@@ -371,8 +370,8 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 326.5,
-   "dummy_pushed": 240.0,
+   "dummy_rise": 326.4,
+   "dummy_pushed": 237.0,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking"
@@ -402,7 +401,7 @@
     "status.hitstun"
    ],
    "dummy_rise": 0.0,
-   "dummy_pushed": 18.0,
+   "dummy_pushed": 16.5,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -410,7 +409,7 @@
     "status.nomove",
     "status.nopawnblock"
    ],
-   "player_moved": 150.2,
+   "player_moved": 148.1,
    "player_rise": 0.0
   },
   {
@@ -591,6 +590,11 @@
    "player_rise": 0.0
   }
  ],
+ "sight": {
+  "behind_500": false,
+  "front_900": false,
+  "front_500": true
+ },
  "enemy_attack": {
   "enemy_montages": [
    "PunchR_MontageEnemy1",
