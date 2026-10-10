@@ -14,6 +14,8 @@
 #include "GameplayEffectTypes.h"
 #include "MyCharacter.generated.h"
 
+enum class EHitReaction : uint8;
+
 //DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
 
 //DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FDieSignature, AMyCharacter, OnDieDelegate, AMyCharacter*, WhoDied);
@@ -121,7 +123,8 @@ public:
 	UPROPERTY(BlueprintAssignable, Category = "Abilities")
 	FCastDelegate OnCastDelegate;
 
-	FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) override;
+	FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
+	void OnHitReaction(EHitReaction Reaction, const FGameplayEffectSpec& Spec) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDamagedBP(AActor* SourceActor);
 	void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) override;

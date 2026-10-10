@@ -7,6 +7,8 @@
 #include "GameplayEffectTypes.h"
 #include "IGetHit.generated.h"
 
+enum class EHitReaction : uint8;
+
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
 class UGetHit : public UInterface
@@ -23,7 +25,10 @@ class MYGAME_API IGetHit
 
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
-	virtual FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor) = 0;
+	// Applies an effect to me (hits, items, an ability's self effects); returns the active handle for duration effects
+	virtual FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) = 0;
+	// An applied effect's UHitReactionEffectComponent asks for a reaction; the attacker is the spec's effect causer
+	virtual void OnHitReaction(EHitReaction Reaction, const FGameplayEffectSpec& Spec) = 0;
 	virtual void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) = 0;
 	virtual void OnDie() = 0;
 	virtual bool IsAlive() = 0;

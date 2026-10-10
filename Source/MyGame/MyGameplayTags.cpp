@@ -41,7 +41,6 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_X, "data.launch.x");
 	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Y, "data.launch.y");
 	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Z, "data.launch.z");
-	UE_DEFINE_GAMEPLAY_TAG(Data_NoApply, "data.noapply");
 	UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, "data.stunimmune");
 	UE_DEFINE_GAMEPLAY_TAG(Data_NoControl, "data.nocontrol");
 }

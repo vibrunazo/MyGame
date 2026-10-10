@@ -11,6 +11,7 @@
 #include "../Props/LearnItemDataAsset.h"
 #include "../Props/Pickup.h"
 #include "../UI/MyHealthBar.h"
+#include "../Abilities/HitReactionEffectComponent.h"
 
 //#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -673,74 +674,36 @@ void AMyCharacter::StepOutOf(const ACharacter* Other)
 	if (Needed > 0.f) SetActorLocation(GetActorLocation() + Away * Needed, true);
 }
 
-FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect, AActor* SourceActor)
+FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
 {
-	// UE_LOG(LogTemp, Warning, TEXT("Char getting effected"));
-	FGameplayTagContainer EffectTags;
-	// NewEffect.Data->GetAllGrantedTags(EffectTags);
-	if (!ensure(NewEffect.Data)) return FActiveGameplayEffectHandle();
-	if (!ensure(AbilitySystem)) return FActiveGameplayEffectHandle();
-	// if (!NewEffect.Data || !AbilitySystem) { return nullptr; }
-	NewEffect.Data->GetAllAssetTags(EffectTags);
-	// const FActiveGameplayEffect* AGE = AbilitySystem->GetActiveGameplayEffect(NewEffect);
-	// FGameplayTag HitstunTag = MyGameplayTags::Status_HitStun;
-	// the 'data.noapply' tag let's us know this effect only has side effects, and doesn't modify any attributes
-	// so we should NOT call ApplyGameplayEffectSpecToSelf
-	FGameplayTag NoApplyTag = MyGameplayTags::Data_NoApply;
-	FGameplayTag HitstunTag = MyGameplayTags::Data_HitStun;
-	FGameplayTag KnockbackTag = MyGameplayTags::Data_Knockback;
-	FGameplayTag CamShakeTag = MyGameplayTags::Data_CamShake;
-	//FGameplayTag NoPawnBlockTag = FGameplayTag::RequestGameplayTag(TEXT("data.nopawnblock"));
-	FGameplayTag LaunchTag = MyGameplayTags::Data_Launch; 
-	FGameplayTag LaunchXTag = MyGameplayTags::Data_Launch_X; 
-	FGameplayTag LaunchYTag = MyGameplayTags::Data_Launch_Y; 
-	FGameplayTag LaunchZTag = MyGameplayTags::Data_Launch_Z; 
-	// {{TagName="data.knockback" },500.000000}
-	if (EffectTags.HasTag(HitstunTag)) 
-	{
-		// UE_LOG(LogTemp, Warning, TEXT("Has Hitstun Tag, Count: %d, Immune: %d"), HitStunCount, StunImmune);
-		if (!HasStunImmune())
-		{
-			PlayAnimMontage(GetHitMontage);
-			IncrementHitStunCount();
-		}
-	}
-	if (EffectTags.HasTag(KnockbackTag))
-	{
-		float Knockback = NewEffect.Data.Get()->GetSetByCallerMagnitude(KnockbackTag);
-		ApplyKnockBack(SourceActor, Knockback);
-	}
-	if (EffectTags.HasTag(CamShakeTag))
-	{
-		float CamShakePower = NewEffect.Data.Get()->GetSetByCallerMagnitude(CamShakeTag);
-		if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(CamShakePower);
-	}
-	/*if (EffectTags.HasTag(NoPawnBlockTag))
-	{
-		AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
-	}*/
-	if (EffectTags.HasTag(LaunchTag)) 
-	// if (EffectTags.HasTag(LaunchTag) && !StunImmune) 
-	{
-		float LaunchX = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchXTag);
-		float LaunchY = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchYTag);
-		float LaunchZ = NewEffect.Data.Get()->GetSetByCallerMagnitude(LaunchZTag);
-		FVector LaunchVector = FVector(LaunchX, LaunchY, LaunchZ);
-		// TMap<FGameplayTag, float> KnockbackMap = NewEffect.Data.Get()->SetByCallerTagMagnitudes;
-		// float Knockback = *(KnockbackMap.Find(KnockbackTag));
-		// UE_LOG(LogTemp, Warning, TEXT("Has Launchtag, Knockback: %s"), *LaunchVector.ToString());
-		ApplyLaunchBack(SourceActor, LaunchVector);
-	}
-	// the 'data.noapply' tag let's us know this effect only has side effects, and doesn't modify any attributes
-	// so we should NOT call ApplyGameplayEffectSpecToSelf
-	if (EffectTags.HasTag(NoApplyTag))
-	{
-		return FActiveGameplayEffectHandle();
-	}
-	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*(NewEffect.Data.Get()));
-	// FActiveGameplayEffectHandle* ActiveEffectPointer = &ActiveEffect;
+	if (!ensure(NewEffect.Data) || !ensure(AbilitySystem)) return FActiveGameplayEffectHandle();
+	// hitstun, knockback, launch and camera shake happen through the effects' Hit Reaction components
+	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*NewEffect.Data.Get());
 	UpdateHealthBar();
 	return ActiveEffect;
+}
+
+void AMyCharacter::OnHitReaction(EHitReaction Reaction, const FGameplayEffectSpec& Spec)
+{
+	AActor* SourceActor = Spec.GetEffectContext().GetEffectCauser();
+	switch (Reaction)
+	{
+	case EHitReaction::HitStun:
+		// the effect can't apply while stun immune, so getting here means the stun landed
+		PlayAnimMontage(GetHitMontage);
+		IncrementHitStunCount();
+		break;
+	case EHitReaction::Knockback:
+		ApplyKnockBack(SourceActor, Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Knockback, false));
+		break;
+	case EHitReaction::Launch:
+		ApplyLaunchBack(SourceActor, FVector(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_X, false),
+			Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));
+		break;
+	case EHitReaction::CameraShake:
+		if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));
+		break;
+	}
 }
 
 /* Removes the outline of an enemy character by setting the custom depth stencil back to zero.
@@ -1150,9 +1113,6 @@ void AMyCharacter::ApplyKnockBack(AActor* SourceActor, float Power)
 
 void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
 {
-	FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
-	FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
-	//FVector LaunchDir = (A - B).GetSafeNormal();
 	FVector LaunchDir = FVector();
 	if (SourceActor) LaunchDir = SourceActor->GetActorForwardVector();
 	else LaunchDir = GetActorForwardVector();

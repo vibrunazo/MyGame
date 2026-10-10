@@ -240,5 +240,11 @@ void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Ta
 	//if (!Target || !Target->IsValidLowLevel() || !IsValid((UObject*)Target)) return;
 	if (!Target) return;
 	if (!IsValid(Target->_getUObject())) return;
-	Target->OnGetHitByEffect(Effect, GetOwner());
+	// reactions push the target along the attacker's facing: for a projectile that's the projectile, not its caster
+	if (Effect.Data.IsValid())
+	{
+		FGameplayEffectContextHandle Context = Effect.Data->GetContext();
+		Context.AddInstigator(Context.GetInstigator(), GetOwner());
+	}
+	Target->OnGetHitByEffect(Effect);
 }

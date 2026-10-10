@@ -47,7 +47,7 @@ FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToC
             Spec.SetDuration(MaxDuration, true);
         }
     }
-    return Char->OnGetHitByEffect(NewHandle, nullptr);
+    return Char->OnGetHitByEffect(NewHandle);
     
     // FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
     //    NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);

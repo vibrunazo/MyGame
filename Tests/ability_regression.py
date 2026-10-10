@@ -107,6 +107,7 @@ def run_scenario(name, actions, duration, player, dummy, away_from_dummy=False):
             "timeline": timeline, "abilities": sorted(seen),
             "dummy_damage": round(start_dummy["health"] - end_dummy["health"], 1),
             "dummy_tags": sorted(dummy_tags), "dummy_rise": round(dummy_z - start_dummy["location"][2], 1),
+            "dummy_pushed": round(sum((a - b) ** 2 for a, b in zip(end_dummy["location"][:2], start_dummy["location"][:2])) ** 0.5, 1),
             "player_mana": round(end_player["attributes"]["Mana"] - start_player["attributes"]["Mana"], 1),
             "player_tags": sorted(player_tags),
             "player_moved": round(sum((a - b) ** 2 for a, b in zip(end_player["location"][:2], start_player["location"][:2])) ** 0.5, 1),
@@ -242,7 +243,8 @@ def enemy_attack(dummy, seconds=6.0):
 def outcome(s):
     """What a scenario should keep doing across refactors; exact timings and damage totals vary run to run."""
     return {"montages": sorted({k.split(":")[0] for k in s["timeline"]}), "abilities": s["abilities"],
-            "hit": s["dummy_damage"] > 0, "launched": s["dummy_rise"] > 20, "mana": s["player_mana"],
+            "hit": s["dummy_damage"] > 0, "launched": s["dummy_rise"] > 20, "pushed": s.get("dummy_pushed", 0) > 10,
+            "mana": s["player_mana"],
             "jumped": s["player_rise"] > 50, "moved": s.get("player_moved", 0) > 100,
             "player_tags": s.get("player_tags"), "dummy_tags": s.get("dummy_tags"),
             "damage": None if s["scenario"] in VARIABLE_DAMAGE else s["dummy_damage"]}
