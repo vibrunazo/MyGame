@@ -244,9 +244,14 @@ def diff(a_path, b_path):
             continue
         oa, ob = outcome(a[name]), outcome(b[name])
         for k in oa:
-            if oa[k] != ob[k]:
-                print(f"{name}.{k}: {oa[k]} -> {ob[k]}")
-                same = False
+            if oa[k] == ob[k]:
+                continue
+            if k.endswith("_tags") and set(ob[k] or []) <= set(oa[k] or []):
+                # brief tags (a hitstun) can fall between samples: a missing one is a note, a new one a difference
+                print(f"note {name}.{k}: {oa[k]} -> {ob[k]}")
+                continue
+            print(f"{name}.{k}: {oa[k]} -> {ob[k]}")
+            same = False
     ea, eb = A.get("enemy_attack"), B.get("enemy_attack")
     if ea and eb and (set(ea["enemy_montages"]) != set(eb["enemy_montages"]) or (ea["player_damage"] > 0) != (eb["player_damage"] > 0)):
         print(f"enemy_attack: {ea} -> {eb}")

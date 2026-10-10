@@ -50,8 +50,8 @@
     "PunchL_Montage:ComboStart",
     "PunchR_Montage:Default",
     "PunchR_Montage:ComboStart",
-    "PunchL_Montage:Default",
-    "PunchL_Montage:ComboStart"
+    "PunchR_Montage:Default",
+    "PunchR_Montage:ComboStart"
    ],
    "abilities": [
     "GA_BasicPunches"
@@ -93,7 +93,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 42.3,
+   "dummy_rise": 42.8,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -130,7 +130,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 45.5,
+   "dummy_rise": 45.7,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -162,7 +162,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 81.6,
+   "dummy_rise": 77.5,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -171,7 +171,7 @@
     "status.hitstun"
    ],
    "player_moved": 0.0,
-   "player_rise": 216.2
+   "player_rise": 203.1
   },
   {
    "scenario": "jump_punch",
@@ -202,7 +202,7 @@
     "status.airborne"
    ],
    "player_moved": 0.0,
-   "player_rise": 216.1
+   "player_rise": 206.9
   },
   {
    "scenario": "dash",
@@ -249,7 +249,7 @@
    "player_tags": [
     "state.running"
    ],
-   "player_moved": 513.3,
+   "player_moved": 535.7,
    "player_rise": 0.0
   },
   {
@@ -301,7 +301,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 81.6,
+   "dummy_rise": 75.9,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -368,7 +368,7 @@
     "status.hitstun",
     "status.nocontrol"
    ],
-   "dummy_rise": 325.9,
+   "dummy_rise": 326.4,
    "player_mana": 0.0,
    "player_tags": [
     "state.attacking",
@@ -407,7 +407,7 @@
     "status.nomove",
     "status.nopawnblock"
    ],
-   "player_moved": 148.1,
+   "player_moved": 152.3,
    "player_rise": 0.0
   },
   {
@@ -514,24 +514,13 @@
     0.0,
     0.0
    ],
-   "timeline": [
-    "SmashPlayer_Montage:Default"
-   ],
-   "abilities": [
-    "GA_Smash"
-   ],
-   "dummy_damage": 30.0,
-   "dummy_tags": [
-    "status.airborne",
-    "status.hitstun",
-    "status.nocontrol"
-   ],
-   "dummy_rise": 78.8,
+   "timeline": [],
+   "abilities": [],
+   "dummy_damage": 0.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [
-    "state.attacking",
-    "state.combat"
-   ],
+   "player_tags": [],
    "player_moved": 0.0,
    "player_rise": 0.0
   }
