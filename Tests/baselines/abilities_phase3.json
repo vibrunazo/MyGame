@@ -20,10 +20,15 @@
     "GA_BasicPunches"
    ],
    "dummy_damage": 15.0,
-   "dummy_tags": [],
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -45,17 +50,22 @@
     "PunchL_Montage:ComboStart",
     "PunchR_Montage:Default",
     "PunchR_Montage:ComboStart",
-    "PunchR_Montage:Default",
-    "PunchR_Montage:ComboStart"
+    "PunchL_Montage:Default",
+    "PunchL_Montage:ComboStart"
    ],
    "abilities": [
     "GA_BasicPunches"
    ],
    "dummy_damage": 45.0,
-   "dummy_tags": [],
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -78,10 +88,17 @@
     "GA_Kick"
    ],
    "dummy_damage": 15.0,
-   "dummy_tags": [],
-   "dummy_rise": 45.4,
+   "dummy_tags": [
+    "status.airborne",
+    "status.hitstun",
+    "status.nocontrol"
+   ],
+   "dummy_rise": 42.3,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -107,11 +124,18 @@
    "abilities": [
     "GA_Kick"
    ],
-   "dummy_damage": 45.0,
-   "dummy_tags": [],
-   "dummy_rise": 45.7,
+   "dummy_damage": 15.0,
+   "dummy_tags": [
+    "status.airborne",
+    "status.hitstun",
+    "status.nocontrol"
+   ],
+   "dummy_rise": 45.5,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -133,12 +157,21 @@
     "GA_Voadora"
    ],
    "dummy_damage": 15.0,
-   "dummy_tags": [],
-   "dummy_rise": 79.9,
+   "dummy_tags": [
+    "status.airborne",
+    "status.hitstun",
+    "status.nocontrol"
+   ],
+   "dummy_rise": 81.6,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat",
+    "status.airborne",
+    "status.hitstun"
+   ],
    "player_moved": 0.0,
-   "player_rise": 211.5
+   "player_rise": 216.2
   },
   {
    "scenario": "jump_punch",
@@ -158,19 +191,25 @@
     "GA_AirPunch"
    ],
    "dummy_damage": 15.0,
-   "dummy_tags": [],
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat",
+    "status.airborne"
+   ],
    "player_moved": 0.0,
-   "player_rise": 207.0
+   "player_rise": 216.1
   },
   {
    "scenario": "dash",
    "start_gap": [
-    643.5,
-    4600.0,
-    -0.1
+    300.0,
+    0.0,
+    0.0
    ],
    "start_yaw": [
     0.0,
@@ -184,16 +223,18 @@
    "dummy_tags": [],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
-   "player_moved": 321.6,
+   "player_tags": [
+    "status.nocontrol"
+   ],
+   "player_moved": 227.6,
    "player_rise": 0.0
   },
   {
    "scenario": "walk_back",
    "start_gap": [
-    643.5,
-    4600.0,
-    -0.1
+    300.0,
+    0.0,
+    0.0
    ],
    "start_yaw": [
     0.0,
@@ -205,16 +246,18 @@
    "dummy_tags": [],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
-   "player_moved": 498.3,
+   "player_tags": [
+    "state.running"
+   ],
+   "player_moved": 513.3,
    "player_rise": 0.0
   },
   {
    "scenario": "dash_double_tap",
    "start_gap": [
-    643.5,
-    4600.0,
-    -0.1
+    300.0,
+    0.0,
+    0.0
    ],
    "start_yaw": [
     0.0,
@@ -228,14 +271,17 @@
    "dummy_tags": [],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
-   "player_moved": 339.4,
+   "player_tags": [
+    "state.running",
+    "status.nocontrol"
+   ],
+   "player_moved": 329.9,
    "player_rise": 0.0
   },
   {
    "scenario": "super_punch_smash",
    "start_gap": [
-    72.0,
+    95.0,
     0.0,
     0.0
    ],
@@ -250,10 +296,18 @@
     "GA_Smash"
    ],
    "dummy_damage": 30.0,
-   "dummy_tags": [],
-   "dummy_rise": 80.7,
+   "dummy_tags": [
+    "status.airborne",
+    "status.hitstun",
+    "status.nocontrol"
+   ],
+   "dummy_rise": 81.6,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat",
+    "state.running"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -277,11 +331,17 @@
     "GA_PunchRun"
    ],
    "dummy_damage": 20.0,
-   "dummy_tags": [],
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
-   "player_moved": 22.9,
+   "player_tags": [
+    "state.attacking",
+    "state.combat",
+    "status.nomove"
+   ],
+   "player_moved": 49.9,
    "player_rise": 0.0
   },
   {
@@ -303,10 +363,17 @@
     "GA_Upper"
    ],
    "dummy_damage": 15.0,
-   "dummy_tags": [],
-   "dummy_rise": 325.8,
+   "dummy_tags": [
+    "status.airborne",
+    "status.hitstun",
+    "status.nocontrol"
+   ],
+   "dummy_rise": 325.9,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -327,12 +394,20 @@
    "abilities": [
     "GA_Tat"
    ],
-   "dummy_damage": 36.0,
-   "dummy_tags": [],
+   "dummy_damage": 48.0,
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
-   "player_moved": 95.1,
+   "player_tags": [
+    "state.attacking",
+    "state.combat",
+    "status.immune.proj",
+    "status.nomove",
+    "status.nopawnblock"
+   ],
+   "player_moved": 148.1,
    "player_rise": 0.0
   },
   {
@@ -355,10 +430,15 @@
     "GA_Kkk"
    ],
    "dummy_damage": 10.0,
-   "dummy_tags": [],
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -380,10 +460,15 @@
     "GA_Cast"
    ],
    "dummy_damage": 20.0,
-   "dummy_tags": [],
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": -10.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -406,10 +491,15 @@
     "GA_BasicPunches"
    ],
    "dummy_damage": 15.0,
-   "dummy_tags": [],
+   "dummy_tags": [
+    "status.hitstun"
+   ],
    "dummy_rise": 0.0,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   },
@@ -431,10 +521,17 @@
     "GA_Smash"
    ],
    "dummy_damage": 30.0,
-   "dummy_tags": [],
-   "dummy_rise": 78.7,
+   "dummy_tags": [
+    "status.airborne",
+    "status.hitstun",
+    "status.nocontrol"
+   ],
+   "dummy_rise": 78.8,
    "player_mana": 0.0,
-   "player_tags": [],
+   "player_tags": [
+    "state.attacking",
+    "state.combat"
+   ],
    "player_moved": 0.0,
    "player_rise": 0.0
   }

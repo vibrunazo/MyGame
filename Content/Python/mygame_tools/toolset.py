@@ -53,7 +53,7 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def pie_player_state() -> str:
-        """Returns the PIE player's location, movement mode, attributes and owned gameplay tags.
+        """Returns the PIE player's location, facing, movement and jump state, and attributes (owned tags: GASToolsets GetActiveTags).
 
         Returns:
             JSON snapshot of the player character.
@@ -75,9 +75,6 @@ class MyGameTools(unreal.ToolsetDefinition):
             state["attributes"] = {
                 name: attributes.get_editor_property(name.lower()).get_editor_property("current_value")
                 for name in _ATTRIBUTES}
-        if asc:
-            with contextlib.suppress(Exception):
-                state["tags"] = sorted(str(t.tag_name) for t in asc.get_owned_gameplay_tags().gameplay_tags)
         return json.dumps(state)
 
     @toolset_registry.tool_call
@@ -126,8 +123,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         abilities = list(item.get_editor_property("abilities_to_learn"))
         char.learn_abilities(abilities)
         return json.dumps([{"ability": a.get_editor_property("ability_class").get_name(),
-                            "input": str(a.get_editor_property("input")),
-                            "ground": a.get_editor_property("can_use_on_ground"), "air": a.get_editor_property("can_use_on_air")}
+                            "input": str(a.get_editor_property("input"))}
                            for a in abilities])
 
     @toolset_registry.tool_call
@@ -247,7 +243,7 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def character_state(actor_path: str) -> str:
-        """Location, health, mana and owned gameplay tags of any PIE character.
+        """Location, current montage, health and mana of any PIE character (owned tags: GASToolsets GetActiveTags).
 
         Args:
             actor_path: Full path of a PIE character (see list_characters).
@@ -267,9 +263,6 @@ class MyGameTools(unreal.ToolsetDefinition):
             state["health"] = attributes.get_editor_property("health").get_editor_property("current_value")
             state["mana"] = attributes.get_editor_property("mana").get_editor_property("current_value")
         asc = char.get_editor_property("ability_system")
-        if asc:
-            with contextlib.suppress(Exception):
-                state["tags"] = sorted(str(t.tag_name) for t in asc.get_owned_gameplay_tags().gameplay_tags)
         return json.dumps(state)
 
     @toolset_registry.tool_call
@@ -353,6 +346,26 @@ class MyGameTools(unreal.ToolsetDefinition):
         char = _player()
         char.set_actor_location(unreal.Vector(x, y, z), False, True)
         return MyGameTools.pie_player_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def teleport_actor(actor_path: str, x: float, y: float, z: float) -> str:
+        """Moves any PIE actor (e.g. a frozen enemy used as a dummy) to a world location.
+
+        Args:
+            actor_path: Full path of a PIE actor.
+            x: World X.
+            y: World Y.
+            z: World Z.
+
+        Returns:
+            The actor's new location as JSON.
+        """
+        actor = unreal.find_object(None, actor_path)
+        if not actor:
+            raise RuntimeError(f"no actor at {actor_path}")
+        actor.set_actor_location(unreal.Vector(x, y, z), False, True)
+        return json.dumps(_vec(actor.get_actor_location()))
 
     @toolset_registry.tool_call
     @staticmethod

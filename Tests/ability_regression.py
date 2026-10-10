@@ -1,7 +1,7 @@
 """Ability regression run for Phase 3: presses the player's buttons in PIE and records what happens.
 
-Needs the editor running with PIE started (see MIGRATION.md "How we test"). An enemy from another room
-is frozen (AI stopped) and used as a still dummy in front of the player; the player gets Defense 1000.
+Needs the editor running with PIE started (see MIGRATION.md "How we test"). Every enemy is frozen (AI and
+sensing off); one is brought into the start room as a still dummy in front of the player (Defense 1000).
 
     python Tests/ability_regression.py run  out.json        # record
     python Tests/ability_regression.py diff Tests/baselines/abilities_phase3.json out.json
@@ -20,9 +20,40 @@ ITEMS = "/Game/Blueprints/Items/"
 SAMPLE = 0.08
 
 
+def active_tags(path):
+    return call_tool(GAS, "GetActiveTags", {"actor": {"refPath": path}})
+
+
 def active_abilities(path):
     granted = call_tool(GAS, "GetGrantedAbilities", {"actor": {"refPath": path}})
     return sorted(a["abilityName"].removesuffix("_C") for a in granted if a["bIsActive"])
+
+
+# Everything happens in the start room: empty, walled, and the y = -300 row has no books. Next to a random
+# enemy the player could end up outside the room grid (the game then reloads the level) or walk off an edge.
+DUMMY_SPOT = (300.0, -300.0)
+START_ROOM_SPOT = (0.0, -300.0)
+FLOOR = []
+
+
+def floor_z():
+    if not FLOOR:
+        FLOOR.append(tool("floor_height", x=DUMMY_SPOT[0], y=DUMMY_SPOT[1], from_z=500.0)["z"] + 100.0)
+    return FLOOR[0]
+
+
+def place(dummy, player_x):
+    """Dummy at DUMMY_SPOT, player at player_x facing +X (towards the dummy); retried if the game moves them."""
+    x, y = DUMMY_SPOT
+    for _ in range(4):
+        tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=floor_z())
+        tool("teleport_player", x=player_x, y=y, z=floor_z())
+        tool("set_player_facing", yaw=0.0)
+        time.sleep(0.4)
+        px, py, _ = tool("pie_player_state")["location"]
+        dx, dy, _ = tool("character_state", actor_path=dummy["path"])["location"]
+        if abs(px - player_x) < 30 and abs(py - y) < 30 and abs(dx - x) < 30 and abs(dy - y) < 30:
+            return
 
 
 def reset(player, dummy):
@@ -35,28 +66,13 @@ def reset(player, dummy):
         tool("set_player_attribute", attribute=a, value=v)
     for a in ("MaxHealth", "Health"):
         tool("set_character_attribute", actor_path=dummy["path"], attribute=a, value=1000.0)
-    d = tool("character_state", actor_path=dummy["path"])
-    x, y, z = d["location"]
-    for _ in range(4):  # the game can move a freshly teleported player (room entry); place it again until it stays
-        tool("teleport_player", x=x - 95, y=y, z=z + 5)
-        tool("set_player_facing", yaw=0.0)
-        time.sleep(0.4)
-        px, py, _ = tool("pie_player_state")["location"]
-        if abs(px - (x - 95)) < 30 and abs(py - y) < 30:
-            break
+    place(dummy, DUMMY_SPOT[0] - 95)
 
 
-# Movement runs in the start room (empty, walled, no books along y = -300); next to a random dummy the
-# player can walk off an edge of whatever room it's in
-START_ROOM_SPOT = (0.0, -300.0)
-
-
-def run_scenario(name, actions, duration, player, dummy, in_start_room=False):
+def run_scenario(name, actions, duration, player, dummy, away_from_dummy=False):
     reset(player, dummy)
-    if in_start_room:
-        x, y = START_ROOM_SPOT
-        tool("teleport_player", x=x, y=y, z=tool("floor_height", x=x, y=y, from_z=500.0)["z"] + 100.0)
-        time.sleep(0.4)
+    if away_from_dummy:  # movement: start further back so walking and dashing (along -X) have room
+        place(dummy, START_ROOM_SPOT[0])
     start_dummy = tool("character_state", actor_path=dummy["path"])
     start_player = tool("pie_player_state")
     timeline, seen, dummy_tags, dummy_z, player_z = [], set(), set(), start_dummy["location"][2], start_player["location"][2]
@@ -76,11 +92,11 @@ def run_scenario(name, actions, duration, player, dummy, in_start_room=False):
             timeline.append(key)
         seen.update(active_abilities(player))
         d = tool("character_state", actor_path=dummy["path"])
-        dummy_tags.update(t for t in d.get("tags", []) if t.startswith(("status.", "state.")))
+        dummy_tags.update(t for t in active_tags(dummy["path"]) if t.startswith(("status.", "state.")))
         dummy_z = max(dummy_z, d["location"][2])
         ps = tool("pie_player_state")
         player_z = max(player_z, ps["location"][2])
-        player_tags.update(t for t in ps.get("tags", []) if t.startswith(("state.", "status.")))
+        player_tags.update(t for t in active_tags(player) if t.startswith(("state.", "status.")))
         time.sleep(SAMPLE)
     end_dummy = tool("character_state", actor_path=dummy["path"])
     end_player = tool("pie_player_state")
@@ -212,7 +228,8 @@ def outcome(s):
     """What a scenario should keep doing across refactors; exact timings and damage totals vary run to run."""
     return {"montages": sorted({k.split(":")[0] for k in s["timeline"]}), "abilities": s["abilities"],
             "hit": s["dummy_damage"] > 0, "launched": s["dummy_rise"] > 20, "mana": s["player_mana"],
-            "jumped": s["player_rise"] > 50, "moved": s.get("player_moved", 0) > 100}
+            "jumped": s["player_rise"] > 50, "moved": s.get("player_moved", 0) > 100,
+            "player_tags": s.get("player_tags"), "dummy_tags": s.get("dummy_tags")}
 
 
 def diff(a_path, b_path):

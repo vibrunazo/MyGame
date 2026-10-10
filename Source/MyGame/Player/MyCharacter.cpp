@@ -425,9 +425,8 @@ void AMyCharacter::FindAndRemoveOverlappingAbilities(FAbilityStruct AbilityToCom
 	TArray<FAbilityStruct> AbilitiesToRemove;
 	for (auto&& LearnedAbility : Abilities)
 	{
-		if (LearnedAbility.Input == AbilityToCompare.Input
-			&& LearnedAbility.CanUseOnAir == AbilityToCompare.CanUseOnAir
-			&& LearnedAbility.CanUseOnGround == AbilityToCompare.CanUseOnGround)
+		// same slot, and both air moves or both ground moves (an air punch doesn't replace the ground punch)
+		if (LearnedAbility.Input == AbilityToCompare.Input && IsAirAbility(LearnedAbility.AbilityClass) == IsAirAbility(AbilityToCompare.AbilityClass))
 		{
 			AbilitiesToRemove.Add(LearnedAbility);
 		}
@@ -444,6 +443,11 @@ void AMyCharacter::FindAndRemoveOverlappingAbilities(FAbilityStruct AbilityToCom
 			AbilitySystem->ClearAbility(Spec->Handle);
 		}
 	}
+}
+
+bool AMyCharacter::IsAirAbility(TSubclassOf<UGameplayAbility> AbilityClass)
+{
+	return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);
 }
 
 bool AMyCharacter::GetAbilityKeyDown(uint8 Index)
@@ -470,13 +474,12 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	// first add all abilities that can activate from this input (ie punch) to a list
 	for (auto &&Ability : Abilities)
 	{
-		if (InputsToCheck.Contains((uint8)Ability.Input))
+		// ground moves are blocked while airborne and air moves on the ground (OnMovementModeChanged), plus each
+		// ability's own activation tags: the fallback below only considers moves that could start right now
+		const UGameplayAbility* AbilityCDO = Ability.AbilityClass ? Ability.AbilityClass.GetDefaultObject() : nullptr;
+		if (InputsToCheck.Contains((uint8)Ability.Input) && AbilityCDO && AbilityCDO->DoesAbilitySatisfyTagRequirements(*AbilitySystem))
 		{
-			if ((Ability.CanUseOnAir && GetMovementComponent()->IsFalling())
-			|| (Ability.CanUseOnGround && !GetMovementComponent()->IsFalling()))
-			{
-				AbilitiesThatCanActivate.Add(Ability);
-			}
+			AbilitiesThatCanActivate.Add(Ability);
 		}
 	}
 	// then, activate only the highest priority ability with that button
@@ -999,6 +1002,7 @@ void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 P
 	FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(FlyingTag);
 	FGameplayTag GroundTag = MyGameplayTags::Activate_GroundAttack;
 	FGameplayTagContainer GroundTagContainer = FGameplayTagContainer(GroundTag);
+	AbilitySystem->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, GetMovementComponent()->IsFalling() ? 1 : 0);
 	if (!GetMovementComponent()->IsFalling())	// I'm on ground
 	{
 		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);

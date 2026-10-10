@@ -11,6 +11,7 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, "status.nomove");
 	UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, "status.nopawnblock");
 	UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, "status.immune.proj");
+	UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, "status.airborne");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_75, "status.health.75");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_70, "status.health.70");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_50, "status.health.50");

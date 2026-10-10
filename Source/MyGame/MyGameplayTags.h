@@ -15,6 +15,8 @@ namespace MyGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoMove);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoPawnBlock);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_ImmuneProjectile);
+	// While falling or jumping; abilities that only work on the ground can list it in ActivationBlockedTags
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Airborne);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_75);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_70);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_50);

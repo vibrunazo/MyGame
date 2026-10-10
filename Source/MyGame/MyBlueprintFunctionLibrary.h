@@ -32,6 +32,8 @@ enum class EInput : uint8
 	None = 200
 };
 
+// An ability granted on a button slot. Whether it works on the ground or in the air is the ability's own
+// tags (activate.groundattack / activate.flyingattack, blocked by AMyCharacter while airborne / grounded)
 USTRUCT(BlueprintType)
 struct FAbilityStruct
 {
@@ -45,18 +47,10 @@ struct FAbilityStruct
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EInput Input = EInput::Punch;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool CanUseOnGround = true;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool CanUseOnAir = false;
-
 	friend bool operator==(const FAbilityStruct& first, const FAbilityStruct& second)
 	{
 		return first.AbilityClass == second.AbilityClass
-			&& first.Input == second.Input
-			&& first.CanUseOnGround == second.CanUseOnGround
-			&& first.CanUseOnAir == second.CanUseOnAir;
+			&& first.Input == second.Input;
 	}
 	friend uint32 GetTypeHash(const FAbilityStruct& Other)
 	{
