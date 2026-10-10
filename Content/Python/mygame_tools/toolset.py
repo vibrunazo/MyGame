@@ -153,6 +153,153 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def press_input(button: str, pressed: bool) -> str:
+        """Presses or releases a player button through the same path the keyboard/gamepad uses.
+
+        Args:
+            button: Punch, Kick, Cast, Jump, Super or Ultra.
+            pressed: True to press (and hold), False to release.
+
+        Returns:
+            The player's state afterwards, as JSON.
+        """
+        char = _player()
+        controller = char.get_controller()
+        if button == "Super":
+            controller.set_super_mod(pressed)
+        elif button == "Ultra":
+            controller.set_ultra_mod(pressed)
+        else:
+            slot = getattr(unreal.Input, button.upper())  # EInput (Python drops the E prefix)
+            if button == "Jump":
+                char.jump() if pressed else char.stop_jumping()
+            controller.set_ability_key_down(slot, pressed)
+        return MyGameTools.pie_player_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def player_anim() -> str:
+        """The PIE player's current montage and section, plus its active abilities.
+
+        Returns:
+            JSON {"montage", "section", "active"}.
+        """
+        char = _player()
+        anim = char.get_editor_property("mesh").get_anim_instance()
+        montage = anim.get_current_active_montage() if anim else None
+        state = {"montage": montage.get_name() if montage else None,
+                 "section": str(anim.montage_get_current_section(montage)) if montage else None}
+        return json.dumps(state)
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_ai_enabled(actor_path: str, enabled: bool) -> str:
+        """Stops or restarts a character's AI logic (behavior tree), e.g. to use an enemy as a still test dummy.
+
+        Args:
+            actor_path: Full path of a PIE character.
+            enabled: False stops its behavior tree; True restarts it.
+
+        Returns:
+            JSON {"actor", "ai_running"}.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        controller = char.get_controller()
+        brain = controller.get_editor_property("brain_component") if controller else None
+        if not brain:
+            raise RuntimeError(f"{actor_path} has no AI brain")
+        if enabled:
+            brain.restart_logic()
+        else:
+            brain.stop_logic("test dummy")
+        return json.dumps({"actor": char.get_name(), "ai_running": brain.is_running()})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def character_state(actor_path: str) -> str:
+        """Location, health, mana and owned gameplay tags of any PIE character.
+
+        Args:
+            actor_path: Full path of a PIE character (see list_characters).
+
+        Returns:
+            JSON snapshot.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        state = {"actor": char.get_name(), "location": _vec(char.get_actor_location())}
+        anim = char.get_editor_property("mesh").get_anim_instance()
+        montage = anim.get_current_active_montage() if anim else None
+        state["montage"] = montage.get_name() if montage else None
+        attributes = char.get_editor_property("attribute_set_base")
+        if attributes:
+            state["health"] = attributes.get_editor_property("health").get_editor_property("current_value")
+            state["mana"] = attributes.get_editor_property("mana").get_editor_property("current_value")
+        asc = char.get_editor_property("ability_system")
+        if asc:
+            with contextlib.suppress(Exception):
+                state["tags"] = sorted(str(t.tag_name) for t in asc.get_owned_gameplay_tags().gameplay_tags)
+        return json.dumps(state)
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_character_attribute(actor_path: str, attribute: str, value: float) -> str:
+        """Test cheat: sets base and current value of any PIE character's attribute, bypassing GameplayEffects.
+
+        Args:
+            actor_path: Full path of a PIE character.
+            attribute: Attribute name on MyAttributeSet (e.g. "Health").
+            value: New value.
+
+        Returns:
+            The character's state afterwards, as JSON.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        data = unreal.GameplayAttributeData(base_value=value, current_value=value)
+        char.get_editor_property("attribute_set_base").set_editor_property(attribute.lower(), data)
+        return MyGameTools.character_state(actor_path)
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def refresh_health(actor_path: str) -> str:
+        """Runs a character's health-changed handling (health bar, HUD, health-threshold events), e.g. after set_character_attribute.
+
+        Args:
+            actor_path: Full path of a PIE character.
+
+        Returns:
+            The character's state afterwards, as JSON.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        char.update_health_bar()
+        return MyGameTools.character_state(actor_path)
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_player_facing(yaw: float) -> str:
+        """Turns the PIE player and its control rotation to a world yaw (0 = +X), as stick input would.
+
+        Args:
+            yaw: World yaw in degrees.
+
+        Returns:
+            The player's state afterwards, as JSON.
+        """
+        char = _player()
+        rot = unreal.Rotator(roll=0.0, pitch=0.0, yaw=yaw)
+        char.set_actor_rotation(rot, False)
+        char.get_controller().set_control_rotation(rot)
+        return MyGameTools.pie_player_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
     def jump_player() -> str:
         """Makes the PIE player jump, as the jump button would.
 

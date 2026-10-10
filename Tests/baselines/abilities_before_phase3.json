@@ -1,0 +1,245 @@
+{
+ "dummy": "BP_Enemy1_C",
+ "scenarios": [
+  {
+   "scenario": "punch_tap",
+   "timeline": [
+    "PunchR_Montage:Default",
+    "PunchR_Montage:ComboStart"
+   ],
+   "abilities": [
+    "GA_BasicPunches"
+   ],
+   "dummy_damage": 15.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "punch_hold",
+   "timeline": [
+    "PunchR_Montage:Default",
+    "PunchR_Montage:ComboStart",
+    "PunchL_Montage:Default",
+    "PunchL_Montage:ComboStart",
+    "PunchR_Montage:Default",
+    "PunchR_Montage:ComboStart",
+    "PunchR_Montage:Default",
+    "PunchR_Montage:ComboStart"
+   ],
+   "abilities": [
+    "GA_BasicPunches"
+   ],
+   "dummy_damage": 45.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "kick_tap",
+   "timeline": [
+    "Kick1_Montage:Default",
+    "Kick1_Montage:ComboStart"
+   ],
+   "abilities": [
+    "GA_Kick"
+   ],
+   "dummy_damage": 15.0,
+   "dummy_tags": [],
+   "dummy_rise": 45.9,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "kick_hold",
+   "timeline": [
+    "Kick1_Montage:Default",
+    "Kick1_Montage:ComboStart",
+    "Kick1_Montage:Default",
+    "Kick1_Montage:ComboStart",
+    "Kick1_Montage:Default",
+    "Kick1_Montage:ComboStart"
+   ],
+   "abilities": [
+    "GA_Kick"
+   ],
+   "dummy_damage": 45.0,
+   "dummy_tags": [],
+   "dummy_rise": 45.0,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "jump_kick",
+   "timeline": [
+    "FlyingKick_Montage:Default"
+   ],
+   "abilities": [
+    "GA_Voadora"
+   ],
+   "dummy_damage": 15.0,
+   "dummy_tags": [],
+   "dummy_rise": 80.6,
+   "player_mana": 0.0,
+   "player_rise": 228.1
+  },
+  {
+   "scenario": "jump_punch",
+   "timeline": [
+    "AirPunch_Montage:Default"
+   ],
+   "abilities": [
+    "GA_AirPunch"
+   ],
+   "dummy_damage": 15.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 229.6
+  },
+  {
+   "scenario": "dash",
+   "timeline": [],
+   "abilities": [
+    "GA_Dash"
+   ],
+   "dummy_damage": 0.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 0.1
+  },
+  {
+   "scenario": "super_punch_smash",
+   "timeline": [
+    "SmashPlayer_Montage:Default"
+   ],
+   "abilities": [
+    "GA_Smash"
+   ],
+   "dummy_damage": 30.0,
+   "dummy_tags": [],
+   "dummy_rise": 80.7,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "super_punch_runpunch",
+   "timeline": [
+    "PunchRunR_Montage:Startup",
+    "PunchRunR_Montage:ComboStart",
+    "PunchRunR_Montage:Recovery"
+   ],
+   "abilities": [
+    "GA_PunchRun"
+   ],
+   "dummy_damage": 20.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "super_punch_uppercut",
+   "timeline": [
+    "Upper2_Montage:Default",
+    "Upper2_Montage:combostart"
+   ],
+   "abilities": [
+    "GA_Upper"
+   ],
+   "dummy_damage": 15.0,
+   "dummy_tags": [],
+   "dummy_rise": 325.9,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "super_kick_tat",
+   "timeline": [
+    "Tat_Montage:Default"
+   ],
+   "abilities": [
+    "GA_Tat"
+   ],
+   "dummy_damage": 36.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "super_kick_kkk",
+   "timeline": [
+    "kkk_Montage:Startup",
+    "kkk_Montage:Active",
+    "kkk_Montage:Recovery"
+   ],
+   "abilities": [
+    "GA_Kkk"
+   ],
+   "dummy_damage": 10.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "cast_fireball",
+   "timeline": [
+    "CastForward_Montage:Default"
+   ],
+   "abilities": [
+    "GA_Cast"
+   ],
+   "dummy_damage": 20.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": -10.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "punch_after_learning",
+   "timeline": [
+    "PunchR_Montage:Default",
+    "PunchR_Montage:ComboStart"
+   ],
+   "abilities": [
+    "GA_BasicPunches"
+   ],
+   "dummy_damage": 15.0,
+   "dummy_tags": [],
+   "dummy_rise": 0.0,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  },
+  {
+   "scenario": "health_75_with_smash",
+   "timeline": [
+    "SmashPlayer_Montage:Default"
+   ],
+   "abilities": [
+    "GA_Smash"
+   ],
+   "dummy_damage": 30.0,
+   "dummy_tags": [],
+   "dummy_rise": 80.6,
+   "player_mana": 0.0,
+   "player_rise": 0.0
+  }
+ ],
+ "enemy_attack": {
+  "enemy_montages": [
+   "PunchR_MontageEnemy1",
+   "PunchL_MontageEnemy1",
+   "PunchR_MontageEnemy1",
+   "PunchL_MontageEnemy1",
+   "PunchR_MontageEnemy1",
+   "PunchL_MontageEnemy1",
+   "PunchR_MontageEnemy1"
+  ],
+  "player_damage": 0.1
+ }
+}

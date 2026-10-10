@@ -52,6 +52,21 @@ Found and fixed along the way, beyond the original plan:
 - **Deferred to Phase 4:** `RoomStateRef` (a raw pointer into the grid map; the grid isn't modified after rooms spawn, so it's safe today).
 - **Kept:** `ServerTravel` for next-level travel (it works in standalone).
 
+## Phase 3 status (started 2026-10-10)
+
+Parity: you can't recall anything from the 4.25 game that's still missing, so the feature set counts as complete. Deleting anything still needs your explicit OK.
+
+**Regression test:** `Tests/ability_regression.py` (via `Tests/mcp_client.py`). In PIE it freezes every enemy, uses one as a still dummy, and presses the player's buttons through the same path the controller uses. It covers taps and holds of punch and kick, jump + kick and jump + punch, dash, every learned super move, Fireball, a punch after learning, the health-threshold check and an enemy attacking. `diff` compares outcomes: montages, abilities, hit, launch, mana, jump. Three fresh PIE runs gave identical outcomes. The reference is `Tests/baselines/abilities_before_phase3.json`; every step below must reproduce it.
+
+**Steps, each tested against the baseline and committed on its own:**
+1. Native gameplay tags (`UE_DEFINE_GAMEPLAY_TAG`) instead of ~55 `RequestGameplayTag` string lookups.
+2. Enhanced Input. Keep the slot model (`EInput`): books, loot slot rules, the HUD and the AI's `BTTask_Attack` all use it, so it is the data-driven core, not plumbing. An IMC plus InputActions replace the legacy mappings and the BP controller's input nodes, and the controller maps each InputAction to a slot. Held-button processing stays per frame (as in Lyra's `ProcessAbilityInput`), but moves out of `Character::Tick`. That keeps hold-to-repeat and input buffering.
+3. Dash as a double-tap `UInputTrigger` on the move action, firing a gameplay event that `GA_Dash` triggers on. `FAbilityStruct::EventName` goes away (dash is its only user).
+4. Air/ground: a `status.airborne` tag and activation tags on the abilities replace the `CanUseOnAir`/`CanUseOnGround` flags. Slot selection keeps "the highest modifier wins, otherwise fall back to plain".
+5. Combo window, hit reactions as a HitReact ability plus cues, the hitbox AbilityTask, attribute init and `IncomingDamage`, AIPerception, buff UI data assets: see the table below.
+
+**Found during the baseline (needs your call):** the player's `GA_Smash` carries the boss's triggers (`status.health.75/50/25`). With Smash learned, dropping below 75% health makes the player smash on its own. That's confirmed in PIE (`health_75_with_smash`). It looks copied from `GA_BossSmash1` by the 2020 commit "player ground smash ability". Unless you want it, step 4 removes those triggers from `GA_Smash`.
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.
@@ -164,7 +179,7 @@ Keep the design: an ability is a montage list plus effect containers plus anim-n
 | `OnGetHitByEffect` reads asset tags (`data.hitstun`/`knockback`/`launch`/`camshake`/`noapply`) and does the side effects by hand | Sound, particles and camera shake become GameplayCues that carry the hit result. Hitstun, knockback and launch become a passive HitReact ability triggered by `event.hit` with SetByCaller magnitudes. The `data.noapply` hack goes away. |
 | Hitbox: `ANS_Hitbox` → event → ability spawns `AHitBox` | Keep the flow, but make it an AbilityTask that owns the overlap shapes. Settings travel as an `FInstancedStruct` payload, not a `NewObject`. Effects are applied with `ApplyGameplayEffectSpecToTarget` and real target data. |
 | Stats set in `BeginPlay`, ~40 `RequestGameplayTag(TEXT("..."))` calls | Init from a GE/DataTable, an `IncomingDamage` meta attribute, `PreAttributeChange` clamps, and native tags via `UE_DEFINE_GAMEPLAY_TAG` |
-| `UPawnSensingComponent` | AIPerception (sight). Keep the BT/EQS assets. |
+| `UPawnSensingComponent` | AIPerception (sight). Keep the BT/EQS assets; the move to StateTree is a long-term TODO (Phase 7). |
 | Buff UI metadata (name, description, color, icon) lived in Blueprint subclasses of the GE UI data (`IconFire`, `IconDefense`); since 5.3 that's a GE component, so Phase 2 copied the values into each effect | A `UBuffUIDataAsset` (primary data asset) per buff as the single source of truth: `DA_BuffUI_Fire`, `DA_BuffUI_StunImmune` with the exact current values. Description becomes `FText`, ready for a future mouse-over tooltip. Each GE's UI component references its data asset instead of holding a copy, and `WBP_DurationBar` reads through it. Verify the flame and shield bars in game. Keep `IconFire`/`IconDefense` until parity is confirmed. |
 
 ## Phase 4: the level generator and PCG
@@ -210,6 +225,8 @@ After the migration and the code fixes (Phases 3 to 5). Every tester called the 
   1. **Fully dynamic lighting.** Rooms are assembled at runtime and the main lights are already Movable, so baking adds work (per-machine bakes, re-saved maps) for almost no gain. Set `r.AllowStaticLighting=False` and make the room lights Movable. That removes `*_BuiltData`, Lightmass and the importance volume.
   2. **An explicit mood.** Drive the blue with the height fog color and post-process grading directly. Give the sky light a fixed sky cubemap, or use real-time capture, instead of capturing a sky sphere the camera never sees. Use one sun plus the sky light, and fold the fill light (`LightSource3`) into the sky light. Remove the deprecated `AtmosphericFog`, with your OK.
   3. **Lumen as a high-settings option.** It adds bounce light, light from emissive effects (Fire Hands, pickups) and sky occlusion. It needs a DX12/SM6 GPU and costs several ms per frame. The look must still hold with GI off (`r.DynamicGlobalIlluminationMethod=0`) for low-end PCs and handhelds. Compare captures of the same room both ways, plus GPU frame times, and pick by eye.
+- **Generated ability icons (long-term TODO):** render each ability's icon automatically instead of drawing it by hand: a test map plays the ability's montage on the character, a scripted capture writes a render target, and the result becomes the icon texture the book cover and HUD slot use. You planned this in 2020 but never built it. `GA_PunchRun` is the first one that needs it.
+- **AI on StateTree (long-term TODO):** move the enemy AI from Behavior Trees (`BT_*`, `BTTask_*`, the blackboards and EQS queries) to StateTree, with the same behavior. Record each enemy type's behavior in scripted PIE runs first (targeting, attack ranges, run-away, the boss summons and buff phases) as the baseline, then port one enemy at a time and compare against it.
 - Asset audit, with **no deletions without your OK**. For each test-named asset, list its referencers from the asset registry and say whether a live path reaches it (a map, a character's `Abilities`, a `DA_Learn*`, a loot table). Candidates: ThirdPersonCPP, BSPtest, `GA_Test*` (it may be the real punch), `RT_*`, `ChildActorTest`/`ParentActorTest`, AdvancedLocomotionV4.
 
 ## Decisions
