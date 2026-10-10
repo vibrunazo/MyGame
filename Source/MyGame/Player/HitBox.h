@@ -50,7 +50,8 @@ public:
 
 	//void AddComponentsToBones(TArray<FName> Bones);
 	void SetOwningAbility(class UMyGameplayAbility* NewOwner);
-	void AddComponentsFromContainer(const class UHitboxesContainer* Container);
+	// Creates the overlap shapes (one per bone per setting) and the per-target hit limits, from an ANS_Hitbox
+	void SetupHitboxes(const TArray<struct FHitboxSettings>& Settings, uint8 InNumHits, float InHitCooldown);
 	void AddComponentsFromSettings(struct FHitboxSettings Settings); 
 	void AddOneComponentFromBone(FHitboxSettings Settings, FName Bone);
 	class USphereComponent* AddHitSphere(float SphereRadius);
@@ -77,8 +78,6 @@ public:
 	class UNiagaraSystem* HitParticles;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	class UNiagaraSystem* BlockParticles;
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Hitbox")
-	TObjectPtr<const class UHitboxesContainer> Hitboxes;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Hitbox")
 	TArray<UPrimitiveComponent*> HitComponents;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))

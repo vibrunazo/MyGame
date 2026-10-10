@@ -128,18 +128,18 @@ protected:
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled) override;
 	UFUNCTION()
 	void OnMontageComplete();
+	// Hit windows from UAbilityTask_HitboxWindows
 	UFUNCTION()
-	void OnHitStart(const FGameplayEventData Payload);
+	void OnHitStart(class AHitBox* NewHB);
 	UFUNCTION()
-	void OnHitEnd(const FGameplayEventData Payload);
+	void OnHitEnd();
 	UFUNCTION()
-	void OnHitConnect(const FGameplayEventData Payload);
+	void OnHitConnect();
 	UFUNCTION()
 	void OnDeactivateEvent(const FGameplayEventData Payload);
 	TArray<struct FGameplayEffectSpecHandle> MakeSpecHandles();
 	void CheckConditionalEffects();
 	void IncComboCount();
-	void ResetHitBoxes();
 	void ResetTarget(); 
 	void AcquireNewTarget();
 	void LockToTarget();
@@ -150,8 +150,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Hitbox")
 	TSoftClassPtr<class AHitBox> HitBoxClass;
 	UClass* GetHitBoxClass();
-	UPROPERTY()
-	class AHitBox* HitBoxRef = nullptr;
 	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> ActiveSelfEffects = {};
 	

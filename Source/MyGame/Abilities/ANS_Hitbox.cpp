@@ -11,15 +11,10 @@
 void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSequenceBase* Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
 
-	FGameplayTag HitStartTag = MyGameplayTags::Notify_Hit_Start;
-	FGameplayEventData Payload = FGameplayEventData();
-	//auto NewContainer = new UHitboxesContainer(Hitboxes);
-	auto NewContainer = NewObject<UHitboxesContainer>(GetTransientPackage());
-	NewContainer->Hitboxes = Hitboxes;
-	NewContainer->NumHits = NumHits;
-	NewContainer->HitCooldown = HitCooldown;
-	Payload.OptionalObject = Cast<UObject>(NewContainer);
-	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), HitStartTag, Payload);
+	// the notify itself is the payload: an ability's UAbilityTask_HitboxWindows reads its shapes and limits
+	FGameplayEventData Payload;
+	Payload.OptionalObject = this;
+	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_Start, Payload);
 
 	if (MeshComp->GetOwner() && !Cast<APawn>(MeshComp->GetOwner()))
 	{
@@ -32,7 +27,7 @@ void UANS_Hitbox::NotifyBegin(USkeletalMeshComponent* MeshComp, class UAnimSeque
 		params.Instigator = (APawn*)(Owner);
 		params.Owner = Owner;
 		AHitBox* NewHB = Owner->GetWorld()->SpawnActor<AHitBox>(AHitBox::StaticClass(), Loc, FRotator::ZeroRotator, params);
-		NewHB->AddComponentsFromContainer(NewContainer);
+		NewHB->SetupHitboxes(Hitboxes, NumHits, HitCooldown);
 		NewHB->AttachToComponent(MeshComp, FAttachmentTransformRules::SnapToTargetIncludingScale);
 		
 	}

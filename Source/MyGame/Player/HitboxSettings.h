@@ -29,26 +29,3 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
 	bool bIsSphere = true;
 };
-
-/**
- * An UObject that can get passed around as the Optional Object from notifies.
- * Is used by the Hitbox Notify State to send all the Hitbox properties to the Ability.
- * Which will in turn pass this to the created Hitbox Actor that will use this to initialize its settings and control its behaviour.
- */
-UCLASS(BlueprintType)
-class MYGAME_API UHitboxesContainer : public UObject
-{
-	GENERATED_BODY()
-
-public:
-	UHitboxesContainer();
-	UHitboxesContainer(TArray<FHitboxSettings> NewHitboxes);
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings)
-	TArray<FHitboxSettings> Hitboxes;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "How many times I can hit the same Actor?"))
-	uint8 NumHits = 1;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Settings, meta = (ToolTip = "Cooldown between hits allowed against the same Actor."))
-	float HitCooldown = 0.1f;
-	
-};

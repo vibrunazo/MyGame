@@ -10,8 +10,8 @@
 
 /**
  * A Hitbox Notify State. Used by the Anim Montage to set when in the animation the Hitbox is created and destroyed.
- * Contains all the settings that will be stored on an UHitboxesContainer and passed as an Optional Object through an event
- * that will be captured by the Gameplay Ability that will use it to create the Hitbox and initialize it.
+ * Sends itself as the notify.hit.start event's Optional Object; the ability's UAbilityTask_HitboxWindows reads these
+ * settings to shape the hitbox it spawns.
  */
 UCLASS()
 class MYGAME_API UANS_Hitbox : public UAnimNotifyState

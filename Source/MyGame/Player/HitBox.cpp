@@ -152,16 +152,13 @@ void AHitBox::SetOwningAbility(UMyGameplayAbility* NewOwner)
 	OwningAbility = NewOwner;
 }
 
-void AHitBox::AddComponentsFromContainer(const UHitboxesContainer* Container)
+void AHitBox::SetupHitboxes(const TArray<FHitboxSettings>& Settings, uint8 InNumHits, float InHitCooldown)
 {
-	if (!Container) return;
-	//Hitboxes.Append(Container->Hitboxes);
-	Hitboxes = Container;
-	NumHits = Hitboxes->NumHits;
-	HitCooldown = Hitboxes->HitCooldown;
-	for (auto&& Settings : Container->Hitboxes)
+	NumHits = InNumHits;
+	HitCooldown = InHitCooldown;
+	for (const FHitboxSettings& Setting : Settings)
 	{
-		AddComponentsFromSettings(Settings);
+		AddComponentsFromSettings(Setting);
 	}
 }
 

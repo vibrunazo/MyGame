@@ -10,6 +10,7 @@
 
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "Abilities/Tasks/AbilityTask_WaitGameplayEvent.h"
+#include "AbilityTask_HitboxWindows.h"
 // #include "Abilities/Tasks/AbilityTask_WaitDelay.h"
 #include "Animation/AnimMontage.h"
 #include "GameplayTagContainer.h"
@@ -126,21 +127,12 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     Task->OnBlendOut.AddDynamic(this, &UMyGameplayAbility::OnMontageComplete);
     Task->ReadyForActivation();
 
-    FGameplayTag HitStartTag = MyGameplayTags::Notify_Hit_Start;;
-    FGameplayTag HitEndTag = MyGameplayTags::Notify_Hit_End;
-    FGameplayTag HitConnectTag = MyGameplayTags::Notify_Hit_Connect;
-
-    UAbilityTask_WaitGameplayEvent* HitStartTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitStartTag);
-    HitStartTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitStart);
-    HitStartTask->ReadyForActivation();
-
-    UAbilityTask_WaitGameplayEvent* HitEndTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitEndTag);
-    HitEndTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitEnd);
-    HitEndTask->ReadyForActivation();
-
-    UAbilityTask_WaitGameplayEvent* HitConnectTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, HitConnectTag);
-    HitConnectTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnHitConnect);
-    HitConnectTask->ReadyForActivation();
+    // the montage's hitbox notifies open and close hit windows; the task owns the hitbox
+    UAbilityTask_HitboxWindows* HitboxTask = UAbilityTask_HitboxWindows::WatchHitboxWindows(this, GetHitBoxClass());
+    HitboxTask->OnWindowStarted.AddDynamic(this, &UMyGameplayAbility::OnHitStart);
+    HitboxTask->OnWindowEnded.AddDynamic(this, &UMyGameplayAbility::OnHitEnd);
+    HitboxTask->OnHitConnected.AddDynamic(this, &UMyGameplayAbility::OnHitConnect);
+    HitboxTask->ReadyForActivation();
 
     UAbilityTask_WaitGameplayEvent* DeactivateTask = UAbilityTask_WaitGameplayEvent::WaitGameplayEvent(this, TagThatDeactivateMe);
     DeactivateTask->EventReceived.AddDynamic(this, &UMyGameplayAbility::OnDeactivateEvent);
@@ -171,44 +163,24 @@ void UMyGameplayAbility::OnMontageComplete()
     bHasHitConnected = false;
     bHasHitStarted = false;
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
-    ResetHitBoxes();
     EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
     FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;
     GetActorInfo().AbilitySystemComponent.Get()->SetLooseGameplayTagCount(CanCancelState, 0);
 }
 
-void UMyGameplayAbility::OnHitStart(const FGameplayEventData Payload)
+void UMyGameplayAbility::OnHitStart(AHitBox* NewHB)
 {
-    if (!IsValid(GetAvatarActorFromActorInfo())) return;
-    ResetHitBoxes();
+    if (!IsValid(GetAvatarActorFromActorInfo()) || !NewHB) return;
     bHasHitStarted = true;
-    // UE_LOG(LogTemp, Warning, TEXT("Hit started"));
-    // TODO might crash if I'm dead?
-    FVector Loc = GetAvatarActorFromActorInfo()->GetActorLocation();
-    FActorSpawnParameters params;
-    params.bNoFail = true;
-    params.Instigator = Cast<APawn>(GetAvatarActorFromActorInfo());
-    params.Owner = GetAvatarActorFromActorInfo();
-    AHitBox* NewHB = GetWorld()->SpawnActor<AHitBox>(GetHitBoxClass(), Loc, FRotator::ZeroRotator, params);
-    NewHB->AttachToActor(GetAvatarActorFromActorInfo(), FAttachmentTransformRules::SnapToTargetNotIncludingScale);
     NewHB->HitSound = HitSound;
     NewHB->BlockSound = BlockSound;
     NewHB->HitParticles = HitParticles;
     NewHB->BlockParticles = BlockParticles;
     NewHB->EffectsToApply = MakeSpecHandles();
-    // const UHitboxSettings* Settings = Cast<UHitboxSettings>(&Payload.OptionalObject);
-    const UObject* OO = Payload.OptionalObject;
-    if (OO) {
-        const UHitboxesContainer* Settings = Cast<UHitboxesContainer>(Payload.OptionalObject);
-        if (!ensure(Settings != nullptr)) return;
-        NewHB->SetOwningAbility(this);
-        NewHB->AddComponentsFromContainer(Settings);
-    }
-
-    HitBoxRef = NewHB;
+    NewHB->SetOwningAbility(this);
 }
 
-void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
+void UMyGameplayAbility::OnHitEnd()
 {
      //UE_LOG(LogTemp, Warning, TEXT("Hit ended"));
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
@@ -220,10 +192,9 @@ void UMyGameplayAbility::OnHitEnd(const FGameplayEventData Payload)
         bHasHitConnected = true;
     }
     bHasHitStarted = false;
-    ResetHitBoxes();
 }
 
-void UMyGameplayAbility::OnHitConnect(const FGameplayEventData Payload)
+void UMyGameplayAbility::OnHitConnect()
 {
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     if (!bHasHitStarted) {
@@ -449,10 +420,4 @@ UClass* UMyGameplayAbility::GetHitBoxClass()
 {
     UClass* Loaded = HitBoxClass.LoadSynchronous();
     return Loaded ? Loaded : AHitBox::StaticClass();
-}
-
-void UMyGameplayAbility::ResetHitBoxes()
-{
-    if (!IsValid(HitBoxRef) || !IsValid(GetAvatarActorFromActorInfo())) return;
-    HitBoxRef->Destroy();
 }
