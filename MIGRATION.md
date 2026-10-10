@@ -93,6 +93,10 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
 - The room catalogue comes from an asset-registry scan whose order isn't guaranteed, and the random room picks index into it. So a seed may not give the same level on another machine.
 - A walled room gets a door on each edge facing another room; outer edges keep a solid wall.
 
+**Steps:**
+1. **Done:** the level regression above.
+2. **Done:** `FLevelLayoutGenerator` (`Level/LevelLayout.*`) plans the run with no world: params, catalogue and seed in, `FLevelLayout` out (cells, room assets, miniboss reward). It's a faithful port of the walk, the room picks and the treasure placement, drawing from the stream in the same order. `ALevelBuilder::BuildGrid` just fills its grid from it, and about 150 lines of picking code left the builder. The three seeded levels are unchanged. Automation tests (`MyGameEditor`, `MyGame.Layout.*`): determinism over 500 seeds; the rules over 10,000 layouts of 4 to 13 rooms (unique cells, a connected walk that never goes left, start/boss/fight rooms, doored rooms placed and spaced right, the treasure room touching the walk and not the boss); and an empty catalogue doesn't crash. All pass, 0 rule breaks. The walk can't overlap (it never goes left), so the planned backtracking isn't needed.
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.

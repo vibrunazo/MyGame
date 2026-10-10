@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "RoomDataAsset.h"
+#include "LevelLayout.h"
 #include "../Abilities/LootComponent.h"
 #include "LevelBuilder.generated.h"
 
@@ -165,6 +166,9 @@ public:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	// int32 RandomSeed = 0;
 	FRandomStream* RandomStream = nullptr;
+	// This run's plan, and the Grid built from it (room states by coordinate)
+	UPROPERTY()
+	FLevelLayout Layout;
 	UPROPERTY()
 	TMap<FCoord, FRoomState> Grid;
 	UPROPERTY()
@@ -179,16 +183,8 @@ private:
 	void BuildGrid();
 	FString DebugGrid();
 	void BuildWalls(TPair<FCoord, FRoomState> &Tile);
-	class ULevelStreaming* GenerateRandomRoom(FTransform Where);
 	class ULevelStreaming* SpawnRoom(FCoord Where, class URoomDataAsset* RoomType);
 	void SetAssetListFromRegistry();
-	class URoomDataAsset* GetRandomRoom();
-	class URoomDataAsset* GetRandomRoom(int32 Difficulty);
-	class URoomDataAsset* GetRandomRoom(int32 Difficulty, ERoomType Type, int8 IsDoored = -1);
-	TArray<class URoomDataAsset*> FindRoomsOfType(ERoomType Type, int32 Difficulty = -1, int8 IsDoored = -1);
-	TArray<class URoomDataAsset*> FindRoomsOfDifficulty(int32 Difficulty);
-	class URoomDataAsset* AddTreasureRoom();
-	class URoomDataAsset* AddTreasureRoomNextTo(FCoord Coord);
 	class ADoor* SpawnDoor(FCoord Where, ERoomDirection Dir);
 	class AWall* SpawnWall(FTransform Where, FWallSettings* Settings = nullptr);
 	class AWall* SpawnWallAtLocDirSettings(FTransform Where, ERoomDirection Pos, FWallSettings* Settings = nullptr);
@@ -199,12 +195,8 @@ private:
 	FString GetWallID(FCoord Coord1, FCoord Coord2);
 	FString GetWallID(FCoord Coord, ERoomDirection Dir);
 	FCoord GetNeighbor(FCoord From, ERoomDirection To);
-	bool IsNeighborFree(FCoord From, ERoomDirection To);
-	bool IsAnyNeighborOfType(FCoord From, ERoomType Type);
 	bool IsTileOfType(FCoord Tile, ERoomType Type);
-	TArray<FCoord> GetAllNeighborsCoords(FCoord From);
 	ERoomDirection GetOppositeDirection(ERoomDirection From);
-	TArray<FCoord> FindFreeNeighbors(FCoord From);
 	// class UStaticMesh* GetWallTypeAtTiles(FCoord Coord1, FCoord Coord2, bool Cap = false);
 	UFUNCTION()
 	void OnLoadedOneLevel();

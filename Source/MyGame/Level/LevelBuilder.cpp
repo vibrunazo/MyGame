@@ -76,100 +76,25 @@ void ALevelBuilder::BeginPlay()
 	// GenerateRoom();
 }
 
-/* Spawns all streaming levels from the pre-built Grid into the world */
+/* Plans the run's rooms (FLevelLayoutGenerator) and fills the Grid with them */
 void ALevelBuilder::BuildGrid()
 {
-	// UE_LOG(LogTemp, Warning, TEXT("Random Seed: %d Stream: %s"), RandomStream.GetCurrentSeed(), *RandomStream.ToString());
-	// UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
-	int16 x = 0;
-	int16 y = 0;
-	int32 Difficulty = 0;
-	int16 ChanceOfGoingRight = InitialChanceOfGoingRight;
 	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (!GI) return;
-	uint8 GIDifficulty = GI->LevelDifficulty;
-	NumRooms += GIDifficulty;
 	RandomStream = &GI->RandomStream;
-	uint8 DooredRoom = 0; 
-	
-	// uint8 TreasureRoomPosition = 3;
-	// uint8 TreasureRoomPosition = FMath::RandRange(1, NumRooms - 2);
-	// FCoord TreasureRoomCoord;
-
-	for (uint8 i = 0; i < NumRooms; i++)
+	FLevelLayoutParams Params;
+	Params.NumRooms = NumRooms + GI->LevelDifficulty;
+	Params.InitialChanceOfGoingRight = InitialChanceOfGoingRight;
+	Params.DecWhenChoseRight = DecWhenChoseRight;
+	Params.IncWhenChoseVert = IncWhenChoseVert;
+	Layout = FLevelLayoutGenerator::Generate(Params, ObjectPtrDecay(RoomList), *RandomStream);
+	for (const FPlannedRoom& Planned : Layout.Rooms)
 	{
-		// FCoord Coord = {x, y};
-		FCoord Coord = FCoord(x, y);
-		if (i > 1) Difficulty = 1;
-		if (i > 4) Difficulty = 2;
-		if (i > 6) Difficulty = 3;
-		if (i == NumRooms - 2) { ChanceOfGoingRight = 100; }
-		if (i == NumRooms - 1) { Difficulty = 9; }
-		// if (i == TreasureRoomPosition) TreasureRoomCoord = Coord;
-		if (NumRooms > 3 && i % 5 == 0)
-		{
-			DooredRoom = RandomStream->RandRange(0, 4) + (i / 5) * 5;
-			DooredRoom = FMath::Clamp((int)DooredRoom, 2, NumRooms -2);
-			UE_LOG(LogTemp, Warning, TEXT("DooredRoom = %d, i = %d"), DooredRoom, i);
-		}
-		FRoomState Content; 
-		// first room will always be empty
-		if (i == 0) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Empty);
-		else
-		{
-			// all next rooms will always have regular enemies, unless it's the last room, then it's a boss room
-			if (i == NumRooms - 1) { Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Boss); }
-			//else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, -1);
-			else if (DooredRoom > 0 && i == DooredRoom)
-			{
-				Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
-				Content.RoomReward = MinibossReward;
-			}
-			//else if (i > 1) Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 1);
-			else Content.RoomType = GetRandomRoom(Difficulty, ERoomType::Enemies, 0);
-		}
-		Grid.Add(Coord, Content);
-		// UE_LOG(LogTemp, Warning, TEXT("Added tile at %d, %d, Grid now has %d for i: %d"), Coord.X, Coord.Y, Grid.Num(), i);
-		// y++;
-		// UE_LOG(LogTemp, Warning, TEXT("Chance of Going Right: %d%"), ChanceOfGoingRight);
-		// if (FMath::RandRange(1, 100) <= ChanceOfGoingRight)
-		if (RandomStream->RandRange(1, 100) <= ChanceOfGoingRight)
-		{
-			// UE_LOG(LogTemp, Warning, TEXT("Chose Right"));
-			y++; ChanceOfGoingRight -= DecWhenChoseRight;
-		}
-		else
-		{
-			// UE_LOG(LogTemp, Warning, TEXT("Chose Vert"));
-			ChanceOfGoingRight += IncWhenChoseVert;
-			// if(FMath::RandBool())
-			// try the random vertical side, then the other one; if both already have rooms, go right
-			// (always free: the walk never goes left), so the next room never overwrites an existing one
-			const bool bTopFirst = RandomStream->RandRange(0, 1) != 0;
-			const ERoomDirection First = bTopFirst ? ERoomDirection::Top : ERoomDirection::Bottom;
-			const ERoomDirection Second = bTopFirst ? ERoomDirection::Bottom : ERoomDirection::Top;
-			if (IsNeighborFree(Coord, First)) x += bTopFirst ? 1 : -1;
-			else if (IsNeighborFree(Coord, Second)) x += bTopFirst ? -1 : 1;
-			else y++;
-		}
-
-		// else x--;
+		FRoomState Content;
+		Content.RoomType = Planned.Room;
+		if (Planned.bMinibossReward) Content.RoomReward = MinibossReward;
+		Grid.Add(FCoord(Planned.Coord.X, Planned.Coord.Y), Content);
 	}
-	AddTreasureRoom();
-}
-
-ULevelStreaming* ALevelBuilder::GenerateRandomRoom(FTransform Where)
-{
-	// return OnBPCreateLevelByName("Game/Maps/Rooms/Room01");
-	URoomDataAsset* NewRoomType = GetRandomRoom();
-	ULevelStreaming* NewRoom = OnBPCreateLevelByName(NewRoomType->LevelAddress);
-	if (NewRoom)
-	{
-		NewRoom->LevelTransform = Where;
-		NewRoom->SetShouldBeVisible(true);
-		NewRoom->SetShouldBeLoaded(true);
-	}
-	return NewRoom;
 }
 
 /// <summary>
@@ -422,133 +347,6 @@ void ALevelBuilder::SetAssetListFromRegistry()
 	MyGI->SetLevelBuilderRef(this);
 }
 
-/* Adds a Room of ERoomType::Treasure to a free Grid Coord that is a neighbor of a random Grid Tile 
-between the Index 1 and second last of the Grid. Will try 20 times. If it fails, returns nullptr.
-Will add the Room to the Grid */
-URoomDataAsset* ALevelBuilder::AddTreasureRoom()
-{
-	URoomDataAsset* result = nullptr;
-	if (NumRooms < 3) return result;
-	TArray<FCoord> GridCoords; Grid.GetKeys(GridCoords);
-	for (uint8 i = 0; i < 20; i++)
-	{
-		// uint8 TreasurePosition = FMath::RandRange(2, GridCoords.Num() - 2);
-		uint8 TreasurePosition = RandomStream->RandRange(2, GridCoords.Num() - 2);
-		FCoord Coord = GridCoords[TreasurePosition];
-		result = AddTreasureRoomNextTo(Coord);
-		if (result) return result;
-	}
-	return result;
-}
-
-/* Adds a Room of ERoomType::Treasure to a free Grid Coord that is a free neighbor from given Coord param.
-Will add the Room to the Grid */
-URoomDataAsset* ALevelBuilder::AddTreasureRoomNextTo(FCoord Coord)
-{
-	TArray<URoomDataAsset *> FilteredRooms = FindRoomsOfType(ERoomType::Treasure);
-	if (FilteredRooms.Num() == 0) 
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to create Treasure room, no free space next to %s"), *Coord.ToString());
-		return nullptr;
-	}
-	FRoomState Content; Content.RoomType = FilteredRooms[0];
-	TArray<FCoord> FreeCoords = FindFreeNeighbors(Coord);
-	if (FreeCoords.Num() == 0) return nullptr;
-	FCoord TreasureCoord = FreeCoords[0];
-	if (IsAnyNeighborOfType(TreasureCoord, ERoomType::Boss)) 
-	{
-		return nullptr;
-	}
-	Grid.Add(TreasureCoord, Content);
-	UE_LOG(LogTemp, Warning, TEXT("Added treasure at %s"), *TreasureCoord.ToString());
-	return Content.RoomType;
-}
-
-/// <summary>
-/// Returns a pointer to a room of random type. Of any room type and any difficulty
-/// </summary>
-/// <returns></returns>
-URoomDataAsset* ALevelBuilder::GetRandomRoom()
-{
-	if (RoomList.Num() == 0) return nullptr;
-	int32 Index = RandomStream->RandRange(0, RoomList.Num() - 1);
-	// int32 Index = FMath::RandRange(0, RoomList.Num() - 1);
-	return RoomList[Index];
-}
-
-/// <summary>
-/// Returns a pointer to a room of random type. Of any type but always of specified difficulty
-/// </summary>
-/// <param name="Difficulty"></param>
-/// <returns></returns>
-URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty)
-{
-	if (RoomList.Num() == 0) return nullptr;
-	TArray<URoomDataAsset*> FilteredRooms = {};
-	FilteredRooms = FindRoomsOfDifficulty(Difficulty);
-	if (FilteredRooms.Num() == 0) return nullptr;
-	int32 Index = RandomStream->RandRange(0, FilteredRooms.Num() - 1);
-	// int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
-
-	return FilteredRooms[Index];
-}
-
-/// <summary>
-/// Returns a pointer to a random room of specified type and specified difficulty. If difficulty is less than zero, then ignore difficulty
-/// </summary>
-/// <param name="Difficulty"></param>
-/// <param name="Type"></param>
-/// <returns></returns>
-URoomDataAsset* ALevelBuilder::GetRandomRoom(int32 Difficulty, ERoomType Type, int8 IsDoored)
-{
-	if (RoomList.Num() == 0) return nullptr;
-	TArray<URoomDataAsset*> FilteredRooms = {};
-	FilteredRooms = FindRoomsOfType(Type, Difficulty, IsDoored);
-	if (FilteredRooms.Num() == 0)
-	{
-		UE_LOG(LogTemp, Error, TEXT("Failed to find rooms, Difficulty: %d, Type: %d, Doored: %d"), Difficulty, Type, IsDoored);
-		return nullptr;
-	}
-	int32 Index = RandomStream->RandRange(0, FilteredRooms.Num() - 1);
-	// int32 Index = FMath::RandRange(0, FilteredRooms.Num() - 1);
-
-	return FilteredRooms[Index];
-}
-
-
-/**Returns a filtered list of Rooms from RoomList that contains only Rooms of this Difficulty.
-*/
-TArray<URoomDataAsset*> ALevelBuilder::FindRoomsOfDifficulty(int32 Difficulty)
-{
-	TArray<URoomDataAsset *> FilteredRooms = {};
-	if (RoomList.Num() == 0) return FilteredRooms;
-	for (auto &&Room : RoomList)
-	{
-		if (Room->RoomDifficulty == Difficulty && Room->RoomType != ERoomType::Treasure)
-		{
-			FilteredRooms.Add(Room);
-		}
-	}
-	return FilteredRooms;
-}
-
-/**Returns a filtered list of Rooms from RoomList that contains only Rooms of this Type
- * and Difficulty. If Difficulty is less than zero then ignores Difficulty.
- * if IsDoored is zero or 1, then only find rooms that are not doored, or only that are doored. -1 to ignore
-*/
-TArray<URoomDataAsset*> ALevelBuilder::FindRoomsOfType(ERoomType Type, int32 Difficulty, int8 IsDoored)
-{
-	TArray<URoomDataAsset *> FilteredRooms = {};
-	if (RoomList.Num() == 0) return FilteredRooms;
-	for (auto &&Room : RoomList)
-	{
-		if (Type == Room->RoomType && (Difficulty < 0 || Room->RoomDifficulty == Difficulty) && (IsDoored < 0 || Room->bIsDoored == (bool)IsDoored))
-		{
-			FilteredRooms.Add(Room);
-		}
-	}
-	return FilteredRooms;
-}
 FString ALevelBuilder::DebugGrid()
 {
 	FString result = FString();
@@ -633,40 +431,6 @@ FCoord ALevelBuilder::GetNeighbor(FCoord From, ERoomDirection To)
 	return FCoord(From.X + GetXFromDir(To), From.Y + GetYFromDir(To));
 }
 
-/* Returns true if the neighbor From this Coord To this direction does not have any 
-Rooms in the Grid yet
- */
-bool ALevelBuilder::IsNeighborFree(FCoord From, ERoomDirection To)
-{
-	FCoord NeighborCoord = GetNeighbor(From, To);
-	// if(Grid.Contains(NeighborCoord)) true;
-	return !Grid.Contains(NeighborCoord);
-}
-
-/* Returns an Array with all the Grid Coordinates of free neighbors From this Grid Coord.
-Free Neighbors are Grid Coords that don't have any Room yet */
-TArray<FCoord> ALevelBuilder::FindFreeNeighbors(FCoord From)
-{
-	TArray<FCoord> result = {};
-	for (auto &&Dir : ALLDIRECTIONS)
-	{
-		if (IsNeighborFree(From, Dir)) result.Add(GetNeighbor(From, Dir));
-	}
-	return result;
-}
-
-/* Returns true if any of the Neighbors From given Coord is of given Room Type */
-bool ALevelBuilder::IsAnyNeighborOfType(FCoord From, ERoomType Type)
-{
-	TArray<FCoord> NeighborCoords = GetAllNeighborsCoords(From);
-	for (auto &&Neighbor : NeighborCoords)
-	{
-		FRoomState* NeighborState = Grid.Find(Neighbor);
-		if (!NeighborState || !NeighborState->RoomType) continue;
-		if (NeighborState->RoomType->RoomType == Type) return true;
-	}
-	return false;
-}
 /* Returns true if this Tile at this Coord is of given Room Type */
 bool ALevelBuilder::IsTileOfType(FCoord Tile, ERoomType Type)
 {
@@ -674,17 +438,6 @@ bool ALevelBuilder::IsTileOfType(FCoord Tile, ERoomType Type)
 	if (!MyState || !MyState->RoomType) return false;
 	if (MyState->RoomType->RoomType == Type) return true;
 	return false;
-}
-
-/* Returns the Coords of all Neighboring Tiles in the Grid From this given Grid Coord */
-TArray<FCoord> ALevelBuilder::GetAllNeighborsCoords(FCoord From)
-{
-	TArray<FCoord> result = {};
-	for (auto &&Dir : ALLDIRECTIONS)
-	{
-		result.Add(GetNeighbor(From, Dir));
-	}
-	return result;
 }
 
 /// <summary>
