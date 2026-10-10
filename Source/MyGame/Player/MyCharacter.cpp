@@ -137,27 +137,16 @@ void AMyCharacter::SetDefaultProperties()
 
 void AMyCharacter::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
 {
-	// Set up gameplay key bindings
+	// Buttons and movement are Enhanced Input actions bound by AMyPlayerController; touch still jumps
 	check(PlayerInputComponent);
-	// PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
-	/*PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &AMyCharacter::Jump);
-	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);*/
-
-	PlayerInputComponent->BindAxis("MoveForward", this, &AMyCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AMyCharacter::MoveRight);
-
-	// We have 2 versions of the rotation bindings to handle different kinds of devices differently
-	// "turn" handles devices that provide an absolute delta, such as a mouse.
-	// "turnrate" is for devices that we choose to treat as a rate of change, such as an analog joystick
-	// PlayerInputComponent->BindAxis("Turn", this, &APawn::AddControllerYawInput);
-	// PlayerInputComponent->BindAxis("TurnRate", this, &AMyCharacter::TurnAtRate);
-	// PlayerInputComponent->BindAxis("LookUp", this, &APawn::AddControllerPitchInput);
-	// PlayerInputComponent->BindAxis("LookUpRate", this, &AMyCharacter::LookUpAtRate);
-
-	// handle touch devices
 	PlayerInputComponent->BindTouch(IE_Pressed, this, &AMyCharacter::TouchStarted);
 	PlayerInputComponent->BindTouch(IE_Released, this, &AMyCharacter::TouchStopped);
+}
 
+void AMyCharacter::SetMoveInput(FVector2D Value)
+{
+	MoveForward(Value.X);
+	MoveRight(Value.Y);
 }
 
 void AMyCharacter::TouchStarted(ETouchIndex::Type FingerIndex, FVector Location)
@@ -283,16 +272,14 @@ void AMyCharacter::BeginPlay()
 void AMyCharacter::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	// Held slots retry every frame (player buttons and AI presses alike): holding a button repeats the
+	// move, and a press during another attack fires as soon as that attack can be cancelled
 	if (InputEnabled())
 	{
-		if (GetAbilityKeyDown(0)) ActivateAbilityByInput(0);
-		if (GetAbilityKeyDown(1)) ActivateAbilityByInput(1);
-		if (GetAbilityKeyDown(2)) ActivateAbilityByInput(2);
-		if (GetAbilityKeyDown(3)) ActivateAbilityByInput(3);
-		if (GetAbilityKeyDown(4)) ActivateAbilityByInput(4);
-		if (GetAbilityKeyDown(5)) ActivateAbilityByInput(5);
-		if (GetAbilityKeyDown(6)) ActivateAbilityByInput(6);
-		if (GetAbilityKeyDown(7)) ActivateAbilityByInput(7);
+		for (uint8 Slot = 0; Slot < IsAbilityKeyDown.Num(); ++Slot)
+		{
+			if (IsAbilityKeyDown[Slot]) ActivateAbilityByInput(Slot);
+		}
 	}
 	if (IsPlayerControlled())
 	{

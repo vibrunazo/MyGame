@@ -62,6 +62,8 @@ public:
 	bool GetAbilityKeyDown(uint8 Index);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ActivateAbilityByInput(uint8 Index);
+	// Movement input for this frame from the controller's move action: X = forward (world +X), Y = right (world +Y)
+	void SetMoveInput(FVector2D Value);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void ActivateAbilityByEvent(FString EventName);
 	UFUNCTION(BlueprintCallable, Category = Abilities)

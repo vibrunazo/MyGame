@@ -33,6 +33,13 @@ def _vec(v: unreal.Vector):
     return [round(v.x, 1), round(v.y, 1), round(v.z, 1)]
 
 
+def _inject(action_name, value_type, value):
+    """Holds (value = (x, y)) or releases (value = None) /Game/Input/IA_<action_name> through the controller's test hook."""
+    action = unreal.load_asset(f"/Game/Input/IA_{action_name}")
+    x, y = value or (0.0, 0.0)
+    _player().get_controller().inject_test_input(action, unreal.Vector2D(x, y), value is not None)
+
+
 def _pawn_response(char):
     """The capsule's collision response to the Pawn channel (Block / Overlap / Ignore)."""
     capsule = char.get_editor_property("capsule_component")
@@ -53,9 +60,13 @@ class MyGameTools(unreal.ToolsetDefinition):
         """
         char = _player()
         state = {"actor": char.get_name(), "location": _vec(char.get_actor_location()),
+                 "yaw": round(char.get_actor_rotation().yaw, 1),
+                 "control_yaw": round(char.get_controller().get_control_rotation().yaw, 1) if char.get_controller() else None,
                  "pawn_collision": _pawn_response(char)}
         movement = char.get_editor_property("character_movement")
         if movement:
+            state["can_jump"] = char.can_jump()
+            state["jump_count"] = char.get_editor_property("jump_current_count")
             state["movement_mode"] = str(movement.get_editor_property("movement_mode"))
             state["velocity"] = _vec(movement.get_editor_property("velocity"))
         asc = char.get_editor_property("ability_system")
@@ -154,26 +165,33 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def press_input(button: str, pressed: bool) -> str:
-        """Presses or releases a player button through the same path the keyboard/gamepad uses.
+        """Presses or releases a player button by injecting its Enhanced Input action, as a real key would.
 
         Args:
             button: Punch, Kick, Cast, Jump, Super or Ultra.
-            pressed: True to press (and hold), False to release.
+            pressed: True to press (held until released), False to release.
 
         Returns:
             The player's state afterwards, as JSON.
         """
-        char = _player()
-        controller = char.get_controller()
-        if button == "Super":
-            controller.set_super_mod(pressed)
-        elif button == "Ultra":
-            controller.set_ultra_mod(pressed)
-        else:
-            slot = getattr(unreal.Input, button.upper())  # EInput (Python drops the E prefix)
-            if button == "Jump":
-                char.jump() if pressed else char.stop_jumping()
-            controller.set_ability_key_down(slot, pressed)
+        name = {"Super": "SuperMod", "Ultra": "UltraMod"}.get(button, button)
+        _inject(name, unreal.InputActionValueType.BOOLEAN, (1.0, 0.0) if pressed else None)
+        return MyGameTools.pie_player_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def move_input(forward: float, right: float) -> str:
+        """Holds the move stick (IA_Move) at a direction until called again; 0, 0 lets go.
+
+        Args:
+            forward: -1..1 along world +X.
+            right: -1..1 along world +Y.
+
+        Returns:
+            The player's state afterwards, as JSON.
+        """
+        held = (forward, right) if forward or right else None
+        _inject("Move", unreal.InputActionValueType.AXIS2D, held)
         return MyGameTools.pie_player_state()
 
     @toolset_registry.tool_call
@@ -210,6 +228,10 @@ class MyGameTools(unreal.ToolsetDefinition):
         brain = controller.get_editor_property("brain_component") if controller else None
         if not brain:
             raise RuntimeError(f"{actor_path} has no AI brain")
+        # sensing too: seeing the player aggroes the whole room, which restarts frozen trees
+        sensing = char.get_editor_property("pawn_sense_comp")
+        if sensing:
+            sensing.set_sensing_updates_enabled(enabled)
         if enabled:
             brain.restart_logic()
         else:

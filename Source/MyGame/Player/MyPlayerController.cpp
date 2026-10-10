@@ -12,9 +12,18 @@
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "EnhancedInputComponent.h"
+#include "EnhancedInputSubsystems.h"
+#include "InputActionValue.h"
+#include "InputAction.h"
 
 void AMyPlayerController::BeginPlay()
 {
+    Super::BeginPlay();
+    if (UEnhancedInputLocalPlayerSubsystem* Input = GetEnhancedInputSubsystem())
+    {
+        if (DefaultMappingContext) Input->AddMappingContext(DefaultMappingContext, 0);
+    }
     ShowHUD();
     ShowLevelIntro();
 }
@@ -22,11 +31,66 @@ void AMyPlayerController::BeginPlay()
 void AMyPlayerController::SetupInputComponent()
 {
     Super::SetupInputComponent();
-    check(InputComponent);
-	InputComponent->BindAction("PauseMenu", IE_Pressed, this, &AMyPlayerController::OnPausePressed).bExecuteWhenPaused = true;
+    UEnhancedInputComponent* Input = CastChecked<UEnhancedInputComponent>(InputComponent);
+    if (MoveAction)
+    {
+        Input->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AMyPlayerController::OnMove);
+        Input->BindAction(MoveAction, ETriggerEvent::Completed, this, &AMyPlayerController::OnMove);
+    }
+    for (const FAbilityInputBinding& Binding : AbilityInputs)
+    {
+        if (!Binding.Action) continue;
+        Input->BindAction(Binding.Action, ETriggerEvent::Started, this, &AMyPlayerController::OnAbilityInput, Binding.Slot, true);
+        Input->BindAction(Binding.Action, ETriggerEvent::Completed, this, &AMyPlayerController::OnAbilityInput, Binding.Slot, false);
+    }
+    if (SuperModAction)
+    {
+        Input->BindAction(SuperModAction, ETriggerEvent::Started, this, &AMyPlayerController::SetSuperMod, true);
+        Input->BindAction(SuperModAction, ETriggerEvent::Completed, this, &AMyPlayerController::SetSuperMod, false);
+    }
+    if (UltraModAction)
+    {
+        Input->BindAction(UltraModAction, ETriggerEvent::Started, this, &AMyPlayerController::SetUltraMod, true);
+        Input->BindAction(UltraModAction, ETriggerEvent::Completed, this, &AMyPlayerController::SetUltraMod, false);
+    }
+    // IA_Pause triggers while paused, so the same button closes the menu
+    if (PauseAction) Input->BindAction(PauseAction, ETriggerEvent::Started, this, &AMyPlayerController::OnPausePressed);
+    if (ShowFPSAction) Input->BindAction(ShowFPSAction, ETriggerEvent::Started, this, &AMyPlayerController::OnShowFPS);
+}
 
-    InputComponent->BindAction("Jump", IE_Pressed, this, &AMyPlayerController::Jump);
-    InputComponent->BindAction("Jump", IE_Released, this, &AMyPlayerController::StopJump);
+UEnhancedInputLocalPlayerSubsystem* AMyPlayerController::GetEnhancedInputSubsystem() const
+{
+    return ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer());
+}
+
+#if WITH_EDITOR
+void AMyPlayerController::InjectTestInput(UInputAction* Action, FVector2D Value, bool bHeld)
+{
+    UEnhancedInputLocalPlayerSubsystem* Input = GetEnhancedInputSubsystem();
+    if (!Input || !Action) return;
+    if (bHeld) Input->StartContinuousInputInjectionForAction(Action, FInputActionValue(Action->ValueType, FVector(Value, 0.)), {}, {});
+    else Input->StopContinuousInputInjectionForAction(Action);
+}
+#endif
+
+void AMyPlayerController::OnMove(const FInputActionValue& Value)
+{
+    if (AMyCharacter* MyChar = GetPawn<AMyCharacter>()) MyChar->SetMoveInput(Value.Get<FVector2D>());
+}
+
+void AMyPlayerController::OnAbilityInput(EInput Slot, bool bPressed)
+{
+    if (Slot == EInput::Jump)
+    {
+        if (bPressed) Jump();
+        else StopJump();
+    }
+    SetAbilityKeyDown(Slot, bPressed);
+}
+
+void AMyPlayerController::OnShowFPS()
+{
+    ConsoleCommand(TEXT("stat fps"));
 }
 
 void AMyPlayerController::Jump()
