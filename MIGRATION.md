@@ -158,7 +158,11 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
    - **Fixed 2026-10-11: enemies idle in the packaged game (fine in PIE).**
      - **Cause:** Phase 1 had swapped constructor asset loads (UE5 deadlocks on them) for soft paths set in native code: `DefaultAIControllerClass` and `DefaultAnimClass`. A path in native code isn't a reference the cooker sees, so `BP_AIController` never shipped, and Enemy1/2/3 got a plain AIController with no behavior tree. PIE loads anything from disk, so it never showed.
      - **Fix:** the controller and anim class are now set on the character Blueprints (`BP_EnemyBase` and every enemy, `BP_Char`), and the native fallbacks are deleted.
-     - **Same pattern elsewhere:** `HitBoxClass` and `APickup::WidgetActorClass`. Their assets shipped by luck through other references. Now `/Game/Blueprints/PAL_CodeReferenced`, a Primary Asset Label made by `Tools/create_code_referenced_label.py`, always cooks them. Any new `TEXT("/Game/...")` path in C++ goes there too.
+     - **Same pattern elsewhere:** `HitBoxClass` and `APickup::WidgetActorClass` also had hard-coded asset paths. Their assets shipped by luck through other references.
+       - The hitbox is now `AMyCharacter::HitBoxClass`, set on `BP_Char` and `BP_EnemyBase`; the enemies inherit it. Abilities take it from the character performing them.
+       - The pickup's floating text is a class property set on `BP_Pickup`.
+       - A Primary Asset Label briefly papered over this; it's removed.
+     - **Rule (your call, 2026-10-11): C++ never hard-codes an asset path.** It declares a `TSubclassOf` / `TObjectPtr` / soft property, and an asset sets it. No `/Game/` path is left in `Source`. What remains are name contracts (the blackboard key `TargetChar`, the material parameters `BodyColor` and `GlowAlpha`), which don't affect packaging.
      - **Guard:** `AMyCharacter::PossessedBy` logs an error when an enemy gets anything but the game's AI controller.
      - **Smoke test:** `Tests/package_smoke.py` boots the packaged Development build (menu, then a seeded run) and checks the game's log: map loaded, every room in, no missing packages, no errors or ensures, no enemy without AI. All pass.
      - **Gotcha:** a game process left running from `Saved/Packaged` locks the exe, and BuildCookRun's archive step then silently keeps the old one. The smoke test now kills leftovers first.

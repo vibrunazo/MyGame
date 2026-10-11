@@ -47,11 +47,6 @@ APickup::APickup()
 	BoxTrigger->SetBoxExtent(FVector(50.f, 50.f, 50.f));
 	BoxTrigger->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	OnActorBeginOverlap.AddDynamic(this, &APickup::OnPickupBeginOverlap);
-	// Blueprint'/Game/UI/BP_WidgetActor.BP_WidgetActor'
-	// Blueprint'/Game/UI/BP_UMGActor.BP_UMGActor'
-	// Soft path: loading Blueprints from a native constructor deadlocks UE5's loader
-	// a path the cooker can't see: /Game/Blueprints/PAL_CodeReferenced always cooks it (keep them in sync)
-	WidgetActorClass = TSoftClassPtr<AWidgetActor>(FSoftObjectPath(TEXT("/Game/UI/BP_UMGActor.BP_UMGActor_C")));
 
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 
@@ -100,7 +95,7 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 	{
 		Char->AddItemToInventory(ItemData);
 		// The UI Widget that shows in the world letting player know he picked up this item
-		if (UClass* WidgetClass = WidgetActorClass.LoadSynchronous())
+		if (UClass* WidgetClass = WidgetActorClass)
 		{
 			FVector Loc = GetActorLocation();
 			FActorSpawnParameters params;

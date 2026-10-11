@@ -147,8 +147,6 @@ protected:
 	void ApplySelfEffects();
 	void RemoveSelfEffects();
 
-	UPROPERTY(EditDefaultsOnly, Category = "Hitbox")
-	TSoftClassPtr<class AHitBox> HitBoxClass;
 	UClass* GetHitBoxClass();
 	UPROPERTY()
 	TArray<FActiveGameplayEffectHandle> ActiveSelfEffects = {};

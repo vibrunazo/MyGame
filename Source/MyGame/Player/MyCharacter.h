@@ -182,6 +182,9 @@ public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
+	// The hitbox this character's attacks spawn (its look and sound on hit)
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Abilities)
+	TSubclassOf<class AHitBox> HitBoxClass;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TArray<FLootDrop> LootTable;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

@@ -27,9 +27,6 @@
 
 UMyGameplayAbility::UMyGameplayAbility()
 {
-    // Soft path: loading Blueprints from a native constructor deadlocks UE5's loader
-    // a path the cooker can't see: /Game/Blueprints/PAL_CodeReferenced always cooks it (keep them in sync)
-    HitBoxClass = TSoftClassPtr<AHitBox>(FSoftObjectPath(TEXT("/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C")));
 }
 
 bool UMyGameplayAbility::CanActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayTagContainer* SourceTags = nullptr, const FGameplayTagContainer* TargetTags = nullptr, OUT FGameplayTagContainer* OptionalRelevantTags = nullptr) const
@@ -417,8 +414,11 @@ void UMyGameplayAbility::UpdateCombo()
     // UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
 }
 
+// The hitbox the character performing this ability uses (AMyCharacter::HitBoxClass, set on the character Blueprints)
 UClass* UMyGameplayAbility::GetHitBoxClass()
 {
-    UClass* Loaded = HitBoxClass.LoadSynchronous();
-    return Loaded ? Loaded : AHitBox::StaticClass();
+    const AMyCharacter* Char = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
+    if (Char && Char->HitBoxClass) return Char->HitBoxClass;
+    UE_LOG(LogTemp, Error, TEXT("%s: %s has no HitBoxClass, using a bare AHitBox"), *GetName(), *GetNameSafe(Char));
+    return AHitBox::StaticClass();
 }

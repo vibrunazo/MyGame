@@ -67,8 +67,9 @@ public:
 	float DelayedSpawnMax = 0.4f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup", meta = (ToolTip = "Time after the Item delayed spawn that it takes to enable pickup by the player."))
 	float PickupTime = 0.7f;
+	// The floating text naming the item when it's picked up (set on BP_Pickup)
 	UPROPERTY(EditDefaultsOnly, Category = "Item Pickup")
-	TSoftClassPtr<class AWidgetActor> WidgetActorClass;
+	TSubclassOf<class AWidgetActor> WidgetActorClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item Pickup")
 	UCurveFloat *CurveScale;
 	FTimeline MyTimeline;
