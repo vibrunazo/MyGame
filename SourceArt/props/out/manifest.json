@@ -1,0 +1,378 @@
+{
+ "files": {
+  "SM_Prop_crate.fbx": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:27:40",
+   "params": {
+    "kind": "crate"
+   },
+   "objects": 1,
+   "triangles": 1692,
+   "vertices": 864,
+   "size_m": [
+    0.84,
+    0.84,
+    0.8
+   ],
+   "bounds_min": [
+    -0.42,
+    -0.42,
+    0.0
+   ],
+   "materials": [
+    "M_PropWood",
+    "M_PropWoodDark"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_crate.blend": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:27:40",
+   "params": {
+    "kind": "crate"
+   },
+   "objects": 1,
+   "triangles": 1692,
+   "vertices": 864,
+   "size_m": [
+    0.84,
+    0.84,
+    0.8
+   ],
+   "bounds_min": [
+    -0.42,
+    -0.42,
+    0.0
+   ],
+   "materials": [
+    "M_PropWood",
+    "M_PropWoodDark"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_crate_preview.png": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:27:47",
+   "params": {
+    "kind": "crate"
+   },
+   "views": 4,
+   "objects": 1,
+   "triangles": 1692,
+   "vertices": 864,
+   "size_m": [
+    0.84,
+    0.84,
+    0.8
+   ],
+   "bounds_min": [
+    -0.42,
+    -0.42,
+    0.0
+   ],
+   "materials": [
+    "M_PropWood",
+    "M_PropWoodDark"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_barrel.fbx": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:27:54",
+   "params": {
+    "kind": "barrel"
+   },
+   "objects": 1,
+   "triangles": 1008,
+   "vertices": 512,
+   "size_m": [
+    0.75,
+    0.75,
+    1.0
+   ],
+   "bounds_min": [
+    -0.375,
+    -0.375,
+    0.0
+   ],
+   "materials": [
+    "M_PropMetal",
+    "M_PropWood"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_barrel.blend": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:27:54",
+   "params": {
+    "kind": "barrel"
+   },
+   "objects": 1,
+   "triangles": 1008,
+   "vertices": 512,
+   "size_m": [
+    0.75,
+    0.75,
+    1.0
+   ],
+   "bounds_min": [
+    -0.375,
+    -0.375,
+    0.0
+   ],
+   "materials": [
+    "M_PropMetal",
+    "M_PropWood"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_barrel_preview.png": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:28:01",
+   "params": {
+    "kind": "barrel"
+   },
+   "views": 4,
+   "objects": 1,
+   "triangles": 1008,
+   "vertices": 512,
+   "size_m": [
+    0.75,
+    0.75,
+    1.0
+   ],
+   "bounds_min": [
+    -0.375,
+    -0.375,
+    0.0
+   ],
+   "materials": [
+    "M_PropMetal",
+    "M_PropWood"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_rocks.fbx": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:28:09",
+   "params": {
+    "kind": "rocks"
+   },
+   "objects": 1,
+   "triangles": 192,
+   "vertices": 104,
+   "size_m": [
+    1.19,
+    1.145,
+    0.511
+   ],
+   "bounds_min": [
+    -0.485,
+    -0.574,
+    -0.046
+   ],
+   "materials": [
+    "M_PropStone"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_rocks.blend": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:28:09",
+   "params": {
+    "kind": "rocks"
+   },
+   "objects": 1,
+   "triangles": 192,
+   "vertices": 104,
+   "size_m": [
+    1.19,
+    1.145,
+    0.511
+   ],
+   "bounds_min": [
+    -0.485,
+    -0.574,
+    -0.046
+   ],
+   "materials": [
+    "M_PropStone"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_rocks_preview.png": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:28:16",
+   "params": {
+    "kind": "rocks"
+   },
+   "views": 4,
+   "objects": 1,
+   "triangles": 192,
+   "vertices": 104,
+   "size_m": [
+    1.19,
+    1.145,
+    0.511
+   ],
+   "bounds_min": [
+    -0.485,
+    -0.574,
+    -0.046
+   ],
+   "materials": [
+    "M_PropStone"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_pillar.fbx": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:28:27",
+   "params": {
+    "kind": "pillar"
+   },
+   "objects": 1,
+   "triangles": 976,
+   "vertices": 496,
+   "size_m": [
+    1.222,
+    0.813,
+    1.756
+   ],
+   "bounds_min": [
+    -0.35,
+    -0.35,
+    -0.0
+   ],
+   "materials": [
+    "M_PropStone",
+    "M_PropWoodDark"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_pillar.blend": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:28:27",
+   "params": {
+    "kind": "pillar"
+   },
+   "objects": 1,
+   "triangles": 976,
+   "vertices": 496,
+   "size_m": [
+    1.222,
+    0.813,
+    1.756
+   ],
+   "bounds_min": [
+    -0.35,
+    -0.35,
+    -0.0
+   ],
+   "materials": [
+    "M_PropStone",
+    "M_PropWoodDark"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  },
+  "SM_Prop_pillar_preview.png": {
+   "tool": "3d.build.blender",
+   "model": null,
+   "license": "GPL (the program); your models and renders are yours",
+   "created": "2026-10-10T20:28:43",
+   "params": {
+    "kind": "pillar"
+   },
+   "views": 4,
+   "objects": 1,
+   "triangles": 976,
+   "vertices": 496,
+   "size_m": [
+    1.222,
+    0.813,
+    1.756
+   ],
+   "bounds_min": [
+    -0.35,
+    -0.35,
+    -0.0
+   ],
+   "materials": [
+    "M_PropStone",
+    "M_PropWoodDark"
+   ],
+   "animations": [],
+   "frame_range": [
+    1,
+    250
+   ]
+  }
+ },
+ "generator": "D:\\docs\\assets\\generator"
+}

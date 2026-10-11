@@ -111,6 +111,16 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
    - A room master registers with the room whose streamed map holds it (`GetRoomStateOfLevel`), not by its world position. It looks its room up when needed instead of keeping a raw `FRoomState*` into the grid.
    - A spawner's room master is the one in its own map, so the order the actors begin play in doesn't matter.
    - Levels, the doored flow and the ability regression are unchanged, and the camera still follows. The grid itself stays in `ALevelBuilder`; the Phase 5 game loop decides what run state moves into the subsystem.
+6. **Done: PCG room dressing (your call, 2026-10-10: props, not walls).** Walls stay in C++: one scaled cube per edge, already covered by the regression, so a PCG rebuild would change nothing in play. PCG goes where it pays off: varying the 33 hand-made rooms from run to run.
+   - **Props:** crate, barrel, rock pile and broken pillar. Graybox, built by `SourceArt/props/room_prop.py` (`gen 3d build ... --set kind=crate`), imported by `Tools/import_props.py` into `/Game/Props`. 190 to 750 triangles each, with collision.
+   - **The graph, `/Game/PCG/PCG_RoomDressing`:** splines on the actor → `Spline Sampler` every 160 cm (unbounded) → seeded density noise → keep about 45% → footprint bounds → `Self Pruning` → `Projection` onto a `World Ray Hit Query` (onto floors and ledges; points over a pit drop out) → random yaw and scale 0.85 to 1.15 → weighted `Static Mesh Spawner` (crate 4, barrel 3, rocks 3, pillar 1), blocking collision.
+   - **`ARoomDressing`:** a room-sized box (the PCG bounds) plus one spline per line. `ALevelBuilder::DressRoom` lays lines 110 cm inside each solid wall (top, left and right), never along the bottom wall (the camera's side) or an open edge into the next room. It leaves ±260 cm clear around doorways. The PCG seed comes from the run seed plus the room, and the props generate once every room is shown (the builder now counts `OnLevelShown`, so floors collide before props drop).
+   - **Checks:** seeds 6032, 101 and 2024 give 63, 50 and 59 props, identical across runs. The level baselines now record props per room. Screenshots from the game camera show props on floors and ledges along the walls, clear of doorways and stairs.
+   - **5.8 quirks:**
+     - `World Raycast` couldn't read `$Position` from the sampled points, so the graph uses Projection plus World Ray Hit Query instead.
+     - The Spline Sampler clips points to the component's own shape unless `bUnbounded` is set.
+     - `AssetTools.save_assets` claims an asset doesn't exist while PIE runs.
+   - **Moved:** the wall cutaway (a camera-facing fade instead of rebuilding wall heights) goes to Phase 6 with the camera.
 
 ## Starting point
 
@@ -243,7 +253,7 @@ The steps:
    - Change `LevelAddress` to `TSoftObjectPtr<UWorld>`.
 3. C++ streaming with `ULevelStreamingDynamic::LoadLevelInstanceBySoftObjectPtr`, which replaces the BP `OnBPCreateLevelByName`. A loading gate (pause plus a loading widget, with a timeout) replaces time dilation 0.
 4. Run state moves into a `URunSubsystem` (UWorldSubsystem). RoomMasters register through their streaming level instead of their world position, which removes the ordering race.
-5. A PCG graph builds walls and doors at runtime (Generate On Demand, seeded) from the room bounds and door list. Doors stay real actors because they have logic. The wall cutaway becomes a camera-facing material fade instead of rebuilding HISM heights.
+5. ~~A PCG graph builds walls and doors at runtime.~~ Changed (your call): walls stay in C++, and PCG scatters seeded props along the walls instead (Phase 4 status, step 6). The wall cutaway moves to Phase 6.
 6. Keep the 39 hand-made room maps. The persistent level stays non-World-Partition.
 
 ## Phase 5: make the game loop work
@@ -265,6 +275,7 @@ After the migration and the code fixes (Phases 3 to 5). Every tester called the 
   - framing that keeps the player and the enemies in view instead of chasing the player.
   Candidates are UE's camera modifiers or a slimmed-down pawn; pick whichever is simpler.
 - Compare old and new with the same recorded runs (numbers first, then short clips) and let you pick by feel; play testing decides, not the metrics.
+- **Wall cutaway (moved from Phase 4):** `ALevelBuilder::HideWall` rebuilds the wall between the camera and the player 50 cm tall whenever the player changes room. Replace it with a camera-facing material fade (dithered opacity near the camera-to-player line), designed together with the new camera.
 
 ## Phase 7: optional
 

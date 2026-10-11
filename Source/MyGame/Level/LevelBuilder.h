@@ -137,6 +137,8 @@ public:
 	TArray<TObjectPtr<class URoomDataAsset>> RoomList;
 	UPROPERTY()
 	TArray<TObjectPtr<class ADoor>> DoorList;
+	UPROPERTY()
+	TArray<TObjectPtr<class ARoomDressing>> Dressings;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	int32 NumRooms = 7;
@@ -150,6 +152,15 @@ public:
 	TSubclassOf<class AWall> WallActor = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	TSubclassOf<class ADoor> DoorActor;
+	// Scatters props along each room's solid walls (PCG_RoomDressing); none when unset
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder|Dressing")
+	TObjectPtr<class UPCGGraphInterface> DressingGraph;
+	// How far from a wall the props' line runs
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder|Dressing")
+	float DressingInset = 110.f;
+	// Half the prop-free gap kept around a doorway
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LevelBuilder|Dressing")
+	float DoorwayClearance = 260.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
 	float RoomSizeX = 2000.f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = LevelBuilder)
@@ -202,6 +213,10 @@ private:
 	UFUNCTION()
 	void OnLoadedOneLevel();
 	void OnLoadingTimedOut();
+	// Every room is in (or loading gave up): unfreeze and dress the rooms
+	void OnRoomsReady();
+	bool bRoomsReady = false;
+	void DressRoom(const FCoord& Coord, const FRoomState& Room);
 	// A core ticker, not a world timer: world timers run on dilated time, and the world is frozen while rooms stream
 	FTSTicker::FDelegateHandle LoadingTimeout;
 

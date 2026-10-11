@@ -86,3 +86,4 @@ DerivedDataCache/*
 # Python bytecode (editor scripts)
 __pycache__/
 *.pyc
+SourceArt/**/*.blend

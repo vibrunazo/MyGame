@@ -6,7 +6,7 @@ Needs the editor running with PIE started and a fixed seed (`-Seed=N` on the edi
     python Tests/level_regression.py diff before.json after.json
 
 Recorded: room maps per grid coordinate, walls (position, doorway), doors, room masters and their enemies,
-enemies per room, and the doored-room flow: walking in locks the doors, killing the room's enemies opens them
+enemies and props per room, and the doored-room flow: walking in locks the doors, killing the room's enemies opens them
 and drops the reward.
 """
 import json
@@ -21,7 +21,7 @@ def wait_loaded(timeout=30.0):
     t0, last = time.time(), None
     while time.time() - t0 < timeout:
         s = tool("level_state")
-        key = (len(s["rooms"]), len(s["room_masters"]), s["time_dilation"])
+        key = (len(s["rooms"]), len(s["room_masters"]), s["time_dilation"], json.dumps(s.get("props"), sort_keys=True))
         if s["time_dilation"] == 1.0 and key == last:
             return s
         last = key
@@ -78,6 +78,7 @@ def capture(out):
         "doors": sorted([d["at"][0], d["at"][1]] for d in s["doors"]),
         "room_masters": sorted([m["coord"][0], m["coord"][1], m["chars"]] for m in s["room_masters"]),
         "enemies": dict(sorted(s["enemies"].items())),
+        "props": {k: dict(sorted(v.items())) for k, v in sorted(s.get("props", {}).items())},
         "unfrozen": s["time_dilation"] == 1.0,
     }
     result["doored_flow"] = doored_flow(s)

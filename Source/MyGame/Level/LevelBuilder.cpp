@@ -6,6 +6,7 @@
 #include "Wall.h"
 #include "RoomMaster.h"
 #include "RunSubsystem.h"
+#include "RoomDressing.h"
 #include "../MyGameInstance.h"
 
 #include "Components/BillboardComponent.h"
@@ -70,7 +71,7 @@ void ALevelBuilder::BeginPlay()
 	BuildGrid();
 	SpawnLevels();
 	// The game stays frozen until every room has streamed in: unfreeze when nothing streams, and don't wait forever
-	if (CountOfLevelsThatDidntFinishLoading == 0) GetWorldSettings()->SetTimeDilation(1.0f);
+	if (CountOfLevelsThatDidntFinishLoading == 0) OnRoomsReady();
 	else LoadingTimeout = FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateWeakLambda(this, [this](float)
 	{
 		OnLoadingTimedOut();
@@ -140,7 +141,8 @@ ULevelStreaming* ALevelBuilder::SpawnRoom(FCoord Where, class URoomDataAsset* Ro
 		UE_LOG(LogTemp, Error, TEXT("Could not stream %s for %s"), *RoomType->Level.ToString(), *RoomType->GetName());
 		return nullptr;
 	}
-	NewRoom->OnLevelLoaded.AddDynamic(this, &ALevelBuilder::OnLoadedOneLevel);
+	// shown, not just loaded: the room's floors must collide before props are dropped on them
+	NewRoom->OnLevelShown.AddDynamic(this, &ALevelBuilder::OnLoadedOneLevel);
 	CountOfLevelsThatDidntFinishLoading++;
 	return NewRoom;
 }
@@ -149,17 +151,56 @@ ULevelStreaming* ALevelBuilder::SpawnRoom(FCoord Where, class URoomDataAsset* Ro
 void ALevelBuilder::OnLoadingTimedOut()
 {
 	UE_LOG(LogTemp, Error, TEXT("%d rooms didn't finish streaming in after 15 s; starting anyway"), CountOfLevelsThatDidntFinishLoading);
-	GetWorldSettings()->SetTimeDilation(1.0f);
+	OnRoomsReady();
 }
 
-// Bound to each streamed room's OnLevelLoaded; unfreezes the game when the last one is in
+void ALevelBuilder::OnRoomsReady()
+{
+	if (bRoomsReady) return;
+	bRoomsReady = true;
+	GetWorldSettings()->SetTimeDilation(1.0f);
+	for (auto&& Tile : Grid) DressRoom(Tile.Key, Tile.Value);
+}
+
+// Props go along the room's solid walls, except the bottom one (the camera's side), and never in a doorway or on an
+// open edge into the next room. The seed comes from the run seed and the room, so a run always gets the same props.
+void ALevelBuilder::DressRoom(const FCoord& Coord, const FRoomState& Room)
+{
+	if (!DressingGraph) return;
+	const FVector Center = GetLocFromGrid(Coord) + FVector(0.f, 0.f, 500.f);
+	const float HX = RoomSizeX / 2 - DressingInset, HY = RoomSizeY / 2 - DressingInset;
+	// deferred: the PCG component reads the actor's bounds when it registers, so size the room first
+	ARoomDressing* Dressing = GetWorld()->SpawnActorDeferred<ARoomDressing>(ARoomDressing::StaticClass(), FTransform(Center));
+	Dressing->SetRoomExtent(FVector(RoomSizeX / 2, RoomSizeY / 2, 1000.f));
+	Dressing->FinishSpawning(FTransform(Center));
+	auto AddWallLine = [&](ERoomDirection Dir, const FVector& From, const FVector& To)
+	{
+		if (!Room.Walls.Contains(Dir)) return;
+		const AWall* Wall = GetWallRefFromCoordAndDir(Coord, Dir);
+		if (!Wall || !Wall->bIsDoored)
+		{
+			Dressing->AddLine(From, To);
+			return;
+		}
+		const FVector Mid = (From + To) / 2, Along = (To - From).GetSafeNormal();
+		Dressing->AddLine(From, Mid - Along * DoorwayClearance);
+		Dressing->AddLine(Mid + Along * DoorwayClearance, To);
+	};
+	AddWallLine(ERoomDirection::Top, Center + FVector(HX, -HY, 0.f), Center + FVector(HX, HY, 0.f));
+	AddWallLine(ERoomDirection::Left, Center + FVector(-HX, -HY, 0.f), Center + FVector(HX, -HY, 0.f));
+	AddWallLine(ERoomDirection::Right, Center + FVector(-HX, HY, 0.f), Center + FVector(HX, HY, 0.f));
+	Dressing->Generate(DressingGraph, (int32)HashCombine(GetTypeHash(RandomStream ? RandomStream->GetInitialSeed() : 0), GetTypeHash(Coord)));
+	Dressings.Add(Dressing);
+}
+
+// Bound to each streamed room's OnLevelShown; unfreezes the game when the last one is in
 void ALevelBuilder::OnLoadedOneLevel()
 {
 	CountOfLevelsThatDidntFinishLoading--;
 	if (CountOfLevelsThatDidntFinishLoading == 0)
 	{
 		FTSTicker::GetCoreTicker().RemoveTicker(LoadingTimeout);
-		GetWorldSettings()->SetTimeDilation(1.0f);
+		OnRoomsReady();
 	}
 	// UE_LOG(LogTemp, Warning, TEXT("new level is loaded, %d levels left to load"), CountOfLevelsThatDidntFinishLoading);
 }

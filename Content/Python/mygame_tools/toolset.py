@@ -410,7 +410,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         works whatever builds the level.
 
         Returns:
-            JSON {"rooms", "walls", "doors", "room_masters", "enemies", "time_dilation"}.
+            JSON {"rooms", "walls", "doors", "room_masters", "enemies", "props", "time_dilation"}.
         """
         world = _pie_world()
         if not world:
@@ -434,13 +434,55 @@ class MyGameTools(unreal.ToolsetDefinition):
                  for d in actors("/Script/MyGame.Door")]
         masters = [{"coord": coord(m.get_actor_location()), "chars": len(m.get_editor_property("chars_to_kill"))}
                    for m in actors("/Script/MyGame.RoomMaster")]
+        # props per room: mesh name -> instance count, from each room dressing's PCG-spawned instance components
+        props = {}
+        for d in actors("/Script/MyGame.RoomDressing"):
+            room = props.setdefault(",".join(map(str, coord(d.get_actor_location()))), {})
+            for ism in d.get_components_by_class(unreal.InstancedStaticMeshComponent):
+                if ism.static_mesh and ism.get_instance_count():
+                    name = ism.static_mesh.get_name()
+                    room[name] = room.get(name, 0) + ism.get_instance_count()
         enemies = {}
         for c in actors("/Script/MyGame.MyCharacter"):
             if c.get_editor_property("team") == 1:
                 k = ",".join(map(str, coord(c.get_actor_location())))
                 enemies[k] = enemies.get(k, 0) + 1
-        return json.dumps({"room_size": [sx, sy], "rooms": rooms, "walls": walls, "doors": doors, "room_masters": masters, "enemies": enemies,
+        return json.dumps({"room_size": [sx, sy], "rooms": rooms, "walls": walls, "doors": doors, "room_masters": masters, "enemies": enemies, "props": props,
                            "time_dilation": unreal.GameplayStatics.get_global_time_dilation(world)})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def game_screenshot(name: str) -> str:
+        """Saves what the PIE game camera shows (HighResShot) to Saved/Screenshots; needs a rendering editor
+        (-RenderOffscreen). The file appears a frame or two later.
+
+        Args:
+            name: File name without extension.
+
+        Returns:
+            JSON {"requested": name}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        unreal.SystemLibrary.execute_console_command(world, f"HighResShot 1280x720 filename={name}")
+        return json.dumps({"requested": name})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def regenerate_dressings() -> str:
+        """Runs every room dressing's PCG graph again (after editing PCG_RoomDressing during PIE).
+
+        Returns:
+            JSON {"dressings": count}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        dressings = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.RoomDressing"))
+        for d in dressings:
+            d.get_component_by_class(unreal.PCGComponent).generate_local(True)
+        return json.dumps({"dressings": len(dressings)})
 
     @toolset_registry.tool_call
     @staticmethod
