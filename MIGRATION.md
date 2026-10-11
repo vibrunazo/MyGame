@@ -150,7 +150,8 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
      - That exposed a Phase 1 config line: a `GameFeatureData` asset scan, added to quiet GameFeatures in the editor. It hit an ensure in the game, which has no GameFeatures. Now it's editor-only.
      - `BP_AIContWizard` and `BP_AIContKicker` still carried the removed `PawnActionsComponent` (UE4's AAIController default subobject). Resaved.
    - **Smoke test:** the packaged game boots to the main menu. `MyGame.exe /Game/Maps/LevelPersistent -Seed=6032` builds the same level as the editor baseline: same rooms, 7 room masters. No errors or ensures.
-   - **Still to do:** a Shipping build, and your hands-on run through menu → floors → death.
+   - **Shipping** (`-clientconfig=Shipping`, into `Saved/PackagedShipping`, 613 MB) also builds. A seeded run was still running after 25 s with the level loaded (about 1.2 GB), and no crash report. Shipping writes no log, so the Development build is the one to debug.
+   - **Still to do:** your hands-on run through menu → floors → death.
    - **Known flake:** `super_kick_tat` once landed an extra hit (60 damage instead of 48) and travelled 95 cm instead of about 150, under the 100 cm `moved` threshold. The rerun matched the baseline. It's frame timing against the dummy, not a regression.
 
 ## Starting point
