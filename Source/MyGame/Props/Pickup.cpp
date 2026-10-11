@@ -50,6 +50,7 @@ APickup::APickup()
 	// Blueprint'/Game/UI/BP_WidgetActor.BP_WidgetActor'
 	// Blueprint'/Game/UI/BP_UMGActor.BP_UMGActor'
 	// Soft path: loading Blueprints from a native constructor deadlocks UE5's loader
+	// a path the cooker can't see: /Game/Blueprints/PAL_CodeReferenced always cooks it (keep them in sync)
 	WidgetActorClass = TSoftClassPtr<AWidgetActor>(FSoftObjectPath(TEXT("/Game/UI/BP_UMGActor.BP_UMGActor_C")));
 
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));

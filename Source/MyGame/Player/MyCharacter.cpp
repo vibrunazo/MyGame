@@ -4,6 +4,7 @@
 #include "../MyGameplayTags.h"
 #include "EnemyCharBase.h"
 #include "MyPlayerController.h"
+#include "MyAIController.h"
 #include "../MyGameInstance.h"
 #include "../Abilities/LootComponent.h"
 #include "../Level/LevelBuilder.h"
@@ -124,10 +125,8 @@ void AMyCharacter::SetDefaultProperties()
 	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, -140.0f));
 	HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
 
-	// Soft paths only: loading Blueprints from a native constructor deadlocks UE5's loader.
-	// Resolved in OnConstruction / PostInitializeComponents.
-	DefaultAnimClass = TSoftClassPtr<UAnimInstance>(FSoftObjectPath(TEXT("/Game/Anims/ABP_CharAnim.ABP_CharAnim_C")));
-	DefaultAIControllerClass = TSoftClassPtr<AController>(FSoftObjectPath(TEXT("/Game/Blueprints/AI/BP_AIController.BP_AIController_C")));
+	// The anim class and the AI controller are set on the character Blueprints, not here: a path in native code
+	// isn't a reference the cooker can see, so the packaged game would lack the asset
 	Team = 0;
 }
 
@@ -205,16 +204,6 @@ void AMyCharacter::MoveRight(float Value)
 		FVector CurVector = FVector(ForwardAxis, RightAxis, 0.0f);
 		if (GetController()) GetController()->SetControlRotation(CurVector.Rotation());
 	}
-}
-
-void AMyCharacter::PostInitializeComponents()
-{
-	// Still the engine default means this Blueprint didn't choose a controller; must be set before Super spawns it
-	if (AIControllerClass == GetDefault<APawn>()->AIControllerClass && !DefaultAIControllerClass.IsNull())
-	{
-		AIControllerClass = DefaultAIControllerClass.LoadSynchronous();
-	}
-	Super::PostInitializeComponents();
 }
 
 UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
@@ -296,10 +285,6 @@ void AMyCharacter::Tick(float DeltaSeconds)
 void AMyCharacter::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	if (!GetMesh()->GetAnimClass() && !DefaultAnimClass.IsNull())
-	{
-		GetMesh()->SetAnimInstanceClass(DefaultAnimClass.LoadSynchronous());
-	}
 	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
 	ResetBodyColor();
 }
@@ -392,6 +377,11 @@ void AMyCharacter::PossessedBy(AController* NewController)
 	Super::PossessedBy(NewController);
 	// refresh the ASC's actor info (player controller) now that we have a controller
 	if (AbilitySystem) AbilitySystem->InitAbilityActorInfo(this, this);
+	// a plain engine controller means the Blueprint's AI controller is missing (unset, or not in a packaged build)
+	if (NewController && !NewController->IsA<APlayerController>() && !NewController->IsA<AMyAIController>())
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s has no game AI: possessed by %s"), *GetName(), *NewController->GetClass()->GetName());
+	}
 }
 
 void AMyCharacter::LearnAbility(FAbilityStruct Ability)

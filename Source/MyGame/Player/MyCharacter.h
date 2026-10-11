@@ -47,7 +47,6 @@ public:
 	void FellOutOfWorld(const UDamageType& dmgType) override;
 	void OnConstruction(const FTransform& Transform) override;
 	void PossessedBy(AController* NewController) override;
-	void PostInitializeComponents() override;
 
 	virtual void SetDefaultProperties();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -209,12 +208,6 @@ public:
 	class UBoxComponent* TargetDetection;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	uint8 Team = 0;
-	// Used when the mesh has no anim class of its own
-	UPROPERTY(EditDefaultsOnly, Category = "Defaults")
-	TSoftClassPtr<UAnimInstance> DefaultAnimClass;
-	// Used when this Blueprint leaves AIControllerClass at the engine default
-	UPROPERTY(EditDefaultsOnly, Category = "Defaults")
-	TSoftClassPtr<AController> DefaultAIControllerClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	bool StunImmune = false;
 	uint8 HitStunCount = 0;

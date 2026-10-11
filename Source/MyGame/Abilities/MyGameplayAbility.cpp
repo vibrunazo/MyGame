@@ -28,6 +28,7 @@
 UMyGameplayAbility::UMyGameplayAbility()
 {
     // Soft path: loading Blueprints from a native constructor deadlocks UE5's loader
+    // a path the cooker can't see: /Game/Blueprints/PAL_CodeReferenced always cooks it (keep them in sync)
     HitBoxClass = TSoftClassPtr<AHitBox>(FSoftObjectPath(TEXT("/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C")));
 }
 

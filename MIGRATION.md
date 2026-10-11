@@ -155,6 +155,13 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
    - **Smoke test:** the packaged game boots to the main menu. `MyGame.exe /Game/Maps/LevelPersistent -Seed=6032` builds the same level as the editor baseline: same rooms, 7 room masters. No errors or ensures.
    - **Shipping** (`-clientconfig=Shipping`, into `Saved/PackagedShipping`, 613 MB) also builds. A seeded run was still running after 25 s with the level loaded (about 1.2 GB), and no crash report. Shipping writes no log, so the Development build is the one to debug.
    - **Still to do:** your hands-on run through menu → floors → death.
+   - **Fixed 2026-10-11: enemies idle in the packaged game (fine in PIE).**
+     - **Cause:** Phase 1 had swapped constructor asset loads (UE5 deadlocks on them) for soft paths set in native code: `DefaultAIControllerClass` and `DefaultAnimClass`. A path in native code isn't a reference the cooker sees, so `BP_AIController` never shipped, and Enemy1/2/3 got a plain AIController with no behavior tree. PIE loads anything from disk, so it never showed.
+     - **Fix:** the controller and anim class are now set on the character Blueprints (`BP_EnemyBase` and every enemy, `BP_Char`), and the native fallbacks are deleted.
+     - **Same pattern elsewhere:** `HitBoxClass` and `APickup::WidgetActorClass`. Their assets shipped by luck through other references. Now `/Game/Blueprints/PAL_CodeReferenced`, a Primary Asset Label made by `Tools/create_code_referenced_label.py`, always cooks them. Any new `TEXT("/Game/...")` path in C++ goes there too.
+     - **Guard:** `AMyCharacter::PossessedBy` logs an error when an enemy gets anything but the game's AI controller.
+     - **Smoke test:** `Tests/package_smoke.py` boots the packaged Development build (menu, then a seeded run) and checks the game's log: map loaded, every room in, no missing packages, no errors or ensures, no enemy without AI. All pass.
+     - **Gotcha:** a game process left running from `Saved/Packaged` locks the exe, and BuildCookRun's archive step then silently keeps the old one. The smoke test now kills leftovers first.
    - **Known flake:** `super_kick_tat` once landed an extra hit (60 damage instead of 48) and travelled 95 cm instead of about 150, under the 100 cm `moved` threshold. The rerun matched the baseline. It's frame timing against the dummy, not a regression.
 
 ## Starting point
