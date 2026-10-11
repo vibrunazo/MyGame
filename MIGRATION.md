@@ -141,6 +141,17 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
      - a new run back to floor 1 with starting moves only;
      - main menu and back.
    - All pass. The ability and level regressions are unchanged.
+2. **Keyboard and gamepad:** needs your play-test with real devices. Input injection covers the bindings, not the devices. Also play-test the no-control-after-the-flag fix there.
+3. **Done: Win64 package.**
+   - **Settings:** the packaging settings were still 4.25's: a staging path into the old 4.25 folder, and loose files without pak or IoStore. Now: pak + IoStore, compressed, and `MapsToCook` lists MainMenu and LevelPersistent. The room maps come in through the always-cooked room data assets.
+   - **Command:** `RunUAT BuildCookRun -platform=Win64 -clientconfig=Development -build -cook -stage -pak -iostore -archive -archivedirectory=Saved/Packaged` takes about 7.5 minutes and produces about 960 MB.
+   - **Fixed while packaging:**
+     - The MCP plugin and its toolsets have Runtime modules, so they shipped inside the game. They're now `TargetAllowList: Editor` in the .uproject.
+     - That exposed a Phase 1 config line: a `GameFeatureData` asset scan, added to quiet GameFeatures in the editor. It hit an ensure in the game, which has no GameFeatures. Now it's editor-only.
+     - `BP_AIContWizard` and `BP_AIContKicker` still carried the removed `PawnActionsComponent` (UE4's AAIController default subobject). Resaved.
+   - **Smoke test:** the packaged game boots to the main menu. `MyGame.exe /Game/Maps/LevelPersistent -Seed=6032` builds the same level as the editor baseline: same rooms, 7 room masters. No errors or ensures.
+   - **Still to do:** a Shipping build, and your hands-on run through menu → floors → death.
+   - **Known flake:** `super_kick_tat` once landed an extra hit (60 damage instead of 48) and travelled 95 cm instead of about 150, under the 100 cm `moved` threshold. The rerun matched the baseline. It's frame timing against the dummy, not a regression.
 
 ## Starting point
 
