@@ -76,9 +76,21 @@ void UMyGameInstance::DoCamShake(float Intensity)
     UGameplayStatics::PlayWorldCameraShake(GetWorld(), CamShakeClass, Loc, 0.0f, 100.f);
 }
 
-void UMyGameInstance::OnGameOver()
+void UMyGameInstance::StartNewRun()
 {
     NewGame();
+    UGameplayStatics::OpenLevelBySoftObjectPtr(this, RunMap);
+}
+
+void UMyGameInstance::NextFloor()
+{
+    LevelDifficulty++;
+    UGameplayStatics::OpenLevelBySoftObjectPtr(this, RunMap);
+}
+
+void UMyGameInstance::QuitToMainMenu()
+{
+    UGameplayStatics::OpenLevelBySoftObjectPtr(this, MainMenuMap);
 }
 
 void UMyGameInstance::NewGame()
@@ -87,6 +99,7 @@ void UMyGameInstance::NewGame()
     Health = 100.f;
     Mana = 40.f;
     Inventory.Empty();
+    CarriedAbilities.Empty();
 
     // TODO this might be called after the game is over, before the new game actually starts, which might cause random stream to desync?
     // -Seed=N on the command line replays a run (bug reports, tests); otherwise RandomSeed, 0 meaning a new one
@@ -98,22 +111,12 @@ void UMyGameInstance::NewGame()
 	UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
 }
 
-void UMyGameInstance::LevelClear(FString NextMapUrl)
-{
-    LevelDifficulty++;
-    UWorld* LeMundi = GetWorld();
-	if (!LeMundi) return;
-	LeMundi->ServerTravel(NextMapUrl);
-}
-
-/// <summary>
-/// Called when level ends before going to the next one
-/// </summary>
 void UMyGameInstance::StoreCharStats()
 {
     if (PlayerCharRef)
     {
         Health = PlayerCharRef->GetAttributes()->GetHealth();
         Mana = PlayerCharRef->GetAttributes()->GetMana();
+        CarriedAbilities = PlayerCharRef->Abilities;
     }
 }

@@ -452,6 +452,85 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def run_state() -> str:
+        """The run as the game instance and the PIE world see it: map, floor difficulty, seed, carried health and
+        mana, items, and the player's learned abilities and current attributes.
+
+        Returns:
+            JSON {"map", "difficulty", "seed", "gi_health", "gi_mana", "items", "abilities", "player"}; "player" is
+            null when no player character is possessed (between levels, after death).
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        gi = unreal.GameplayStatics.get_game_instance(world)
+        def prop(name):
+            try:
+                return gi.get_editor_property(name)
+            except Exception:
+                return None
+        stream = prop("random_stream")
+        state = {"map": unreal.GameplayStatics.get_current_level_name(world), "difficulty": prop("level_difficulty"),
+                 "seed": stream.get_editor_property("initial_seed") if stream else None,
+                 "gi_health": prop("health"), "gi_mana": prop("mana"),
+                 "items": sorted(i.get_name() for i in prop("inventory") or [] if i), "abilities": None, "player": None}
+        pawn = unreal.GameplayStatics.get_player_pawn(world, 0)
+        if pawn and hasattr(pawn, "learn_abilities"):  # a MyCharacter, not the spectator pawn shown after the level ends
+            state["abilities"] = sorted(f'{a.get_editor_property("ability_class").get_name()}@{a.get_editor_property("input")}'
+                                        for a in pawn.get_editor_property("abilities") if a.get_editor_property("ability_class"))
+            attrs = pawn.get_editor_property("attribute_set_base")
+            state["player"] = {n: attrs.get_editor_property(n.lower()).get_editor_property("current_value") for n in ("Health", "MaxHealth", "Mana")}
+        state["widgets"] = sorted({w.get_class().get_name() for w in unreal.ObjectIterator(unreal.UserWidget)
+                                   if w.get_world() == world and w.is_in_viewport()})
+        return json.dumps(state)
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def hud_ability_icons(slots: str = "") -> str:
+        """The icon texture each HUD ability button shows (WBP_HUD's buttons, set up from the abilities' UI data).
+
+        Args:
+            slots: Comma-separated EInput values (default: 0-3 and their Super +10 and Ultra +20 versions).
+
+        Returns:
+            JSON {slot: icon texture name or null}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        hud = next((w for w in unreal.ObjectIterator(unreal.UserWidget)
+                    if w.get_world() == world and w.get_class().get_name() == "WBP_HUD_C"), None)
+        if not hud:
+            raise RuntimeError("no HUD")
+        out = {}
+        for slot in [int(x) for x in slots.split(",") if x.strip()] or [0, 1, 2, 3, 10, 11, 12, 20, 21, 22]:
+            button = hud.call_method("GetButtonReffromIndex", (slot,))
+            icon = button.get_editor_property("Icon") if button else None
+            res = icon.get_editor_property("brush").get_editor_property("resource_object") if icon else None
+            out[str(slot)] = res.get_name() if res else None
+        return json.dumps(out)
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def run_action(action: str) -> str:
+        """Calls the game instance's run flow, as the menu buttons do.
+
+        Args:
+            action: start_new_run, next_floor or quit_to_main_menu.
+
+        Returns:
+            JSON {"called": action}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        if action not in ("start_new_run", "next_floor", "quit_to_main_menu"):
+            raise ValueError(f"unknown action {action}")
+        getattr(unreal.GameplayStatics.get_game_instance(world), action)()
+        return json.dumps({"called": action})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def game_screenshot(name: str) -> str:
         """Saves what the PIE game camera shows (HighResShot) to Saved/Screenshots; needs a rendering editor
         (-RenderOffscreen). The file appears a frame or two later.

@@ -125,6 +125,23 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
 
 **Phase 4 is done** (2026-10-11).
 
+## Phase 5 status (started 2026-10-11)
+
+1. **Done: the game loop.**
+   - The game instance owns the run's flow: `StartNewRun` (resets the run and opens `RunMap`), `NextFloor` (the flag; one floor harder, same run) and `QuitToMainMenu`. It also owns the maps, as soft references set on `BP_MyGI`.
+   - The main menu, game over and pause menu buttons call these. That replaces three Blueprints' hard-coded `OpenLevel` strings and the goal's `NextMapUrl`, which was empty and just reloaded the map.
+   - Death no longer resets the run on the spot; the next `StartNewRun` does.
+   - The packaged game now starts in `MainMenu` (`GameDefaultMap`). The editor still opens `LevelPersistent`.
+   - **Bug fixed:** learned moves (books) were lost on the next floor, while health, mana and items carried over. The game instance now stores the player's moves when the floor is cleared, and the next floor's character starts with them. The HUD refreshes its buttons from the character's moves (skipping dash and air moves, which share a button).
+   - **Test:** `Tests/loop_regression.py` checks each step:
+     - no control after the flag;
+     - floor 2 one room bigger;
+     - health 70, items and a book's move carried over;
+     - the game over screen;
+     - a new run back to floor 1 with starting moves only;
+     - main menu and back.
+   - All pass. The ability and level regressions are unchanged.
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.

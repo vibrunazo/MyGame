@@ -151,6 +151,18 @@ void AMyPlayerController::ShowHUD()
     if (!HUDWidget) return;
     HUDWidgetRef = CreateWidget<UMyHUDWidget>(this, HUDWidget);
     HUDWidgetRef->AddToViewport();
+    RefreshHUDAbilities(GetPawn<AMyCharacter>());
+}
+
+void AMyPlayerController::RefreshHUDAbilities(AMyCharacter* Char)
+{
+    if (!Char || !HUDWidgetRef) return;
+    for (const FAbilityStruct& Ability : Char->Abilities)
+    {
+        // no slot (dash), or an air move sharing its slot with the ground move the button shows
+        if (Ability.Input == EInput::None || AMyCharacter::IsAirAbility(Ability.AbilityClass)) continue;
+        UpdateHUDAbility(Ability, true);
+    }
 }
 
 void AMyPlayerController::ShowLevelIntro()
@@ -278,13 +290,8 @@ void AMyPlayerController::OnCharDies(AMyCharacter* CharRef)
 	AMyDefaultPawn* MyPawn = GetWorld()->SpawnActor<AMyDefaultPawn>(AMyDefaultPawn::StaticClass(), Loc, FRotator::ZeroRotator, params);
     DefaultPawnRef = MyPawn;
     SetViewTargetWithBlend(DefaultPawnRef, 3.0f);
+    // the run resets when the next one starts (UMyGameInstance::StartNewRun from the game over screen)
     ShowGameOver();
-    if (!GetGameInstance()) return;
-    UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
-	if (GI)
-	{
-		GI->OnGameOver();
-	}
 }
 
 void AMyPlayerController::OnDelayedCharDies(AMyCharacter* CharRef)

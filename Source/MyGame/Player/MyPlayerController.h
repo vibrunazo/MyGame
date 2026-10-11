@@ -51,6 +51,8 @@ public:
 	void ShowAbilityCooldown(uint8 Index, float Cooldown);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	void UpdateHUDAbility(FAbilityStruct Ability, bool NewState);
+	// Every move the character knows on the HUD (a later floor starts with carried moves, not the defaults)
+	void RefreshHUDAbilities(class AMyCharacter* Char);
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	void SetSuperMod(bool NewState);
 	UFUNCTION(BlueprintCallable, Category = BaseController)

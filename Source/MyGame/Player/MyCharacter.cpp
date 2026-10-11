@@ -228,10 +228,16 @@ void AMyCharacter::BeginPlay()
 	if(!AbilitySystem) return;
 	AbilitySystem->InitAbilityActorInfo(this, this);
 	AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
+	// on later floors the player starts with the moves carried from the last one, learned books included
+	if (IsPlayerControlled() && GetMyGameInstance() && GetMyGameInstance()->CarriedAbilities.Num() > 0)
+	{
+		Abilities = GetMyGameInstance()->CarriedAbilities;
+	}
 	for (auto &&Ability : Abilities)
 	{
 		GiveAbility(Ability.AbilityClass);
 	}
+	if (AMyPlayerController* MyCont = GetController<AMyPlayerController>()) MyCont->RefreshHUDAbilities(this);
 	if (!ensure(AttributeSetBase != nullptr)) return;
 	if (!ensure(GetCharacterMovement() != nullptr)) return;
 	AttributeSetBase->SetMaxHealth(MaxHealth);

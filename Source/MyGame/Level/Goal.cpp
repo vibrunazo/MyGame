@@ -77,6 +77,6 @@ void AGoal::OnDelayedOpenLevel()
 	UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance());
 	if (GI)
 	{
-		GI->LevelClear(NextMapUrl);
+		GI->NextFloor();
 	}
 }

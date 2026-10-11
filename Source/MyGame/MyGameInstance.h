@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "MyBlueprintFunctionLibrary.h"
 #include "MyGameInstance.generated.h"
 
 /**
@@ -19,12 +20,17 @@ public:
 
 	void Init() override;
 
+	// The run's flow: menu -> StartNewRun -> NextFloor after each boss -> death or quit -> menu
 	UFUNCTION(BlueprintCallable, Category="MyGI")
-	void OnGameOver();
+	void StartNewRun();
+	// The floor is cleared: one floor harder, same run (health, mana, items and learned moves carry over)
 	UFUNCTION(BlueprintCallable, Category="MyGI")
+	void NextFloor();
+	UFUNCTION(BlueprintCallable, Category="MyGI")
+	void QuitToMainMenu();
+	// Resets the run state (floor 1, full health, no items or learned moves, a new seed)
 	void NewGame();
-	UFUNCTION(BlueprintCallable, Category="MyGI")
-	void LevelClear(FString NextMapUrl);
+	// What carries over to the next floor, taken from the player when the floor is cleared
 	void StoreCharStats();
 	void SetCharRef(class AMyCharacter* NewRef);
 	TArray<FString> GetItemsICannotGetMoreOf();
@@ -39,18 +45,26 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UGameplayEffect> NoControlEffectRef;
 
+	// The generated level a run plays on, and the main menu
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyGI)
+	TSoftObjectPtr<UWorld> RunMap;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyGI)
+	TSoftObjectPtr<UWorld> MainMenuMap;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	uint8 LevelDifficulty = 0;
-	UPROPERTY()
+	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
 	float Health = 100.f;
-	UPROPERTY()
+	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
 	float Mana = 100.f;
+	// The player's moves, learned books included; empty until the first floor is cleared
+	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
+	TArray<struct FAbilityStruct> CarriedAbilities;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<class UItemDataAsset*> Inventory;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)
 	class AMyCharacter* PlayerCharRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	int32 RandomSeed = 0;
-	UPROPERTY()
+	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
 	FRandomStream RandomStream;
 };

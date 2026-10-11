@@ -34,8 +34,6 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Goal)
 	class UBoxComponent* BoxCollision;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Goal)
-	FString NextMapUrl = "";
 private:
 	bool bIsEnabled = false;
 	bool bIsCleared = false;
