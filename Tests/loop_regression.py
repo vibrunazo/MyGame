@@ -11,6 +11,8 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
   game_over     dying shows the game over screen
   new_run       a new run is floor 1 again: full health, no items, starting moves only
   menu          quitting goes to the main menu, and a new run from there loads the level
+  input_mode    every level a run plays starts in Game Only input (injected input skips Slate focus, so a level
+                left in the menu's UI Only mode would pass every other check while real keys and pads do nothing)
 """
 import json
 import sys
@@ -123,6 +125,10 @@ def run(out):
     back = wait_for(lambda s: s["map"] == "LevelPersistent" and s["player"])
     check("menu", menu and menu["map"] == "MainMenu" and back and back["map"] == "LevelPersistent",
           f'{menu and menu["map"]} -> {back and back["map"]}, widgets in menu {menu and menu["widgets"]}')
+    modes = {"floor 2": floor2_state["input_mode"], "game over": over and over["input_mode"],
+             "new run": fresh["input_mode"], "main menu": menu and menu["input_mode"], "run from menu": back and back["input_mode"]}
+    check("input_mode", all((modes[k] or "").startswith("Game Only") for k in ("floor 2", "new run", "run from menu")),
+          str({k: v and v.split(" (")[0] for k, v in modes.items()}))
 
     with open(out, "w") as f:
         json.dump(results, f, indent=1)

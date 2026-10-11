@@ -24,6 +24,10 @@ void AMyPlayerController::BeginPlay()
     {
         if (DefaultMappingContext) Input->AddMappingContext(DefaultMappingContext, 0);
     }
+    // the input mode lives on the viewport and outlives a level: the menu and the game over screen leave it on
+    // UI only, so a game level takes it back (the main menu has its own controller, AMenuController)
+    SetInputMode(FInputModeGameOnly());
+    SetShowMouseCursor(false);
     ShowHUD();
     ShowLevelIntro();
 }
@@ -140,6 +144,8 @@ void AMyPlayerController::OnPausePressed()
         if (PauseWidgetRef) PauseWidgetRef->BPOnEnd();
         // if (PauseWidgetRef) PauseWidgetRef->RemoveFromParent();
         UGameplayStatics::SetGamePaused(GetWorld(), false);
+        SetInputMode(FInputModeGameOnly());
+        SetShowMouseCursor(false);
         bIsPaused = false;
 
     }

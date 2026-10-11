@@ -457,8 +457,9 @@ class MyGameTools(unreal.ToolsetDefinition):
         mana, items, and the player's learned abilities and current attributes.
 
         Returns:
-            JSON {"map", "difficulty", "seed", "gi_health", "gi_mana", "items", "abilities", "player"}; "player" is
-            null when no player character is possessed (between levels, after death).
+            JSON {"map", "difficulty", "seed", "gi_health", "gi_mana", "items", "abilities", "player", "input_mode",
+            "widgets"}; "player" is null when no player character is possessed (between levels, after death);
+            "input_mode" is the controller's last SetInputMode ("Game Only" is the only one real keys and pads reach).
         """
         world = _pie_world()
         if not world:
@@ -480,6 +481,8 @@ class MyGameTools(unreal.ToolsetDefinition):
                                         for a in pawn.get_editor_property("abilities") if a.get_editor_property("ability_class"))
             attrs = pawn.get_editor_property("attribute_set_base")
             state["player"] = {n: attrs.get_editor_property(n.lower()).get_editor_property("current_value") for n in ("Health", "MaxHealth", "Mana")}
+        pc = unreal.GameplayStatics.get_player_controller(world, 0)
+        state["input_mode"] = pc.get_input_mode_for_test() if pc and hasattr(pc, "get_input_mode_for_test") else None
         state["widgets"] = sorted({w.get_class().get_name() for w in unreal.ObjectIterator(unreal.UserWidget)
                                    if w.get_world() == world and w.is_in_viewport()})
         return json.dumps(state)

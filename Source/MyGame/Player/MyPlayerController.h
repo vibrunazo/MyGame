@@ -70,6 +70,9 @@ public:
 	// PIE test hook: holds an input action at Value (as a key or stick would) until called with bHeld = false
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	void InjectTestInput(UInputAction* Action, FVector2D Value, bool bHeld);
+	// PIE test hook: the input mode last set ("Game Only", "UI Only", ...); real keys and pads only reach the game in Game Only
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	FString GetInputModeForTest() const { return GetCurrentInputModeDebugString(); }
 #endif
 
 	UPROPERTY()
