@@ -203,42 +203,7 @@
   "0,1": 1,
   "0,2": 3
  },
- "props": {
-  "-1,2": {
-   "SM_PropBarrel": 1
-  },
-  "-1,3": {
-   "SM_PropCrate": 2,
-   "SM_PropPillar": 4
-  },
-  "-1,4": {
-   "SM_PropBarrel": 1,
-   "SM_PropCrate": 3,
-   "SM_PropPillar": 2,
-   "SM_PropRocks": 5
-  },
-  "0,0": {
-   "SM_PropBarrel": 2,
-   "SM_PropCrate": 1,
-   "SM_PropPillar": 2,
-   "SM_PropRocks": 2
-  },
-  "0,1": {
-   "SM_PropBarrel": 3,
-   "SM_PropCrate": 3,
-   "SM_PropRocks": 1
-  },
-  "0,2": {
-   "SM_PropBarrel": 2,
-   "SM_PropCrate": 4,
-   "SM_PropRocks": 3
-  },
-  "0,3": {
-   "SM_PropBarrel": 2,
-   "SM_PropCrate": 5,
-   "SM_PropRocks": 2
-  }
- },
+ "props": {},
  "unfrozen": true,
  "doored_flow": {
   "room": [

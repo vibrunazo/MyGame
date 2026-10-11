@@ -121,6 +121,9 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
      - The Spline Sampler clips points to the component's own shape unless `bUnbounded` is set.
      - `AssetTools.save_assets` claims an asset doesn't exist while PIE runs.
    - **Moved:** the wall cutaway (a camera-facing fade instead of rebuilding wall heights) goes to Phase 6 with the camera.
+   - **On hold (2026-10-11, your call):** you didn't like the props. Theme decisions come first, since everything is placeholder art. The dressing is off (`BP_LevelBuilder.DressingGraph` is empty) and the code and graph are kept. The level baselines record no props. To turn it back on, set `DressingGraph` to `/Game/PCG/PCG_RoomDressing` and re-record the baselines.
+
+**Phase 4 is done** (2026-10-11).
 
 ## Starting point
 
