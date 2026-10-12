@@ -59,7 +59,7 @@ def walk_until(f, r, done, limit=8.0):
 def demo():
     # seed 6032: the start room is two tiles wide (0,0 and 0,1); a door at the top of tile 0,1 (x 700, y 2000) leads
     # into the closed room 1,1
-    walk_until(0, 1, lambda x, y: y >= 2000)   # walk right across the start room: the camera slides along with you
+    walk_until(0, 1, lambda x, y: y >= 1880)   # walk right across the start room (stopping in line with the door)
     wait(0.8)
     press("Cast")                               # stop and throw a fireball
     wait(1.2)
@@ -106,7 +106,7 @@ def main(out, label=""):
     for c in tool("list_characters"):  # frozen, so the walk reaches the next room (it's a camera demo, not a fight)
         if c["team"] == 1:
             tool("set_ai_enabled", actor_path=c["path"], enabled=False, show_player=False)
-    time.sleep(20)  # new shaders (the room darkness) finish compiling before the first frame
+    time.sleep(60)  # new shaders (the room darkness) finish compiling before the first frame
     name = f"camvid_{int(time.time())}"
     tool("video_frames", action="start", prefix=name, slowdown=SLOW)
     try:
