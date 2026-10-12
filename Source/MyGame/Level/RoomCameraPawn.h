@@ -95,6 +95,17 @@ public:
 	// Seconds the camera takes to catch up with the focus (critically damped: eases in and out, never overshoots)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framed")
 	float SmoothTime = 0.35f;
+	// How far ahead the camera looks in the direction the player has been moving, to see enemies coming (and shoot
+	// them from afar). It follows travel, not facing: turning around in a fight doesn't swing it, and it stays when the
+	// player stops
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framed")
+	float LookAhead = 400.f;
+	// Seconds of moving one way before the look-ahead switches to that way
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framed")
+	float LookAheadDelay = 0.4f;
+	// The look-ahead's own smoothing (slower than the follow, so it glides over instead of snapping)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framed")
+	float LookAheadSmoothTime = 0.8f;
 
 private:
 	void FollowPlayer(float DeltaTime);
@@ -103,6 +114,12 @@ private:
 	// Where the dead zone is centered, and the camera's speed for the damping
 	FVector Focus = FVector::ZeroVector;
 	FVector SmoothVelocity = FVector::ZeroVector;
+	// The direction the player has kept moving in, how long, and the look-ahead the camera is easing toward
+	FVector MoveDirection = FVector::ZeroVector;
+	float MoveTime = 0.f;
+	FVector LookAheadTarget = FVector::ZeroVector;
+	FVector LookAheadOffset = FVector::ZeroVector;
+	FVector LookAheadVelocity = FVector::ZeroVector;
 	bool bFramedStarted = false;
 	FVector GetRoomDistance(); 
 	FVector GetRoomSize(); 

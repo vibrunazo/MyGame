@@ -229,7 +229,8 @@ void ARoomCameraPawn::FollowPlayerFramed(float DeltaTime)
 	if (!bFramedStarted)
 	{
 		Focus = Player;
-		SmoothVelocity = FVector::ZeroVector;
+		SmoothVelocity = LookAheadVelocity = LookAheadTarget = LookAheadOffset = MoveDirection = FVector::ZeroVector;
+		MoveTime = 0.f;
 	}
 	// the dead zone: drag the focus only by how far the player is past the box's edge
 	const float DX = Player.X - Focus.X, DY = Player.Y - Focus.Y;
@@ -239,9 +240,20 @@ void ARoomCameraPawn::FollowPlayerFramed(float DeltaTime)
 	const UCharacterMovementComponent* Movement = PlayerRef->GetCharacterMovement();
 	if (!bFramedStarted || (Movement && Movement->IsMovingOnGround())) Focus.Z = Player.Z;
 
+	// look ahead where the player has been heading for a moment; standing still (fighting, shooting) keeps it
+	const FVector Velocity2D = FVector(PlayerRef->GetVelocity().X, PlayerRef->GetVelocity().Y, 0.f);
+	if (Velocity2D.Size() > 100.f)
+	{
+		const FVector Direction = Velocity2D.GetSafeNormal();
+		MoveTime = (FVector::DotProduct(Direction, MoveDirection) > 0.7f) ? MoveTime + DeltaTime : 0.f;
+		if (MoveTime == 0.f) MoveDirection = Direction;
+		if (MoveTime >= LookAheadDelay) LookAheadTarget = MoveDirection * LookAhead;
+	}
+	LookAheadOffset = SmoothDamp(LookAheadOffset, LookAheadTarget, LookAheadVelocity, LookAheadSmoothTime, DeltaTime);
+
 	// don't look past a room's walls (the same clamps as the old follow)
 	const FVector RoomPosition = GetRoomDistance();
-	FVector Goal = Focus;
+	FVector Goal = Focus + LookAheadOffset;
 	if (bIsWalledRight) Goal.Y = FMath::Min(Goal.Y, RoomPosition.Y + WallClampRight);
 	if (bIsWalledLeft) Goal.Y = FMath::Max(Goal.Y, RoomPosition.Y - WallClampLeft);
 	if (bIsWalledTop) Goal.X = FMath::Min(Goal.X, RoomPosition.X + WallClampTop);

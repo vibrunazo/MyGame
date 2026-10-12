@@ -14,6 +14,19 @@ from toolset_registry.registration import Registration
 
 _ATTRIBUTES = ("Health", "MaxHealth", "Mana", "MaxMana", "Attack", "Defense", "Speed", "AttackSpeed", "RotSpeed")
 
+# video_frames: a screenshot request every PIE frame, with its game time
+_vid = {"handle": None, "frames": [], "name": "", "t0": 0.0}
+
+
+def _vid_tick(delta_seconds):
+    world = _pie_world()
+    if not world:
+        return
+    n = len(_vid["frames"])
+    unreal.SystemLibrary.execute_console_command(world, f"HighResShot 1280x720 filename={_vid['name']}_{n:05d}")
+    _vid["frames"].append(round(unreal.GameplayStatics.get_time_seconds(world) - _vid["t0"], 4))
+
+
 # camera_record: samples taken every editor tick while recording (one per PIE frame)
 _cam_rec = {"handle": None, "samples": [], "t0": 0.0}
 
@@ -568,6 +581,37 @@ class MyGameTools(unreal.ToolsetDefinition):
             raise RuntimeError("PIE is not running")
         unreal.SystemLibrary.execute_console_command(world, f"MyGame.LegacyCamera {1 if legacy else 0}")
         return json.dumps({"legacy": legacy})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def video_frames(action: str, prefix: str = "vid", slowdown: float = 0.25) -> str:
+        """Records the game camera as numbered screenshots, one per PIE frame (Saved/Screenshots/<platform>/<prefix>_NNNNN.png),
+        with the game time of each, for turning into a video. Needs a rendering editor (-RenderOffscreen). Slows the
+        game down while recording so every frame gets captured; scale scripted waits by 1/slowdown.
+
+        Args:
+            action: "start" or "stop".
+            prefix: File name prefix.
+            slowdown: Global time dilation while recording.
+
+        Returns:
+            "start": JSON {"recording": name}. "stop": JSON {"name", "times"} (game seconds per frame index).
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        if action == "start":
+            if _vid["handle"]:
+                unreal.unregister_slate_post_tick_callback(_vid["handle"])
+            unreal.GameplayStatics.set_global_time_dilation(world, slowdown)
+            _vid.update(frames=[], name=prefix, t0=unreal.GameplayStatics.get_time_seconds(world))
+            _vid["handle"] = unreal.register_slate_post_tick_callback(_vid_tick)
+            return json.dumps({"recording": prefix})
+        if _vid["handle"]:
+            unreal.unregister_slate_post_tick_callback(_vid["handle"])
+            _vid["handle"] = None
+        unreal.GameplayStatics.set_global_time_dilation(world, 1.0)
+        return json.dumps({"name": _vid["name"], "times": _vid["frames"]})
 
     @toolset_registry.tool_call
     @staticmethod

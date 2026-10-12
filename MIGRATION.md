@@ -186,6 +186,8 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
    - critically damped smoothing (0.35 s, no overshoot) instead of the spring arm's lag;
    - the old wall clamps and the fixed 40° angle.
    - **Measured:** 0 camera movement while turning, punching or jumping in place. Walking moves it 0.6 times the player's distance, and a room change pans into the new room. Reference: `Tests/baselines/camera_framed.json`.
+   - **Look-ahead restored (2026-10-12):** the 2020 look-ahead was there so you can see enemies ahead and shoot fireballs from afar. The first framed version dropped it, and with the dead zone it even trailed behind. Now it follows travel, not facing: after 0.4 s of moving one way, the view eases 500 ahead that way (0.8 s glide), and it stays when you stop to shoot. Turning, punching and jumping in place still move the camera 0. Steady look-ahead is about 300, the same as the old camera's standing value.
+   - **Video:** `Tests/camera_video.py` records the same scripted run for either camera. It slows the game, screenshots every frame and resamples to 30 fps of game time. A/B page: https://claude.ai/artifact/Au6ZRCPXHLxyk7fAqPTcRs
 3. **Your pick, by feel:** the packaged Development build defaults to the framed follow. The console (`~`, or the key left of 1) with `MyGame.LegacyCamera 1` switches back to the 2020 follow, and `0` returns to the new one. Once you pick, the switch and the losing follow get deleted. The tuning knobs are `DeadZone` and `SmoothTime` on `BP_RoomCameraPawn`.
 4. **Not started:**
    - framing that also keeps the enemies in view (only if the dead zone alone isn't enough);

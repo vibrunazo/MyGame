@@ -15,7 +15,8 @@ Scenarios (each starts from the same spot, enemies frozen):
   room_change  walk right into the next room
 
 Per scenario: how far the camera travelled (xy and z separately), how far the player did, the camera's travel while
-the player stood still, its yaw/pitch/FoV range, and "busy-ness" (camera direction reversals per second).
+the player stood still, its yaw/pitch/FoV range, "busy-ness" (camera direction reversals per second), and the sideways
+look-ahead (camera Y minus player Y: positive looks right) at the end and its range.
 """
 import json
 import math
@@ -88,7 +89,10 @@ def metrics(samples):
             reversals += 1
     dur = s[-1][0] - s[0][0]
     rng = lambda i: round(max(x[i] for x in s) - min(x[i] for x in s), 2)
-    return {"frames": len(s), "seconds": round(dur, 2), "cam_xy": round(cam_xy), "cam_z": round(cam_z), "player_xy": round(ply),
+    # how far the camera looks ahead sideways: camera Y minus player Y (the arm only tilts along X)
+    lead = [x[2] - x[8] for x in s]
+    return {"lead_y_end": round(lead[-1]), "lead_y_min": round(min(lead)), "lead_y_max": round(max(lead)),
+            "frames": len(s), "seconds": round(dur, 2), "cam_xy": round(cam_xy), "cam_z": round(cam_z), "player_xy": round(ply),
             "cam_per_player": round(cam_xy / ply, 2) if ply > 1 else None, "cam_while_still": round(still),
             "yaw_range": rng(5), "pitch_range": rng(4), "fov_range": rng(6), "reversals_per_s": round(reversals / max(dur, 1e-3), 2)}
 
@@ -113,7 +117,7 @@ def run(out, legacy=False):
 
 def report(path):
     r = json.load(open(path))
-    cols = ["seconds", "cam_xy", "cam_z", "player_xy", "cam_per_player", "cam_while_still", "yaw_range", "pitch_range", "fov_range", "reversals_per_s"]
+    cols = ["lead_y_end", "lead_y_min", "lead_y_max", "cam_xy", "cam_z", "player_xy", "cam_per_player", "cam_while_still", "yaw_range", "pitch_range", "fov_range", "reversals_per_s"]
     print(f"{'scenario':12}" + "".join(f"{c:>17}" for c in cols))
     for name, v in r.items():
         m = v["metrics"]
