@@ -566,21 +566,16 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def set_legacy_camera(legacy: bool) -> str:
-        """Switches the game camera between the 2020 follow and the framed one (the MyGame.LegacyCamera console
-        variable, an A/B switch while the new camera is being picked).
-
-        Args:
-            legacy: True for the 2020 follow.
+    def game_time() -> str:
+        """The PIE world's game time (seconds, slowed by time dilation), for scripts that wait in game time.
 
         Returns:
-            JSON {"legacy": legacy}.
+            JSON {"t": seconds}.
         """
         world = _pie_world()
         if not world:
             raise RuntimeError("PIE is not running")
-        unreal.SystemLibrary.execute_console_command(world, f"MyGame.LegacyCamera {1 if legacy else 0}")
-        return json.dumps({"legacy": legacy})
+        return json.dumps({"t": unreal.GameplayStatics.get_time_seconds(world)})
 
     @toolset_registry.tool_call
     @staticmethod
@@ -672,6 +667,46 @@ class MyGameTools(unreal.ToolsetDefinition):
         for d in dressings:
             d.get_component_by_class(unreal.PCGComponent).generate_local(True)
         return json.dumps({"dressings": len(dressings)})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def room_bounds() -> str:
+        """The geometry of each streamed room, relative to its grid cell's center: the box around everything that blocks
+        (floors, platforms, stairs, props), and the box around the walkable tops (surfaces facing up).
+
+        Returns:
+            JSON [{"map", "cell", "solid": [min xyz, max xyz], "floor_z": [lowest, highest top], "actors"}].
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        builders = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.LevelBuilder"))
+        sx = builders[0].get_editor_property("room_size_x") if builders else 2000.0
+        sy = builders[0].get_editor_property("room_size_y") if builders else 2000.0
+        levels = {}
+        for ls in unreal.ObjectIterator(unreal.LevelStreaming):
+            if ls.get_world() == world and ls.get_loaded_level():
+                t = ls.get_editor_property("level_transform").translation
+                levels[ls.get_loaded_level().get_path_name()] = (ls.get_loaded_level().get_outer().get_name(), t)
+        out = {}
+        for a in unreal.GameplayStatics.get_all_actors_of_class(world, unreal.StaticMeshActor):
+            lvl = a.get_level().get_path_name() if a.get_level() else None
+            if lvl not in levels:
+                continue
+            comp = a.static_mesh_component
+            if not comp or comp.get_collision_enabled() == unreal.CollisionEnabled.NO_COLLISION:
+                continue
+            name, t = levels[lvl]
+            origin, extent = a.get_actor_bounds(True)
+            lo = [origin.x - extent.x - t.x, origin.y - extent.y - t.y, origin.z - extent.z - t.z]
+            hi = [origin.x + extent.x - t.x, origin.y + extent.y - t.y, origin.z + extent.z - t.z]
+            r = out.setdefault(lvl, {"map": name, "cell": [round(t.x / sx), round(t.y / sy)], "lo": lo, "hi": hi, "tops": [], "actors": 0})
+            r["lo"] = [min(x, y) for x, y in zip(r["lo"], lo)]
+            r["hi"] = [max(x, y) for x, y in zip(r["hi"], hi)]
+            r["tops"].append(hi[2])
+            r["actors"] += 1
+        return json.dumps([{"map": r["map"], "cell": r["cell"], "solid": [[round(v) for v in r["lo"]], [round(v) for v in r["hi"]]],
+                            "floor_z": [round(min(r["tops"])), round(max(r["tops"]))], "actors": r["actors"]} for r in out.values()])
 
     @toolset_registry.tool_call
     @staticmethod

@@ -2,7 +2,7 @@
 
 Needs the editor running with PIE started and `-Seed=6032` (the start room is open to the right, toward room 0,1).
 
-    python Tests/camera_regression.py run out.json [legacy]  # record every scenario (legacy: the 2020 follow)
+    python Tests/camera_regression.py run out.json      # record every scenario
     python Tests/camera_regression.py report out.json   # the summary table again
 
 Scenarios (each starts from the same spot, enemies frozen):
@@ -97,9 +97,8 @@ def metrics(samples):
             "yaw_range": rng(5), "pitch_range": rng(4), "fov_range": rng(6), "reversals_per_s": round(reversals / max(dur, 1e-3), 2)}
 
 
-def run(out, legacy=False):
+def run(out):
     wait_loaded()
-    tool("set_legacy_camera", legacy=legacy)
     freeze_enemies()
     tool("set_player_attribute", attribute="Mana", value=1000.0)
     results = {}
@@ -125,7 +124,4 @@ def report(path):
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "run":
-        run(sys.argv[2], legacy=len(sys.argv) > 3 and sys.argv[3] == "legacy")
-    else:
-        report(sys.argv[2])
+    (run if sys.argv[1] == "run" else report)(sys.argv[2])

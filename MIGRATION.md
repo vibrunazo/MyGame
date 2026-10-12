@@ -179,19 +179,21 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
      - Walking moves it 1.3 to 1.7 times as far as the player.
    - **Old numbers vary run to run:** the look-ahead depends on timing and frame rate.
    - **References:** `Tests/baselines/camera_legacy_run1.json`, `camera_legacy_run2.json`.
-2. **Built: the framed follow** (`ARoomCameraPawn::FollowPlayerFramed`):
-   - a dead zone (X ±150, Y ±200) that steps, lunges and turns stay inside;
-   - no facing look-ahead;
-   - height that follows the ground, not jumps;
-   - critically damped smoothing (0.35 s, no overshoot) instead of the spring arm's lag;
-   - the old wall clamps and the fixed 40° angle.
-   - **Measured:** 0 camera movement while turning, punching or jumping in place. Walking moves it 0.6 times the player's distance, and a room change pans into the new room. Reference: `Tests/baselines/camera_framed.json`.
-   - **Look-ahead restored (2026-10-12):** the 2020 look-ahead was there so you can see enemies ahead and shoot fireballs from afar. The first framed version dropped it, and with the dead zone it even trailed behind. Now it follows travel, not facing: after 0.4 s of moving one way, the view eases 500 ahead that way (0.8 s glide), and it stays when you stop to shoot. Turning, punching and jumping in place still move the camera 0. Steady look-ahead is about 300, the same as the old camera's standing value.
-   - **Video:** `Tests/camera_video.py` records the same scripted run for either camera. It slows the game, screenshots every frame and resamples to 30 fps of game time. A/B page: https://claude.ai/artifact/Au6ZRCPXHLxyk7fAqPTcRs
-3. **Your pick, by feel:** the packaged Development build defaults to the framed follow. The console (`~`, or the key left of 1) with `MyGame.LegacyCamera 1` switches back to the 2020 follow, and `0` returns to the new one. Once you pick, the switch and the losing follow get deleted. The tuning knobs are `DeadZone` and `SmoothTime` on `BP_RoomCameraPawn`.
-4. **Not started:**
-   - framing that also keeps the enemies in view (only if the dead zone alone isn't enough);
-   - the wall cutaway fade.
+2. **Tried, then replaced: a framed follow** (dead zone, critically damped smoothing, then a travel-based look-ahead). It was calmer than 2020's camera but still moved at walking speed. Your call (2026-10-12): it still moved too fast. You described the intent as The Binding of Isaac + Streets of Rage, with the camera confined to the room.
+3. **Done: the room camera** (`ARoomCameraPawn`, rewritten from scratch).
+   - **Framing:** each room gets one fixed framing. It's solved at runtime so the whole cell (1400 × 2000, platforms up to 600 high, a character's height along the near edge) fits the screen at the current aspect ratio, at a fixed pitch (40°) and horizontal FoV (60°). Characters are about 9% of the screen's height, your pick, "whole room".
+   - **Motion:** inside a room the camera doesn't move. Entering another room starts a 0.5 s smoothstep to its framing, once the player is 150 inside it (no flip-flop on borders).
+   - **Measured** (`Tests/baselines/camera_room.json`): 0 movement in every in-room scenario (walking, depth, turns, lunges, jumps, dashes); exactly one room's width on a room change.
+   - **Removed:** the look-ahead, dead zone, spring arm, wall clamps, FoV lerp, the homing movement component, both 2020 follow functions and the A/B switch.
+   - **Rooms measured:** all 15 rooms reachable over five seeds fill their cell exactly. They vary in layout and height, not footprint, so the framing uses the cell. A room's real bounds would only matter for future multi-cell rooms.
+4. **Done: other rooms dark** (your pick: dark + camera).
+   - `/Game/FX/PostProcess/PP_RoomDarkness`, made by `Tools/create_room_darkness_material.py`, is a post-process material that darkens pixels whose world position is outside the current room's rectangle, with a soft 200 edge, leaving 8% brightness.
+   - The camera adds it as a blendable and feeds it the room's rectangle, eased with the transition.
+   - Open floor still joins rooms, so the darkness is what keeps the next room secret; the camera alone can't.
+5. **Video:** `Tests/camera_video.py` (enemies frozen, waits on the game clock: capturing every frame slows the game unevenly). A/B page, room camera vs 2020: https://claude.ai/artifact/Au6ZRCPXHLxyk7fAqPTcRs
+6. **Next:**
+   - The near-wall cutaway. The bottom wall still drops to 50 cm on room entry (`HideWall`); with the higher camera, a fade or a lower wall may be needed.
+   - Your play-test, by feel.
 
 ## Starting point
 

@@ -2,9 +2,9 @@
 
 Needs the editor running with a rendering PIE (editor_pie with -RenderOffscreen) and `-Seed=6032`.
 
-    python Tests/camera_video.py out.mp4 [legacy] [label]
+    python Tests/camera_video.py out.mp4 [label]
 
-The demo (game seconds): walk right into the next room, stop and throw a fireball ahead, fight while turning,
+The demo (game seconds, enemies frozen): walk right into the next room, stop and throw a fireball ahead, fight while turning,
 jump twice, walk back left and stop. The game runs slowed down while every frame is captured; the frames are then
 resampled to 30 fps of game time, so the video plays at real speed.
 """
@@ -24,7 +24,10 @@ START = (0.0, -300.0)
 
 
 def wait(game_seconds):
-    time.sleep(game_seconds / SLOW)
+    # on the game's clock: capturing every frame slows the game below SLOW, so real-time sleeps would cut moves short
+    t0 = tool("game_time")["t"]
+    while tool("game_time")["t"] - t0 < game_seconds:
+        time.sleep(0.05)
 
 
 def press(button, hold=0.08):
@@ -40,7 +43,7 @@ def move(f, r, secs):
 
 
 def demo():
-    move(0, 1, 3.0)                       # walk right into the next room: the camera should look ahead
+    move(0, 1, 4.5)                       # walk right into the next room: the camera eases over to it
     wait(0.8)
     press("Cast")                         # stop and throw a fireball ahead
     wait(1.2)
@@ -76,16 +79,18 @@ def encode(times, name, out, label):
     print(f"{out}: {k} frames from {len(have)} captures ({have[-1][0]:.1f} s of game time)")
 
 
-def main(out, legacy=False, label=""):
+def main(out, label=""):
     wait_loaded()
-    tool("set_legacy_camera", legacy=legacy)
     tool("learn_item_abilities", item_asset_path="/Game/Blueprints/Items/DA_LearnFireball")
     for attr, v in (("MaxHealth", 5000.0), ("Health", 5000.0), ("Defense", 1000.0), ("Mana", 1000.0)):
         tool("set_player_attribute", attribute=attr, value=v)
     z = tool("floor_height", x=START[0], y=START[1], from_z=500.0)["z"] + 100
     tool("teleport_player", x=START[0], y=START[1], z=z)
     tool("set_player_facing", yaw=90.0)
-    time.sleep(3)
+    for c in tool("list_characters"):  # frozen, so the walk reaches the next room (it's a camera demo, not a fight)
+        if c["team"] == 1:
+            tool("set_ai_enabled", actor_path=c["path"], enabled=False, show_player=False)
+    time.sleep(20)  # new shaders (the room darkness) finish compiling before the first frame
     name = f"camvid_{int(time.time())}"
     tool("video_frames", action="start", prefix=name, slowdown=SLOW)
     try:
@@ -97,4 +102,4 @@ def main(out, legacy=False, label=""):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], legacy=len(sys.argv) > 2 and sys.argv[2] == "legacy", label=sys.argv[3] if len(sys.argv) > 3 else "")
+    main(sys.argv[1], label=sys.argv[2] if len(sys.argv) > 2 else "")
