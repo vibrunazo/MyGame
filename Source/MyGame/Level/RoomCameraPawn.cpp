@@ -13,6 +13,27 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "DrawDebugHelpers.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "HAL/IConsoleManager.h"
+
+// A/B switch while you pick the new camera by feel (Phase 6); goes away with the old follow once picked
+static TAutoConsoleVariable<int32> CVarLegacyCamera(TEXT("MyGame.LegacyCamera"), 0,
+	TEXT("1: the 2020 camera follow (look-ahead offset, spring arm lag). 0: the framed follow (dead zone, no jump bob)."));
+
+namespace
+{
+	// Critically damped smoothing toward Target (Game Programming Gems 4, 1.10): no overshoot, continuous speed
+	FVector SmoothDamp(const FVector& Current, const FVector& Target, FVector& Velocity, float SmoothTime, float DeltaTime)
+	{
+		const float Omega = 2.f / FMath::Max(SmoothTime, 1e-4f);
+		const float X = Omega * DeltaTime;
+		const float Exp = 1.f / (1.f + X + 0.48f * X * X + 0.235f * X * X * X);
+		const FVector Change = Current - Target;
+		const FVector Temp = (Velocity + Omega * Change) * DeltaTime;
+		Velocity = (Velocity - Omega * Temp) * Exp;
+		return Target + (Change + Temp) * Exp;
+	}
+}
 
 // Sets default values
 ARoomCameraPawn::ARoomCameraPawn()
@@ -60,7 +81,11 @@ void ARoomCameraPawn::Tick(float DeltaTime)
 	if (PlayerRef && GetLevelBuilder())
 	{
 		TryRegisterEnterRoomEvent();
-		FollowPlayer2(DeltaTime);
+		const bool bLegacy = CVarLegacyCamera.GetValueOnGameThread() != 0;
+		CameraBoom->bEnableCameraLag = bLegacy;  // the framed follow smooths itself
+		if (bLegacy) FollowPlayer2(DeltaTime);
+		else FollowPlayerFramed(DeltaTime);
+		bFramedStarted = !bLegacy;
 	}
 
 }
@@ -196,6 +221,33 @@ void ARoomCameraPawn::FollowPlayer2(float DeltaTime)
 	//UE_LOG(LogTemp, Warning, TEXT("RotOffset: %f"), RotOffset);
 	//DrawDebugLine(GetWorld(), PlayerRef->GetActorLocation(), PlayerRef->GetActorLocation()+OffsetTimeVector*100.f, FColor::Red);
 	//DrawDebugDirectionalArrow(GetWorld(), PlayerRef->GetActorLocation(), PlayerRef->GetActorLocation() + OffsetTimeVector * 100.f, 5.f, FColor::Red);
+}
+
+void ARoomCameraPawn::FollowPlayerFramed(float DeltaTime)
+{
+	const FVector Player = PlayerRef->GetActorLocation();
+	if (!bFramedStarted)
+	{
+		Focus = Player;
+		SmoothVelocity = FVector::ZeroVector;
+	}
+	// the dead zone: drag the focus only by how far the player is past the box's edge
+	const float DX = Player.X - Focus.X, DY = Player.Y - Focus.Y;
+	if (FMath::Abs(DX) > DeadZone.X) Focus.X = Player.X - FMath::Sign(DX) * DeadZone.X;
+	if (FMath::Abs(DY) > DeadZone.Y) Focus.Y = Player.Y - FMath::Sign(DY) * DeadZone.Y;
+	// height follows floors and stairs, not jumps, launches or knock-ups
+	const UCharacterMovementComponent* Movement = PlayerRef->GetCharacterMovement();
+	if (!bFramedStarted || (Movement && Movement->IsMovingOnGround())) Focus.Z = Player.Z;
+
+	// don't look past a room's walls (the same clamps as the old follow)
+	const FVector RoomPosition = GetRoomDistance();
+	FVector Goal = Focus;
+	if (bIsWalledRight) Goal.Y = FMath::Min(Goal.Y, RoomPosition.Y + WallClampRight);
+	if (bIsWalledLeft) Goal.Y = FMath::Max(Goal.Y, RoomPosition.Y - WallClampLeft);
+	if (bIsWalledTop) Goal.X = FMath::Min(Goal.X, RoomPosition.X + WallClampTop);
+	if (bIsWalledBottom) Goal.X = FMath::Max(Goal.X, RoomPosition.X - WallClampBottom);
+
+	SetActorLocation(bFramedStarted ? SmoothDamp(GetActorLocation(), Goal, SmoothVelocity, SmoothTime, DeltaTime) : Goal);
 }
 
 // The level builder's room size; 2000 x 2000 without one

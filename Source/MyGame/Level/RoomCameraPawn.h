@@ -88,9 +88,22 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Camera)
 	float OffsetAccel = 20.f;
 
+	// Framed follow (Phase 6). The focus only moves once the player leaves this box around it (half sizes: X depth,
+	// Y sideways), so steps, attack lunges and turning in a fight don't move the camera
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framed")
+	FVector2D DeadZone = FVector2D(150.f, 200.f);
+	// Seconds the camera takes to catch up with the focus (critically damped: eases in and out, never overshoots)
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framed")
+	float SmoothTime = 0.35f;
+
 private:
 	void FollowPlayer(float DeltaTime);
 	void FollowPlayer2(float DeltaTime);
+	void FollowPlayerFramed(float DeltaTime);
+	// Where the dead zone is centered, and the camera's speed for the damping
+	FVector Focus = FVector::ZeroVector;
+	FVector SmoothVelocity = FVector::ZeroVector;
+	bool bFramedStarted = false;
 	FVector GetRoomDistance(); 
 	FVector GetRoomSize(); 
 	class ALevelBuilder* GetLevelBuilder();

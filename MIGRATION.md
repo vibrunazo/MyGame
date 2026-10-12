@@ -168,6 +168,29 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
      - **Gotcha:** a game process left running from `Saved/Packaged` locks the exe, and BuildCookRun's archive step then silently keeps the old one. The smoke test now kills leftovers first.
    - **Known flake:** `super_kick_tat` once landed an extra hit (60 damage instead of 48) and travelled 95 cm instead of about 150, under the 100 cm `moved` threshold. The rerun matched the baseline. It's frame timing against the dummy, not a regression.
 
+## Phase 6 status (started 2026-10-12)
+
+1. **Done: measured the 2020 camera.**
+   - **Tools:** `Tests/camera_regression.py` scripts seven situations (walk left/right, walk in depth, turning in a fight, punch lunges, jumps, dashes, a room change). The `camera_record` hook samples the player camera manager every frame. Out come travel, vertical bob, travel while the player stands still, rotation/FoV range and direction reversals.
+   - **Findings:** the camera never rotates and the FoV is fixed. It moves too much for three reasons:
+     - The facing look-ahead (`FollowPlayer2`: ±300 units after facing a way for 0.3 s) swings it during fights. It moved 12 m in 10 s of turning in place.
+     - It follows every lunge (3.7 direction reversals/s while punching in place).
+     - It bobs with jumps (5.6 m of vertical travel for three jumps).
+     - Walking moves it 1.3 to 1.7 times as far as the player.
+   - **Old numbers vary run to run:** the look-ahead depends on timing and frame rate.
+   - **References:** `Tests/baselines/camera_legacy_run1.json`, `camera_legacy_run2.json`.
+2. **Built: the framed follow** (`ARoomCameraPawn::FollowPlayerFramed`):
+   - a dead zone (X ±150, Y ±200) that steps, lunges and turns stay inside;
+   - no facing look-ahead;
+   - height that follows the ground, not jumps;
+   - critically damped smoothing (0.35 s, no overshoot) instead of the spring arm's lag;
+   - the old wall clamps and the fixed 40° angle.
+   - **Measured:** 0 camera movement while turning, punching or jumping in place. Walking moves it 0.6 times the player's distance, and a room change pans into the new room. Reference: `Tests/baselines/camera_framed.json`.
+3. **Your pick, by feel:** the packaged Development build defaults to the framed follow. The console (`~`, or the key left of 1) with `MyGame.LegacyCamera 1` switches back to the 2020 follow, and `0` returns to the new one. Once you pick, the switch and the losing follow get deleted. The tuning knobs are `DeadZone` and `SmoothTime` on `BP_RoomCameraPawn`.
+4. **Not started:**
+   - framing that also keeps the enemies in view (only if the dead zone alone isn't enough);
+   - the wall cutaway fade.
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.

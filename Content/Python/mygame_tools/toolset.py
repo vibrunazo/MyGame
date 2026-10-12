@@ -14,6 +14,25 @@ from toolset_registry.registration import Registration
 
 _ATTRIBUTES = ("Health", "MaxHealth", "Mana", "MaxMana", "Attack", "Defense", "Speed", "AttackSpeed", "RotSpeed")
 
+# camera_record: samples taken every editor tick while recording (one per PIE frame)
+_cam_rec = {"handle": None, "samples": [], "t0": 0.0}
+
+
+def _cam_sample(delta_seconds):
+    world = _pie_world()
+    if not world:
+        return
+    pawn = unreal.GameplayStatics.get_player_pawn(world, 0)
+    cams = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.RoomCameraPawn"))
+    pcm = unreal.GameplayStatics.get_player_camera_manager(world, 0)
+    if not pawn or not pcm:
+        return
+    loc, rot = pcm.get_camera_location(), pcm.get_camera_rotation()
+    _cam_rec["samples"].append([round(unreal.GameplayStatics.get_time_seconds(world) - _cam_rec["t0"], 4),
+                                *[round(c, 1) for c in (loc.x, loc.y, loc.z)], round(rot.pitch, 2), round(rot.yaw, 2),
+                                round(pcm.get_fov_angle(), 2), *[round(c, 1) for c in _vec(pawn.get_actor_location())],
+                                round(pawn.get_actor_rotation().yaw, 1), 1 if cams else 0])
+
 
 def _pie_world():
     return unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_game_world()
@@ -531,6 +550,50 @@ class MyGameTools(unreal.ToolsetDefinition):
             raise ValueError(f"unknown action {action}")
         getattr(unreal.GameplayStatics.get_game_instance(world), action)()
         return json.dumps({"called": action})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_legacy_camera(legacy: bool) -> str:
+        """Switches the game camera between the 2020 follow and the framed one (the MyGame.LegacyCamera console
+        variable, an A/B switch while the new camera is being picked).
+
+        Args:
+            legacy: True for the 2020 follow.
+
+        Returns:
+            JSON {"legacy": legacy}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        unreal.SystemLibrary.execute_console_command(world, f"MyGame.LegacyCamera {1 if legacy else 0}")
+        return json.dumps({"legacy": legacy})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def camera_record(action: str) -> str:
+        """Records what the game camera does, one sample per frame (the player camera manager's view, so whatever
+        drives the camera), with the player's position and facing.
+
+        Args:
+            action: "start" (clears earlier samples) or "stop".
+
+        Returns:
+            "start": JSON {"recording": true}. "stop": JSON {"columns", "samples"}; each sample is
+            [t, cam x, y, z, pitch, yaw, fov, player x, y, z, player yaw, room camera present].
+        """
+        if action == "start":
+            if _cam_rec["handle"]:
+                unreal.unregister_slate_post_tick_callback(_cam_rec["handle"])
+            world = _pie_world()
+            _cam_rec.update(samples=[], t0=unreal.GameplayStatics.get_time_seconds(world) if world else 0.0)
+            _cam_rec["handle"] = unreal.register_slate_post_tick_callback(_cam_sample)
+            return json.dumps({"recording": True})
+        if _cam_rec["handle"]:
+            unreal.unregister_slate_post_tick_callback(_cam_rec["handle"])
+            _cam_rec["handle"] = None
+        return json.dumps({"columns": ["t", "cx", "cy", "cz", "pitch", "yaw", "fov", "px", "py", "pz", "pyaw", "roomcam"],
+                           "samples": _cam_rec["samples"]})
 
     @toolset_registry.tool_call
     @staticmethod
