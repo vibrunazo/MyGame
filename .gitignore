@@ -87,3 +87,4 @@ DerivedDataCache/*
 __pycache__/
 *.pyc
 SourceArt/**/*.blend
+Tests/out/

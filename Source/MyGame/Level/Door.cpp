@@ -2,7 +2,7 @@
 
 
 #include "Door.h"
-// #include "RoomDataAsset.h"
+// #include "TileTemplate.h"
 
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
@@ -93,13 +93,13 @@ void ADoor::CloseDoor()
 	OnCloseDoorBP();
 }
 
-void ADoor::SetSymbol(ERoomType SymbolType)
+void ADoor::SetSymbol(ETileType SymbolType)
 {
 	FVector SpawnLoc = GetActorLocation();
 	SpawnLoc.Z += 350.f;
 	switch (SymbolType)
 	{
-	case ERoomType::Treasure:
+	case ETileType::Treasure:
 		SymbolMeshA->SetStaticMesh(TreasureMesh);
 		SymbolMeshB->SetStaticMesh(TreasureMesh);
 		if (TreasureParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), TreasureParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
@@ -107,7 +107,7 @@ void ADoor::SetSymbol(ERoomType SymbolType)
 		LightB->SetLightColor(FLinearColor(0.9f, 0.9f, 0.1f));
 		break;
 	
-	case ERoomType::Boss:
+	case ETileType::Boss:
 		SymbolMeshA->SetStaticMesh(BossMesh);
 		SymbolMeshB->SetStaticMesh(BossMesh);
 		if (BossParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), BossParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);

@@ -4,7 +4,7 @@
 #include "MyGameInstance.h"
 #include "Player/MyCharacter.h"
 #include "Props/ItemDataAsset.h"
-#include "Level/RoomCameraPawn.h"
+#include "Level/RoomCamera.h"
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
@@ -84,7 +84,7 @@ void UMyGameInstance::StartNewRun()
 
 void UMyGameInstance::NextFloor()
 {
-    LevelDifficulty++;
+    FloorNumber++;
     UGameplayStatics::OpenLevelBySoftObjectPtr(this, RunMap);
 }
 
@@ -95,16 +95,17 @@ void UMyGameInstance::QuitToMainMenu()
 
 void UMyGameInstance::NewGame()
 {
-    LevelDifficulty = 1;
+    FloorNumber = 1;
     Health = 100.f;
     Mana = 40.f;
     Inventory.Empty();
     CarriedAbilities.Empty();
 
     // TODO this might be called after the game is over, before the new game actually starts, which might cause random stream to desync?
-    // -Seed=N on the command line replays a run (bug reports, tests); otherwise RandomSeed, 0 meaning a new one
+    // RandomSeed when set (tests set it before StartNewRun), else -Seed=N on the command line (replaying a run for a bug
+    // report), else 0: a new one
     int32 Seed = RandomSeed;
-    FParse::Value(FCommandLine::Get(), TEXT("Seed="), Seed);
+    if (!Seed) FParse::Value(FCommandLine::Get(), TEXT("Seed="), Seed);
     RandomStream = FRandomStream(Seed);
 	if (!Seed) RandomStream.GenerateNewSeed();
     UE_LOG(LogTemp, Warning, TEXT("GameInstance Random Seed: %d"), RandomStream.GetCurrentSeed());

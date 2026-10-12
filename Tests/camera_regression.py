@@ -23,6 +23,7 @@ import math
 import sys
 import time
 
+from harness import wait_game
 from mcp_client import tool
 from level_regression import wait_loaded
 
@@ -40,30 +41,30 @@ def reset():
     z = tool("floor_height", x=START[0], y=START[1], from_z=500.0)["z"] + 100
     tool("teleport_player", x=START[0], y=START[1], z=z)
     tool("set_player_facing", yaw=90.0)
-    time.sleep(2.5)  # let the camera settle
+    wait_game(2.5)  # let the camera settle
 
 
 def move(f, r, secs):
     tool("move_input", forward=f, right=r)
-    time.sleep(secs)
+    wait_game(secs)
     tool("move_input", forward=0.0, right=0.0)
 
 
 def punch():
     tool("press_input", button="Punch", pressed=True)
-    time.sleep(0.08)
+    wait_game(0.08)
     tool("press_input", button="Punch", pressed=False)
 
 
 SCENARIOS = {
-    "walk_lr": lambda: (move(0, 1, 2.0), time.sleep(1.0), move(0, -1, 2.0), time.sleep(1.5)),
-    "walk_depth": lambda: (move(1, 0, 1.2), time.sleep(1.0), move(-1, 0, 1.2), time.sleep(1.5)),
-    "turns": lambda: ([(tool("set_player_facing", yaw=90.0 if i % 2 else -90.0), punch(), time.sleep(0.5)) for i in range(10)],
-                      time.sleep(1.5)),
-    "lunges": lambda: ([(punch(), time.sleep(0.35)) for _ in range(8)], time.sleep(1.5)),
-    "jumps": lambda: ([(tool("jump_player"), time.sleep(1.1)) for _ in range(3)], time.sleep(1.0)),
-    "dashes": lambda: (tool("dash_player", forward=0.0, right=1.0), time.sleep(1.2), tool("dash_player", forward=0.0, right=-1.0), time.sleep(1.5)),
-    "room_change": lambda: (move(0, 1, 4.5), time.sleep(2.0)),
+    "walk_lr": lambda: (move(0, 1, 2.0), wait_game(1.0), move(0, -1, 2.0), wait_game(1.5)),
+    "walk_depth": lambda: (move(1, 0, 1.2), wait_game(1.0), move(-1, 0, 1.2), wait_game(1.5)),
+    "turns": lambda: ([(tool("set_player_facing", yaw=90.0 if i % 2 else -90.0), punch(), wait_game(0.5)) for i in range(10)],
+                      wait_game(1.5)),
+    "lunges": lambda: ([(punch(), wait_game(0.35)) for _ in range(8)], wait_game(1.5)),
+    "jumps": lambda: ([(tool("jump_player"), wait_game(1.1)) for _ in range(3)], wait_game(1.0)),
+    "dashes": lambda: (tool("dash_player", forward=0.0, right=1.0), wait_game(1.2), tool("dash_player", forward=0.0, right=-1.0), wait_game(1.5)),
+    "tile_change": lambda: (move(0, 1, 4.5), wait_game(2.0)),
 }
 
 
@@ -98,6 +99,13 @@ def metrics(samples):
 
 
 def run(out):
+    results = run_all()
+    with open(out, "w") as f:
+        json.dump(results, f)
+    report(out)
+
+
+def run_all():
     wait_loaded()
     freeze_enemies()
     tool("set_player_attribute", attribute="Mana", value=1000.0)
@@ -109,13 +117,14 @@ def run(out):
         rec = tool("camera_record", action="stop")
         results[name] = {"metrics": metrics(rec["samples"]), "samples": rec["samples"]}
         print(name, results[name]["metrics"])
-    with open(out, "w") as f:
-        json.dump(results, f)
-    report(out)
+    return results
 
 
 def report(path):
-    r = json.load(open(path))
+    report_results(json.load(open(path)))
+
+
+def report_results(r):
     cols = ["lead_y_end", "lead_y_min", "lead_y_max", "cam_xy", "cam_z", "player_xy", "cam_per_player", "cam_while_still", "yaw_range", "pitch_range", "fov_range", "reversals_per_s"]
     print(f"{'scenario':12}" + "".join(f"{c:>17}" for c in cols))
     for name, v in r.items():

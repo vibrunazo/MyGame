@@ -7,7 +7,7 @@
 #include "MyAIController.h"
 #include "../MyGameInstance.h"
 #include "../Abilities/LootComponent.h"
-#include "../Level/LevelBuilder.h"
+#include "../Level/FloorBuilder.h"
 #include "../Level/RunSubsystem.h"
 #include "../Props/ItemDataAsset.h"
 #include "../Props/LearnItemDataAsset.h"
@@ -445,6 +445,27 @@ void AMyCharacter::SetAttributeBaseForTest(FGameplayAttribute Attribute, float V
 {
 	if (AbilitySystem && Attribute.IsValid()) AbilitySystem->SetNumericAttributeBase(Attribute, Value);
 	UpdateHealthBar();
+}
+
+TArray<FString> AMyCharacter::GetTagsForTest() const
+{
+	TArray<FString> Out;
+	if (!AbilitySystem) return Out;
+	FGameplayTagContainer Owned;
+	AbilitySystem->GetOwnedGameplayTags(Owned);
+	for (const FGameplayTag& Tag : Owned) Out.Add(Tag.ToString());
+	return Out;
+}
+
+TArray<FString> AMyCharacter::GetActiveAbilitiesForTest() const
+{
+	TArray<FString> Out;
+	if (!AbilitySystem) return Out;
+	for (const FGameplayAbilitySpec& Spec : AbilitySystem->GetActivatableAbilities())
+	{
+		if (Spec.IsActive() && Spec.Ability) Out.Add(Spec.Ability->GetClass()->GetName().LeftChop(Spec.Ability->GetClass()->GetName().EndsWith(TEXT("_C")) ? 2 : 0));
+	}
+	return Out;
 }
 #endif
 
@@ -1185,9 +1206,9 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 		SetTargetEnemy(NewTarget);
 	}
 
-	ALevelBuilder* Builder = URunSubsystem::GetLevelBuilder(this);
+	AFloorBuilder* Builder = URunSubsystem::GetFloorBuilder(this);
 	if (!Builder) return;
-	Builder->AggroRoom(NewTarget, GetActorLocation());
+	Builder->AggroTile(NewTarget, GetActorLocation());
 	if (AggroSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), AggroSound, GetActorLocation());
 }
 
@@ -1315,7 +1336,7 @@ FDieSignature& AMyCharacter::GetReportDeathDelegate()
 
 void AMyCharacter::CheckWalls()
 {
-	ALevelBuilder* Builder = URunSubsystem::GetLevelBuilder(this);
+	AFloorBuilder* Builder = URunSubsystem::GetFloorBuilder(this);
 	if (!Builder) return;
 	Builder->OnUpdateCharCoord(GetActorLocation());
 	// AStaticMeshActor* SM = Builder->GetBottomWallFromLoc(GetActorLocation());

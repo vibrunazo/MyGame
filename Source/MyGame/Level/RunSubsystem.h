@@ -6,7 +6,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "RunSubsystem.generated.h"
 
-class ALevelBuilder;
+class AFloorBuilder;
 
 UCLASS()
 class MYGAME_API URunSubsystem : public UWorldSubsystem
@@ -14,12 +14,12 @@ class MYGAME_API URunSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 public:
-	// The level builder of this world; null outside a generated level
+	// The floor builder of this world; null outside a generated level
 	UFUNCTION(BlueprintPure, Category = "Run", meta = (WorldContext = "WorldContextObject"))
-	static ALevelBuilder* GetLevelBuilder(const UObject* WorldContextObject);
+	static AFloorBuilder* GetFloorBuilder(const UObject* WorldContextObject);
 
-	void SetLevelBuilder(ALevelBuilder* Builder) { LevelBuilder = Builder; }
+	void SetFloorBuilder(AFloorBuilder* Builder) { FloorBuilder = Builder; }
 
 private:
-	TWeakObjectPtr<ALevelBuilder> LevelBuilder;
+	TWeakObjectPtr<AFloorBuilder> FloorBuilder;
 };

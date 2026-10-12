@@ -3,21 +3,24 @@
 Needs the editor running with PIE started (see MIGRATION.md "How we test"). Every enemy is frozen (AI and
 sensing off); one is brought into the start room as a still dummy in front of the player (Defense 1000).
 
-    python Tests/ability_regression.py run  out.json        # record
+    python Tests/ability_regression.py run  out.json        # record (or through Tests/run_all.py)
     python Tests/ability_regression.py diff Tests/baselines/abilities_phase3.json out.json
 
 Per scenario it records the montage/section timeline, abilities seen active, the dummy's health
 change, tags and highest Z (launches), and the player's mana change and highest Z.
+
+Each scenario's inputs play on the game clock inside the editor (the run_timeline hook), which also records every
+frame there, so a scenario behaves the same at any game speed (Tests/run_all.py --speed).
 """
 import json
 import sys
 import time
 
+from harness import game_time, wait_game
 from mcp_client import call_tool, tool
 
 GAS = "GASToolsets.AbilitySystemInspectorToolset"
 ITEMS = "/Game/Blueprints/Items/"
-SAMPLE = 0.08
 
 
 def active_tags(path):
@@ -49,7 +52,7 @@ def place(dummy, player_x):
         tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=floor_z())
         tool("teleport_player", x=player_x, y=y, z=floor_z())
         tool("set_player_facing", yaw=0.0)
-        time.sleep(0.4)
+        wait_game(0.4)
         px, py, _ = tool("pie_player_state")["location"]
         dx, dy, _ = tool("character_state", actor_path=dummy["path"])["location"]
         if abs(px - player_x) < 30 and abs(py - y) < 30 and abs(dx - x) < 30 and abs(dy - y) < 30:
@@ -61,7 +64,7 @@ def reset(player, dummy):
         tool("press_input", button=b, pressed=False)
     tool("move_input", forward=0.0, right=0.0)
     freeze_enemies()
-    time.sleep(1.5)
+    wait_game(1.5)
     for a, v in (("MaxHealth", 1000), ("Health", 1000), ("Defense", 1000), ("MaxMana", 100), ("Mana", 100)):
         tool("set_player_attribute", attribute=a, value=v)
     for a in ("MaxHealth", "Health"):
@@ -70,128 +73,83 @@ def reset(player, dummy):
     place(dummy, DUMMY_SPOT[0] - 95)
 
 
-def run_scenario(name, actions, duration, player, dummy, away_from_dummy=False):
+def run_scenario(name, inputs, duration, player, dummy, away_from_dummy=False):
     reset(player, dummy)
     if away_from_dummy:  # movement: start further back so walking and dashing (along -X) have room
         place(dummy, START_ROOM_SPOT[0])
     start_dummy = tool("character_state", actor_path=dummy["path"])
     start_player = tool("pie_player_state")
-    timeline, seen, dummy_tags, dummy_z, player_z = [], set(), set(), start_dummy["location"][2], start_player["location"][2]
-    player_tags = set()
-    pending = sorted(actions, key=lambda a: a[0])
-    t0 = time.time()
-    while time.time() - t0 < duration:
-        now = time.time() - t0
-        # at most one input per sample, so the game ticks between presses (the editor can answer several
-        # tool calls in one frame; two presses landing together would be one simultaneous press)
-        if pending and pending[0][0] <= now:
-            pending.pop(0)[1]()
-            time.sleep(0.05)
-        anim = tool("player_anim")
-        key = f"{anim['montage']}:{anim['section']}" if anim["montage"] else None
-        if key and (not timeline or timeline[-1] != key):
-            timeline.append(key)
-        seen.update(active_abilities(player))
-        d = tool("character_state", actor_path=dummy["path"])
-        dummy_tags.update(t for t in active_tags(dummy["path"]) if t.startswith(("status.", "state.")))
-        dummy_z = max(dummy_z, d["location"][2])
-        ps = tool("pie_player_state")
-        player_z = max(player_z, ps["location"][2])
-        # state.combat is a timed buff that can outlast the previous scenario: noise
-        player_tags.update(t for t in active_tags(player) if t.startswith(("state.", "status.")) and t != "state.combat")
-        time.sleep(SAMPLE)
-    end_dummy = tool("character_state", actor_path=dummy["path"])
-    end_player = tool("pie_player_state")
-    # a combo window must close with the attack (combo.cancancel left behind lets any attack cancel any other):
-    # look once the player's abilities have ended
-    t1 = time.time()
-    while active_abilities(player) and time.time() - t1 < 3.0:
-        time.sleep(0.1)
-    lingering = sorted(t for t in active_tags(player) if t.startswith("combo."))
+    tool("run_timeline", spec=json.dumps({"dummy": dummy["path"], "duration": duration, "inputs": inputs}))
+    while not (r := tool("timeline_result"))["done"]:
+        time.sleep(0.05)
+    rec = r["result"]
+    end_dummy, end_player = rec["end_dummy"], rec["end_player"]
     gap = [round(a - b, 1) for a, b in zip(start_dummy["location"], start_player["location"])]
-    return {"scenario": name, "lingering": lingering, "start_gap": gap, "start_yaw": [start_player["yaw"], start_player["control_yaw"]],
-            "timeline": timeline, "abilities": sorted(seen),
+    return {"scenario": name, "lingering": rec["lingering"], "start_gap": gap, "start_yaw": [start_player["yaw"], start_player["control_yaw"]],
+            "timeline": rec["timeline"], "abilities": rec["abilities"],
             "dummy_damage": round(start_dummy["health"] - end_dummy["health"], 1),
-            "dummy_tags": sorted(dummy_tags), "dummy_rise": round(dummy_z - start_dummy["location"][2], 1),
+            "dummy_tags": rec["dummy_tags"], "dummy_rise": round(rec["dummy_z"] - start_dummy["location"][2], 1),
             "dummy_pushed": round(sum((a - b) ** 2 for a, b in zip(end_dummy["location"][:2], start_dummy["location"][:2])) ** 0.5, 1),
             "player_mana": round(end_player["attributes"]["Mana"] - start_player["attributes"]["Mana"], 1),
-            "player_tags": sorted(player_tags),
+            "player_tags": rec["player_tags"],
             "player_moved": round(sum((a - b) ** 2 for a, b in zip(end_player["location"][:2], start_player["location"][:2])) ** 0.5, 1),
-            "player_rise": round(player_z - start_player["location"][2], 1)}
+            "player_rise": round(rec["player_z"] - start_player["location"][2], 1)}
 
 
-def press(button, down=True):
-    return lambda: tool("press_input", button=button, pressed=down)
+# timeline inputs: [game time, "call", MyGameTools hook, kwargs]
+def at(t, hook, **kwargs):
+    return [t, "call", hook, kwargs]
 
 
-def tap(button, at, length=0.06):
-    """Press and release as one action, so the hold lasts `length` and not a whole sampling cycle."""
-    def act():
-        tool("press_input", button=button, pressed=True)
-        time.sleep(length)
-        tool("press_input", button=button, pressed=False)
-    return [(at, act)]
+def press(button, t, down=True):
+    return [at(t, "press_input", button=button, pressed=down)]
 
 
-def move(forward, right=0.0):
-    return lambda: tool("move_input", forward=forward, right=right)
+def tap(button, t, length=0.06):
+    return press(button, t) + press(button, t + length, False)
 
 
-def double_tap(forward):
-    """Two quick stick flicks in one action, so their spacing is real time and not sampling cycles."""
-    def act():
-        for _ in range(2):
-            tool("move_input", forward=forward, right=0.0)
-            time.sleep(0.04)
-            tool("move_input", forward=0.0, right=0.0)
-            time.sleep(0.03)
-    return act
+def move(t, forward, right=0.0):
+    return [at(t, "move_input", forward=forward, right=right)]
 
 
-def learn(item):
-    return lambda: tool("learn_item_abilities", item_asset_path=ITEMS + item)
+def double_tap(t, forward):
+    """Two quick stick flicks (the dash's double tap)."""
+    return move(t, forward) + move(t + 0.04, 0.0) + move(t + 0.07, forward) + move(t + 0.11, 0.0)
+
+
+def learn(t, item):
+    return [at(t, "learn_item_abilities", item_asset_path=ITEMS + item)]
 
 
 def scenarios():
     yield "punch_tap", tap("Punch", 0.0), 1.5
-    yield "punch_hold", [(0.0, press("Punch")), (2.4, press("Punch", False))], 3.2
+    yield "punch_hold", press("Punch", 0.0) + press("Punch", 2.4, False), 3.2
     yield "kick_tap", tap("Kick", 0.0), 1.5
-    yield "kick_hold", [(0.0, press("Kick")), (2.4, press("Kick", False))], 3.2
+    yield "kick_hold", press("Kick", 0.0) + press("Kick", 2.4, False), 3.2
     yield "jump_kick", tap("Jump", 0.0, 0.2) + tap("Kick", 0.25), 1.8
     yield "jump_punch", tap("Jump", 0.0, 0.2) + tap("Punch", 0.25), 1.8
-    yield "dash", [(0.0, lambda: tool("dash_player"))], 1.2, True
+    yield "dash", [at(0.0, "dash_player")], 1.2, True
     # movement through IA_Move (away from the dummy, along -X)
-    yield "walk_back", [(0.0, move(-1.0)), (1.0, move(0.0))], 1.4, True
-    yield "dash_double_tap", [(0.0, double_tap(-1.0))], 1.2, True
+    yield "walk_back", move(0.0, -1.0) + move(1.0, 0.0), 1.4, True
+    yield "dash_double_tap", double_tap(0.0, -1.0), 1.2, True
     for item, button in (("DA_LearnSmash", "Punch"), ("DA_LearnRunPunch", "Punch"), ("DA_LearnUppercut", "Punch"),
                          ("DA_LearnTat", "Kick"), ("DA_LearnKkk", "Kick")):
         yield (f"super_{button.lower()}_{item[8:].lower()}",
-               [(0.0, learn(item)), (0.1, press("Super"))] + tap(button, 0.2) + [(0.5, press("Super", False))], 2.2)
-    yield "cast_fireball", [(0.0, learn("DA_LearnFireball"))] + tap("Cast", 0.2), 1.8
+               learn(0.0, item) + press("Super", 0.1) + tap(button, 0.2) + press("Super", 0.5, False), 2.2)
+    yield "cast_fireball", learn(0.0, "DA_LearnFireball") + tap("Cast", 0.2), 1.8
     # punch right after the super move: plain punch still works when Super isn't held
     yield "punch_after_learning", tap("Punch", 0.0), 1.5
-    # damage path: a punch against Defense 2 (the exec scales by Attack / Defense), and Fire Hands' damage over time
-    yield "punch_vs_defense2", [(0.0, set_dummy("Defense", 2.0))] + tap("Punch", 0.2), 1.5
+    # damage path: a punch against Defense 2 (the exec scales by Attack / Defense)
+    yield "punch_vs_defense2", [at(0.0, "set_character_attribute", actor_path=DUMMY[0]["path"], attribute="Defense", value=2.0)] + tap("Punch", 0.2), 1.5
     # a learned Smash must not fire by itself when health crosses 75% (it used to carry the boss's triggers)
-    yield "health_75_with_smash", [(0.0, learn("DA_LearnSmash")), (0.2, set_player_health(700.0))], 2.0
+    yield "health_75_with_smash", learn(0.0, "DA_LearnSmash") + [at(0.2, "set_player_attribute", attribute="Health", value=700.0),
+                                                                 at(0.21, "refresh_health", actor_path=PLAYER_PATH[0])], 2.0
     # last: the item stays in the inventory and the burn outlasts the reset
-    yield "fire_hands_punch", [(0.0, lambda: tool("give_item", item_asset_path=ITEMS + "DA_ItemFireHands"))] + tap("Punch", 0.2), 6.0
-
-
-def set_dummy(attribute, value):
-    return lambda: tool("set_character_attribute", actor_path=DUMMY[0]["path"], attribute=attribute, value=value)
+    yield "fire_hands_punch", [at(0.0, "give_item", item_asset_path=ITEMS + "DA_ItemFireHands")] + tap("Punch", 0.2), 6.0
 
 
 DUMMY = [None]
-
-
-def set_player_health(value):
-    def act():
-        tool("set_player_attribute", attribute="Health", value=value)
-        tool("refresh_health", actor_path=PLAYER_PATH[0])
-    return act
-
-
 PLAYER_PATH = [None]
 
 
@@ -213,7 +171,26 @@ def pick_dummy():
     return dummy
 
 
+def run_scenarios(names):
+    """Only these scenarios (no boss, sight or enemy checks): {name: dummy damage}."""
+    player = tool("pie_player_state")
+    PLAYER_PATH[0] = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
+    dummy = pick_dummy()
+    DUMMY[0] = dummy
+    out = {}
+    for name, inputs, duration, *start_room in scenarios():
+        if name in names:
+            out[name] = run_scenario(name, inputs, duration, PLAYER_PATH[0], dummy, bool(start_room))["dummy_damage"]
+    return out
+
+
 def run(out):
+    results = run_all()
+    with open(out, "w") as f:
+        json.dump(results, f, indent=1)
+
+
+def run_all():
     player = tool("pie_player_state")
     player_path = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
     PLAYER_PATH[0] = player_path
@@ -230,8 +207,7 @@ def run(out):
     print(json.dumps(results["sight"]))
     results["enemy_attack"] = enemy_attack(dummy)
     print(json.dumps(results["enemy_attack"]))
-    with open(out, "w") as f:
-        json.dump(results, f, indent=1)
+    return results
 
 
 def boss_phases(seconds=4.0):
@@ -250,13 +226,13 @@ def boss_phases(seconds=4.0):
         before = len(tool("list_characters"))
         tool("set_character_attribute", actor_path=boss["path"], attribute="Health", value=pct * 10.0)
         tool("refresh_health", actor_path=boss["path"])
-        montages, effects, t0 = set(), set(), time.time()
-        while time.time() - t0 < seconds:
+        montages, effects, t0 = set(), set(), game_time()
+        while game_time() - t0 < seconds:
             m = tool("character_state", actor_path=boss["path"])["montage"]
             if m: montages.add(m)
             for e in call_tool(GAS, "GetActiveEffects", {"actor": {"refPath": boss["path"]}}):
                 effects.add(str(e.get("effectName", e))[:60] if isinstance(e, dict) else str(e)[:60])
-            time.sleep(0.1)
+            time.sleep(0.02)
         phases[f"below_{pct + 1}"] = {"summoned": len(tool("list_characters")) - before, "montages": sorted(montages), "effects": sorted(effects)}
         freeze_enemies()  # summons
     return phases
@@ -272,12 +248,12 @@ def sight_checks(dummy, seconds=2.0):
         tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=floor_z(), yaw=dummy_yaw)
         tool("teleport_player", x=x - gap, y=y, z=floor_z())
         tool("ai_target", actor_path=dummy["path"], clear=True)
-        time.sleep(0.3)
+        wait_game(0.3)
         tool("set_ai_enabled", actor_path=dummy["path"], enabled=True, show_player=False)
-        t0, seen = time.time(), None
-        while time.time() - t0 < seconds and not seen:
+        t0, seen = game_time(), None
+        while game_time() - t0 < seconds and not seen:
             seen = tool("ai_target", actor_path=dummy["path"])["target"]
-            time.sleep(0.1)
+            time.sleep(0.02)
         tool("set_ai_enabled", actor_path=dummy["path"], enabled=False)
         tool("ai_target", actor_path=dummy["path"], clear=True)
         results[name] = bool(seen)
@@ -290,12 +266,12 @@ def enemy_attack(dummy, seconds=6.0):
     tool("set_player_attribute", attribute="Defense", value=1.0)
     tool("set_ai_enabled", actor_path=dummy["path"], enabled=True)
     start = tool("pie_player_state")["attributes"]["Health"]
-    montages, t0 = [], time.time()
-    while time.time() - t0 < seconds:
+    montages, t0 = [], game_time()
+    while game_time() - t0 < seconds:
         m = tool("character_state", actor_path=dummy["path"])["montage"]
         if m and (not montages or montages[-1] != m):
             montages.append(m)
-        time.sleep(SAMPLE)
+        time.sleep(0.02)
     tool("set_ai_enabled", actor_path=dummy["path"], enabled=False)
     return {"enemy_montages": montages, "player_damage": round(start - tool("pie_player_state")["attributes"]["Health"], 1)}
 
@@ -315,15 +291,14 @@ def outcome(s):
 VARIABLE_DAMAGE = {"punch_hold", "kick_hold", "super_kick_tat"}
 
 
-def diff(a_path, b_path):
-    A, B = json.load(open(a_path)), json.load(open(b_path))
-    a = {s["scenario"]: s for s in A["scenarios"]}
-    b = {s["scenario"]: s for s in B["scenarios"]}
-    same = True
+def compare(A, B):
+    """Outcome differences between two runs, as lines; lines starting with "note" don't count as differences."""
+    lines = []
+    a = {x["scenario"]: x for x in A["scenarios"]}
+    b = {x["scenario"]: x for x in B["scenarios"]}
     for name in a:
         if name not in b:
-            print(f"{name}: missing in {b_path}")
-            same = False
+            lines.append(f"{name}: missing")
             continue
         oa, ob = outcome(a[name]), outcome(b[name])
         for k in oa:
@@ -331,21 +306,24 @@ def diff(a_path, b_path):
                 continue
             if k.endswith("_tags") and set(ob[k] or []) <= set(oa[k] or []):
                 # brief tags (a hitstun) can fall between samples: a missing one is a note, a new one a difference
-                print(f"note {name}.{k}: {oa[k]} -> {ob[k]}")
+                lines.append(f"note {name}.{k}: {oa[k]} -> {ob[k]}")
                 continue
-            print(f"{name}.{k}: {oa[k]} -> {ob[k]}")
-            same = False
+            lines.append(f"{name}.{k}: {oa[k]} -> {ob[k]}")
     if A.get("boss") and B.get("boss") and A["boss"] != B["boss"]:
-        print(f"boss: {A['boss']} -> {B['boss']}")
-        same = False
+        lines.append(f"boss: {A['boss']} -> {B['boss']}")
     if A.get("sight") and B.get("sight") and A["sight"] != B["sight"]:
-        print(f"sight: {A['sight']} -> {B['sight']}")
-        same = False
+        lines.append(f"sight: {A['sight']} -> {B['sight']}")
     ea, eb = A.get("enemy_attack"), B.get("enemy_attack")
     if ea and eb and (set(ea["enemy_montages"]) != set(eb["enemy_montages"]) or (ea["player_damage"] > 0) != (eb["player_damage"] > 0)):
-        print(f"enemy_attack: {ea} -> {eb}")
-        same = False
-    print("same outcomes" if same else "outcomes differ")
+        lines.append(f"enemy_attack: {ea} -> {eb}")
+    return lines
+
+
+def diff(a_path, b_path):
+    lines = compare(json.load(open(a_path)), json.load(open(b_path)))
+    for line in lines:
+        print(line)
+    print("same outcomes" if not any(not line.startswith("note") for line in lines) else "outcomes differ")
 
 
 if __name__ == "__main__":

@@ -18,6 +18,7 @@ import json
 import sys
 import time
 
+from harness import wait_game
 from mcp_client import tool
 from level_regression import wait_loaded
 
@@ -49,18 +50,18 @@ def room_of(at, size):
 
 def clear_floor(level):
     """Kill the boss room's enemies, stand on the flag; returns the player's location just after."""
-    size = level["room_size"]
+    size = level["tile_size"]
     goal = tool("list_actors", class_path="/Script/MyGame.Goal")[0]["location"]
     room = room_of(goal, size)
     tool("set_player_attribute", attribute="Defense", value=1000.0)
     tool("teleport_player", x=room[0] * size[0], y=room[1] * size[1], z=goal[2] + 150)
-    time.sleep(1.5)
+    wait_game(1.5)
     for c in tool("list_characters"):
         if c["team"] == 1 and c.get("health", 0) > 0 and room_of(c["location"], size) == room:
             tool("kill_character", actor_path=c["path"])
-    time.sleep(2)
+    wait_game(2)
     tool("teleport_player", x=goal[0], y=goal[1], z=goal[2] + 100)
-    time.sleep(1.0)
+    wait_game(1.0)
 
 
 def player_pos():
@@ -68,6 +69,14 @@ def player_pos():
 
 
 def run(out):
+    run_all()
+    with open(out, "w") as f:
+        json.dump(results, f, indent=1)
+    print("ALL PASS" if all(v.get("pass", True) for v in results.values() if isinstance(v, dict) and "pass" in v) else "SOME FAILED")
+
+
+def run_all():
+    results.clear()
     floor1 = wait_loaded()
     start = tool("run_state")
     results["start"] = start
@@ -82,17 +91,17 @@ def run(out):
     clear_floor(floor1)
     p0 = player_pos()
     tool("move_input", forward=1.0, right=1.0)
-    time.sleep(1.5)
+    wait_game(1.5)
     tool("move_input", forward=0.0, right=0.0)
     p1 = player_pos()
     moved = ((p1[0] - p0[0]) ** 2 + (p1[1] - p0[1]) ** 2) ** 0.5
     check("no_control", moved < 1.0, f"moved {moved:.0f} after the flag")
 
-    floor2_state = wait_for(lambda s: s["difficulty"] == 2 and s["player"])
+    floor2_state = wait_for(lambda s: s["floor"] == 2 and s["player"])
     floor2 = wait_loaded()
     results["floor2"] = floor2_state
-    check("floor_clear", floor2_state and floor2_state["difficulty"] == 2 and len(floor2["rooms"]) == len(floor1["rooms"]) + 1,
-          f'difficulty {floor2_state and floor2_state["difficulty"]}, rooms {len(floor1["rooms"])} -> {len(floor2["rooms"])}')
+    check("floor_clear", floor2_state and floor2_state["floor"] == 2 and len(floor2["tiles"]) == len(floor1["tiles"]) + 1,
+          f'floor {floor2_state and floor2_state["floor"]}, tiles {len(floor1["tiles"])} -> {len(floor2["tiles"])}')
     check("carry_over", floor2_state["items"] == before["items"] and floor2_state["abilities"] == before["abilities"]
           and abs(floor2_state["player"]["Health"] - 70.0) < 0.5,
           f'items {floor2_state["items"]}, health {floor2_state["player"]["Health"]}, '
@@ -107,14 +116,14 @@ def run(out):
 
     # new run from the game over screen
     tool("run_action", action="start_new_run")
-    time.sleep(3)
+    time.sleep(3)  # the floor reloads: real time, the game clock restarts
     fresh = wait_for(lambda s: s["player"] and s["map"] == "LevelPersistent")
     wait_loaded()
     fresh = tool("run_state")
     results["new_run"] = fresh
-    check("new_run", fresh["difficulty"] == 1 and fresh["items"] == [] and fresh["abilities"] == starting_moves
+    check("new_run", fresh["floor"] == 1 and fresh["items"] == [] and fresh["abilities"] == starting_moves
           and fresh["player"]["Health"] == fresh["player"]["MaxHealth"],
-          f'difficulty {fresh["difficulty"]}, items {fresh["items"]}, health {fresh["player"]["Health"]}, '
+          f'floor {fresh["floor"]}, items {fresh["items"]}, health {fresh["player"]["Health"]}, '
           f'starting moves {fresh["abilities"] == starting_moves}')
 
     # menu and back
@@ -130,9 +139,7 @@ def run(out):
     check("input_mode", all((modes[k] or "").startswith("Game Only") for k in ("floor 2", "new run", "run from menu")),
           str({k: v and v.split(" (")[0] for k, v in modes.items()}))
 
-    with open(out, "w") as f:
-        json.dump(results, f, indent=1)
-    print("ALL PASS" if all(v.get("pass", True) for v in results.values() if isinstance(v, dict) and "pass" in v) else "SOME FAILED")
+    return results
 
 
 if __name__ == "__main__":

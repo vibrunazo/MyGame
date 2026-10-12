@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "RoomDataAsset.h"
+#include "TileTemplate.h"
 #include "GameFramework/Actor.h"
 #include "Door.generated.h"
 
@@ -24,7 +24,7 @@ public:
 	void CloseDoor();
 	UFUNCTION(BlueprintImplementableEvent, Category = Door)
 	void OnCloseDoorBP();
-	void SetSymbol(ERoomType SymbolType);
+	void SetSymbol(ETileType SymbolType);
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Door)
 	class USceneComponent* MyRoot;

@@ -4,7 +4,7 @@
 #include "Spawner.h"
 #include "../MyGameInstance.h"
 #include "../Player/MyCharacter.h"
-#include "../Level/RoomMaster.h"
+#include "../Level/TileMaster.h"
 
 
 #include "Components/BillboardComponent.h"
@@ -26,25 +26,25 @@ ASpawner::ASpawner()
 
 }
 
-void ASpawner::TryToUpdateRoomMasterRef()
+void ASpawner::TryToUpdateTileMasterRef()
 {
 	// the room master that shares this spawner's room map (it may not have begun play yet)
 	for (AActor* Actor : GetLevel()->Actors)
 	{
-		if (ARoomMaster* Master = Cast<ARoomMaster>(Actor))
+		if (ATileMaster* Master = Cast<ATileMaster>(Actor))
 		{
-			RoomMasterRef = Master;
+			TileMasterRef = Master;
 			return;
 		}
 	}
 	UE_LOG(LogTemp, Error, TEXT("failed to update room master ref on %s"), *GetName());
 }
 
-void ASpawner::RegisterNewCharOnRoomMaster(AMyCharacter* NewChar)
+void ASpawner::RegisterNewCharOnTileMaster(AMyCharacter* NewChar)
 {
-	if (!RoomMasterRef) TryToUpdateRoomMasterRef();
-	if (!RoomMasterRef) return;
-	RoomMasterRef->AddNewCharToRoom(NewChar);
+	if (!TileMasterRef) TryToUpdateTileMasterRef();
+	if (!TileMasterRef) return;
+	TileMasterRef->AddNewCharToTile(NewChar);
 }
 
 // Called when the game starts or when spawned
@@ -73,7 +73,7 @@ void ASpawner::SpawnActors()
 	params.bNoFail = true;
 	params.Owner = this;
 	AMyCharacter* NewChar = GetWorld()->SpawnActor<AMyCharacter>(CharsToSpawn[IndexToSpawn], Loc, GetActorRotation(), params);
-	RegisterNewCharOnRoomMaster(NewChar);
+	RegisterNewCharOnTileMaster(NewChar);
 	if (bAggroOnSpawn)
 	{
 		UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());

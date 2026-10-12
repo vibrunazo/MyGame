@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Abilities/GameplayAbility.h"
 #include "Containers/Map.h"
 #include "GameplayTagContainer.h"
 #include "Abilities/IGetHit.h"

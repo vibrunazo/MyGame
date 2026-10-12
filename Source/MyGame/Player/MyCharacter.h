@@ -63,6 +63,11 @@ public:
 	// PIE test hook: sets an attribute's base value through the ability system (modifiers and damage see it)
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	void SetAttributeBaseForTest(FGameplayAttribute Attribute, float Value);
+	// PIE test hooks: the character's gameplay tags, and the abilities active right now (class names)
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	TArray<FString> GetTagsForTest() const;
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	TArray<FString> GetActiveAbilitiesForTest() const;
 #endif
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
@@ -190,7 +195,7 @@ public:
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TSubclassOf<class UCameraShakeBase> CamShakeClass;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	class ARoomCameraPawn* CamPawnRef = nullptr;
+	class ARoomCamera* CamPawnRef = nullptr;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (tooltip = "if < 0, starts with MaxHealth, else starts with InitialHealth every level"))
 	float InitialHealth = -1.f; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

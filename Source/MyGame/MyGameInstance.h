@@ -51,7 +51,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyGI)
 	TSoftObjectPtr<UWorld> MainMenuMap;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
-	uint8 LevelDifficulty = 0;
+	uint8 FloorNumber = 0;
 	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
 	float Health = 100.f;
 	UPROPERTY(VisibleInstanceOnly, Category = MyGI)

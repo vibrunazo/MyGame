@@ -14,6 +14,62 @@ from toolset_registry.registration import Registration
 
 _ATTRIBUTES = ("Health", "MaxHealth", "Mana", "MaxMana", "Attack", "Defense", "Speed", "AttackSpeed", "RotSpeed")
 
+# set_game_speed: the time dilation tests want, re-applied whenever the game resets it to 1 (after a floor loads)
+_speed = {"value": 1.0, "handle": None}
+
+
+def _speed_tick(delta_seconds):
+    world = _pie_world()
+    if world and _speed["value"] != 1.0 and unreal.GameplayStatics.get_global_time_dilation(world) == 1.0:
+        unreal.GameplayStatics.set_global_time_dilation(world, _speed["value"])
+
+
+# run_timeline: scripted inputs fired on the game clock and per-frame recording, all inside the editor's tick, so
+# scenarios behave the same at any game speed (no MCP round trips between an input and the next frame)
+_tl = {"handle": None, "spec": None, "t0": 0.0, "pending": [], "rec": None, "phase": "idle", "result": None}
+
+
+def _char(path):
+    return unreal.find_object(None, path)
+
+
+def _tl_tick(delta_seconds):
+    world = _pie_world()
+    if not world or _tl["phase"] in ("idle", "done"):
+        return
+    spec, rec = _tl["spec"], _tl["rec"]
+    now = unreal.GameplayStatics.get_time_seconds(world) - _tl["t0"]
+    player, dummy = _player(), _char(spec["dummy"]) if spec.get("dummy") else None
+    if _tl["phase"] == "run":
+        # at most one input per frame, so two inputs never land as one simultaneous press
+        if _tl["pending"] and _tl["pending"][0][0] <= now:
+            _, kind, hook, kwargs = (_tl["pending"].pop(0) + [None, None])[:4]
+            if kind == "call":
+                getattr(MyGameTools, hook)(**(kwargs or {}))
+        anim = player.get_editor_property("mesh").get_anim_instance()
+        montage = anim.get_current_active_montage() if anim else None
+        if montage:
+            key = f"{montage.get_name()}:{anim.montage_get_current_section(montage)}"
+            if not rec["timeline"] or rec["timeline"][-1] != key:
+                rec["timeline"].append(key)
+        rec["abilities"].update(player.get_active_abilities_for_test())
+        rec["player_tags"].update(t for t in player.get_tags_for_test() if t.startswith(("state.", "status.")) and t != "state.combat")
+        rec["player_z"] = max(rec["player_z"], player.get_actor_location().z)
+        if dummy:
+            rec["dummy_tags"].update(t for t in dummy.get_tags_for_test() if t.startswith(("status.", "state.")))
+            rec["dummy_z"] = max(rec["dummy_z"], dummy.get_actor_location().z)
+        if now >= spec["duration"]:
+            rec["end_player"] = json.loads(MyGameTools.pie_player_state())
+            rec["end_dummy"] = json.loads(MyGameTools.character_state(spec["dummy"])) if dummy else None
+            _tl["phase"], _tl["settle_from"] = "settle", now
+    elif _tl["phase"] == "settle":
+        # a combo window must close with the attack: look once the player's abilities have ended
+        if not player.get_active_abilities_for_test() or now - _tl["settle_from"] >= spec.get("settle", 3.0):
+            rec["lingering"] = sorted(t for t in player.get_tags_for_test() if t.startswith("combo."))
+            _tl["phase"] = "done"
+            _tl["result"] = {k: sorted(v) if isinstance(v, set) else v for k, v in rec.items()}
+
+
 # video_frames: a screenshot request every PIE frame, with its game time
 _vid = {"handle": None, "frames": [], "name": "", "t0": 0.0}
 
@@ -36,7 +92,7 @@ def _cam_sample(delta_seconds):
     if not world:
         return
     pawn = unreal.GameplayStatics.get_player_pawn(world, 0)
-    cams = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.RoomCameraPawn"))
+    cams = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.RoomCamera"))
     pcm = unreal.GameplayStatics.get_player_camera_manager(world, 0)
     if not pawn or not pcm:
         return
@@ -437,26 +493,26 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def level_state() -> str:
-        """The generated level as the world sees it: streamed rooms (map, grid coordinate, loaded), walls, doors,
+        """The generated level as the world sees it: streamed tiles (map, grid coordinate, loaded), walls, doors,
         room masters, enemies per room and the time dilation. Read from actors and streaming levels only, so it
         works whatever builds the level.
 
         Returns:
-            JSON {"rooms", "walls", "doors", "room_masters", "enemies", "props", "time_dilation"}.
+            JSON {"tiles", "rooms", "walls", "doors", "tile_masters", "enemies", "props", "time_dilation"}.
         """
         world = _pie_world()
         if not world:
             raise RuntimeError("PIE is not running")
-        builders = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.LevelBuilder"))
-        sx = builders[0].get_editor_property("room_size_x") if builders else 2000.0
-        sy = builders[0].get_editor_property("room_size_y") if builders else 2000.0
+        builders = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.FloorBuilder"))
+        sx = builders[0].get_editor_property("tile_size_x") if builders else 2000.0
+        sy = builders[0].get_editor_property("tile_size_y") if builders else 2000.0
         coord = lambda v: [round(v.x / sx), round(v.y / sy)]
-        rooms = []
+        tiles = []
         for ls in unreal.ObjectIterator(unreal.LevelStreaming):
             if ls.get_world() != world or not ls.get_loaded_level():
                 continue  # LevelPersistent also lists every room map as an unloaded sublevel
             # a level instance lives in a unique package (…_LevelInstance_N) but its world keeps the map's name
-            rooms.append({"map": ls.get_loaded_level().get_outer().get_name(), "coord": coord(ls.get_editor_property("level_transform").translation),
+            tiles.append({"map": ls.get_loaded_level().get_outer().get_name(), "coord": coord(ls.get_editor_property("level_transform").translation),
                           "visible": ls.is_level_visible()})
         actors = lambda path: unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, path))
         walls = [{"at": [round(w.get_actor_location().x), round(w.get_actor_location().y)], "doored": w.get_editor_property("is_doored"),
@@ -465,10 +521,10 @@ class MyGameTools(unreal.ToolsetDefinition):
                   "open": d.get_editor_property("box_collision").get_collision_enabled() == unreal.CollisionEnabled.NO_COLLISION}
                  for d in actors("/Script/MyGame.Door")]
         masters = [{"coord": coord(m.get_actor_location()), "chars": len(m.get_editor_property("chars_to_kill"))}
-                   for m in actors("/Script/MyGame.RoomMaster")]
+                   for m in actors("/Script/MyGame.TileMaster")]
         # props per room: mesh name -> instance count, from each room dressing's PCG-spawned instance components
         props = {}
-        for d in actors("/Script/MyGame.RoomDressing"):
+        for d in actors("/Script/MyGame.TileDressing"):
             room = props.setdefault(",".join(map(str, coord(d.get_actor_location()))), {})
             for ism in d.get_components_by_class(unreal.InstancedStaticMeshComponent):
                 if ism.static_mesh and ism.get_instance_count():
@@ -479,7 +535,13 @@ class MyGameTools(unreal.ToolsetDefinition):
             if c.get_editor_property("team") == 1:
                 k = ",".join(map(str, coord(c.get_actor_location())))
                 enemies[k] = enemies.get(k, 0) + 1
-        return json.dumps({"room_size": [sx, sy], "rooms": rooms, "walls": walls, "doors": doors, "room_masters": masters, "enemies": enemies, "props": props,
+        # rooms: tiles joined with no wall between them, as the floor builder grouped them
+        rooms = {}
+        if builders:
+            for t in tiles:
+                r = builders[0].get_room_of_tile(unreal.IntPoint(t["coord"][0], t["coord"][1]))
+                rooms.setdefault(r, []).append(t["coord"])
+        return json.dumps({"tile_size": [sx, sy], "tiles": tiles, "rooms": sorted(sorted(v) for v in rooms.values()), "walls": walls, "doors": doors, "tile_masters": masters, "enemies": enemies, "props": props,
                            "time_dilation": unreal.GameplayStatics.get_global_time_dilation(world)})
 
     @toolset_registry.tool_call
@@ -489,7 +551,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         mana, items, and the player's learned abilities and current attributes.
 
         Returns:
-            JSON {"map", "difficulty", "seed", "gi_health", "gi_mana", "items", "abilities", "player", "input_mode",
+            JSON {"map", "floor", "seed", "gi_health", "gi_mana", "items", "abilities", "player", "input_mode",
             "widgets"}; "player" is null when no player character is possessed (between levels, after death);
             "input_mode" is the controller's last SetInputMode ("Game Only" is the only one real keys and pads reach).
         """
@@ -503,7 +565,7 @@ class MyGameTools(unreal.ToolsetDefinition):
             except Exception:
                 return None
         stream = prop("random_stream")
-        state = {"map": unreal.GameplayStatics.get_current_level_name(world), "difficulty": prop("level_difficulty"),
+        state = {"map": unreal.GameplayStatics.get_current_level_name(world), "floor": prop("floor_number"),
                  "seed": stream.get_editor_property("initial_seed") if stream else None,
                  "gi_health": prop("health"), "gi_mana": prop("mana"),
                  "items": sorted(i.get_name() for i in prop("inventory") or [] if i), "abilities": None, "player": None}
@@ -563,6 +625,103 @@ class MyGameTools(unreal.ToolsetDefinition):
             raise ValueError(f"unknown action {action}")
         getattr(unreal.GameplayStatics.get_game_instance(world), action)()
         return json.dumps({"called": action})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_game_speed(speed: float) -> str:
+        """Runs PIE `speed` times faster than real time (global time dilation), kept across floor loads, for tests.
+        The game should behave the same at any speed.
+
+        Args:
+            speed: 1 for real time.
+
+        Returns:
+            JSON {"speed": speed}.
+        """
+        _speed["value"] = float(speed)
+        if not _speed["handle"]:
+            _speed["handle"] = unreal.register_slate_post_tick_callback(_speed_tick)
+        world = _pie_world()
+        if world and unreal.GameplayStatics.get_global_time_dilation(world) > 0.0:
+            unreal.GameplayStatics.set_global_time_dilation(world, _speed["value"])
+        return json.dumps({"speed": speed})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_max_fps(fps: float) -> str:
+        """Caps the frame rate (t.MaxFPS; 0 = uncapped), to test that gameplay doesn't depend on it.
+
+        Args:
+            fps: Frames per second, 0 for no cap.
+
+        Returns:
+            JSON {"max_fps": fps}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        unreal.SystemLibrary.execute_console_command(world, f"t.MaxFPS {float(fps)}")
+        return json.dumps({"max_fps": fps})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def start_run(seed: int) -> str:
+        """Starts a new run with this seed, as the main menu's New Game does (the floor reloads).
+
+        Args:
+            seed: The run's random seed.
+
+        Returns:
+            JSON {"seed": seed}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        gi = unreal.GameplayStatics.get_game_instance(world)
+        gi.set_editor_property("random_seed", int(seed))
+        gi.start_new_run()
+        return json.dumps({"seed": seed})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def run_timeline(spec: str) -> str:
+        """Plays scripted inputs on the game clock and records what happens, frame by frame, inside the editor.
+        Poll timeline_result until it's done.
+
+        Args:
+            spec: JSON {"dummy": actor path or null, "duration": game seconds, "settle": max game seconds to wait
+                for the player's abilities to end afterwards, "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
+                t, calls one of these MyGameTools hooks (press_input, move_input, dash_player, learn_item_abilities,
+                give_item, set_character_attribute, set_player_attribute, refresh_health...).
+
+        Returns:
+            JSON {"started": true}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        sp = json.loads(spec)
+        player = _player()
+        dummy = _char(sp["dummy"]) if sp.get("dummy") else None
+        _tl.update(spec=sp, t0=unreal.GameplayStatics.get_time_seconds(world), phase="run", result=None,
+                   pending=sorted([list(i) for i in sp["inputs"]], key=lambda i: i[0]),
+                   rec={"timeline": [], "abilities": set(), "player_tags": set(), "dummy_tags": set(),
+                        "player_z": player.get_actor_location().z,
+                        "dummy_z": dummy.get_actor_location().z if dummy else 0.0})
+        if not _tl["handle"]:
+            _tl["handle"] = unreal.register_slate_post_tick_callback(_tl_tick)
+        return json.dumps({"started": True})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def timeline_result() -> str:
+        """The recording of the last run_timeline.
+
+        Returns:
+            JSON {"done": bool, "result": {timeline, abilities, player_tags, dummy_tags, player_z, dummy_z,
+            end_player, end_dummy, lingering} once done}.
+        """
+        return json.dumps({"done": _tl["phase"] == "done", "phase": _tl["phase"], "result": _tl["result"]})
 
     @toolset_registry.tool_call
     @staticmethod
@@ -663,7 +822,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         world = _pie_world()
         if not world:
             raise RuntimeError("PIE is not running")
-        dressings = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.RoomDressing"))
+        dressings = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.TileDressing"))
         for d in dressings:
             d.get_component_by_class(unreal.PCGComponent).generate_local(True)
         return json.dumps({"dressings": len(dressings)})
@@ -680,9 +839,9 @@ class MyGameTools(unreal.ToolsetDefinition):
         world = _pie_world()
         if not world:
             raise RuntimeError("PIE is not running")
-        builders = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.LevelBuilder"))
-        sx = builders[0].get_editor_property("room_size_x") if builders else 2000.0
-        sy = builders[0].get_editor_property("room_size_y") if builders else 2000.0
+        builders = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.FloorBuilder"))
+        sx = builders[0].get_editor_property("tile_size_x") if builders else 2000.0
+        sy = builders[0].get_editor_property("tile_size_y") if builders else 2000.0
         levels = {}
         for ls in unreal.ObjectIterator(unreal.LevelStreaming):
             if ls.get_world() == world and ls.get_loaded_level():

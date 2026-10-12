@@ -4,8 +4,8 @@ Needs the editor running with a rendering PIE (editor_pie with -RenderOffscreen)
 
     python Tests/camera_video.py out.mp4 [label]
 
-The demo (game seconds, enemies frozen): walk right into the next room, stop and throw a fireball ahead, fight while turning,
-jump twice, walk back left and stop. The game runs slowed down while every frame is captured; the frames are then
+The demo (seed 6032, enemies frozen): walk right across the two-tile start room, stop and throw a fireball, fight
+while turning, jump twice, then walk up through the door into the closed room above. The game runs slowed down while every frame is captured; the frames are then
 resampled to 30 fps of game time, so the video plays at real speed.
 """
 import shutil
@@ -42,19 +42,35 @@ def move(f, r, secs):
     tool("move_input", forward=0.0, right=0.0)
 
 
+def player_xy():
+    loc = tool("pie_player_state")["location"]
+    return loc[0], loc[1]
+
+
+def walk_until(f, r, done, limit=8.0):
+    """Holds the stick until done(x, y) is true (or limit game seconds pass)."""
+    tool("move_input", forward=f, right=r)
+    t0 = tool("game_time")["t"]
+    while not done(*player_xy()) and tool("game_time")["t"] - t0 < limit:
+        time.sleep(0.05)
+    tool("move_input", forward=0.0, right=0.0)
+
+
 def demo():
-    move(0, 1, 4.5)                       # walk right into the next room: the camera eases over to it
+    # seed 6032: the start room is two tiles wide (0,0 and 0,1); a door at the top of tile 0,1 (x 700, y 2000) leads
+    # into the closed room 1,1
+    walk_until(0, 1, lambda x, y: y >= 2000)   # walk right across the start room: the camera slides along with you
     wait(0.8)
-    press("Cast")                         # stop and throw a fireball ahead
+    press("Cast")                               # stop and throw a fireball
     wait(1.2)
-    for i in range(6):                    # fight: turn and punch
+    for i in range(6):                          # fight: turn and punch
         tool("set_player_facing", yaw=-90.0 if i % 2 else 90.0)
         press("Punch")
         wait(0.45)
-    for _ in range(2):                    # jumps
+    for _ in range(2):                          # jumps
         tool("jump_player")
         wait(1.0)
-    move(0, -1, 2.2)                      # walk back left: the look-ahead turns around
+    walk_until(1, 0, lambda x, y: x >= 1800)   # up through the door into the closed room: the camera eases over
     wait(1.5)
 
 

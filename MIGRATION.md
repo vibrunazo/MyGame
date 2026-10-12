@@ -191,9 +191,25 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
    - The camera adds it as a blendable and feeds it the room's rectangle, eased with the transition.
    - Open floor still joins rooms, so the darkness is what keeps the next room secret; the camera alone can't.
 5. **Video:** `Tests/camera_video.py` (enemies frozen, waits on the game clock: capturing every frame slows the game unevenly). A/B page, room camera vs 2020: https://claude.ai/artifact/Au6ZRCPXHLxyk7fAqPTcRs
-6. **Next:**
-   - The near-wall cutaway. The bottom wall still drops to 50 cm on room entry (`HideWall`); with the higher camera, a fade or a lower wall may be needed.
-   - Your play-test, by feel.
+6. **Fixed: rooms are what the walls enclose** (your correction, 2026-10-12). Steps 3 and 4 treated every tile as a room, so the camera stopped and darkened at tile edges with no wall between them. A room is tiles joined with no wall between them; you enter one through a door. Over the reference seeds, 7 tiles make 4 or 5 rooms, and seed 2024 has an L-shaped room of 4 tiles.
+   - **Naming pass** (the glossary is in `CLAUDE.md`): tile, tile template, room, wall/door, closed room, floor, run, level.
+     - C++: `UTileTemplate`, `AFloorBuilder`, `ATileMaster`, `ATileDressing`, `ARoomCamera`, `FTileState`, `FTileCoord`, `ETileType`, `ETileSide`, `FFloorLayout…`, `NumTiles`, `TileSize*`, `FloorNumber`, …
+     - Assets: `/Game/Maps/Tiles/TileXX-YY` and `DA_TileXX-YY`, `BP_FloorBuilder`, `BP_TileMaster`, `BP_RoomCamera`, `PCG_TileDressing`.
+     - Tools: `Tools/rename_tiles.py` and `Tools/fixup_tile_redirectors.py`.
+     - The core redirects were baked in by resaving the three Blueprints that used old names, then removed.
+     - The redirectors already in the project from 2020 (`MI_coindecal`, `mana`, `SM_Wall2m2`, `SM_WallTall2m2`, `Room00-05`, `Room01`/`02`/`03`, `Room09-01`) are kept, plus `RoomBoss01`, which `Room09-01` points through. Deleting them needs your OK.
+     - The fixup resaved `FX_Coins`, `FX_RedEye` and `FX_RibbonsUp` to point past those redirectors; no content change.
+   - **Rooms in code:** `AFloorBuilder::FindRooms` flood-fills tiles through sides without walls once the walls are built. Queries: `GetRoomOfTile`, `GetRoomTiles`, `AreJoined`. `level_state` and the level regression record the rooms.
+   - **The camera** (`ARoomCamera`):
+     - One-tile framing as before.
+     - The focus is the point of the room's spine nearest the player. The spine is the tile centers, the lines between joined neighbors and the squares of 2 × 2 blocks.
+     - A one-tile room doesn't move. A bigger one slides along its spine (critically damped, 0.45 s), never past its walls.
+     - Entering another room starts a 0.5 s ease, once 150 inside its tile.
+     - Measured in the two-tile start room: walking sideways moves the camera 0.68 times the player; walking in depth, turning, punching and jumping move it 0.
+   - **The darkness** is now per room: the camera paints a small mask texture (8 texels per tile; bilinear filtering gives the soft edge) lit for the current room's tiles, and `PP_RoomDarkness` samples it by world position.
+7. **Next:**
+   - Your play-test.
+   - The near-wall cutaway: the bottom wall still drops to 50 cm on tile entry (`HideWall`).
 
 ## Starting point
 
@@ -216,7 +232,13 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
   - ability functional tests on a test map: a punch hits a dummy, the combo advances, the damage formula holds
   - boot smoke test: every room streams in, the game unfreezes, every RoomMaster registers
 - **Screenshots / PIE:** only where a numeric or log check flags something.
-- **Ability regression:** start the editor with `-Seed=6032` (plus `"-LogCmds=LogHitCue Verbose"` to count hit cues in the log), start PIE, run `python Tests/ability_regression.py run out.json`, then `diff Tests/baselines/abilities_phase3.json out.json`. It covers the player's moves, damage, hit reactions, the combo window, enemy sight, the boss phases and an enemy attack.
+- **Regression suites, one command:** `python Tests/run_all.py` (`--speed 3` by default, `--only level,abilities,loop,camera,framerate`, `--max-fps N`) takes about 3 minutes.
+  - **One session:** it starts one headless editor with the background CPU throttle off (`harness.start_editor`), which runs PIE at ~60 fps instead of ~10, and one PIE session. Each suite starts a fresh run with its seed through `UMyGameInstance::StartNewRun`.
+  - **Game clock:** every scripted wait is in game time (`harness.wait_game`), and the game runs 3× faster (global time dilation, re-applied after floor loads).
+  - **In-editor timelines:** ability scenarios play their inputs and record every frame inside the editor (`run_timeline`), so MCP latency doesn't shift their timing.
+  - **Results** go to `Tests/out/<time>/`.
+  - **Frame rate:** the game should behave the same at any speed or frame rate. The `framerate` suite runs the multi-hit moves at 1× and 3× (a 3× larger frame step) and requires identical hits.
+- **Ability regression (single suite):** start the editor with `-Seed=6032` (plus `"-LogCmds=LogHitCue Verbose"` to count hit cues in the log), start PIE, run `python Tests/ability_regression.py run out.json`, then `diff Tests/baselines/abilities_phase3.json out.json`. It covers the player's moves, damage, hit reactions, the combo window, enemy sight, the boss phases and an enemy attack.
 
 ## Phase 1: open, compile and run as-is in 5.8
 
@@ -358,6 +380,11 @@ After the migration and the code fixes (Phases 3 to 5). Every tester called the 
   3. **Lumen as a high-settings option.** It adds bounce light, light from emissive effects (Fire Hands, pickups) and sky occlusion. It needs a DX12/SM6 GPU and costs several ms per frame. The look must still hold with GI off (`r.DynamicGlobalIlluminationMethod=0`) for low-end PCs and handhelds. Compare captures of the same room both ways, plus GPU frame times, and pick by eye.
 - **Keyboard button icons (TODO):** the HUD's ability slots show gamepad button icons only. Show the keyboard keys when the player is on keyboard: track the last input device, and read the bound key from `IMC_Default` for each slot's action. That also keeps rebinding correct later.
 - **Generated ability icons (long-term TODO):** render each ability's icon automatically instead of drawing it by hand: a test map plays the ability's montage on the character, a scripted capture writes a render target, and the result becomes the icon texture the book cover and HUD slot use. You planned this in 2020 but never built it. `GA_PunchRun` is the first one that needs it.
+- **Frame-rate dependent moves (TODO, found 2026-10-12 by the `framerate` suite):**
+  - `punch_hold` lands 3 hits at ~60 fps but 2 when frames are 3× longer, like 20 fps, a slow PC or a hitch.
+  - `super_kick_tat` lands 4 at ~60 fps and 5 with long frames.
+  - Likely causes: hold/combo continuation and multi-hit windows checked per frame (a window or a hit cooldown falling between frames).
+  - Fix the hit timing to not depend on the frame step; the `framerate` suite then passes.
 - **Floor progression design (TODO, your call):** after the boss, the same map regenerates with `LevelDifficulty` + 1. Each floor's walk is one room longer, so later floors reach tier 2 (floor 2) and tier 3 (floor 4) rooms and get more doored miniboss rooms. Nothing else changes: the boss is always `RoomBoss01`, enemy stats and loot tables don't scale, and there's no final floor or ending. To decide: enemy scaling per floor, more bosses or floor themes, an end condition, and whether walks should keep growing without limit.
 - **AI on StateTree (long-term TODO):** move the enemy AI from Behavior Trees (`BT_*`, `BTTask_*`, the blackboards and EQS queries) to StateTree, with the same behavior. Record each enemy type's behavior in scripted PIE runs first (targeting, attack ranges, run-away, the boss summons and buff phases) as the baseline, then port one enemy at a time and compare against it.
 - Asset audit, with **no deletions without your OK**. For each test-named asset, list its referencers from the asset registry and say whether a live path reaches it (a map, a character's `Abilities`, a `DA_Learn*`, a loot table). Candidates: ThirdPersonCPP, BSPtest, `GA_Test*` (it may be the real punch), `RT_*`, `ChildActorTest`/`ParentActorTest`, AdvancedLocomotionV4.
