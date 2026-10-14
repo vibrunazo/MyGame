@@ -58,13 +58,22 @@ def _tl_tick(delta_seconds):
         if dummy:
             rec["dummy_tags"].update(t for t in dummy.get_tags_for_test() if t.startswith(("status.", "state.")))
             rec["dummy_z"] = max(rec["dummy_z"], dummy.get_actor_location().z)
+        if spec.get("trace"):
+            # one row per frame: game time, montage section, dummy health, player-dummy distance
+            hp = json.loads(MyGameTools.character_state(spec["dummy"]))["health"] if dummy else 0.0
+            gap = (dummy.get_actor_location() - player.get_actor_location()).length() if dummy else 0.0
+            pos = anim.montage_get_position(montage) if montage else -1.0
+            rec.setdefault("trace", []).append([round(now, 4), rec["timeline"][-1] if rec["timeline"] else "", round(hp, 1), round(gap, 1),
+                                                round(player.get_editor_property("custom_time_dilation"), 3), round(pos, 3),
+                                                round(player.get_actor_location().x, 1), round(player.get_actor_location().y, 1)])
         if now >= spec["duration"]:
-            rec["end_player"] = json.loads(MyGameTools.pie_player_state())
-            rec["end_dummy"] = json.loads(MyGameTools.character_state(spec["dummy"])) if dummy else None
             _tl["phase"], _tl["settle_from"] = "settle", now
     elif _tl["phase"] == "settle":
-        # a combo window must close with the attack: look once the player's abilities have ended
+        # the outcome is read once the player's abilities have ended (the move is over, however long the frames
+        # delayed it), and a combo window must close with the attack
         if not player.get_active_abilities_for_test() or now - _tl["settle_from"] >= spec.get("settle", 3.0):
+            rec["end_player"] = json.loads(MyGameTools.pie_player_state())
+            rec["end_dummy"] = json.loads(MyGameTools.character_state(spec["dummy"])) if dummy else None
             rec["lingering"] = sorted(t for t in player.get_tags_for_test() if t.startswith("combo."))
             _tl["phase"] = "done"
             _tl["result"] = {k: sorted(v) if isinstance(v, set) else v for k, v in rec.items()}
@@ -689,7 +698,9 @@ class MyGameTools(unreal.ToolsetDefinition):
         Poll timeline_result until it's done.
 
         Args:
-            spec: JSON {"dummy": actor path or null, "duration": game seconds, "settle": max game seconds to wait
+            spec: JSON {"dummy": actor path or null, "duration": game seconds, "trace": true for a per-frame trace
+                [t, montage section, dummy health, player-dummy distance,
+                player time dilation, montage position], "settle": max game seconds to wait
                 for the player's abilities to end afterwards, "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
                 t, calls one of these MyGameTools hooks (press_input, move_input, dash_player, learn_item_abilities,
                 give_item, set_character_attribute, set_player_attribute, refresh_health...).

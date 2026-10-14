@@ -79,7 +79,7 @@ def run_scenario(name, inputs, duration, player, dummy, away_from_dummy=False):
         place(dummy, START_ROOM_SPOT[0])
     start_dummy = tool("character_state", actor_path=dummy["path"])
     start_player = tool("pie_player_state")
-    tool("run_timeline", spec=json.dumps({"dummy": dummy["path"], "duration": duration, "inputs": inputs}))
+    tool("run_timeline", spec=json.dumps({"dummy": dummy["path"], "duration": duration, "inputs": inputs, "trace": TRACE[0]}))
     while not (r := tool("timeline_result"))["done"]:
         time.sleep(0.05)
     rec = r["result"]
@@ -93,7 +93,7 @@ def run_scenario(name, inputs, duration, player, dummy, away_from_dummy=False):
             "player_mana": round(end_player["attributes"]["Mana"] - start_player["attributes"]["Mana"], 1),
             "player_tags": rec["player_tags"],
             "player_moved": round(sum((a - b) ** 2 for a, b in zip(end_player["location"][:2], start_player["location"][:2])) ** 0.5, 1),
-            "player_rise": round(rec["player_z"] - start_player["location"][2], 1)}
+            "player_rise": round(rec["player_z"] - start_player["location"][2], 1), **({"trace": rec["trace"]} if TRACE[0] else {})}
 
 
 # timeline inputs: [game time, "call", MyGameTools hook, kwargs]
@@ -150,6 +150,7 @@ def scenarios():
 
 
 DUMMY = [None]
+TRACE = [False]  # per-frame traces in the results (for timing investigations)
 PLAYER_PATH = [None]
 
 
@@ -180,7 +181,8 @@ def run_scenarios(names):
     out = {}
     for name, inputs, duration, *start_room in scenarios():
         if name in names:
-            out[name] = run_scenario(name, inputs, duration, PLAYER_PATH[0], dummy, bool(start_room))["dummy_damage"]
+            r = run_scenario(name, inputs, duration, PLAYER_PATH[0], dummy, bool(start_room))
+            out[name] = r if TRACE[0] else r["dummy_damage"]
     return out
 
 

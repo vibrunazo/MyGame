@@ -21,6 +21,9 @@
 #include "Components/InputComponent.h"
 #include "Components/BoxComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/RootMotionSource.h"
+#include "Animation/AnimMontage.h"
+#include "../Abilities/MyGameplayAbility.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/WidgetComponent.h"
@@ -211,9 +214,27 @@ UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
 	return AbilitySystem;
 };
 
+void AMyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	if (GetMesh()) GetMesh()->UnregisterOnBoneTransformsFinalizedDelegate(PoseFinalizedHandle);
+	FWorldDelegates::OnWorldPreActorTick.Remove(PreActorTickHandle);
+	Super::EndPlay(EndPlayReason);
+}
+
+void AMyCharacter::OnPoseFinalized()
+{
+	HitWindows.RemoveAll([](const TWeakObjectPtr<AHitBox>& Hitbox) { return !Hitbox.IsValid(); });
+	for (const TWeakObjectPtr<AHitBox>& Hitbox : TArray<TWeakObjectPtr<AHitBox>>(HitWindows))
+	{
+		if (Hitbox.IsValid()) Hitbox->AdvanceWindow();
+	}
+}
+
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	PoseFinalizedHandle = GetMesh()->RegisterOnBoneTransformsFinalizedDelegate(FOnBoneTransformsFinalizedMultiCast::FDelegate::CreateUObject(this, &AMyCharacter::OnPoseFinalized));
+	PreActorTickHandle = FWorldDelegates::OnWorldPreActorTick.AddUObject(this, &AMyCharacter::OnFrameStart);
 	if(!AbilitySystem) return;
 	AbilitySystem->InitAbilityActorInfo(this, this);
 	AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
@@ -915,38 +936,113 @@ bool AMyCharacter::IsAlive()
 
 void AMyCharacter::OnHitPause(float Duration)
 {
-	CustomTimeDilation = 0.01f;
-	// UGameplayStatics::SetGlobalTimeDilation(this, 0.01f);
-	FTimerHandle Handle;
-	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnHitPauseEnd, Duration, false);
-
-	if (!GetMesh()) return;
-	TArray<USceneComponent*> MeshChildren;
-	GetMesh()->GetChildrenComponents(false, MeshChildren);
-
-	for (USceneComponent* Component : MeshChildren)
-	{
-		//if (UFXSystemComponent* FXSystemComponent = Cast<UFXSystemComponent>(Component))
-		if (UNiagaraComponent* FXSystemComponent = Cast<UNiagaraComponent>(Component))
-		{
-			FXSystemComponent->SetPaused(true);
-		}
-	}
+	if (!GetWorld()) return;
+	const double Now = GetWorld()->GetTimeSeconds();
+	// the pause starts when the hit connected, which may be earlier in this frame
+	const double Start = LastHitConnectFrame == GFrameCounter ? FMath::Min(LastHitConnectTime, Now) : Now;
+	const double End = Start + Duration;
+	// this frame ran on at its own speed past the hit: owe back what the pause would have taken
+	HitPauseDebt += FMath::Max(0.0, (CustomTimeDilation - HitPauseRate) * (FMath::Min(Now, End) - Start));
+	if (!bHitPaused || Now >= HitPauseEnd) HitPauseStart = Start;
+	HitPauseEnd = FMath::Max(HitPauseEnd, End);
+	CustomTimeDilation = HitPauseRate;
+	if (!bHitPaused) SetHitPauseFX(true);
+	bHitPaused = true;
 }
 
-void AMyCharacter::OnHitPauseEnd()
+void AMyCharacter::OnFrameStart(UWorld* World, ELevelTick TickType, float DeltaSeconds)
 {
-	CustomTimeDilation = 1.0f;
-	// UGameplayStatics::SetGlobalTimeDilation(this, 1.f);
+	if (World != GetWorld() || DeltaSeconds <= 0.f) return;
+	// game time has already moved on to this frame's end; nothing has moved yet
+	FrameStartPose.Capture(this, World->GetTimeSeconds() - DeltaSeconds);
+	if (!bHitPaused)
+	{
+		// the frame the pause ended in ran partly paused; the ones after run at full speed
+		CustomTimeDilation = 1.f;
+		ApplyRootSpeedCurve(DeltaSeconds);
+		return;
+	}
+	// this frame covers game time T0..T1; it should run at full speed except where it overlaps the pause
+	const double T1 = World->GetTimeSeconds();
+	const double T0 = T1 - DeltaSeconds;
+	const double Paused = FMath::Max(0.0, FMath::Min(T1, HitPauseEnd) - FMath::Max(T0, HitPauseStart));
+	const double Ideal = DeltaSeconds - (1.0 - HitPauseRate) * Paused;
+	const double Given = FMath::Clamp(Ideal - HitPauseDebt, HitPauseRate * DeltaSeconds, (double)DeltaSeconds);
+	HitPauseDebt += Given - Ideal;
+	CustomTimeDilation = Given / DeltaSeconds;
+	if (T1 >= HitPauseEnd && HitPauseDebt <= KINDA_SMALL_NUMBER)
+	{
+		HitPauseDebt = 0.0;
+		bHitPaused = false;
+		SetHitPauseFX(false);
+	}
+	ApplyRootSpeedCurve(DeltaSeconds);
+}
+
+void AMyCharacter::ApplyRootSpeedCurve(float DeltaSeconds)
+{
+	static const FName CurveName(TEXT("RootSpeedX"));
+	static const FName SourceName(TEXT("RootSpeedCurve"));
+	const float MoveTime = DeltaSeconds * CustomTimeDilation;
+	const float PreviousMoveTime = LastMoveTime;
+	LastMoveTime = MoveTime;
+	UCharacterMovementComponent* Move = GetCharacterMovement();
+	const UAnimInstance* Anim = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr;
+	const UAnimMontage* Montage = Anim ? Anim->GetCurrentActiveMontage() : nullptr;
+	const UMyGameplayAbility* Ability = Cast<UMyGameplayAbility>(UMyBlueprintFunctionLibrary::GetAnimatingAbilityFromActor(this));
+	if (!Move || !Montage || !Ability || !Montage->HasCurveData(CurveName)) return;
+	// the montage time this frame plays, plus any its curve hasn't moved the character for yet: a montage that started
+	// during the last frame already played part of it
+	const float Rate = Anim->Montage_GetPlayRate(Montage) * Montage->RateScale;
+	const float Now = Anim->Montage_GetPosition(Montage);
+	// a new montage (or the same one restarted): it began playing during the last frame
+	if (RootSpeedMontage != Montage || RootSpeedCovered - Now > PreviousMoveTime * Rate + KINDA_SMALL_NUMBER)
+	{
+		RootSpeedMontage = Montage;
+		RootSpeedCovered = FMath::Max(0.f, Now - PreviousMoveTime * Rate);
+	}
+	// (if the last frame played less than it planned, as when a hit paused it, this frame's span is that much shorter)
+	const float From = RootSpeedCovered;
+	const float Span = Now + MoveTime * Rate - From;
+	RootSpeedCovered = From + Span;
+	if (MoveTime <= 0.f || Span <= 0.f) return;
+	// The curves were tuned at 60 fps, where the velocity they set was braked for one frame before it moved the
+	// character: each 1/60 s of curve moves it at that braked speed, so the moves keep their tuned distances
+	const float Step = 1.f / 60.f;
+	const float Friction = (Move->bUseSeparateBrakingFriction ? Move->BrakingFriction : Move->GroundFriction) * FMath::Max(0.f, Move->BrakingFrictionFactor);
+	const float Braking = Move->GetMaxBrakingDeceleration();
+	const int32 Samples = FMath::Clamp(FMath::CeilToInt(Span * 240.f), 1, 64);
+	float Sum = 0.f;
+	for (int32 Sample = 0; Sample < Samples; ++Sample)
+	{
+		const float Set = 100.f * Ability->RootMotionScale.X * Montage->EvaluateCurveData(CurveName, FAnimExtractContext((double)(From + Span * (Sample + 0.5f) / Samples)));
+		Sum += Set > 0.f ? FMath::Max(0.f, Set - (Friction * Set + Braking) * Step) : 0.f;
+	}
+	// the distance over this frame's span, covered in this frame's movement time
+	const float Speed = Sum / Samples * Span / (MoveTime * Rate);
+	// past the curve's end the last velocity is kept and brakes as usual
+	if (Speed <= 0.f) return;
+	TSharedPtr<FRootMotionSource_ConstantForce> Source = MakeShared<FRootMotionSource_ConstantForce>();
+	Source->InstanceName = SourceName;
+	Source->AccumulateMode = ERootMotionAccumulateMode::Override;
+	Source->Priority = 5;
+	Source->Force = GetActorForwardVector() * Speed;
+	Source->Duration = MoveTime;
+	Source->FinishVelocityParams.Mode = ERootMotionFinishVelocityMode::MaintainLastRootMotionVelocity;
+	Move->RemoveRootMotionSource(SourceName);
+	Move->ApplyRootMotionSource(Source);
+}
+
+void AMyCharacter::SetHitPauseFX(bool bPaused)
+{
 	if (!GetMesh()) return;
 	TArray<USceneComponent*> MeshChildren;
 	GetMesh()->GetChildrenComponents(false, MeshChildren);
-
 	for (USceneComponent* Component : MeshChildren)
 	{
 		if (UNiagaraComponent* FXSystemComponent = Cast<UNiagaraComponent>(Component))
 		{
-			FXSystemComponent->SetPaused(false);
+			FXSystemComponent->SetPaused(bPaused);
 		}
 	}
 }

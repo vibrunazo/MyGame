@@ -2,6 +2,9 @@
 #include "ANS_Hitbox.h"
 #include "../MyGameplayTags.h"
 #include "../Player/HitBox.h"
+#include "../Player/MyCharacter.h"
+
+#include "Animation/AnimMontage.h"
 
 #include "AbilitySystemComponent.h"
 #include "Engine/World.h"
@@ -33,8 +36,18 @@ void UAbilityTask_HitboxWindows::HandleWindowStart(const FGameplayEventData* Pay
 	Hitbox = GetWorld()->SpawnActor<AHitBox>(HitBoxClass, Avatar->GetActorLocation(), FRotator::ZeroRotator, Params);
 	Hitbox->AttachToActor(Avatar, FAttachmentTransformRules::SnapToTargetNotIncludingScale);
 	if (ShouldBroadcastAbilityTaskDelegates()) OnWindowStarted.Broadcast(Hitbox);
-	// shapes last: they can overlap the moment they're added, and the effects must already be set
-	if (const UANS_Hitbox* Notify = Payload ? Cast<UANS_Hitbox>(Payload->OptionalObject) : nullptr)
+	// shapes last: they can hit the moment they're added, and the effects must already be set
+	const UANS_Hitbox* Notify = Payload ? Cast<UANS_Hitbox>(Payload->OptionalObject) : nullptr;
+	if (!Notify) return;
+	// a montage's window is tested at fixed animation times, whatever the frame rate; anything else on overlaps
+	AMyCharacter* Char = Cast<AMyCharacter>(Avatar);
+	const UAnimMontage* Montage = Cast<UAnimMontage>(Payload->OptionalObject2);
+	float Start, End;
+	if (Char && Montage && Notify->GetWindow(Montage, Start, End))
+	{
+		Hitbox->BeginWindow(Char, Montage, Start, End, Notify->Hitboxes, Notify->NumHits, Notify->HitCooldown);
+	}
+	else
 	{
 		Hitbox->SetupHitboxes(Notify->Hitboxes, Notify->NumHits, Notify->HitCooldown);
 	}
@@ -42,6 +55,10 @@ void UAbilityTask_HitboxWindows::HandleWindowStart(const FGameplayEventData* Pay
 
 void UAbilityTask_HitboxWindows::HandleWindowEnd(const FGameplayEventData* Payload)
 {
+	// only ANS_Hitbox's own end event (with the notify); the old Blueprint notify's duplicate has no payload
+	if (!Payload || !Cast<UANS_Hitbox>(Payload->OptionalObject)) return;
+	// the rest of the window is tested before the ability hears it closed (a combo needs to know it connected)
+	if (IsValid(Hitbox)) Hitbox->FinishWindow();
 	if (ShouldBroadcastAbilityTaskDelegates()) OnWindowEnded.Broadcast();
 	DestroyHitbox();
 }

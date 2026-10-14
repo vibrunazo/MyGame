@@ -8,6 +8,7 @@
 #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
 #include "../Abilities/ICastProjectile.h"
+#include "HitBox.h"
 
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
@@ -137,7 +138,10 @@ public:
 	void OnDie() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsAlive() override;
+	// Freezes this character (almost) for Duration of game time, from the moment its hit connected
 	void OnHitPause(float Duration) override;
+	// A hit of this character's connected at Time (game time; it can fall between frames)
+	void NoteHitConnect(double Time) { LastHitConnectTime = Time; LastHitConnectFrame = GFrameCounter; }
 	uint8 GetTeam() override;
 	UMyAttributeSet* GetAttributes() override;
 	FTransform GetProjectileSpawn() override;
@@ -162,7 +166,31 @@ public:
 	void ApplyLaunchBack(AActor* SourceActor, FVector Power);
 	void OnDelayedLaunch();
 	void OnDelayedLaunch2();
-	void OnHitPauseEnd();
+	// Every frame, before anything ticks: records where the frame starts, and the hit pause's share of the frame
+	// sets this character's time dilation
+	void OnFrameStart(UWorld* World, ELevelTick TickType, float DeltaSeconds);
+	void SetHitPauseFX(bool bPaused);
+	// A montage's RootSpeedX curve (m/s, times the ability's RootMotionScale.X) moves the character forward, at the
+	// speed it had at 60 fps (after a frame of braking), averaged over the montage time this frame plays: a root
+	// motion source for exactly this frame, so the move covers the same ground at any frame rate
+	void ApplyRootSpeedCurve(float DeltaSeconds);
+	// the montage whose RootSpeedX has moved this character up to RootSpeedCovered (its time), and the last frame's
+	// movement time
+	TWeakObjectPtr<const class UAnimMontage> RootSpeedMontage;
+	float RootSpeedCovered = 0.f;
+	float LastMoveTime = 0.f;
+	// how fast a hit-paused character runs
+	static constexpr float HitPauseRate = 0.01f;
+	// the pause, in game time
+	double HitPauseStart = 0.0;
+	double HitPauseEnd = 0.0;
+	// game time this character ran beyond the pause (a frame runs at full speed past the hit that starts one)
+	double HitPauseDebt = 0.0;
+	bool bHitPaused = false;
+	// when this character's last hit connected (a hit window's sample time), and in which frame
+	double LastHitConnectTime = 0.0;
+	uint64 LastHitConnectFrame = 0;
+	FDelegateHandle PreActorTickHandle;
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 	void OnSpeedChange(const FOnAttributeChangeData& Data);
 	void OnRotSpeedChange(const FOnAttributeChangeData& Data);
@@ -190,6 +218,10 @@ public:
 	// The hitbox this character's attacks spawn (its look and sound on hit)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Abilities)
 	TSubclassOf<class AHitBox> HitBoxClass;
+	// Where this character was when the frame started: melee hit windows place their samples from there to now
+	const FHitboxPose& GetFrameStartPose() const { return FrameStartPose; }
+	// Advances this melee hit window after every animation update, until it's destroyed
+	void TrackHitWindow(class AHitBox* Hitbox) { HitWindows.AddUnique(Hitbox); }
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TArray<FLootDrop> LootTable;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
@@ -308,6 +340,12 @@ private:
 
 protected:
 	void BeginPlay() override;
+	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
+	// after each animation update: open hit windows test up to the montage's new position
+	void OnPoseFinalized();
+	FHitboxPose FrameStartPose;
+	TArray<TWeakObjectPtr<class AHitBox>> HitWindows;
+	FDelegateHandle PoseFinalizedHandle;
 	void MoveRight(float Value);
 	void MoveForward(float Value);
 	void TurnAtRate(float Rate);
