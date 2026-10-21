@@ -63,6 +63,13 @@ public:
 	bool GetUltraMod();
 	UFUNCTION(BlueprintCallable, Category = BaseController)
 	uint8 GetModValue();
+	// Whether the player last used a gamepad (the HUD shows its buttons) or the keyboard (the HUD shows the keys)
+	UFUNCTION(BlueprintPure, Category = Input)
+	bool IsUsingGamepad() const { return bUsingGamepad; }
+	// The keyboard keys that press Slot as the HUD shows them ("←", "Shift + ↑", "WASD"), from the default mapping
+	// context; empty if no key presses it
+	UFUNCTION(BlueprintPure, Category = Input)
+	FText GetKeyboardText(EInput Slot) const;
 	// The local player's Enhanced Input subsystem (mapping contexts, key remapping, input injection in tests)
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = Input)
 	class UEnhancedInputLocalPlayerSubsystem* GetEnhancedInputSubsystem() const;
@@ -70,6 +77,9 @@ public:
 	// PIE test hook: holds an input action at Value (as a key or stick would) until called with bHeld = false
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	void InjectTestInput(UInputAction* Action, FVector2D Value, bool bHeld);
+	// PIE test hook: switches the HUD as if the player had pressed a gamepad button (true) or a key (false)
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	void SetUsingGamepadForTest(bool bGamepad) { SetUsingGamepad(bGamepad); }
 	// PIE test hook: the input mode last set ("Game Only", "UI Only", ...); real keys and pads only reach the game in Game Only
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	FString GetInputModeForTest() const { return GetCurrentInputModeDebugString(); }
@@ -125,10 +135,17 @@ private:
 	TArray<bool> AbilityKeyStates = { false, false, false, false, false, false, false, false };
 	bool bSuperMod = false;
 	bool bUltraMod = false;
+	bool bUsingGamepad = false;
+	// Switches the HUD's buttons between gamepad pictures and keyboard keys
+	void SetUsingGamepad(bool bGamepad);
+	// The keyboard keys mapped to Action: one key's name, or a group of letter keys in keyboard order ("WASD")
+	FText KeyboardKeysText(const UInputAction* Action) const;
 
 protected:
 	void BeginPlay() override;
 	virtual void SetupInputComponent() override;
+	// Every key, button and stick reaches the controller here first: the last one pressed says which device is in use
+	virtual bool InputKey(const FInputKeyEventArgs& Params) override;
 	void Jump();
 	void StopJump();
 	// The pawn while it takes input: null after death or the level-clear flag (both clear bHasControl)

@@ -618,6 +618,37 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def hud_hotkeys(device: str = "") -> str:
+        """What each HUD ability button shows under its icon: the gamepad pictures or the keyboard keys.
+
+        Args:
+            device: "gamepad" or "keyboard" switches the HUD first (as pressing a pad button or a key would); empty
+                leaves it as it is.
+
+        Returns:
+            JSON {"gamepad": bool, "buttons": {widget name: {"slot", "shows": "gamepad"|"keys", "keys", "visible"}}}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        pc = unreal.GameplayStatics.get_player_controller(world, 0)
+        if device:
+            pc.set_using_gamepad_for_test(device == "gamepad")
+        out = {}
+        for w in unreal.ObjectIterator(unreal.ActionButtonWidget):
+            if w.get_world() != world or not w.get_owning_player():
+                continue
+            switcher = w.get_editor_property("hotkey_switcher")
+            text = w.get_editor_property("command_text_widget")
+            index = switcher.get_active_widget_index() if switcher else -1
+            out[w.get_name()] = {"slot": str(w.get_editor_property("ButtonInput")).split(".")[-1].split(":")[0],
+                                 "shows": "keys" if index == 1 else "gamepad" if index == 0 else None,
+                                 "keys": str(text.get_text()) if text else None,
+                                 "visible": str(w.get_visibility()).split(".")[-1].split(":")[0]}
+        return json.dumps({"gamepad": pc.is_using_gamepad(), "buttons": out})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def run_action(action: str) -> str:
         """Calls the game instance's run flow, as the menu buttons do.
 
@@ -806,12 +837,13 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def game_screenshot(name: str) -> str:
+    def game_screenshot(name: str, ui: bool = False) -> str:
         """Saves what the PIE game camera shows (HighResShot) to Saved/Screenshots; needs a rendering editor
         (-RenderOffscreen). The file appears a frame or two later.
 
         Args:
-            name: File name without extension.
+            name: File name without extension (ignored with ui: the engine names it ScreenShotNNNNN).
+            ui: Include the HUD and other widgets (the viewport as the player sees it, at its own size).
 
         Returns:
             JSON {"requested": name}.
@@ -819,7 +851,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         world = _pie_world()
         if not world:
             raise RuntimeError("PIE is not running")
-        unreal.SystemLibrary.execute_console_command(world, f"HighResShot 1280x720 filename={name}")
+        unreal.SystemLibrary.execute_console_command(world, "shot showui" if ui else f"HighResShot 1280x720 filename={name}")
         return json.dumps({"requested": name})
 
     @toolset_registry.tool_call

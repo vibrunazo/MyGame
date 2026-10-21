@@ -88,6 +88,14 @@ def run_all():
     tool("set_player_attribute", attribute="Health", value=70.0)
     before = tool("run_state")
 
+    # the HUD's buttons follow the device: keys on keyboard (from the mapping context), pictures on a gamepad
+    shown = {dev: tool("hud_hotkeys", device=dev)["buttons"] for dev in ("keyboard", "gamepad")}
+    visible = [n for n, b in shown["keyboard"].items() if b["visible"] != "HIDDEN"]
+    keys_ok = all(shown["keyboard"][n]["shows"] == "keys" and shown["keyboard"][n]["keys"] for n in visible)
+    pads_ok = all(b["shows"] == "gamepad" for b in shown["gamepad"].values())
+    check("hud_hotkeys", visible and keys_ok and pads_ok,
+          {shown["keyboard"][n]["slot"]: shown["keyboard"][n]["keys"] for n in visible})
+
     clear_floor(floor1)
     p0 = player_pos()
     tool("move_input", forward=1.0, right=1.0)

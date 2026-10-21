@@ -16,6 +16,11 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "InputAction.h"
+#include "InputMappingContext.h"
+#include "InputKeyEventArgs.h"
+#include "../UI/ActionButtonWidget.h"
+#include "Framework/Application/SlateApplication.h"
+#include "UObject/UObjectIterator.h"
 
 void AMyPlayerController::BeginPlay()
 {
@@ -28,6 +33,8 @@ void AMyPlayerController::BeginPlay()
     // UI only, so a game level takes it back (the main menu has its own controller, AMenuController)
     SetInputMode(FInputModeGameOnly());
     SetShowMouseCursor(false);
+    // until the player presses something, a plugged-in gamepad is the one they'll use
+    bUsingGamepad = FSlateApplication::IsInitialized() && FSlateApplication::Get().IsGamepadAttached();
     ShowHUD();
     ShowLevelIntro();
 }
@@ -347,4 +354,80 @@ void AMyPlayerController::ShowLevelCleared()
     LevelClearedWidgetRef->AddToViewport();
     // SetInputMode(FInputModeUIOnly());
     // bShowMouseCursor = true;
+}
+
+bool AMyPlayerController::InputKey(const FInputKeyEventArgs& Params)
+{
+    // a pressed key or button, or a stick pushed past its dead zone (mouse movement doesn't count)
+    const bool bPressed = Params.Event == IE_Pressed || (Params.Key.IsAnalog() && FMath::Abs(Params.AmountDepressed) > 0.3f);
+    if (Params.IsGamepad() && bPressed) SetUsingGamepad(true);
+    else if (Params.Event == IE_Pressed && (Params.Key.IsMouseButton() || !Params.Key.IsAnalog()) && !Params.Key.IsTouch()) SetUsingGamepad(false);
+    return Super::InputKey(Params);
+}
+
+void AMyPlayerController::SetUsingGamepad(bool bGamepad)
+{
+    if (bUsingGamepad == bGamepad) return;
+    bUsingGamepad = bGamepad;
+    for (TObjectIterator<UActionButtonWidget> Button; Button; ++Button)
+    {
+        if (Button->GetOwningPlayer() == this) Button->ShowInputDevice(bGamepad);
+    }
+}
+
+FText AMyPlayerController::GetKeyboardText(EInput Slot) const
+{
+    if (Slot == EInput::Run) return KeyboardKeysText(MoveAction);
+    if (Slot == EInput::Dash)
+    {
+        const FText Keys = KeyboardKeysText(DashAction);
+        return Keys.IsEmpty() ? Keys : FText::Format(NSLOCTEXT("MyPlayerController", "DoubleTap", "{0} \u00D72"), Keys);
+    }
+    // Super and Ultra slots are the plain slot plus 10 or 20, pressed with their modifier held
+    const uint8 Value = (uint8)Slot;
+    if (Value >= 30) return FText::GetEmpty();
+    const EInput Plain = (EInput)(Value % 10);
+    const FAbilityInputBinding* Binding = AbilityInputs.FindByPredicate([Plain](const FAbilityInputBinding& B) { return B.Slot == Plain; });
+    const FText Keys = Binding ? KeyboardKeysText(Binding->Action) : FText::GetEmpty();
+    if (Keys.IsEmpty() || Value < 10) return Keys;
+    const FText Modifier = KeyboardKeysText(Value >= 20 ? UltraModAction : SuperModAction);
+    return Modifier.IsEmpty() ? FText::GetEmpty() : FText::Format(NSLOCTEXT("MyPlayerController", "ModifiedKey", "{0} + {1}"), Modifier, Keys);
+}
+
+FText AMyPlayerController::KeyboardKeysText(const UInputAction* Action) const
+{
+    if (!Action || !DefaultMappingContext) return FText::GetEmpty();
+    TArray<FKey> Keys;
+    for (const FEnhancedActionKeyMapping& Mapping : DefaultMappingContext->GetMappings())
+    {
+        if (Mapping.Action == Action && Mapping.Key.IsValid() && !Mapping.Key.IsGamepadKey() && !Keys.Contains(Mapping.Key)) Keys.Add(Mapping.Key);
+    }
+    if (Keys.Num() == 0) return FText::GetEmpty();
+    // arrows as arrows, everything else by its short name ("Left Shift" -> "Shift", "Space Bar" -> "Space")
+    auto Label = [](const FKey& Key) -> FString
+    {
+        if (Key == EKeys::Left) return TEXT("\u2190");
+        if (Key == EKeys::Up) return TEXT("\u2191");
+        if (Key == EKeys::Right) return TEXT("\u2192");
+        if (Key == EKeys::Down) return TEXT("\u2193");
+        if (Key == EKeys::SpaceBar) return TEXT("Space");
+        // either Shift (or Ctrl, Alt) works, so the side isn't named
+        FString Name = Key.GetDisplayName(false).ToString();
+        if (Key.IsModifierKey()) Name.RemoveFromStart(TEXT("Left ")) || Name.RemoveFromStart(TEXT("Right "));
+        return Name;
+    };
+    // several letter keys (movement) read as one group, in keyboard order: W, A, S, D -> "WASD"
+    static const FString Layout = TEXT("QWERTYUIOPASDFGHJKLZXCVBNM");
+    TArray<FString> Letters;
+    for (const FKey& Key : Keys)
+    {
+        const FString Name = Label(Key);
+        if (Name.Len() == 1 && Layout.Contains(Name)) Letters.Add(Name);
+    }
+    if (Letters.Num() > 1)
+    {
+        Letters.Sort([](const FString& A, const FString& B) { return Layout.Find(A) < Layout.Find(B); });
+        return FText::FromString(FString::Join(Letters, TEXT("")));
+    }
+    return FText::FromString(Label(Keys[0]));
 }
