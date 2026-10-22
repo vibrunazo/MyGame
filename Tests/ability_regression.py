@@ -17,7 +17,7 @@ import sys
 import time
 
 from harness import game_time, wait_game
-from mcp_client import call_tool, tool
+from harness import call_tool, tool
 
 GAS = "GASToolsets.AbilitySystemInspectorToolset"
 ITEMS = "/Game/Blueprints/Items/"

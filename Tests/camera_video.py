@@ -15,7 +15,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from mcp_client import tool
+from harness import tool
 from level_regression import wait_loaded
 
 SLOW = 0.25

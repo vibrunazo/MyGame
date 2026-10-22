@@ -24,7 +24,7 @@ import sys
 import time
 
 from harness import wait_game
-from mcp_client import tool
+from harness import tool
 from level_regression import wait_loaded
 
 START = (0.0, -300.0)

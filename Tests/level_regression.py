@@ -13,7 +13,7 @@ import json
 import sys
 import time
 
-from mcp_client import tool
+from harness import tool
 
 
 def wait_game(seconds):

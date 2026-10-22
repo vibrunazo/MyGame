@@ -232,6 +232,7 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
   - ability functional tests on a test map: a punch hits a dummy, the combo advances, the damage formula holds
   - boot smoke test: every room streams in, the game unfreezes, every RoomMaster registers
 - **Screenshots / PIE:** only where a numeric or log check flags something.
+- **Talking to the editor:** the shared `UnrealAgentTools` package (`D:/docs/Unreal Projects/UnrealAgentTools`, installed with `pip install -e`) is the MCP client and editor launcher; `Tests/harness.py` wraps it (`tool()` for this project's hooks). It survives editor restarts, so nothing needs reconnecting.
 - **Regression suites, one command:** `python Tests/run_all.py` (`--speed 3` by default, `--only level,abilities,loop,camera,framerate`, `--max-fps N`) takes about 3 minutes.
   - **One session:** it starts one headless editor with the background CPU throttle off (`harness.start_editor`), which runs PIE at ~60 fps instead of ~10, and one PIE session. Each suite starts a fresh run with its seed through `UMyGameInstance::StartNewRun`.
   - **Game clock:** every scripted wait is in game time (`harness.wait_game`), and the game runs 3× faster (global time dilation, re-applied after floor loads).

@@ -19,7 +19,7 @@ import sys
 import time
 
 from harness import wait_game
-from mcp_client import tool
+from harness import tool
 from level_regression import wait_loaded
 
 BOOK, ITEM = "/Game/Blueprints/Items/DA_LearnTat", "/Game/Blueprints/Items/DA_ItemFireHands"

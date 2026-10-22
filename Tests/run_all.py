@@ -100,6 +100,7 @@ def main():
     ap.add_argument("--max-fps", type=float, default=0, help="cap the frame rate (gameplay mustn't depend on it)")
     ap.add_argument("--keep-editor", action="store_true")
     args = ap.parse_args()
+    sys.stdout.reconfigure(encoding="utf-8")  # key labels like "Shift + ↑" in the suites' output
     global ARGS
     ARGS = args
     out = HERE / "out" / time.strftime("%Y%m%d-%H%M%S")

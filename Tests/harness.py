@@ -4,43 +4,42 @@ Every scripted wait in the suites is in game seconds (`wait_game`), so the suite
 set to (`set_speed`, global time dilation re-applied after each floor load). The game is meant to be frame rate and
 speed agnostic: a suite that changes outcome at another speed has found a bug (or a timing-sensitive test).
 """
-import subprocess
 import time
 from pathlib import Path
 
-from mcp_client import SESSION_FILE, call_tool, tool
+from unreal_agent_tools import Client, editor
 
 ROOT = Path(__file__).resolve().parent.parent
-EDITOR = Path(r"C:\Program Files\Epic Games\UE_5.8\Engine\Binaries\Win64\UnrealEditor.exe")
+PROJECT = ROOT / "MyGame.uproject"
 APP = "EditorToolset.EditorAppToolset"
-# an unfocused editor throttles itself to a few frames a second; tests need every frame
-NO_THROTTLE = "-ini:EditorPerProjectUserSettings:[/Script/UnrealEd.EditorPerformanceSettings]:bThrottleCPUWhenNotForeground=False"
+MYGAME_TOOLS = "mygame_tools.toolset.MyGameTools"
+# the editor's MCP server (port 18765, or UNREAL_MCP_PORT): one client for every suite
+UE = Client()
+
+
+def call_tool(toolset, name, arguments=None):
+    return UE.call_tool(toolset, name, arguments)
+
+
+def tool(name, **arguments):
+    """Calls one of this project's MyGameTools hooks (Content/Python/mygame_tools)."""
+    return UE.call_tool(MYGAME_TOOLS, name, arguments)
 
 
 def kill_editor():
-    subprocess.run(["taskkill", "/IM", "UnrealEditor.exe", "/F"], capture_output=True)
-    time.sleep(3)
+    editor.stop(PROJECT)
 
 
 def start_editor(log="tests", render=False, seed=None, timeout=600):
     """A fresh headless editor (rendering offscreen when `render`) with PIE running on LevelPersistent."""
-    kill_editor()
-    args = [str(EDITOR), str(ROOT / "MyGame.uproject"), "-unattended", "-nosplash",
-            "-RenderOffscreen" if render else "-nullrhi", NO_THROTTLE, f"-log={log}.log"]
-    if seed:
-        args.append(f"-Seed={seed}")
-    subprocess.Popen(args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-    # up when its MCP server answers (a log line could be a previous run's)
-    SESSION_FILE.write_text("")
-    t0 = time.time()
-    while True:
+    editor.start(PROJECT, port=UE.port, render=render, log=log, args=(f"-Seed={seed}",) if seed else (), timeout=timeout)
+    for attempt in range(10):  # the editor can still be finishing its startup
         try:
             call_tool(APP, "StartPIE", {"options": {"bSimulate": False, "playMode": "PlayMode_InViewPort", "warmupSeconds": 6}})
-            break
-        except (OSError, RuntimeError, AttributeError):
-            if time.time() - t0 > timeout:
+            return
+        except RuntimeError:
+            if attempt == 9:
                 raise
-            SESSION_FILE.write_text("")
             time.sleep(5)
 
 
