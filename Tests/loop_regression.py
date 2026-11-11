@@ -88,6 +88,10 @@ def run_all():
     tool("set_player_attribute", attribute="Health", value=70.0)
     before = tool("run_state")
 
+    # each starting move's button shows that move's icon (the HUD sets them from the abilities' UI data)
+    icons = tool("hud_ability_icons", slots="0,1,3")
+    check("hud_icons", icons == {"0": "punch", "1": "kick", "3": "jump"}, icons)
+
     # the HUD's buttons follow the device: keys on keyboard (from the mapping context), pictures on a gamepad
     shown = {dev: tool("hud_hotkeys", device=dev)["buttons"] for dev in ("keyboard", "gamepad")}
     visible = [n for n, b in shown["keyboard"].items() if b["visible"] != "HIDDEN"]
