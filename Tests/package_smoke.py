@@ -4,7 +4,7 @@
 
 Boots the main menu, then a seeded run straight into LevelPersistent, and reads the game's own log:
   menu       the main menu map loads
-  run        the level builds (Grid line) and every room's room master registers
+  run        the level builds (the Tiles line) and every room's room master registers
   assets     no package missing from the build (a path the cooker couldn't see: SkipPackage / Failed to find)
   clean      no Error / Fatal / Ensure lines (minus known engine noise)
   ai         every enemy is possessed by the game's AI controller (AMyCharacter::PossessedBy logs "has no game AI"
@@ -46,9 +46,9 @@ def main(seconds):
     results = {}
     menu = play("smoke_menu", [], r"Took .* seconds to LoadMap\(/Game/Maps/MainMenu\)", 3)
     results["menu"] = "LoadMap(/Game/Maps/MainMenu)" in menu
-    run = play("smoke_run", ["/Game/Maps/LevelPersistent", "-Seed=6032"], r"Grid:", seconds)
+    run = play("smoke_run", ["/Game/Maps/LevelPersistent", "-Seed=6032"], r"Warning: Tiles: ", seconds)
     rooms = len(re.findall(r"Room Level:", run))
-    grid = re.search(r"Grid: (.*)", run)
+    grid = re.search(r"Warning: Tiles: (.*)", run)
     planned = grid.group(1).count("Coord:") if grid else 0
     results["run"] = bool(grid) and rooms == planned
     missing = sorted(set(re.findall(r"SkipPackage: (\S+)|Failed to find object '([^']+)'", run + menu)))
