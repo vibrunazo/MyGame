@@ -142,6 +142,10 @@ public:
 	// Two neighboring tiles with no wall between them
 	bool AreJoined(const FIntPoint& A, const FIntPoint& B) const;
 	int32 NumRooms() const { return Rooms.Num(); }
+	// Dev: puts the player on a free spot of a room's floor (GoToRoom, -Room=N). False when there's no such room or spot
+	bool MoveToRoom(int32 Room);
+	// Dev: the tile template's map name at a tile
+	FString TemplateNameAt(FIntPoint Tile);
 	// The smallest and largest tile coordinates on this floor
 	void GetTileExtent(FIntPoint& Min, FIntPoint& Max) const;
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "FloorBuilder")

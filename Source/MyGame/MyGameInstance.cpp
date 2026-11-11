@@ -5,6 +5,8 @@
 #include "Player/MyCharacter.h"
 #include "Props/ItemDataAsset.h"
 #include "Level/RoomCamera.h"
+#include "Level/FloorBuilder.h"
+#include "Level/RunSubsystem.h"
 
 #include "Engine/World.h"
 #include "Kismet/GameplayStatics.h"
@@ -85,6 +87,7 @@ void UMyGameInstance::StartNewRun()
 void UMyGameInstance::NextFloor()
 {
     FloorNumber++;
+    SeedFloor();
     UGameplayStatics::OpenLevelBySoftObjectPtr(this, RunMap);
 }
 
@@ -101,15 +104,38 @@ void UMyGameInstance::NewGame()
     Inventory.Empty();
     CarriedAbilities.Empty();
 
-    // TODO this might be called after the game is over, before the new game actually starts, which might cause random stream to desync?
     // RandomSeed when set (tests set it before StartNewRun), else -Seed=N on the command line (replaying a run for a bug
-    // report), else 0: a new one
+    // report), else a new one. -Floor=N starts on floor N (dev: replaying a later floor)
     int32 Seed = RandomSeed;
     if (!Seed) FParse::Value(FCommandLine::Get(), TEXT("Seed="), Seed);
-    RandomStream = FRandomStream(Seed);
-	if (!Seed) RandomStream.GenerateNewSeed();
-    UE_LOG(LogTemp, Warning, TEXT("GameInstance Random Seed: %d"), RandomStream.GetCurrentSeed());
-	UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
+    if (!Seed) Seed = FMath::Max(1, FMath::Rand());
+    RunSeed = Seed;
+    int32 StartFloor = 1;
+    if (FParse::Value(FCommandLine::Get(), TEXT("Floor="), StartFloor)) FloorNumber = (uint8)FMath::Clamp(StartFloor, 1, 255);
+    SeedFloor();
+}
+
+void UMyGameInstance::SeedFloor()
+{
+    // floor 1 keeps the plain seed, so the seeded baselines stay valid
+    RandomStream.Initialize(FloorNumber <= 1 ? RunSeed : (int32)HashCombine(GetTypeHash(RunSeed), GetTypeHash((int32)FloorNumber)));
+    UE_LOG(LogTemp, Warning, TEXT("Run seed %d, floor %d: stream seed %d"), RunSeed, FloorNumber, RandomStream.GetInitialSeed());
+    // three draws the floor layouts were made after (the baselines depend on them)
+    UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
+}
+
+int32 UMyGameInstance::TakeStartRoom()
+{
+    int32 Room = -1;
+    if (bStartRoomTaken || !FParse::Value(FCommandLine::Get(), TEXT("Room="), Room)) return -1;
+    bStartRoomTaken = true;
+    return Room;
+}
+
+void UMyGameInstance::GoToRoom(int32 Room)
+{
+    AFloorBuilder* Builder = URunSubsystem::GetFloorBuilder(this);
+    if (!Builder || !Builder->MoveToRoom(Room)) UE_LOG(LogTemp, Warning, TEXT("GoToRoom %d: no such room, or no free spot in it"), Room);
 }
 
 void UMyGameInstance::StoreCharStats()

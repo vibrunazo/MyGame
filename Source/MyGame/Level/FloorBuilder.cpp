@@ -20,6 +20,9 @@
 #include "Math/RandomStream.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/AudioComponent.h"
+#include "Components/CapsuleComponent.h"
+#include "GameFramework/Character.h"
+#include "TimerManager.h"
 
 TArray<ETileSide> ALLDIRECTIONS = {ETileSide::Left, ETileSide::Right, ETileSide::Bottom, ETileSide::Top};
 int8 GetXFromDir(ETileSide Dir)
@@ -161,6 +164,15 @@ void AFloorBuilder::OnTilesReady()
 	bTilesReady = true;
 	GetWorldSettings()->SetTimeDilation(1.0f);
 	for (auto&& Tile : Tiles) DressTile(Tile.Key, Tile.Value);
+	// -Room=N: start there (next tick, so the player has spawned)
+	if (UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance()))
+	{
+		const int32 StartRoom = GI->TakeStartRoom();
+		if (StartRoom >= 0) GetWorldTimerManager().SetTimerForNextTick(FTimerDelegate::CreateWeakLambda(this, [this, StartRoom]
+		{
+			if (!MoveToRoom(StartRoom)) UE_LOG(LogTemp, Error, TEXT("-Room=%d: no such room, or no free spot in it"), StartRoom);
+		}));
+	}
 }
 
 // Props go along the room's solid walls, except the bottom one (the camera's side), and never in a doorway or on an
@@ -498,6 +510,39 @@ int32 AFloorBuilder::GetRoomOfTile(FIntPoint Tile) const
 {
 	const int32* Room = RoomOfTile.Find(Tile);
 	return Room ? *Room : -1;
+}
+
+bool AFloorBuilder::MoveToRoom(int32 Room)
+{
+	ACharacter* Player = UGameplayStatics::GetPlayerCharacter(this, 0);
+	if (!Player || !Rooms.IsValidIndex(Room)) return false;
+	const float HalfHeight = Player->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	FCollisionQueryParams Params(TEXT("MoveToRoom"), false, Player);
+	// the tiles' centers first, then points around them: the first one on the ground floor (not a pit, not on top of
+	// a block) that the capsule fits in
+	const FVector2D Offsets[] = { {0, 0}, {300, 0}, {-300, 0}, {0, 300}, {0, -300}, {300, 300}, {-300, -300}, {300, -300}, {-300, 300} };
+	for (const FVector2D& Offset : Offsets)
+	{
+		for (const FIntPoint& Tile : Rooms[Room].Tiles)
+		{
+			const FVector At = GetLocFromTile(FTileCoord(Tile.X, Tile.Y)) + FVector(Offset.X, Offset.Y, 0.f);
+			FHitResult Hit;
+			if (!GetWorld()->LineTraceSingleByObjectType(Hit, At + FVector(0.f, 0.f, 2000.f), At - FVector(0.f, 0.f, 500.f), FCollisionObjectQueryParams(ECC_WorldStatic), Params)) continue;
+			if (Hit.ImpactNormal.Z < 0.9f || Hit.ImpactPoint.Z > At.Z + 50.f) continue;
+			if (Player->TeleportTo(Hit.ImpactPoint + FVector(0.f, 0.f, HalfHeight + 2.f), Player->GetActorRotation()))
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Moved the player to room %d, tile %d,%d"), Room, Tile.X, Tile.Y);
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+FString AFloorBuilder::TemplateNameAt(FIntPoint Tile)
+{
+	const UTileTemplate* Template = GetTemplateAt(FTileCoord(Tile.X, Tile.Y));
+	return Template ? Template->Level.GetAssetName() : TEXT("none");
 }
 
 const TArray<FIntPoint>& AFloorBuilder::GetRoomTiles(int32 Room) const

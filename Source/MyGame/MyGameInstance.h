@@ -30,6 +30,14 @@ public:
 	void QuitToMainMenu();
 	// Resets the run state (floor 1, full health, no items or learned moves, a new seed)
 	void NewGame();
+	// Restarts the random stream for FloorNumber: floor 1 from the run seed, later floors from the seed and the floor,
+	// so a seed and a floor number rebuild the same floor whatever was looted on the way
+	void SeedFloor();
+	// The room -Room=N asks the first floor to start in, once per session; -1 when none
+	int32 TakeStartRoom();
+	// Dev: moves the player into a room of this floor (console: GoToRoom 3; the room numbers are in the dev overlay)
+	UFUNCTION(Exec, BlueprintCallable, Category = "MyGI|Dev")
+	void GoToRoom(int32 Room);
 	// What carries over to the next floor, taken from the player when the floor is cleared
 	void StoreCharStats();
 	void SetCharRef(class AMyCharacter* NewRef);
@@ -65,6 +73,10 @@ public:
 	class AMyCharacter* PlayerCharRef;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	int32 RandomSeed = 0;
+	// The run's seed: -Seed=N replays it
+	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
+	int32 RunSeed = 0;
 	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
 	FRandomStream RandomStream;
+	bool bStartRoomTaken = false;
 };

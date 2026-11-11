@@ -957,6 +957,45 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def console(command: str) -> str:
+        """Runs a console command in the PIE game, as the game's console would (e.g. GoToRoom 3).
+
+        Args:
+            command: The command line.
+
+        Returns:
+            JSON {"ran": command}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        unreal.SystemLibrary.execute_console_command(world, command, unreal.GameplayStatics.get_player_controller(world, 0))
+        return json.dumps({"ran": command})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def set_camera(prop: str, value: float) -> str:
+        """Sets a number on the PIE room camera, for tuning live (OutsideBrightness applies at once; the framing
+        properties apply on the next floor).
+
+        Args:
+            prop: The property's Python name, e.g. outside_brightness.
+            value: Its new value.
+
+        Returns:
+            JSON {prop: value as read back}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        cams = unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.RoomCamera"))
+        if not cams:
+            raise RuntimeError("no room camera")
+        cams[0].set_editor_property(prop, value)
+        return json.dumps({prop: cams[0].get_editor_property(prop)})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def teleport_actor(actor_path: str, x: float, y: float, z: float, yaw: float = -999.0) -> str:
         """Moves any PIE actor (e.g. a frozen enemy used as a dummy) to a world location.
 

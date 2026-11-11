@@ -210,6 +210,13 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
 7. **Next:**
    - Your play-test.
    - **Done 2026-11-10: the wall cutaway is per room.** When the camera moves to a room it calls `AFloorBuilder::SetCutawayRoom`: the walls between that room and the camera (each of its tiles' bottom walls) drop to `CutawayHeight` (50 cm) and the last room's go back to their own height. A two-row or L-shaped room is fully open to the camera; other rooms' walls stay up. It replaced the 2020 `HideWall`, which lowered the current tile's and its side neighbors' walls whatever room they belonged to. The camera suite visits every room and checks that exactly its camera-side walls are down.
+8. **Done 2026-11-11: your play-test notes** ("a huge improvement to the camera following"):
+   - **Framing:** the tile's box sits at the top of the screen (`ScreenFill`) instead of centered. A tile is wider than the screen's shape, so its width sets the distance, and the height left over now goes below the room, where the HUD is, instead of above it. The HUD no longer covers the near floor. The box's far side is 450 high (the 400 walls plus a margin; it was 600 for tall platforms).
+   - **Angle:** pitch 40° → 35°.
+   - **Darkness:** `PP_RoomDarkness` moved from after tonemapping to after DOF, which is before TSR. After TSR, its world position came from the jittered depth while the colour was already anti-aliased. So pixels on a room's edge (the top of the far wall, against the floor beyond) flipped between darkened and lit from frame to frame. That was the flicker in your clip: one-frame bright lines along the wall's top edge. `OutsideBrightness` is now linear light: 0.012, about a third of the old look, a faint floor with nothing recognizable. The headless captures can't show TSR's flicker either way, so this needs your eyes.
+   - **Settle:** the follow smoothing snaps the last half centimetre, so the camera comes to rest instead of creeping by fractions of a pixel.
+   - **Screen shake:** `Shake_Hit1` is a pitch wobble, now 0.8° at 20 Hz for 0.25 s (was 2° at 13 Hz for 0.4 s). The new camera's narrower view made 2° a bigger share of the screen.
+   - **Replaying a bug:** dev builds show seed, floor, room, tile (and its map) and build date in the top-left corner. `-Seed=N -Floor=N -Room=N` start there (`Play.bat -Seed=6032 -Room=3`), and the console command `GoToRoom N` moves the player in game. Floors 2 and up used to come from the run's random stream after floor 1's loot and spawns, so a seed only replayed floor 1. Now each floor is seeded from the run seed and its number (`UMyGameInstance::SeedFloor`). Floor 1 is unchanged, so the baselines hold.
 
 ## Starting point
 

@@ -1,12 +1,16 @@
 #include "RoomCamera.h"
 #include "FloorBuilder.h"
 #include "RunSubsystem.h"
+#include "../MyGameInstance.h"
 #include "../Player/MyCharacter.h"
 
 #include "Camera/CameraComponent.h"
 #include "Engine/Engine.h"
 #include "Engine/GameViewportClient.h"
 #include "Engine/Texture2D.h"
+#include "HAL/FileManager.h"
+#include "HAL/PlatformProcess.h"
+#include "Modules/ModuleManager.h"
 #include "Materials/MaterialInstanceDynamic.h"
 
 namespace
@@ -68,6 +72,7 @@ void ARoomCamera::Tick(float DeltaTime)
 		FollowCamera->PostProcessSettings.AddBlendable(DarknessMID, 1.f);
 		BuildMask();
 	}
+	if (DarknessMID) DarknessMID->SetScalarParameterValue(TEXT("Brightness"), OutsideBrightness);
 	const float Aspect = ViewportAspect();
 	if (!FMath::IsNearlyEqual(Aspect, CachedAspect, 0.01f))
 	{
@@ -104,7 +109,15 @@ void ARoomCamera::Tick(float DeltaTime)
 		FocusVelocity = FVector::ZeroVector;
 	}
 
-	Focus = SmoothDamp(Focus, FocusIn(CurrentRoom, Player), FocusVelocity, FollowSmoothTime, DeltaTime);
+	const FVector Target = FocusIn(CurrentRoom, Player);
+	Focus = SmoothDamp(Focus, Target, FocusVelocity, FollowSmoothTime, DeltaTime);
+	// settle: the smoothing never quite arrives, and a camera creeping by fractions of a pixel keeps the anti-aliasing
+	// from resting
+	if (FVector::DistSquared(Focus, Target) < 0.25f && FocusVelocity.SizeSquared() < 4.f)
+	{
+		Focus = Target;
+		FocusVelocity = FVector::ZeroVector;
+	}
 	FVector Location = Focus + FramingOffset;
 	if (TransitionAlpha < 1.f)
 	{
@@ -114,6 +127,30 @@ void ARoomCamera::Tick(float DeltaTime)
 		PaintMask(PreviousRoom, CurrentRoom, Eased);
 	}
 	SetActorLocation(Location);
+	ShowDevInfo();
+}
+
+void ARoomCamera::ShowDevInfo() const
+{
+#if !UE_BUILD_SHIPPING
+	if (!GEngine) return;
+	// when this game module was built: the exe in a packaged game, the module's DLL in the editor
+	static const FString Built = []
+	{
+		FString Path = FPlatformProcess::ExecutablePath();
+#if !IS_MONOLITHIC
+		const FString Module = FModuleManager::Get().GetModuleFilename(TEXT("MyGame"));
+		if (!Module.IsEmpty()) Path = Module;
+#endif
+		const FDateTime Utc = IFileManager::Get().GetTimeStamp(*Path);
+		return Utc == FDateTime::MinValue() ? FString(TEXT("?")) : (Utc + (FDateTime::Now() - FDateTime::UtcNow())).ToString(TEXT("%Y-%m-%d %H:%M"));
+	}();
+	const UMyGameInstance* GI = GetGameInstance<UMyGameInstance>();
+	const FString Info = FString::Printf(TEXT("Seed %d   Floor %d   Room %d   Tile %d,%d %s   Built %s"),
+		GI ? GI->RunSeed : 0, GI ? GI->FloorNumber : 0, CurrentRoom, CurrentTile.X, CurrentTile.Y,
+		*FloorBuilderRef->TemplateNameAt(CurrentTile), *Built);
+	GEngine->AddOnScreenDebugMessage((uint64)GetUniqueID(), 0.f, FColor(150, 150, 170), Info);
+#endif
 }
 
 FIntPoint ARoomCamera::TileOfPlayer()
@@ -161,7 +198,9 @@ FVector ARoomCamera::FocusIn(int32 Room, const FVector& Player) const
 }
 
 // The camera's offset from the focus point at a fixed pitch and FoV: as close as possible while a tile's box (its
-// floor, its far side up to FrameHeight, a character along the near side) stays within ScreenFill, centered vertically
+// floor, its far side up to FrameHeight, a character along the near side) stays within ScreenFill, its top at the top
+// of that. A tile is wider than the screen's shape, so its width decides the distance, and the height left over goes
+// below the room, where the HUD is
 FVector ARoomCamera::SolveFramingOffset(float Aspect) const
 {
 	const FVector2D Size = TileSize();
@@ -189,28 +228,28 @@ FVector ARoomCamera::SolveFramingOffset(float Aspect) const
 			MaxH = FMath::Max(MaxH, FMath::Abs(V.Y) / (Depth * TanH));
 		}
 	};
-	// for a distance, the shift that centers the box vertically (moving the pivot ahead moves the box down)
-	auto Centered = [&](float Dist)
+	// for a distance, the shift that puts the box's top at ScreenFill (moving the pivot ahead moves the box down)
+	auto TopAligned = [&](float Dist)
 	{
-		float Lo = -Size.X, Hi = Size.X;
-		for (int32 i = 0; i < 40; i++)
+		float Lo = -3 * Size.X, Hi = 3 * Size.X;
+		for (int32 i = 0; i < 50; i++)
 		{
 			float MinV, MaxV, MaxH;
 			const float Mid = (Lo + Hi) / 2;
 			Extent(Dist, Mid, MinV, MaxV, MaxH);
-			(MinV + MaxV > 0.f ? Lo : Hi) = Mid;
+			(MaxV > ScreenFill ? Lo : Hi) = Mid;
 		}
 		return (Lo + Hi) / 2;
 	};
 	float Near = 100.f, Far = 50000.f;
-	for (int32 i = 0; i < 40; i++)
+	for (int32 i = 0; i < 50; i++)
 	{
 		const float Dist = (Near + Far) / 2;
 		float MinV, MaxV, MaxH;
-		Extent(Dist, Centered(Dist), MinV, MaxV, MaxH);
-		(FMath::Max3(-MinV, MaxV, MaxH) > ScreenFill ? Near : Far) = Dist;
+		Extent(Dist, TopAligned(Dist), MinV, MaxV, MaxH);
+		(FMath::Max(-MinV, MaxH) > ScreenFill ? Near : Far) = Dist;
 	}
-	return FVector(Centered(Far), 0.f, 0.f) - Forward * Far;
+	return FVector(TopAligned(Far), 0.f, 0.f) - Forward * Far;
 }
 
 FVector2D ARoomCamera::TileSize() const
@@ -247,7 +286,6 @@ void ARoomCamera::BuildMask()
 	DarknessMID->SetScalarParameterValue(TEXT("OriginY"), (MaskOrigin.Y - 0.5f) * Size.Y);
 	DarknessMID->SetScalarParameterValue(TEXT("ExtentX"), MaskTiles.X * Size.X);
 	DarknessMID->SetScalarParameterValue(TEXT("ExtentY"), MaskTiles.Y * Size.Y);
-	DarknessMID->SetScalarParameterValue(TEXT("Brightness"), OutsideBrightness);
 }
 
 void ARoomCamera::PaintMask(int32 FromRoom, int32 ToRoom, float Alpha)

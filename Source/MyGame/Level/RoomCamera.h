@@ -1,6 +1,6 @@
 // The game camera, confined to the room the player is in (a room = tiles with no wall between them, see CLAUDE.md).
 // It frames one tile at a fixed pitch and FoV, solved at runtime so a whole tile fits the screen at the current aspect
-// ratio. In a one-tile room it doesn't move. In a bigger room it slides along the room's spine (its tile centers and
+// ratio, as high on the screen as it goes (the room above the HUD). In a one-tile room it doesn't move. In a bigger room it slides along the room's spine (its tile centers and
 // the lines between neighboring tiles), so it never shows past the room's walls. Through a door into another room it
 // eases over. Everything outside the current room is darkened by a post-process material fed a mask of the room's tiles.
 
@@ -30,14 +30,14 @@ public:
 
 	// How far down the camera looks (degrees)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing")
-	float Pitch = 40.f;
+	float Pitch = 35.f;
 	// Horizontal field of view (degrees)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing")
 	float FieldOfView = 60.f;
-	// The height framed above a tile's floor: the tallest platforms plus a character standing on them
+	// The height framed along a tile's far side: its walls (400) plus a margin
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing")
-	float FrameHeight = 600.f;
-	// How much of the screen a tile may fill (1 = edge to edge)
+	float FrameHeight = 450.f;
+	// How much of the screen a tile may fill (1 = edge to edge); its top sits this high, what's left goes below it
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing", meta = (ClampMin = "0.5", ClampMax = "1"))
 	float ScreenFill = 0.96f;
 	// Seconds the camera takes to catch up while sliding inside a big room (critically damped, no overshoot)
@@ -53,9 +53,11 @@ public:
 	// Darkens everything outside the current room (set on BP_RoomCamera); none when unset
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Darkness")
 	TObjectPtr<class UMaterialInterface> RoomDarknessMaterial;
-	// Brightness left outside the current room (0 black, 1 unchanged)
+	// Brightness left outside the current room (0 black, 1 unchanged), in linear light: the material darkens before
+	// tonemapping, so before the anti-aliasing (TSR), which keeps the room's edge from flickering. The tonemapper's toe
+	// crushes it: 0.012 shows a faint floor, 0.05 shows what's there, 0.002 is black
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Darkness")
-	float OutsideBrightness = 0.08f;
+	float OutsideBrightness = 0.012f;
 	// Mask texels per tile side: more makes the fade at the room's edge narrower
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Darkness", meta = (ClampMin = "2", ClampMax = "32"))
 	int32 MaskTexelsPerTile = 8;
@@ -71,6 +73,8 @@ private:
 	float ViewportAspect() const;
 	void BuildMask();
 	void PaintMask(int32 FromRoom, int32 ToRoom, float Alpha);
+	// Dev builds: seed, floor, room and build date in the corner, to replay a bug with -Seed, -Floor and -Room
+	void ShowDevInfo() const;
 
 	UPROPERTY()
 	TObjectPtr<class AFloorBuilder> FloorBuilderRef = nullptr;

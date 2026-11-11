@@ -17,7 +17,7 @@ if not mat:
     mat = ue.AssetToolsHelpers.get_asset_tools().create_asset(NAME, PATH, ue.Material, ue.MaterialFactoryNew())
 MEL.delete_all_material_expressions(mat)
 mat.set_editor_property("material_domain", ue.MaterialDomain.MD_POST_PROCESS)
-mat.set_editor_property("blendable_location", ue.BlendableLocation.BL_SCENE_COLOR_AFTER_TONEMAPPING)
+mat.set_editor_property("blendable_location", ue.BlendableLocation.BL_SCENE_COLOR_AFTER_DOF)  # before TSR: the darkness gets anti-aliased with the scene, no flicker at edges
 
 scene = MEL.create_material_expression(mat, ue.MaterialExpressionSceneTexture, -700, 0)
 scene.set_editor_property("scene_texture_id", ue.SceneTextureId.PPI_POST_PROCESS_INPUT0)
@@ -28,7 +28,7 @@ mask.set_editor_property("texture", ue.load_asset("/Engine/EngineResources/White
 
 params = {}
 for i, (name, default) in enumerate([("OriginX", -2100.0), ("OriginY", -3000.0), ("ExtentX", 4200.0), ("ExtentY", 6000.0),
-                                      ("Brightness", 0.08)]):
+                                      ("Brightness", 0.012)]):
     p = MEL.create_material_expression(mat, ue.MaterialExpressionScalarParameter, -700, 420 + i * 70)
     p.set_editor_property("parameter_name", name)
     p.set_editor_property("default_value", default)
