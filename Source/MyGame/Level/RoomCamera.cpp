@@ -83,6 +83,7 @@ void ARoomCamera::Tick(float DeltaTime)
 		// first frame: just be there
 		bStarted = true;
 		CurrentRoom = PreviousRoom = Room;
+		FloorBuilderRef->SetCutawayRoom(Room);
 		Focus = FocusIn(Room, Player);
 		FocusVelocity = FVector::ZeroVector;
 		TransitionAlpha = 1.f;
@@ -95,6 +96,8 @@ void ARoomCamera::Tick(float DeltaTime)
 		// through a door: ease from here to the new room's framing
 		PreviousRoom = CurrentRoom;
 		CurrentRoom = Room;
+		// the walls in front of the new room come down as the camera starts toward it
+		FloorBuilderRef->SetCutawayRoom(Room);
 		TransitionFrom = GetActorLocation();
 		TransitionAlpha = 0.f;
 		Focus = FocusIn(Room, Player);

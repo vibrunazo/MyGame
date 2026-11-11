@@ -209,7 +209,7 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
    - **The darkness** is now per room: the camera paints a small mask texture (8 texels per tile; bilinear filtering gives the soft edge) lit for the current room's tiles, and `PP_RoomDarkness` samples it by world position.
 7. **Next:**
    - Your play-test.
-   - The near-wall cutaway: the bottom wall still drops to 50 cm on tile entry (`HideWall`).
+   - **Done 2026-11-10: the wall cutaway is per room.** When the camera moves to a room it calls `AFloorBuilder::SetCutawayRoom`: the walls between that room and the camera (each of its tiles' bottom walls) drop to `CutawayHeight` (50 cm) and the last room's go back to their own height. A two-row or L-shaped room is fully open to the camera; other rooms' walls stay up. It replaced the 2020 `HideWall`, which lowered the current tile's and its side neighbors' walls whatever room they belonged to. The camera suite visits every room and checks that exactly its camera-side walls are down.
 
 ## Starting point
 

@@ -124,9 +124,10 @@ public:
 	FTileState* GetTileAt(FTileCoord Coord);
 	class AWall* GetBottomWallFromLoc(FVector Location);
 	class AWall* GetWallAtTileSide(FTileCoord Coord, ETileSide Dir);
-	void OnUpdateCharCoord(FVector Location, ETileSide Dir=ETileSide::Bottom);
-	void HideWall(FTileCoord Coord, ETileSide Dir=ETileSide::Bottom);
-	void HideOneWall(AWall* ThisWall);
+	void OnUpdateCharCoord(FVector Location);
+	// Lowers the walls on the camera's side of this room (each of its tiles' bottom walls) to CutawayHeight, and
+	// raises the last room's back to their own height. The room camera calls it when it moves to a room.
+	void SetCutawayRoom(int32 Room);
 	void SetTileCleared(FTileState& Room);
 	void OpenDoors();
 	void CloseDoors();
@@ -244,8 +245,12 @@ private:
 	// A core ticker, not a world timer: world timers run on dilated time, and the world is frozen while rooms stream
 	FTSTicker::FDelegateHandle LoadingTimeout;
 
+	// How tall the cut-away walls in front of the player's room stay (enough to show where the room ends)
+	UPROPERTY(EditAnywhere, Category = "FloorBuilder")
+	float CutawayHeight = 50.f;
+	// the walls lowered now, and the height each goes back to
 	UPROPERTY()
-	TArray<class AWall*> HiddenWalls;
+	TMap<TObjectPtr<class AWall>, float> CutawayWalls;
 	FTileCoord LastEnteredTile = FTileCoord(-67, 9390);
 	uint8 CountOfLevelsThatDidntFinishLoading = 0;
 

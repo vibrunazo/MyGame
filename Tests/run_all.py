@@ -62,7 +62,13 @@ def suite_camera(out):
     C.report_results(results)
     # the room camera never moves while the player stays put in a room, whatever they do
     still = {k: results[k]["metrics"] for k in ("turns", "lunges", "jumps")}
-    return all(m.get("cam_xy") == 0 and m.get("cam_z") == 0 for m in still.values())
+    ok = all(m.get("cam_xy") == 0 and m.get("cam_z") == 0 for m in still.values())
+    # in every room, the walls between it and the camera are cut away, and only those
+    cut = C.cutaway_check()
+    (out / "cutaway.json").write_text(json.dumps(cut, indent=1))
+    for room, r in cut.items():
+        print(f"  cutaway {room}: " + ("ok" if r["pass"] else f"lowered {r['lowered']}, expected {r['expected']}"))
+    return ok and all(r["pass"] for r in cut.values())
 
 
 # moves that hit several times: frame rate sensitive if anything is

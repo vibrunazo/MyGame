@@ -633,13 +633,12 @@ AWall* AFloorBuilder::GetWallAtTileSide(FTileCoord Coord, ETileSide Dir)
 
 // Try to hide walls on the Tiles at this Location
 // Called from the Character Every tick with the Actor location
-void AFloorBuilder::OnUpdateCharCoord(FVector Location, ETileSide Dir)
+void AFloorBuilder::OnUpdateCharCoord(FVector Location)
 {
 	FTileCoord Coord = GetTileFromLoc(Location);
 	if (Coord == LastEnteredTile) return;
 	LastEnteredTile = Coord;
 	UE_LOG(LogTemp, Warning, TEXT("Char at location %s, which is coord %s"), *Location.ToString(), *Coord.ToString());
-	HideWall(Coord, Dir);
 	FTileState* Room = GetTileAt(Coord);
 	// this might actually be null if I dash into a pit UNDER the wall like an idiot
 	if (!Room) return;
@@ -658,42 +657,25 @@ void AFloorBuilder::OnUpdateCharCoord(FVector Location, ETileSide Dir)
 	}
 }
 
-// Try to Hide walls on this Tiles Tile
-void AFloorBuilder::HideWall(FTileCoord Coord, ETileSide Dir)
+void AFloorBuilder::SetCutawayRoom(int32 Room)
 {
-	// Unhide all Walls
-	for (auto &&Wall : HiddenWalls)
+	for (const TPair<TObjectPtr<AWall>, float>& Lowered : CutawayWalls)
 	{
-		if (Wall)
-		{
-			Wall->Height = 400.f;
-			Wall->BuildWalls();
-		}
+		if (!IsValid(Lowered.Key)) continue;
+		Lowered.Key->Height = Lowered.Value;
+		Lowered.Key->BuildWalls();
 	}
-	HiddenWalls = {};
-	AWall* ThisWall = GetWallAtTileSide(Coord, Dir);
-	// Hide wall in given coord
-	HideOneWall(ThisWall);
-	FTileCoord RightCoord = GetNeighbor(Coord, ETileSide::Right);
-	AWall* RightWall = GetWallAtTileSide(RightCoord, Dir);
-	UTileTemplate* RightRoom = GetTemplateAt(RightCoord);
-	// if room to the right is not doored, then hide it too
-	if (RightRoom && !RightRoom->bIsDoored)	HideOneWall(RightWall);
-	FTileCoord LeftCoord = GetNeighbor(Coord, ETileSide::Left);
-	AWall* LeftWall = GetWallAtTileSide(LeftCoord, Dir);
-	UTileTemplate* LeftRoom = GetTemplateAt(LeftCoord);
-	// if room to the left is not doored, then hide it too
-	if (LeftRoom && !LeftRoom->bIsDoored) HideOneWall(LeftWall);
-
-}
-
-void AFloorBuilder::HideOneWall(AWall* ThisWall)
-{
-	if (ThisWall)
+	CutawayWalls.Reset();
+	if (Room < 0 || Room >= Rooms.Num()) return;
+	// the camera looks from the bottom side: a room tile's bottom wall stands between it and the camera (a tile
+	// joined to the one below has none)
+	for (const FIntPoint& Tile : Rooms[Room].Tiles)
 	{
-		ThisWall->Height = 50.f;
-		ThisWall->BuildWalls();
-		HiddenWalls.Add(ThisWall);
+		AWall* Wall = GetWallAtTileSide(FTileCoord((int16)Tile.X, (int16)Tile.Y), ETileSide::Bottom);
+		if (!IsValid(Wall) || CutawayWalls.Contains(Wall)) continue;
+		CutawayWalls.Add(Wall, Wall->Height);
+		Wall->Height = FMath::Min(Wall->Height, CutawayHeight);
+		Wall->BuildWalls();
 	}
 }
 

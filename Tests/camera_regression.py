@@ -120,6 +120,26 @@ def run_all():
     return results
 
 
+def cutaway_check():
+    """Walks into every room (a teleport to its first tile's center): the walls lowered must be exactly that room's
+    walls on the camera side, each of its tiles' bottom wall (a tile joined to the one below has none)."""
+    freeze_enemies()
+    s = tool("level_state")
+    sx, sy = s["tile_size"]
+    walls = {tuple(w["at"]) for w in s["walls"]}
+    out = {}
+    for room in s["rooms"]:
+        x, y = room[0][0] * sx, room[0][1] * sy
+        tool("teleport_player", x=x, y=y, z=tool("floor_height", x=x, y=y, from_z=500.0)["z"] + 100)
+        wait_game(1.0)
+        now = tool("level_state")["walls"]
+        lowered = sorted(tuple(w["at"]) for w in now if w["height"] < 100)
+        expected = sorted(at for at in ((round((t[0] - 0.5) * sx), round(t[1] * sy)) for t in room) if at in walls)
+        out[str(room)] = {"pass": lowered == expected, "lowered": lowered, "expected": expected}
+    reset()
+    return out
+
+
 def report(path):
     report_results(json.load(open(path)))
 
