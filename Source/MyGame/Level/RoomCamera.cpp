@@ -15,9 +15,6 @@
 
 namespace
 {
-	// A character's height: what must stay in frame along a tile's near (camera-side) edge
-	constexpr float NearEdgeHeight = 200.f;
-
 	// Critically damped smoothing toward Target (Game Programming Gems 4, 1.10): no overshoot, continuous speed
 	FVector SmoothDamp(const FVector& Current, const FVector& Target, FVector& Velocity, float SmoothTime, float DeltaTime)
 	{
@@ -28,13 +25,6 @@ namespace
 		const FVector Temp = (Velocity + Omega * Change) * DeltaTime;
 		Velocity = (Velocity - Omega * Temp) * Exp;
 		return Target + (Change + Temp) * Exp;
-	}
-
-	FVector2D ClosestOnSegment(const FVector2D& P, const FVector2D& A, const FVector2D& B)
-	{
-		const FVector2D AB = B - A;
-		const float T = FMath::Clamp(FVector2D::DotProduct(P - A, AB) / FMath::Max(AB.SizeSquared(), 1.f), 0.f, 1.f);
-		return A + AB * T;
 	}
 }
 
@@ -77,7 +67,7 @@ void ARoomCamera::Tick(float DeltaTime)
 	if (!FMath::IsNearlyEqual(Aspect, CachedAspect, 0.01f))
 	{
 		CachedAspect = Aspect;
-		FramingOffset = SolveFramingOffset(Aspect);
+		SolveFraming(Aspect);
 	}
 
 	const FVector Player = PlayerRef->GetActorLocation();
@@ -165,7 +155,7 @@ FIntPoint ARoomCamera::TileOfPlayer()
 }
 
 // The room's spine: its tile centers, the lines between joined neighbors, and the squares of 2 x 2 blocks. The focus
-// is the spine's point nearest the player, so a one-tile room has a single focus and the view never leaves the room
+// is the spine's point nearest the player, moved sideways by up to SideSlack, so the view never leaves the room
 FVector ARoomCamera::FocusIn(int32 Room, const FVector& Player) const
 {
 	const TArray<FIntPoint>& Tiles = FloorBuilderRef->GetRoomTiles(Room);
@@ -174,82 +164,75 @@ FVector ARoomCamera::FocusIn(int32 Room, const FVector& Player) const
 	const FVector2D P(Player.X, Player.Y);
 	auto Center = [&](const FIntPoint& T) { return FVector2D(T.X * Size.X, T.Y * Size.Y); };
 	FVector2D Best = Center(Tiles[0]);
-	float BestDist = FVector2D::DistSquared(P, Best);
-	auto Consider = [&](const FVector2D& C)
+	float BestDist = MAX_flt;
+	// the nearest point of a box from Min to Max
+	auto Consider = [&](const FVector2D& Min, const FVector2D& Max)
 	{
+		const FVector2D C(FMath::Clamp(P.X, Min.X, Max.X), FMath::Clamp(P.Y, Min.Y, Max.Y));
 		const float D = FVector2D::DistSquared(P, C);
 		if (D < BestDist) { BestDist = D; Best = C; }
 	};
 	for (const FIntPoint& T : Tiles)
 	{
-		Consider(Center(T));
+		Consider(Center(T), Center(T));
 		for (const FIntPoint& Step : { FIntPoint(1, 0), FIntPoint(0, 1) })
 		{
-			if (FloorBuilderRef->AreJoined(T, T + Step)) Consider(ClosestOnSegment(P, Center(T), Center(T + Step)));
+			if (FloorBuilderRef->AreJoined(T, T + Step)) Consider(Center(T), Center(T + Step));
 		}
 		// a 2 x 2 block of joined tiles: anywhere in between
 		const FIntPoint A = T + FIntPoint(1, 0), B = T + FIntPoint(0, 1), C = T + FIntPoint(1, 1);
 		if (FloorBuilderRef->AreJoined(T, A) && FloorBuilderRef->AreJoined(T, B) && FloorBuilderRef->AreJoined(A, C) && FloorBuilderRef->AreJoined(B, C))
 		{
-			Consider(FVector2D(FMath::Clamp(P.X, Center(T).X, Center(C).X), FMath::Clamp(P.Y, Center(T).Y, Center(C).Y)));
+			Consider(Center(T), Center(C));
 		}
 	}
+	// sideways past the spine: the slide goes with how far across the tile the player is, so the side wall reaches the
+	// screen's edge as the player reaches it, and the camera moves about a fifth as much as the player (16:9), not step for step
+	Best.Y += SideSlack * FMath::Clamp((P.Y - Best.Y) / (Size.Y / 2), -1.f, 1.f);
 	return FVector(Best.X, Best.Y, 0.f);
 }
 
-// The camera's offset from the focus point at a fixed pitch and FoV: as close as possible while a tile's box (its
-// floor, its far side up to FrameHeight, a character along the near side) stays within ScreenFill, its top at the top
-// of that. A tile is wider than the screen's shape, so its width decides the distance, and the height left over goes
-// below the room, where the HUD is
-FVector ARoomCamera::SolveFramingOffset(float Aspect) const
+// The camera's offset from the focus point at a fixed pitch and FoV, so a tile fills the screen's height: its far side
+// up to FrameHeight touches the top, the front of its floor (NearFrameDepth below it) the bottom. A tile is wider than
+// the screen's shape, so its sides can overflow: SideSlack is how far the camera then slides sideways (toward the
+// player) to reach either side wall, measured where the side walls meet the near floor edge
+void ARoomCamera::SolveFraming(float Aspect)
 {
 	const FVector2D Size = TileSize();
 	const float P = FMath::DegreesToRadians(Pitch);
 	const FVector Forward(FMath::Cos(P), 0.f, -FMath::Sin(P)), Up(FMath::Sin(P), 0.f, FMath::Cos(P));
 	const float TanH = FMath::Tan(FMath::DegreesToRadians(FieldOfView) / 2), TanV = TanH / FMath::Max(Aspect, 0.1f);
-	TArray<FVector, TInlineAllocator<8>> Corners;
-	for (float Y : { -Size.Y / 2, Size.Y / 2 })
+	const FVector Top(Size.X / 2, 0.f, FrameHeight), Bottom(-Size.X / 2, 0.f, -NearFrameDepth);
+	auto ScreenV = [&](const FVector& Cam, const FVector& At)
 	{
-		Corners.Add(FVector(-Size.X / 2, Y, 0.f));
-		Corners.Add(FVector(-Size.X / 2, Y, NearEdgeHeight));
-		Corners.Add(FVector(Size.X / 2, Y, 0.f));
-		Corners.Add(FVector(Size.X / 2, Y, FrameHeight));
-	}
-	auto Extent = [&](float Dist, float Shift, float& MinV, float& MaxV, float& MaxH)
-	{
-		const FVector Cam = FVector(Shift, 0.f, 0.f) - Forward * Dist;
-		MinV = MAX_flt; MaxV = -MAX_flt; MaxH = 0.f;
-		for (const FVector& C : Corners)
-		{
-			const FVector V = C - Cam;
-			const float Depth = FMath::Max(FVector::DotProduct(V, Forward), 1.f);
-			const float SV = FVector::DotProduct(V, Up) / (Depth * TanV);
-			MinV = FMath::Min(MinV, SV); MaxV = FMath::Max(MaxV, SV);
-			MaxH = FMath::Max(MaxH, FMath::Abs(V.Y) / (Depth * TanH));
-		}
+		const FVector V = At - Cam;
+		return FVector::DotProduct(V, Up) / (FMath::Max(FVector::DotProduct(V, Forward), 1.f) * TanV);
 	};
-	// for a distance, the shift that puts the box's top at ScreenFill (moving the pivot ahead moves the box down)
+	auto CamAt = [&](float Dist, float Shift) { return FVector(Shift, 0.f, 0.f) - Forward * Dist; };
+	// for a distance, the shift that puts the top at the screen's top (moving the pivot ahead moves the view down)
 	auto TopAligned = [&](float Dist)
 	{
 		float Lo = -3 * Size.X, Hi = 3 * Size.X;
 		for (int32 i = 0; i < 50; i++)
 		{
-			float MinV, MaxV, MaxH;
 			const float Mid = (Lo + Hi) / 2;
-			Extent(Dist, Mid, MinV, MaxV, MaxH);
-			(MaxV > ScreenFill ? Lo : Hi) = Mid;
+			(ScreenV(CamAt(Dist, Mid), Top) > 1.f ? Lo : Hi) = Mid;
 		}
 		return (Lo + Hi) / 2;
 	};
+	// then the distance that puts the bottom at the screen's bottom
 	float Near = 100.f, Far = 50000.f;
 	for (int32 i = 0; i < 50; i++)
 	{
 		const float Dist = (Near + Far) / 2;
-		float MinV, MaxV, MaxH;
-		Extent(Dist, TopAligned(Dist), MinV, MaxV, MaxH);
-		(FMath::Max(-MinV, MaxH) > ScreenFill ? Near : Far) = Dist;
+		(ScreenV(CamAt(Dist, TopAligned(Dist)), Bottom) < -1.f ? Near : Far) = Dist;
 	}
-	return FVector(TopAligned(Far), 0.f, 0.f) - Forward * Far;
+	const FVector Cam = CamAt(Far, TopAligned(Far));
+	FramingOffset = Cam;
+	// how much of the near floor edge's half-width the screen shows
+	const FVector Corner = FVector(-Size.X / 2, Size.Y / 2, 0.f) - Cam;
+	const float Shown = FVector::DotProduct(Corner, Forward) * TanH;
+	SideSlack = FMath::Max(0.f, Size.Y / 2 - Shown);
 }
 
 FVector2D ARoomCamera::TileSize() const

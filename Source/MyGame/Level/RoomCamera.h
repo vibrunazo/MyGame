@@ -1,8 +1,9 @@
 // The game camera, confined to the room the player is in (a room = tiles with no wall between them, see CLAUDE.md).
-// It frames one tile at a fixed pitch and FoV, solved at runtime so a whole tile fits the screen at the current aspect
-// ratio, as high on the screen as it goes (the room above the HUD). In a one-tile room it doesn't move. In a bigger room it slides along the room's spine (its tile centers and
-// the lines between neighboring tiles), so it never shows past the room's walls. Through a door into another room it
-// eases over. Everything outside the current room is darkened by a post-process material fed a mask of the room's tiles.
+// It frames one tile's depth at a fixed pitch and FoV, solved at runtime so the tile fills the screen's height at the
+// current aspect ratio. The tile is wider than that, so the camera slides sideways toward the player, up to its side
+// walls. In a bigger room it also slides along the room's spine (its tile centers and the lines between neighboring
+// tiles), so it never shows past the room's walls. Through a door into another room it eases over. Everything outside
+// the current room is darkened by a post-process material fed a mask of the room's tiles.
 
 #pragma once
 
@@ -34,12 +35,13 @@ public:
 	// Horizontal field of view (degrees)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing")
 	float FieldOfView = 60.f;
-	// The height framed along a tile's far side: its walls (400) plus a margin
+	// The height at the screen's top edge, along a tile's far side: leaves the far wall's top edge a small margin (25 px
+	// of 720 at 35 degrees)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing")
-	float FrameHeight = 450.f;
-	// How much of the screen a tile may fill (1 = edge to edge); its top sits this high, what's left goes below it
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing", meta = (ClampMin = "0.5", ClampMax = "1"))
-	float ScreenFill = 0.96f;
+	float FrameHeight = 390.f;
+	// How far below the floor the screen's bottom edge is, along a tile's near side: the bottom of the floor's front
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing")
+	float NearFrameDepth = 66.f;
 	// Seconds the camera takes to catch up while sliding inside a big room (critically damped, no overshoot)
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Camera|Framing")
 	float FollowSmoothTime = 0.45f;
@@ -67,8 +69,9 @@ private:
 	FIntPoint TileOfPlayer();
 	// Where the camera's focus goes in a room: the point of the room's spine nearest the player
 	FVector FocusIn(int32 Room, const FVector& Player) const;
-	// The camera's offset from the focus point, solved so a tile fills the screen (per aspect ratio)
-	FVector SolveFramingOffset(float Aspect) const;
+	// The camera's offset from the focus point and the sideways slack, solved so a tile fills the screen's height (per
+	// aspect ratio)
+	void SolveFraming(float Aspect);
 	FVector2D TileSize() const;
 	float ViewportAspect() const;
 	void BuildMask();
@@ -92,6 +95,8 @@ private:
 	float TransitionAlpha = 1.f;
 	float CachedAspect = 0.f;
 	FVector FramingOffset = FVector::ZeroVector;
+	// How far the focus may move sideways from the room's spine: where the tile is wider than the screen
+	float SideSlack = 0.f;
 	// The mask covers the floor's tiles plus one tile of margin: its first tile and size in tiles
 	FIntPoint MaskOrigin = FIntPoint::ZeroValue, MaskTiles = FIntPoint::ZeroValue;
 	TArray<uint8> MaskPixels;
