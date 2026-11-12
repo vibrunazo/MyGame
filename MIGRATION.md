@@ -168,7 +168,9 @@ Baselines for seeds 6032, 101 and 2024 are in `Tests/baselines/level_seed_*.json
      - **Gotcha:** a game process left running from `Saved/Packaged` locks the exe, and BuildCookRun's archive step then silently keeps the old one. The smoke test now kills leftovers first.
    - **Known flake:** `super_kick_tat` once landed an extra hit (60 damage instead of 48) and travelled 95 cm instead of about 150, under the 100 cm `moved` threshold. The rerun matched the baseline. It's frame timing against the dummy, not a regression.
 
-## Phase 6 status (started 2026-10-12)
+## Phase 6 status (started 2026-10-12): done 2026-11-12
+
+Your play-test of the height-filling framing (2026-11-12): "it's good now".
 
 1. **Done: measured the 2020 camera.**
    - **Tools:** `Tests/camera_regression.py` scripts seven situations (walk left/right, walk in depth, turning in a fight, punch lunges, jumps, dashes, a room change). The `camera_record` hook samples the player camera manager every frame. Out come travel, vertical bob, travel while the player stands still, rotation/FoV range and direction reversals.
