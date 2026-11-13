@@ -13,7 +13,7 @@ import json
 import sys
 import time
 
-from harness import tool
+from harness import floor_z, tool
 
 
 def wait_game(seconds):
@@ -56,7 +56,7 @@ def doored_flow(state):
         return {"room": None}
     room = candidates[0]["coord"]
     cx, cy = room[0] * size[0], room[1] * size[1]
-    z = tool("floor_height", x=cx, y=cy, from_z=500.0)["z"] + 100.0
+    z = floor_z(cx, cy) + 100.0
     tool("set_player_attribute", attribute="MaxHealth", value=1000.0)
     tool("set_player_attribute", attribute="Health", value=1000.0)
     tool("set_player_attribute", attribute="Defense", value=1000.0)

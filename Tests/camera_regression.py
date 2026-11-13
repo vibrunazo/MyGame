@@ -23,8 +23,7 @@ import math
 import sys
 import time
 
-from harness import wait_game
-from harness import tool
+from harness import floor_z, tool, wait_game
 from level_regression import wait_loaded
 
 START = (0.0, -300.0)
@@ -38,8 +37,7 @@ def freeze_enemies():
 
 def reset():
     tool("move_input", forward=0.0, right=0.0)
-    z = tool("floor_height", x=START[0], y=START[1], from_z=500.0)["z"] + 100
-    tool("teleport_player", x=START[0], y=START[1], z=z)
+    tool("teleport_player", x=START[0], y=START[1], z=floor_z(*START) + 100)
     tool("set_player_facing", yaw=90.0)
     wait_game(2.5)  # let the camera settle
 
@@ -130,7 +128,7 @@ def cutaway_check():
     out = {}
     for room in s["rooms"]:
         x, y = room[0][0] * sx, room[0][1] * sy
-        tool("teleport_player", x=x, y=y, z=tool("floor_height", x=x, y=y, from_z=500.0)["z"] + 100)
+        tool("teleport_player", x=x, y=y, z=floor_z(x, y) + 100)
         wait_game(1.0)
         now = tool("level_state")["walls"]
         lowered = sorted(tuple(w["at"]) for w in now if w["height"] < 100)

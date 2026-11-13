@@ -15,7 +15,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from harness import tool
+from harness import floor_z, tool
 from level_regression import wait_loaded
 
 SLOW = 0.25
@@ -100,8 +100,7 @@ def main(out, label=""):
     tool("learn_item_abilities", item_asset_path="/Game/Blueprints/Items/DA_LearnFireball")
     for attr, v in (("MaxHealth", 5000.0), ("Health", 5000.0), ("Defense", 1000.0), ("Mana", 1000.0)):
         tool("set_player_attribute", attribute=attr, value=v)
-    z = tool("floor_height", x=START[0], y=START[1], from_z=500.0)["z"] + 100
-    tool("teleport_player", x=START[0], y=START[1], z=z)
+    tool("teleport_player", x=START[0], y=START[1], z=floor_z(*START) + 100)
     tool("set_player_facing", yaw=90.0)
     for c in tool("list_characters"):  # frozen, so the walk reaches the next room (it's a camera demo, not a fight)
         if c["team"] == 1:

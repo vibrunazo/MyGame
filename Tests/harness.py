@@ -54,6 +54,22 @@ def wait_game(seconds, poll=0.02):
         time.sleep(poll)
 
 
+def floor_z(x, y, from_z=500.0, tries=3):
+    """The floor's height at (x, y), traced straight down through world geometry from `from_z`. A spot with no floor
+    is tried again a second later (wall clock: the game may be frozen while a tile streams in), then fails with what
+    the level looked like, instead of a KeyError further on."""
+    for attempt in range(tries):
+        hit = tool("floor_height", x=float(x), y=float(y), from_z=float(from_z))
+        if hit.get("hit"):
+            if attempt:
+                print(f"  note: the floor at ({x:.0f}, {y:.0f}) was found only on try {attempt + 1}")
+            return hit["z"]
+        time.sleep(1.0)
+    s = tool("level_state")
+    raise RuntimeError(f"no floor at ({x:.0f}, {y:.0f}) below z {from_z:.0f} after {tries} tries: "
+                       f"{len(s['tiles'])} tiles, time dilation {s['time_dilation']}, run {tool('run_state')}")
+
+
 def set_speed(speed):
     """Runs the game `speed` times faster than real time (kept across floor loads)."""
     tool("set_game_speed", speed=float(speed))

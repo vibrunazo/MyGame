@@ -16,7 +16,7 @@ import json
 import sys
 import time
 
-from harness import game_time, wait_game
+from harness import floor_z, game_time, wait_game
 from harness import call_tool, tool
 
 GAS = "GASToolsets.AbilitySystemInspectorToolset"
@@ -39,9 +39,10 @@ START_ROOM_SPOT = (0.0, -300.0)
 FLOOR = []
 
 
-def floor_z():
+def stand_z():
+    """Where a character stands at the dummy spot: its floor plus a capsule's half height, roughly."""
     if not FLOOR:
-        FLOOR.append(tool("floor_height", x=DUMMY_SPOT[0], y=DUMMY_SPOT[1], from_z=500.0)["z"] + 100.0)
+        FLOOR.append(floor_z(*DUMMY_SPOT) + 100.0)
     return FLOOR[0]
 
 
@@ -49,8 +50,8 @@ def place(dummy, player_x):
     """Dummy at DUMMY_SPOT, player at player_x facing +X (towards the dummy); retried if the game moves them."""
     x, y = DUMMY_SPOT
     for _ in range(4):
-        tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=floor_z())
-        tool("teleport_player", x=player_x, y=y, z=floor_z())
+        tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=stand_z())
+        tool("teleport_player", x=player_x, y=y, z=stand_z())
         tool("set_player_facing", yaw=0.0)
         wait_game(0.4)
         px, py, _ = tool("pie_player_state")["location"]
@@ -247,8 +248,8 @@ def sight_checks(dummy, seconds=2.0):
     for name, dummy_yaw, gap in (("behind_500", 0.0, 500.0), ("front_900", 180.0, 900.0), ("front_500", 180.0, 500.0)):
         reset(None, dummy)
         x, y = DUMMY_SPOT
-        tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=floor_z(), yaw=dummy_yaw)
-        tool("teleport_player", x=x - gap, y=y, z=floor_z())
+        tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=stand_z(), yaw=dummy_yaw)
+        tool("teleport_player", x=x - gap, y=y, z=stand_z())
         tool("ai_target", actor_path=dummy["path"], clear=True)
         wait_game(0.3)
         tool("set_ai_enabled", actor_path=dummy["path"], enabled=True, show_player=False)
