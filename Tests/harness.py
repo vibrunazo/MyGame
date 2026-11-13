@@ -4,6 +4,7 @@ Every scripted wait in the suites is in game seconds (`wait_game`), so the suite
 set to (`set_speed`, global time dilation re-applied after each floor load). The game is meant to be frame rate and
 speed agnostic: a suite that changes outcome at another speed has found a bug (or a timing-sensitive test).
 """
+import json
 import time
 from pathlib import Path
 
@@ -87,4 +88,12 @@ def start_run(seed, timeout=60):
         except RuntimeError:
             pass  # between maps
         time.sleep(0.5)
-    return wait_loaded()
+    state = wait_loaded()
+    # every suite's numbers assume the seed's own floor: fail here, clearly, if another one was built
+    baseline = Path(__file__).parent / "baselines" / f"level_seed_{seed}.json"
+    if baseline.exists():
+        want = sorted(sorted(map(list, r)) for r in json.loads(baseline.read_text())["rooms"])
+        got = sorted(sorted(map(list, r)) for r in state["rooms"])
+        if got != want:
+            raise RuntimeError(f"start_run({seed}) built another floor: rooms {got}, the seed's baseline has {want}")
+    return state

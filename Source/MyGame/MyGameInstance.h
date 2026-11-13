@@ -33,6 +33,8 @@ public:
 	// Restarts the random stream for FloorNumber: floor 1 from the run seed, later floors from the seed and the floor,
 	// so a seed and a floor number rebuild the same floor whatever was looted on the way
 	void SeedFloor();
+	// A fresh stream as SeedFloor leaves it, for planning the floor from its seed alone (AFloorBuilder::PlanTiles)
+	FRandomStream MakeFloorStream() const;
 	// The room -Room=N asks the first floor to start in, once per session; -1 when none
 	int32 TakeStartRoom();
 	// Dev: moves the player into a room of this floor (console: GoToRoom 3; the room numbers are in the dev overlay)

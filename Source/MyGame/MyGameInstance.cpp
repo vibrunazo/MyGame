@@ -117,11 +117,17 @@ void UMyGameInstance::NewGame()
 
 void UMyGameInstance::SeedFloor()
 {
-    // floor 1 keeps the plain seed, so the seeded baselines stay valid
-    RandomStream.Initialize(FloorNumber <= 1 ? RunSeed : (int32)HashCombine(GetTypeHash(RunSeed), GetTypeHash((int32)FloorNumber)));
+    RandomStream = MakeFloorStream();
     UE_LOG(LogTemp, Warning, TEXT("Run seed %d, floor %d: stream seed %d"), RunSeed, FloorNumber, RandomStream.GetInitialSeed());
+}
+
+FRandomStream UMyGameInstance::MakeFloorStream() const
+{
+    // floor 1 keeps the plain seed, so the seeded baselines stay valid
+    FRandomStream Stream(FloorNumber <= 1 ? RunSeed : (int32)HashCombine(GetTypeHash(RunSeed), GetTypeHash((int32)FloorNumber)));
     // three draws the floor layouts were made after (the baselines depend on them)
-    UE_LOG(LogTemp, Warning, TEXT("Random numbers: %d, %d, %d"), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10), RandomStream.RandRange(0, 10));
+    for (int32 Draw = 0; Draw < 3; ++Draw) Stream.RandRange(0, 10);
+    return Stream;
 }
 
 int32 UMyGameInstance::TakeStartRoom()

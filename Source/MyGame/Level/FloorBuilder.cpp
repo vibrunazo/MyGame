@@ -104,7 +104,12 @@ void AFloorBuilder::PlanTiles()
 	Params.InitialChanceOfGoingRight = InitialChanceOfGoingRight;
 	Params.DecWhenChoseRight = DecWhenChoseRight;
 	Params.IncWhenChoseVert = IncWhenChoseVert;
-	Layout = FFloorLayoutGenerator::Generate(Params, ObjectPtrDecay(TileTemplates), *RandomStream);
+	// The plan comes from the floor's seed alone, not from wherever the run's stream has got to, so a seed always builds
+	// the same floor: spawners and loot draw from the same stream, and the last level's can still draw after a new run is
+	// seeded. The run's stream then carries on from the plan, as it always did.
+	FRandomStream Plan = GI->MakeFloorStream();
+	Layout = FFloorLayoutGenerator::Generate(Params, ObjectPtrDecay(TileTemplates), Plan);
+	GI->RandomStream = Plan;
 	for (const FPlannedTile& Planned : Layout.Tiles)
 	{
 		FTileState Content;
