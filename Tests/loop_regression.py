@@ -13,10 +13,9 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
                 left in the menu's UI Only mode would pass every other check while real keys and pads do nothing)
 """
 import json
-import time
 
 import mygame
-from mygame import tool, wait_game, wait_loaded
+from mygame import tool, wait_game, wait_loaded, wait_until
 
 BOOK, ITEM = "/Game/Blueprints/Items/DA_LearnTat", "/Game/Blueprints/Items/DA_ItemFireHands"
 results = {}
@@ -27,17 +26,12 @@ def check(name, ok, detail=""):
     print(("PASS " if ok else "FAIL ") + name, detail)
 
 
-def wait_for(cond, timeout=40.0, step=1.0):
-    t0, state = time.time(), None
-    while time.time() - t0 < timeout:
-        try:
-            state = tool("run_state")
-            if cond(state):
-                return state
-        except RuntimeError:
-            pass  # between maps
-        time.sleep(step)
-    return state
+def state_when(cond):
+    """A condition for wait_until: the run state, once cond(state) holds."""
+    def check():
+        s = tool("run_state")
+        return s if cond(s) else None
+    return check
 
 
 def room_of(at, size):
@@ -109,7 +103,7 @@ def run_all():
     moved = ((p1[0] - p0[0]) ** 2 + (p1[1] - p0[1]) ** 2) ** 0.5
     check("no_control", moved < 1.0, f"moved {moved:.0f} after the flag")
 
-    floor2_state = wait_for(lambda s: s["floor"] == 2 and s["player"])
+    floor2_state = wait_until(state_when(lambda s: s["floor"] == 2 and s["player"]), timeout=40, every=1.0, what="floor 2 with its player")
     floor2 = wait_loaded()
     results["floor2"] = floor2_state
     check("floor_clear", floor2_state and floor2_state["floor"] == 2 and len(floor2["tiles"]) == len(floor1["tiles"]) + 1,
@@ -122,14 +116,15 @@ def run_all():
     # death
     player = next(c["path"] for c in tool("list_characters") if c["team"] == 0)
     tool("kill_character", actor_path=player)
-    over = wait_for(lambda s: "WBP_GameOver_C" in s["widgets"], timeout=15)
+    over = wait_until(state_when(lambda s: "WBP_GameOver_C" in s["widgets"]), timeout=15, every=1.0, what="the game over screen")
     results["game_over"] = over
     check("game_over", over and "WBP_GameOver_C" in over["widgets"], f'widgets {over and over["widgets"]}')
 
     # new run from the game over screen
     tool("run_action", action="start_new_run")
     # the floor reloads: the new level has no game over screen (the old one kept it, and its player, until it went)
-    fresh = wait_for(lambda s: s["player"] and s["map"] == "LevelPersistent" and "WBP_GameOver_C" not in s["widgets"])
+    fresh = wait_until(state_when(lambda s: s["player"] and s["map"] == "LevelPersistent" and "WBP_GameOver_C" not in s["widgets"]),
+                       timeout=40, every=1.0, what="a new run after game over")
     wait_loaded()
     fresh = tool("run_state")
     results["new_run"] = fresh
@@ -140,10 +135,10 @@ def run_all():
 
     # menu and back
     tool("run_action", action="quit_to_main_menu")
-    menu = wait_for(lambda s: s["map"] == "MainMenu")
+    menu = wait_until(state_when(lambda s: s["map"] == "MainMenu"), timeout=40, every=1.0, what="the main menu")
     results["menu"] = menu
     tool("run_action", action="start_new_run")
-    back = wait_for(lambda s: s["map"] == "LevelPersistent" and s["player"])
+    back = wait_until(state_when(lambda s: s["map"] == "LevelPersistent" and s["player"]), timeout=40, every=1.0, what="a run from the menu")
     check("menu", menu and menu["map"] == "MainMenu" and back and back["map"] == "LevelPersistent",
           f'{menu and menu["map"]} -> {back and back["map"]}, widgets in menu {menu and menu["widgets"]}')
     modes = {"floor 2": floor2_state["input_mode"], "game over": over and over["input_mode"],

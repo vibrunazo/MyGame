@@ -17,7 +17,7 @@ import time
 from pathlib import Path
 
 import mygame
-from mygame import call_tool, floor_z, game_time, tool, wait_game
+from mygame import call_tool, floor_z, game_time, tool, wait_game, wait_until
 
 BASELINE = Path(__file__).resolve().parent / "baselines" / "abilities_phase3.json"
 
@@ -83,8 +83,7 @@ def run_scenario(name, inputs, duration, player, dummy, away_from_dummy=False):
     start_dummy = tool("character_state", actor_path=dummy["path"])
     start_player = tool("pie_player_state")
     tool("run_timeline", spec=json.dumps({"dummy": dummy["path"], "duration": duration, "inputs": inputs, "trace": TRACE[0]}))
-    while not (r := tool("timeline_result"))["done"]:
-        time.sleep(0.05)
+    r = wait_until(lambda: (t := tool("timeline_result"))["done"] and t, timeout=120, every=0.05, what=f"the {name} timeline")
     rec = r["result"]
     end_dummy, end_player = rec["end_dummy"], rec["end_player"]
     gap = [round(a - b, 1) for a, b in zip(start_dummy["location"], start_player["location"])]

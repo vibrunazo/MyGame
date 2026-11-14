@@ -19,7 +19,7 @@ from unreal_agent_tools import Client, capture
 from unreal_agent_tools.testing import Context
 
 import mygame
-from mygame import floor_z, tool, wait_game
+from mygame import floor_z, tool, wait_game, wait_until
 
 START = (0.0, -300.0)
 
@@ -39,8 +39,7 @@ def walk_until(f, r, done, limit=8.0):
     """Holds the stick until done(x, y) is true (or limit game seconds pass)."""
     tool("move_input", forward=f, right=r)
     t0 = tool("game_time")["t"]
-    while not done(*player_xy()) and tool("game_time")["t"] - t0 < limit:
-        time.sleep(0.05)
+    wait_until(lambda: done(*player_xy()) or tool("game_time")["t"] - t0 >= limit, timeout=120, every=0.05, what="the walk")
     tool("move_input", forward=0.0, right=0.0)
 
 

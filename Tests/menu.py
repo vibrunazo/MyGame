@@ -16,7 +16,6 @@ where the bug lived.
 """
 import json
 import re
-import time
 
 MENU_MAP, RUN_MAP = "MainMenu", "LevelPersistent"
 MENU_WIDGET, PAUSE_WIDGET = "WBP_MainMenu_C", "WBP_PauseMenu_C"
@@ -68,16 +67,6 @@ def floor_ready(ctx):
     return any(p.get("AreTilesReady") for p in props(ctx, "FloorBuilder", ["AreTilesReady"]))
 
 
-def wait_until(cond, timeout=40.0):
-    """Until `cond()` holds (a condition, wall clock as the limit: levels load in real time)."""
-    t0 = time.time()
-    while time.time() - t0 < timeout:
-        if cond():
-            return True
-        time.sleep(0.25)
-    return False
-
-
 class Trip:
     def __init__(self, ctx, device):
         self.ctx, self.dev = ctx, device
@@ -104,12 +93,13 @@ class Trip:
     def run(self):
         ctx, dev = self.ctx, self.dev
         on_menu = lambda: world_map(ctx) == MENU_MAP and shown(ctx, MENU_WIDGET)
-        ok = wait_until(on_menu)
+        ok = ctx.wait_until(on_menu, timeout=40, every=0.25, what="the main menu")
         mode = input_mode(ctx)
         if not self.check("menu", ok and str(mode).startswith("UI Only"), {"map": world_map(ctx), "input_mode": mode}):
             return
         r = self.press(dev["confirm"])
-        ok = wait_until(lambda: world_map(ctx) == RUN_MAP and floor_ready(ctx) and player_xy(ctx) is not None, timeout=60)
+        ok = ctx.wait_until(lambda: world_map(ctx) == RUN_MAP and floor_ready(ctx) and player_xy(ctx) is not None, timeout=60,
+                            every=0.25, what="the floor and the player of the run")
         if not self.check("start", ok, {"confirm": r, "map": world_map(ctx)}):
             return
         mode = input_mode(ctx)
@@ -119,17 +109,17 @@ class Trip:
         moved = round(sum((a - b) ** 2 for a, b in zip(after, before)) ** 0.5, 1) if before and after else 0.0
         self.check("move", str(mode).startswith("Game Only") and moved >= MIN_MOVE, {"input_mode": mode, "moved": moved, "key": r})
         r = self.press(dev["pause"])
-        menu_up = wait_until(lambda: shown(ctx, PAUSE_WIDGET), timeout=10)
+        menu_up = ctx.wait_until(lambda: shown(ctx, PAUSE_WIDGET), timeout=10, every=0.25, what="the pause menu")
         paused = ctx.clock().get("paused")
         r2 = self.press(dev["pause"])
         running = not ctx.clock().get("paused")
         self.check("pause", menu_up and paused and running,
                    {"pause_menu": menu_up, "paused": paused, "resumed": running, "pause_key": r, "resume_key": r2})
         self.press(dev["pause"])
-        wait_until(lambda: shown(ctx, PAUSE_WIDGET), timeout=10)
+        ctx.wait_until(lambda: shown(ctx, PAUSE_WIDGET), timeout=10, every=0.25, what="the pause menu, again")
         on_exit = self.to_exit()
         r = self.press(dev["confirm"])
-        ok = wait_until(on_menu)
+        ok = ctx.wait_until(on_menu, timeout=40, every=0.25, what="the main menu, back")
         mode = input_mode(ctx)
         self.check("back", on_exit and ok and str(mode).startswith("UI Only"),
                    {"moved_to_exit": on_exit, "confirm": r, "map": world_map(ctx), "input_mode": mode})

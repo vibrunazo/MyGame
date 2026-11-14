@@ -5,7 +5,6 @@ context (`unreal-agent guide suites`). A suite calls use(ctx) first; every call 
 client and waits, so nothing in MyGame names a port. `reset` is the game's known state, named in unreal-agent.toml.
 """
 import json
-import time
 from pathlib import Path
 
 MYGAME_TOOLS = "mygame_tools.toolset.MyGameTools"
@@ -49,18 +48,22 @@ def set_speed(speed):
     tool("set_game_speed", speed=float(speed))
 
 
+def wait_until(condition, timeout=30.0, every=0.1, what=""):
+    """The context's wait for a condition: the condition knows the game, the loop is the tools'."""
+    return _ctx.wait_until(condition, timeout=timeout, every=every, what=what)
+
+
 def wait_loaded(timeout=30.0):
-    """Until the tiles finished streaming in (the game unfrozen) and stop changing (a condition, wall clock as the
-    limit: the game is frozen while it loads)."""
-    t0, last = time.time(), None
-    while time.time() - t0 < timeout:
+    """The level state once the tiles have streamed in (the game unfrozen) and stopped changing between two looks a
+    second apart."""
+    last = [None]
+
+    def settled():
         s = tool("level_state")
         key = (len(s["tiles"]), len(s["tile_masters"]), s["time_dilation"], json.dumps(s.get("props"), sort_keys=True))
-        if s["time_dilation"] > 0.0 and key == last:
-            return s
-        last = key
-        time.sleep(1.0)
-    return tool("level_state")
+        ready, last[0] = s["time_dilation"] > 0.0 and key == last[0], key
+        return s if ready else None
+    return wait_until(settled, timeout=timeout, every=1.0, what="the level to load and settle")
 
 
 def start_run(seed, timeout=60, check_floor=True):
@@ -68,14 +71,11 @@ def start_run(seed, timeout=60, check_floor=True):
     the floor isn't the one the seed's level baseline recorded, unless `check_floor` is off (the level suite compares
     the floor itself)."""
     tool("start_run", seed=int(seed))
-    t0 = time.time()
-    while time.time() - t0 < timeout:
-        try:
-            if tool("run_state")["seed"] == seed and tool("run_state")["player"]:
-                break
-        except RuntimeError:
-            pass  # between maps
-        time.sleep(0.5)
+
+    def started():
+        s = tool("run_state")
+        return s["seed"] == seed and s["player"]
+    wait_until(started, timeout=timeout, every=0.5, what=f"a run on seed {seed} with its player")
     state = wait_loaded()
     baseline = BASE / f"level_seed_{seed}.json"
     if check_floor and baseline.exists():
@@ -90,13 +90,13 @@ def floor_z(x, y, from_z=500.0, tries=3):
     """The floor's height at (x, y), traced straight down through world geometry from `from_z`. A spot with no floor
     is tried again a second later (the game may be frozen while a tile streams in), then fails with what the level
     looked like."""
-    for attempt in range(tries):
-        hit = tool("floor_height", x=float(x), y=float(y), from_z=float(from_z))
-        if hit.get("hit"):
-            if attempt:
-                print(f"  note: the floor at ({x:.0f}, {y:.0f}) was found only on try {attempt + 1}")
-            return hit["z"]
-        time.sleep(1.0)
+    def hit():
+        h = tool("floor_height", x=float(x), y=float(y), from_z=float(from_z))
+        return h if h.get("hit") else None
+    try:
+        return wait_until(hit, timeout=float(tries - 1), every=1.0, what=f"a floor at ({x:.0f}, {y:.0f})")["z"]
+    except TimeoutError:
+        pass
     s = tool("level_state")
     raise RuntimeError(f"no floor at ({x:.0f}, {y:.0f}) below z {from_z:.0f} after {tries} tries: "
                        f"{len(s['tiles'])} tiles, time dilation {s['time_dilation']}, run {tool('run_state')}")

@@ -10,7 +10,6 @@ and drops the reward.
 """
 import json
 import sys
-import time
 from pathlib import Path
 
 import mygame

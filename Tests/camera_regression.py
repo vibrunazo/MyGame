@@ -24,11 +24,10 @@ look-ahead (camera Y minus player Y: positive looks right) at the end and its ra
 import json
 import math
 import sys
-import time
 from pathlib import Path
 
 import mygame
-from mygame import floor_z, tool, wait_game, wait_loaded
+from mygame import floor_z, tool, wait_game, wait_loaded, wait_until
 
 START = (0.0, -300.0)
 BASELINE = Path(__file__).resolve().parent / "baselines" / "camera_room.json"
@@ -77,8 +76,7 @@ def play(inputs, end):
     spec = {"dummy": None, "duration": end + 0.05, "settle": 0.0,
             "inputs": [at(0.0, "camera_record", action="start")] + inputs + [at(end, "camera_record", action="stop")]}
     tool("run_timeline", spec=json.dumps(spec))
-    while not tool("timeline_result")["done"]:
-        time.sleep(0.05)
+    wait_until(lambda: tool("timeline_result")["done"], timeout=120, every=0.05, what="the camera timeline")
     return tool("camera_record", action="stop")["samples"]  # already stopped inside: the same samples
 
 
