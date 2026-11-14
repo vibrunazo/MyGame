@@ -113,7 +113,8 @@ class MYGAME_API AFloorBuilder : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AFloorBuilder();
-	// Every room has streamed in and the game is unfrozen
+	// Every room has streamed in and the game is unfrozen (a UFUNCTION so tests read it by reflection, cooked too)
+	UFUNCTION(BlueprintPure, Category = "Floor")
 	bool AreTilesReady() const { return bTilesReady; }
 	void OnConstruction(const FTransform & Transform) override;
 

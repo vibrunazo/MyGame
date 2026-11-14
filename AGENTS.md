@@ -22,7 +22,7 @@ The camera and the darkness work per room, never per tile: no spoiling across wa
 
 - C++ never hard-codes asset paths: declare a property and set it on a Blueprint or asset. The cooker can't see paths in code.
 - No asset deletions without the user's OK.
-- Test in PIE with the regressions (`python Tests/run_all.py`). Package plus `Tests/package_smoke.py` only for changes that can differ in a cooked build (asset references, config, plugins, startup and menu flow, input mode), or when the user wants an exe.
+- Test with `unreal-agent test`. Package plus `unreal-agent test --on packaged` only for changes that can differ in a cooked build (asset references, config, plugins, startup and menu flow, input mode), or when the user wants an exe.
 - The user judges feel (camera, audio) by eye and ear: send videos or clips, not just numbers.
 
 ## MyGame's tests and dev tools
@@ -51,6 +51,7 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   | menu | `menu.py` | from the main menu map, with real keys then a gamepad: start a run, Game Only input and a held W (the stick) moves, pause and resume, back to the menu; runs last, in a rendering editor | none (asserts) |
   | menu-to-run (command; also cooked) | `Source/MyGame/Dev/MenuToRunTest.cpp` | the dev command `MyGame.MenuToRunTest quit`: from the main menu, a real Enter starts a run, which is in Game Only input and a held W moves the player | none (asserts) |
   | smoke (`--on packaged`) | `package_smoke.py` | the cooked game: the menu loads; seed 6032's run builds every room; no missing package; a clean log; every enemy has its AI | none (asserts) |
+  | menu-cooked (`--on packaged`) | `menu.py` (`packaged_suite`) | the menu suite's two trips in the cooked game, through its bridge | none (asserts) |
 
 - **Known state:** `Tests/mygame.py` holds MyGame's own test helpers. `reset(ctx)` (named in `unreal-agent.toml`)
   starts seed 6032; `start_run(seed)` starts a run through `UMyGameInstance::StartNewRun` and fails when the floor
@@ -64,7 +65,9 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   <out.mp4> [label]`: a scripted camera demo on seed 6032, captured
   frame by frame at quarter speed and resampled to 30 fps of game time (no HUD, no sound; not proof of flicker).
 - **Packaged build:** `unreal-agent package` (a minute incremental, about 7.5 cold; `[package]` in `unreal-agent.toml`),
-  then `unreal-agent test --on packaged` (smoke and menu-to-run on the cooked game). `Play.bat` runs it.
+  then `unreal-agent test --on packaged` (smoke, menu-to-run and menu-cooked on the cooked game). `Play.bat` runs it.
+  `unreal-agent start --packaged` starts it with its bridge (port 18965): `key`, `exec`, `shot`, `status`, then `stop`.
+  Development builds carry the bridge (ModelContextProtocol and AgentPlayToolset); Shipping builds don't.
 - **Dev commands** (every build but Shipping): `GoToRoom N` moves the player into room N; `MyGame.MenuToRunTest [quit]`
   checks the menu-to-run path with real keys and logs `MenuToRun: PASS|FAIL` (`quit` exits 0 or 1).
 - **Replaying a bug:** dev builds show seed, floor, room, tile and build date top left; `-Seed=N -Floor=N -Room=N`

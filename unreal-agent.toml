@@ -64,3 +64,8 @@ verdict = "MenuToRun"
 on = ["game", "packaged"]          # cooked, it's where the dead keyboard happened
 needs = ["render"]                 # keys reach the menu through Slate
 timeout = 180
+
+[[suite]]
+name = "menu-cooked"
+kind = "packaged"
+run = "Tests/menu.py:packaged_suite"   # the menu suite's trips in the cooked game, through its bridge
