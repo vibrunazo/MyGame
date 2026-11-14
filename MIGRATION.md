@@ -229,27 +229,10 @@ Your play-test of the height-filling framing (2026-11-12): "it's good now".
 
 ## How we test
 
-- **Build:** headless UBT, `Engine\Build\BatchFiles\Build.bat MyGameEditor Win64 Development -Project=...`.
-- **Unreal MCP:** `unreal-mcp`, `http://127.0.0.1:18765/mcp`, user-scope in Claude Code. It runs while the editor is up, headless included: `UnrealEditor.exe MyGame.uproject -unattended -nosplash -nullrhi`. Useful toolsets:
-  - Logs, to read compile and runtime errors
-  - AutomationTest, to run tests
-  - AbilitySystemInspector, AttributeSet, GameplayTags and GameplayCue, to watch the ASC during PIE
-  - PCG, to inspect and generate graphs
-  - UMG and Editor
-- **Automation tests:** a `MyGameTests` module covering:
-  - layout generator: determinism, connectivity, constraints, and 10k seeds with no crash
-  - ability functional tests on a test map: a punch hits a dummy, the combo advances, the damage formula holds
-  - boot smoke test: every room streams in, the game unfreezes, every RoomMaster registers
-- **Screenshots / PIE:** only where a numeric or log check flags something.
-- **Talking to the editor:** the shared `UnrealAgentTools` package (`D:/docs/Unreal Projects/UnrealAgentTools`, installed with `pip install -e`) is the MCP client and editor launcher; `Tests/harness.py` wraps it (`tool()` for this project's hooks). It survives editor restarts, so nothing needs reconnecting.
-- **Regression suites, one command:** `python Tests/run_all.py` (`--speed 3` by default, `--only level,abilities,loop,camera,framerate`, `--max-fps N`) takes about 3 minutes.
-  - **One session:** it starts one headless editor with the background CPU throttle off (`harness.start_editor`), which runs PIE at ~60 fps instead of ~10, and one PIE session. Each suite starts a fresh run with its seed through `UMyGameInstance::StartNewRun`.
-  - **Game clock:** every scripted wait is in game time (`harness.wait_game`), and the game runs 3× faster (global time dilation, re-applied after floor loads).
-  - **In-editor timelines:** ability scenarios play their inputs and record every frame inside the editor (`run_timeline`), so MCP latency doesn't shift their timing.
-  - **Results** go to `Tests/out/<time>/`.
-  - **Frame rate:** the game should behave the same at any speed or frame rate. The `framerate` suite runs the multi-hit moves at 1× and 3× (a 3× larger frame step) and requires identical hits; add `--max-fps 20` to compare 50 ms and 150 ms frames.
-  - **Traces:** `ability_regression.TRACE[0] = True` makes each scenario record every frame (game time, montage section and position, the dummy's health and distance, the player's time dilation and position).
-- **Ability regression (single suite):** start the editor with `-Seed=6032` (plus `"-LogCmds=LogHitCue Verbose"` to count hit cues in the log), start PIE, run `python Tests/ability_regression.py run out.json`, then `diff Tests/baselines/abilities_phase3.json out.json`. It covers the player's moves, damage, hit reactions, the combo window, enemy sight, the boss phases and an enemy attack.
+Moved to `AGENTS.md` (2026-11-13): MyGame's own suites, seeds, hooks, build and package lines are in its "MyGame's tests
+and dev tools" section, and the shared workflow every game follows is the section at its end. `unreal-agent guide`
+prints the commands. This section described an `unreal-mcp` connection on port 18765 and a `MyGameTests` module that
+never existed, so it was out of date before it moved.
 
 ## Phase 1: open, compile and run as-is in 5.8
 
