@@ -69,8 +69,20 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   then `unreal-agent test --on packaged` (smoke, menu-to-run and menu-cooked on the cooked game). `Play.bat` runs it.
   `unreal-agent start --packaged` starts it with its bridge (port 18965): `key`, `exec`, `shot`, `status`, then `stop`.
   Development builds carry the bridge (ModelContextProtocol and AgentPlayToolset); Shipping builds don't.
-- **Dev commands** (every build but Shipping): `GoToRoom N` moves the player into room N; `MyGame.MenuToRunTest [quit]`
-  checks the menu-to-run path with real keys and logs `MenuToRun: PASS|FAIL` (`quit` exits 0 or 1).
+- **Dev commands, launch arguments and debug keys:**
+
+  | Command | Arguments | What it does | Shipping |
+  |---|---|---|---|
+  | `MyGame.MenuToRunTest` (console) | `[quit]` | From the main menu, a real Enter starts a run; checks Game Only input and that a held W moves the player. Logs `MenuToRun: PASS\|FAIL`; `quit` exits 0 or 1 | absent (`#if !UE_BUILD_SHIPPING`) |
+  | `GoToRoom` (console) | `N` | Moves the player into room N of this floor (the room numbers are in the dev overlay) | compiled in; Shipping has no console |
+  | `-Seed=` (launch) | `N` | The run's seed (a new run from the menu takes it too) | works |
+  | `-Floor=` (launch) | `N` (1-255) | Starts on floor N | works |
+  | `-Room=` (launch) | `N` | The first floor starts in room N (once per session) | works |
+  | Dev overlay | none | Seed, floor, room, tile and its template, build date, top left | absent |
+  | F1 or V (key) | none | Kills every enemy in the room (`BP_MyController`) | no build check found: likely works in Shipping |
+  | F5 / F6 (key) | none | Caps the frame rate at 30 / 60 (`BP_MyController`) | no build check found: likely works in Shipping |
+  | F3 (key) | none | `stat fps` (`IA_ShowFPS`) | stat commands are compiled out |
+  | Test functions | none | `GetTagsForTest`, `SetAttributeBaseForTest`, `InjectTestInput`, `GetInputModeForTest`, `SetUsingGamepadForTest`: the C++ behind the editor-Python hooks (`set_player_attribute` is the tests' cheat) | editor only (`WITH_EDITOR`) |
 - **Replaying a bug:** dev builds show seed, floor, room, tile and build date top left; `-Seed=N -Floor=N -Room=N`
   start there (`Play.bat` passes them through), and the console command `GoToRoom N` moves the player in game.
 
