@@ -29,7 +29,7 @@ Not goals: networked multiplayer play; merging the two attribute sets or damage 
 |---|---|
 | MyGame abilities | `Tests/ability_regression.py`. Its recording (montage and section timeline, damage, tags, push, rise, mana, player movement) must equal the baseline `Tests/baselines/abilities_phase3.json`. The baseline holds 19 scenarios over the 11 player abilities; Step 0 extends it to enemy and boss abilities. |
 | MyGame enemies | The Behavior Tree picks its spots without a seed, so two runs never match move for move. Step 0 records behaviour measures over many runs; after the port the same measures must fall inside the same spread. The user also compares before and after videos. |
-| MyGame as a whole | `Tests/run_all.py` (level, loop and camera suites). For steps that can differ in a cooked build, a packaged build and `Tests/package_smoke.py`. |
+| MyGame as a whole | `unreal-agent test` (the layout, level, loop, camera, framerate, menu and menu-to-run suites). For steps that can differ in a cooked build, `unreal-agent package` and `unreal-agent test --on packaged`. |
 | Terra Arcana | `Terra.AITest all`, `Terra.AbilityTest`, `Terra.MoveTest` and `Terra.ReplayTest` pass. A fixed set of seeded benchmark fights gives the results recorded in Step 0. A stored Lair's JSON loads and saves back unchanged, and so does the server tuning JSON. |
 
 ---
@@ -139,6 +139,8 @@ One Behavior Tree, `BT_AIBase` (with `BT_AttackOrStop`, the blackboard `BB_AIBas
 
 - **A Python package** (`unreal_agent_tools`: a client for the editor's MCP server, and an editor launcher), installed once on the machine with `pip install -e`. **Both games use it.** It needs nothing in a `.uproject` beyond the engine's own `ModelContextProtocol` and `AllToolsets` plugins. MyGame's `Tests/harness.py` imports it and reaches the game through MyGame's own Python toolset (`Content/Python/mygame_tools`).
 - **One C++ editor plugin**, `Plugins/AgentPlayToolset` (console commands, key presses and clicks inside play-in-editor), added on 2026-10-31. **Only Terra Arcana loads it**, with `"AdditionalPluginDirectories": ["../UnrealAgentTools/Plugins"]` in its `.uproject`. MyGame's `.uproject` has no `AdditionalPluginDirectories` entry and its logs never mention the plugin.
+
+**Since then (2026-11-14):** both games pin a release of UnrealAgentTools in their `unreal-agent.toml` and mount its plugin from `../UnrealAgentTools/versions/<release>/Plugins`; MyGame's tests run through `unreal-agent test`. The rest of this section is as read on 2026-11-12.
 
 So no C++ plugin is built by both projects yet. This plan does not load its plugin that way (3.2): a path to a sibling folder isn't part of a game's repo, so a clone of the game on another computer wouldn't build.
 
@@ -388,7 +390,7 @@ Each step is one session in one game's folder, working in that game's copy of th
 
 ### Step 0: ground truth and safety nets (small, no gameplay code changes)
 
-1. Create the plugin repo with empty modules and its GitHub remote (the remote on the user's OK). Add it to MyGame as a submodule, build, then **package MyGame and run the smoke test**, since a plugin change can differ in a cooked build. Run `RunUAT BuildPlugin` once to prove the plugin compiles on its own.
+1. Create the plugin repo with empty modules and its GitHub remote (the remote on the user's OK). Add it to MyGame as a submodule, build, then **`unreal-agent package` and `unreal-agent test --on packaged`**, since a plugin change can differ in a cooked build. Run `RunUAT BuildPlugin` once to prove the plugin compiles on its own.
 2. When Terra Arcana's session is idle: add the submodule there too and build. The plugin can stay enabled in Terra Arcana: its types are prefixed, so nothing clashes with the types Terra Arcana still declares. Clone one game with `--recursive` into a scratch folder and check that the plugin arrives.
 3. MyGame: read through the editor, and commit as JSON under `Tests/baselines/`, every `GA_*` class default (the engine's own too: tags, cost, cooldown, triggers), what each of the seven graphs does, the tree, the blackboard, the query, the controllers' defaults and each enemy's abilities. This is the conversion's input.
 4. MyGame: extend the ability regression to the enemy and boss abilities and record their baseline.
@@ -401,7 +403,7 @@ Each step is one session in one game's folder, working in that game's copy of th
 
 Move the mechanics listed in 2.3 into a `UAssCombatComponent` in the MyGame module, under its final name. The ability, the hitbox and the reactions talk to the component and to `IAssCombatant`, not to `AMyCharacter`.
 
-**Gate:** ability regression equal to baseline; `Tests/run_all.py`.
+**Gate:** ability regression equal to baseline; `unreal-agent test`.
 
 ### Step 2: the combat runtime moves into the plugin (medium)
 
@@ -424,7 +426,7 @@ Move the component, the ability class, the hit window task and notify, the hitbo
 4. A command exports and imports templates and kits as JSON.
 5. The old `GA_*` assets are no longer referenced. They are listed for the user and deleted only on their OK.
 
-**Gate:** ability regression equal to baseline; `run_all.py`; packaged build and smoke test; the user plays a run.
+**Gate:** ability regression equal to baseline; `unreal-agent test`; `unreal-agent package` and `unreal-agent test --on packaged`; the user plays a run.
 
 ### Step 5: Terra Arcana's data types and pattern AI move into the plugin (large, no behaviour change)
 
