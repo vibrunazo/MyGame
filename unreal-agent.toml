@@ -1,4 +1,4 @@
-version = "0.20"
+version = "0.21"
 project = "MyGame.uproject"
 port = 18765
 editor_target = "MyGameEditor"

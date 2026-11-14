@@ -98,7 +98,9 @@ Rules:
   For anything it doesn't list yet, do as this game's notes say and file the gap. Don't commit a launcher, runner,
   wait or capture script to this game. A one-off analysis in the scratchpad is fine.
 - `build`, `test` and `package` can take minutes: run them in the background or with a long timeout.
-- If `build` or `package` names an editor or a game you didn't start, ask the user to close it.
+- The user's open editor is fine to work in while they watch; the tools never close it. With it open, `build` compiles
+  inside it with Live Coding, and `test`, `run`, `start` and `package` then wait for a full build (they say so). If a
+  command names another editor or a game you didn't start, ask the user to close it.
 - If the workflow lacks something or could be better, file it: `unreal-agent feedback add "<what, and where>"`. A small
   Python addition any game could use may be made in UnrealAgentTools right away: `unreal-agent guide tools` says how.
   A plugin change, a new command, or a change to the client, launcher or runner is filed instead. It reaches this game
