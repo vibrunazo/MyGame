@@ -38,17 +38,23 @@ def kill_editor():
     editor.stop(PROJECT)
 
 
-def start_editor(log="tests", render=False, seed=None, timeout=600):
-    """A fresh headless editor (rendering offscreen when `render`) with PIE running on LevelPersistent."""
+FIXED_FPS = 60  # the PIE suites' step: every frame is 1/60 s of game time, as players see it, and runs repeat exactly
+
+
+def start_editor(log="tests", render=False, seed=None, timeout=600, fixed_fps=FIXED_FPS):
+    """A fresh headless editor (rendering offscreen when `render`) with PIE running on LevelPersistent, on a fixed
+    step of 1/`fixed_fps` (None: the editor's own frame times)."""
     editor.start(PROJECT, port=UE.port, render=render, log=log, args=(f"-Seed={seed}",) if seed else (), timeout=timeout)
     for attempt in range(10):  # the editor can still be finishing its startup
         try:
             call_tool(APP, "StartPIE", {"options": {"bSimulate": False, "playMode": "PlayMode_InViewPort", "warmupSeconds": 6}})
-            return
+            break
         except RuntimeError:
             if attempt == 9:
                 raise
             time.sleep(5)
+    if fixed_fps:
+        call_tool("AgentPlayToolset.AgentPlayToolset", "PushFixedStep", {"fps": float(fixed_fps)})
 
 
 def game_time():

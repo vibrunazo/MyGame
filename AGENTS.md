@@ -34,9 +34,10 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   path. MyGame's port is 18765 (`unreal-agent.toml`, and `Config/UserEditorPerProjectUserSettings.ini` for an editor
   opened by hand). `unreal-agent` is the way to reach the editor; the app's `unreal-mcp` connection is only a
   fallback, and it drops on every editor restart.
-- **PIE suites:** `python Tests/run_all.py` (game at 3× by default; `--only <suites>`, `--speed N`, `--max-fps N`,
-  `--keep-editor`), about 3.5 minutes, results and `summary.json` in `Tests/out/<time>/`. Each suite file has
-  `suite(ctx)` (the shared pie-suite contract):
+- **PIE suites:** `python Tests/run_all.py` (on a fixed 1/60 step at speed 1, so runs repeat exactly; `--only
+  <suites>`, `--speed N`, `--keep-editor`), results and `summary.json` in `Tests/out/<time>/`. The baselines describe
+  the 1/60 step (the dash's two airborne frames show there, not on coarser frames). Each suite file has `suite(ctx)`
+  (the shared pie-suite contract):
 
   | Suite | File | Checks | Baseline |
   |---|---|---|---|

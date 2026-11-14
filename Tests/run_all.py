@@ -1,15 +1,16 @@
 """Runs the PIE regression suites in one editor session.
 
-    python Tests/run_all.py                      # every suite, game at 3x
-    python Tests/run_all.py --speed 1            # real time
+    python Tests/run_all.py                      # every suite, on a fixed 1/60 step at speed 1
+    python Tests/run_all.py --speed 3            # time dilation on top: each frame 3/60 s of game time
     python Tests/run_all.py --only level,camera  # some suites
     python Tests/run_all.py --max-fps 20         # cap the frame rate too
     python Tests/run_all.py --keep-editor        # leave the editor running afterwards
 
 Each suite follows UnrealAgentTools' pie-suite contract (`unreal-agent guide suites`): `suite(ctx)` in its own file,
 returning {ok, checks, problems, files}, so the shared runner can call it unchanged when it comes. Until then this
-script is the runner: one headless editor, one PIE session, a ctx whose reset() starts a new run on seed 6032 through
-the game's own StartNewRun (the main menu's path). Results go to Tests/out/<time>/ with a summary.json.
+script is the runner: one headless editor, one PIE session on a fixed 1/60 step (harness.FIXED_FPS: runs repeat
+exactly), a ctx whose reset() starts a new run on seed 6032 through the game's own StartNewRun (the main menu's path).
+Results go to Tests/out/<time>/ with a summary.json.
 """
 import argparse
 import importlib
@@ -30,7 +31,7 @@ RESET_SEED = 6032  # the known state: a new run on this seed, loaded and unfroze
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--speed", type=float, default=3.0)
+    ap.add_argument("--speed", type=float, default=1.0)
     ap.add_argument("--only", default=",".join(SUITES))
     ap.add_argument("--max-fps", type=float, default=0, help="cap the frame rate (gameplay mustn't depend on it)")
     ap.add_argument("--keep-editor", action="store_true")
