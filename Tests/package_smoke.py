@@ -1,71 +1,45 @@
-"""Smoke test for the packaged Development build (RunUAT BuildCookRun ... -archivedirectory=Saved/Packaged).
+"""Smoke test for the packaged Development build: the `smoke` suite of `unreal-agent test --on packaged`.
 
-    python Tests/package_smoke.py [seconds]
-
-Boots the main menu, then a seeded run straight into LevelPersistent, and reads the game's own log:
+`unreal-agent package` builds the game into Saved/Packaged/Windows; this suite (`suite(ctx)`) runs the cooked game
+twice through ctx.run_game (its own executable, offscreen, a saved folder of its own) and reads its log:
   menu       the main menu map loads
-  run        the level builds (the Tiles line) and every room's room master registers
+  run        a seeded run straight into LevelPersistent: the level builds (the Tiles line), every room streams in
+             (Tiles ready) and every room's room master registers
   assets     no package missing from the build (a path the cooker couldn't see: SkipPackage / Failed to find)
   clean      no Error / Fatal / Ensure lines (minus known engine noise)
   ai         every enemy is possessed by the game's AI controller (AMyCharacter::PossessedBy logs "has no game AI"
              when a Blueprint's controller is missing, and the enemy just stands there)
-The editor's PIE can't catch the "assets" and "ai" cases: it loads anything from disk on demand.
+The editor's PIE can't catch the "assets" and "ai" cases: it loads anything from disk on demand. The menu-to-run dev
+command (the `menu-to-run` suite, also run cooked) checks the menu, the input mode and the keyboard.
 """
+import json
 import re
-import subprocess
-import sys
-import time
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-GAME = ROOT / "Saved/Packaged/Windows/MyGame.exe"
-LOGS = ROOT / "Saved/Packaged/Windows/MyGame/Saved/Logs"
 NOISE = re.compile(r"Wintab|aqProf|PixGpu|Vtune|UnifiedError|Error test|Error with|FError")
 
 
-def kill_game():
-    for exe in ("MyGame-Win64-Development.exe", "MyGame.exe"):
-        subprocess.run(["taskkill", "/IM", exe, "/F"], capture_output=True)
-
-
-def play(name, args, ready, seconds):
-    kill_game()
-    name = f"{name}_{int(time.time())}"
-    log = LOGS / f"{name}.log"
-    proc = subprocess.Popen([str(GAME), *args, "-RenderOffscreen", "-windowed", "-resx=1280", "-resy=720", f"-log={name}.log"])
-    t0 = time.time()
-    while time.time() - t0 < 90 and not (log.exists() and re.search(ready, log.read_text(errors="replace"))):
-        time.sleep(1)
-    time.sleep(seconds)
-    kill_game()
-    proc.kill()
-    return log.read_text(errors="replace")
-
-
-def main(seconds):
-    results = {}
-    menu = play("smoke_menu", [], r"Took .* seconds to LoadMap\(/Game/Maps/MainMenu\)", 3)
-    results["menu"] = "LoadMap(/Game/Maps/MainMenu)" in menu
-    run = play("smoke_run", ["/Game/Maps/LevelPersistent", "-Seed=6032"], r"Warning: Tiles: ", seconds)
-    rooms = len(re.findall(r"Room Level:", run))
-    grid = re.search(r"Warning: Tiles: (.*)", run)
+def suite(ctx):
+    """Both runs' logs, each check."""
+    menu = ctx.run_game([], until=r"Took .* seconds to LoadMap\(/Game/Maps/MainMenu\)", timeout=120)
+    run = ctx.run_game([], args=["/Game/Maps/LevelPersistent", "-Seed=6032"], until=r"Tiles ready: ", timeout=180)
+    menu_log, run_log = menu.log.read_text(errors="replace"), run.log.read_text(errors="replace")
+    rooms = len(re.findall(r"Room Level:", run_log))
+    grid = re.search(r"Warning: Tiles: (.*)", run_log)
     planned = grid.group(1).count("Coord:") if grid else 0
-    results["run"] = bool(grid) and rooms == planned
-    missing = sorted(set(re.findall(r"SkipPackage: (\S+)|Failed to find object '([^']+)'", run + menu)))
-    results["assets"] = not missing
-    bad = [l for l in (run + menu).splitlines() if re.search(r"Error:|Fatal|Ensure", l) and not NOISE.search(l)]
-    results["clean"] = not bad
-    no_ai = re.findall(r"(\S+) has no game AI", run)
-    results["ai"] = not no_ai
-    for k, ok in results.items():
-        print(("PASS " if ok else "FAIL ") + k)
-    print(f"rooms {rooms}/{planned}, enemies without AI {sorted(set(no_ai))}")
-    for m in missing[:10]:
-        print("  missing", m)
-    for l in bad[:10]:
-        print("  ", l[:200])
-    print("ALL PASS" if all(results.values()) else "SOME FAILED")
-
-
-if __name__ == "__main__":
-    main(int(sys.argv[1]) if len(sys.argv) > 1 else 15)
+    missing = sorted({a or b for a, b in re.findall(r"SkipPackage: (\S+)|Failed to find object '([^']+)'", run_log + menu_log)})
+    bad = [l for l in (run_log + menu_log).splitlines() if re.search(r"Error:|Fatal|Ensure", l) and not NOISE.search(l)]
+    no_ai = sorted(set(re.findall(r"(\S+) has no game AI", run_log)))
+    checks = {
+        "menu": ("LoadMap(/Game/Maps/MainMenu)" in menu_log, f"menu run: {menu.outcome}"),
+        "run": (bool(grid) and "Tiles ready: " in run_log and rooms == planned, f"rooms {rooms}/{planned}, run: {run.outcome}"),
+        "assets": (not missing, f"missing {missing[:10]}"),
+        "clean": (not bad, f"{len(bad)} error lines: {[l[:160] for l in bad[:5]]}"),
+        "ai": (not no_ai, f"enemies without AI {no_ai}"),
+    }
+    for name, (ok, detail) in checks.items():
+        print(("  PASS " if ok else "  FAIL ") + name, detail)
+    record = {name: {"pass": ok, "detail": detail} for name, (ok, detail) in checks.items()}
+    record["logs"] = {"menu": str(menu.log), "run": str(run.log)}
+    (ctx.out / "smoke.json").write_text(json.dumps(record, indent=1))
+    problems = [f"{name}: {detail}" for name, (ok, detail) in checks.items() if not ok]
+    return {"ok": not problems, "checks": len(checks), "problems": problems, "files": {"smoke.json": None}}

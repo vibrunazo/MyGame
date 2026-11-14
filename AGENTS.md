@@ -49,6 +49,8 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   | camera | `camera_regression.py` | every scenario's camera numbers, played inside the engine; the camera stays still with the player in place; each room's wall cutaway | `camera_room.json` |
   | framerate | `framerate.py` | multi-hit moves land the same hits at 1× and 3× (a 3× frame step) | none (compares) |
   | menu (manual: `--only menu`) | `menu.py` | from the main menu map, with real keys then a gamepad: start a run, Game Only input and a held W moves, pause and resume, back to the menu; a rendering editor | none (asserts) |
+  | menu-to-run (command; also cooked) | `Source/MyGame/Dev/MenuToRunTest.cpp` | the dev command `MyGame.MenuToRunTest quit`: from the main menu, a real Enter starts a run, which is in Game Only input and a held W moves the player | none (asserts) |
+  | smoke (`--on packaged`) | `package_smoke.py` | the cooked game: the menu loads; seed 6032's run builds every room; no missing package; a clean log; every enemy has its AI | none (asserts) |
 
 - **Known state:** `Tests/mygame.py` holds MyGame's own test helpers. `reset(ctx)` (named in `unreal-agent.toml`)
   starts seed 6032; `start_run(seed)` starts a run through `UMyGameInstance::StartNewRun` and fails when the floor
@@ -61,8 +63,10 @@ MyGame knows, and what `guide` doesn't list a command for yet:
 - **Video for the user:** `unreal-agent start --render`, `unreal-agent pie`, then `python Tests/camera_video.py
   <out.mp4> [label]`: a scripted camera demo on seed 6032, captured
   frame by frame at quarter speed and resampled to 30 fps of game time (no HUD, no sound; not proof of flicker).
-- **Packaged build:** `RunUAT BuildCookRun -platform=Win64 -clientconfig=Development -build -cook -stage -pak -iostore
-  -archive -archivedirectory=Saved/Packaged` (about 7.5 minutes), then `python Tests/package_smoke.py`. `Play.bat` runs it.
+- **Packaged build:** `unreal-agent package` (a minute incremental, about 7.5 cold; `[package]` in `unreal-agent.toml`),
+  then `unreal-agent test --on packaged` (smoke and menu-to-run on the cooked game). `Play.bat` runs it.
+- **Dev commands** (every build but Shipping): `GoToRoom N` moves the player into room N; `MyGame.MenuToRunTest [quit]`
+  checks the menu-to-run path with real keys and logs `MenuToRun: PASS|FAIL` (`quit` exits 0 or 1).
 - **Replaying a bug:** dev builds show seed, floor, room, tile and build date top left; `-Seed=N -Floor=N -Room=N`
   start there (`Play.bat` passes them through), and the console command `GoToRoom N` moves the player in game.
 

@@ -4,6 +4,15 @@ port = 18765
 editor_target = "MyGameEditor"
 reset = "Tests/mygame.py:reset"   # a new run on seed 6032, on its own floor
 fixed_fps = 60                     # every PIE frame is 1/60 s of game time
+# standalone runs of the editor's executable (-game) load the editor's plugins: AllToolsets brings GameFeatures, which
+# wants an asset rule the cooked game must not name (feedback filed: it belongs in the tools' engine noise)
+log_noise = ["Asset manager settings do not include a rule for assets of type GameFeatureData"]
+
+[package]                          # unreal-agent package: RunUAT BuildCookRun, archived here (Play.bat runs it)
+dir = "Saved/Packaged/Windows"
+archive = true
+exe = "MyGame.exe"
+args = ["-iostore"]
 
 [[suite]]
 name = "layout"
@@ -46,3 +55,17 @@ map = "/Game/Maps/MainMenu"
 needs = ["render"]                 # keys reach UMG menus only through Slate, which a headless editor's viewport drops
 tier = "manual"                    # until it gets a rendering editor of its own: rendering the whole run doubles the
                                    # other suites' times and changes the camera's framing (it solves for the viewport)
+
+[[suite]]
+name = "smoke"
+kind = "packaged"
+run = "Tests/package_smoke.py:suite"
+
+[[suite]]
+name = "menu-to-run"
+kind = "command"
+command = "MyGame.MenuToRunTest quit"
+verdict = "MenuToRun"
+on = ["game", "packaged"]          # cooked, it's where the dead keyboard happened
+needs = ["render"]                 # keys reach the menu through Slate
+timeout = 180
