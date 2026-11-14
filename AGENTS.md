@@ -48,6 +48,7 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   | loop | `loop_regression.py` | clear a floor, carry over, die, new run, the menu, Game Only input everywhere | none (asserts) |
   | camera | `camera_regression.py` | every scenario's camera numbers, played inside the engine; the camera stays still with the player in place; each room's wall cutaway | `camera_room.json` |
   | framerate | `framerate.py` | multi-hit moves land the same hits at 1× and 3× (a 3× frame step) | none (compares) |
+  | menu (manual: `--only menu`) | `menu.py` | from the main menu map, with real keys then a gamepad: start a run, Game Only input and a held W moves, pause and resume, back to the menu; a rendering editor | none (asserts) |
 
 - **Known state:** `Tests/mygame.py` holds MyGame's own test helpers. `reset(ctx)` (named in `unreal-agent.toml`)
   starts seed 6032; `start_run(seed)` starts a run through `UMyGameInstance::StartNewRun` and fails when the floor

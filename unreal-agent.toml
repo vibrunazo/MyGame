@@ -37,3 +37,12 @@ name = "framerate"
 kind = "pie"
 run = "Tests/framerate.py:suite"
 speed = "own"                      # its 1x and 3x runs
+
+[[suite]]
+name = "menu"
+kind = "pie"
+run = "Tests/menu.py:suite"
+map = "/Game/Maps/MainMenu"
+needs = ["render"]                 # keys reach UMG menus only through Slate, which a headless editor's viewport drops
+tier = "manual"                    # until it gets a rendering editor of its own: rendering the whole run doubles the
+                                   # other suites' times and changes the camera's framing (it solves for the viewport)
