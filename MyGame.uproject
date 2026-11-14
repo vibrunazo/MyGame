@@ -48,6 +48,6 @@
 		}
 	],
 	"AdditionalPluginDirectories": [
-		"../UnrealAgentTools/versions/0.9/Plugins"
+		"../UnrealAgentTools/versions/0.11/Plugins"
 	]
 }
