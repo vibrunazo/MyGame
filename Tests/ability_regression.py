@@ -1,6 +1,6 @@
 """Ability regression run for Phase 3: presses the player's buttons in PIE and records what happens.
 
-The `abilities` suite of Tests/run_all.py (`suite(ctx)`). Every enemy is frozen (AI and sensing off); one is brought
+The `abilities` suite of `unreal-agent test` (`suite(ctx)`). Every enemy is frozen (AI and sensing off); one is brought
 into the start room as a still dummy in front of the player (Defense 1000).
 
     python Tests/ability_regression.py diff Tests/baselines/abilities_phase3.json out.json
@@ -9,16 +9,15 @@ Per scenario it records the montage/section timeline, abilities seen active, the
 change, tags and highest Z (launches), and the player's mana change and highest Z.
 
 Each scenario's inputs play on the game clock inside the editor (the run_timeline hook), which also records every
-frame there, so a scenario behaves the same at any game speed (Tests/run_all.py --speed).
+frame there, so a scenario behaves the same at any game speed or step.
 """
 import json
 import sys
 import time
 from pathlib import Path
 
-import harness
-from harness import floor_z, game_time, wait_game
-from harness import call_tool, tool
+import mygame
+from mygame import call_tool, floor_z, game_time, tool, wait_game
 
 BASELINE = Path(__file__).resolve().parent / "baselines" / "abilities_phase3.json"
 
@@ -193,7 +192,7 @@ def run_scenarios(names):
 def suite(ctx):
     """Every scenario's outcome, the boss's phases, enemy sight and an enemy's attack, compared with the baseline
     (lines starting with "note" don't count)."""
-    harness.use(ctx.ue)
+    mygame.use(ctx)
     ctx.reset()
     result = run_all()
     (ctx.out / "abilities.json").write_text(json.dumps(result, indent=1))

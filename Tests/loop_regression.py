@@ -1,6 +1,6 @@
 """Game loop regression for Phase 5: clear a floor, carry the run over, die, start again, go through the menu.
 
-The `loop` suite of Tests/run_all.py (`suite(ctx)`).
+The `loop` suite of `unreal-agent test` (`suite(ctx)`).
 
 Checks (each prints PASS/FAIL, the JSON keeps the states seen):
   floor_clear   killing the boss room and touching the flag travels to floor 2, one room bigger
@@ -15,10 +15,8 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
 import json
 import time
 
-import harness
-from harness import wait_game
-from harness import tool
-from level_regression import wait_loaded
+import mygame
+from mygame import tool, wait_game, wait_loaded
 
 BOOK, ITEM = "/Game/Blueprints/Items/DA_LearnTat", "/Game/Blueprints/Items/DA_ItemFireHands"
 results = {}
@@ -68,7 +66,7 @@ def player_pos():
 
 def suite(ctx):
     """Each step of the loop checked in turn."""
-    harness.use(ctx.ue)
+    mygame.use(ctx)
     ctx.reset()
     run_all()
     (ctx.out / "loop.json").write_text(json.dumps(results, indent=1))

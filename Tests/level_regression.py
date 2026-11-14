@@ -1,6 +1,6 @@
 """Level generator regression for Phase 4: what a seeded level looks like and how a doored room behaves.
 
-The `level` suite of Tests/run_all.py (`suite(ctx)`): each reference seed's level, compared with its baseline.
+The `level` suite of `unreal-agent test` (`suite(ctx)`): each reference seed's level, compared with its baseline.
 
     python Tests/level_regression.py diff before.json after.json
 
@@ -13,29 +13,11 @@ import sys
 import time
 from pathlib import Path
 
-import harness
-from harness import floor_z, tool
+import mygame
+from mygame import floor_z, tool, wait_game, wait_loaded
 
 SEEDS = (6032, 101, 2024)
 BASE = Path(__file__).resolve().parent / "baselines"
-
-
-def wait_game(seconds):
-    from harness import wait_game as wg
-    wg(seconds)
-
-
-def wait_loaded(timeout=30.0):
-    """Until the tiles finished streaming in (the game unfrozen) and stop changing."""
-    t0, last = time.time(), None
-    while time.time() - t0 < timeout:
-        s = tool("level_state")
-        key = (len(s["tiles"]), len(s["tile_masters"]), s["time_dilation"], json.dumps(s.get("props"), sort_keys=True))
-        if s["time_dilation"] > 0.0 and key == last:  # unfrozen (tests may run the game faster than 1)
-            return s
-        last = key
-        time.sleep(1.0)
-    return tool("level_state")
 
 
 def room_of(at, size):
@@ -80,10 +62,10 @@ def doored_flow(state):
 
 def suite(ctx):
     """Each reference seed builds the level its baseline recorded."""
-    harness.use(ctx.ue)
+    mygame.use(ctx)
     checks, problems, files = 0, [], {}
     for seed in SEEDS:
-        harness.start_run(seed, check_floor=False)  # a different floor is this suite's finding, not a crash
+        mygame.start_run(seed, check_floor=False)  # a different floor is this suite's finding, not a crash
         result = capture_state()
         name = f"level_seed_{seed}.json"
         (ctx.out / name).write_text(json.dumps(result, indent=1))

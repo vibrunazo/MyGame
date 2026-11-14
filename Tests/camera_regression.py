@@ -1,19 +1,21 @@
 """Camera measurements for Phase 6: what the game camera does in scripted situations, as numbers.
 
-The `camera` suite of Tests/run_all.py (`suite(ctx)`), on seed 6032 (the start room is open to the right, toward
-room 0,1). It asserts that the camera stays still while the player stays in place, and each room's wall cutaway; the
-travel numbers are printed, not compared.
+The `camera` suite of `unreal-agent test` (`suite(ctx)`), on seed 6032 (the start room is open to the right, toward
+room 0,1). Each scenario plays inside the engine on the game clock (the run_timeline hook), with the camera recorder
+started and stopped inside it, so on the fixed step two runs give the same numbers to the last digit. It asserts that
+the camera stays still while the player stays in place, compares every scenario's numbers with
+Tests/baselines/camera_room.json exactly, and checks each room's wall cutaway.
 
     python Tests/camera_regression.py report out.json   # the summary table of a result file again
 
 Scenarios (each starts from the same spot, enemies frozen):
   walk_lr      walk right 2 s, stop, walk left 2 s, stop
   walk_depth   walk toward the back wall and back (X, toward and away from the camera)
-  turns        stand still, face left and right every 0.6 s, punching (a beat 'em up fight)
+  turns        stand still, face left and right every 0.58 s, punching (a beat 'em up fight)
   lunges       punch combos facing right, standing still
   jumps        three jumps in place
   dashes       dash right, dash left
-  room_change  walk right into the next room
+  tile_change  walk right into the next tile
 
 Per scenario: how far the camera travelled (xy and z separately), how far the player did, the camera's travel while
 the player stood still, its yaw/pitch/FoV range, "busy-ness" (camera direction reversals per second), and the sideways
@@ -23,12 +25,13 @@ import json
 import math
 import sys
 import time
+from pathlib import Path
 
-import harness
-from harness import floor_z, tool, wait_game
-from level_regression import wait_loaded
+import mygame
+from mygame import floor_z, tool, wait_game, wait_loaded
 
 START = (0.0, -300.0)
+BASELINE = Path(__file__).resolve().parent / "baselines" / "camera_room.json"
 
 
 def freeze_enemies():
@@ -41,31 +44,42 @@ def reset():
     tool("move_input", forward=0.0, right=0.0)
     tool("teleport_player", x=START[0], y=START[1], z=floor_z(*START) + 100)
     tool("set_player_facing", yaw=90.0)
-    wait_game(2.5)  # let the camera settle
+    wait_game(2.5)  # the camera settles and snaps to rest
 
 
-def move(f, r, secs):
-    tool("move_input", forward=f, right=r)
-    wait_game(secs)
-    tool("move_input", forward=0.0, right=0.0)
+# timeline inputs: [game time, "call", MyGameTools hook, kwargs], at most one per frame
+def at(t, hook, **kwargs):
+    return [round(t, 4), "call", hook, kwargs]
 
 
-def punch():
-    tool("press_input", button="Punch", pressed=True)
-    wait_game(0.08)
-    tool("press_input", button="Punch", pressed=False)
+def move(t, forward, right, secs):
+    return [at(t, "move_input", forward=float(forward), right=float(right)), at(t + secs, "move_input", forward=0.0, right=0.0)]
 
 
+def punch(t):
+    return [at(t, "press_input", button="Punch", pressed=True), at(t + 0.08, "press_input", button="Punch", pressed=False)]
+
+
+# each scenario: its inputs on the game clock, and when it ends
 SCENARIOS = {
-    "walk_lr": lambda: (move(0, 1, 2.0), wait_game(1.0), move(0, -1, 2.0), wait_game(1.5)),
-    "walk_depth": lambda: (move(1, 0, 1.2), wait_game(1.0), move(-1, 0, 1.2), wait_game(1.5)),
-    "turns": lambda: ([(tool("set_player_facing", yaw=90.0 if i % 2 else -90.0), punch(), wait_game(0.5)) for i in range(10)],
-                      wait_game(1.5)),
-    "lunges": lambda: ([(punch(), wait_game(0.35)) for _ in range(8)], wait_game(1.5)),
-    "jumps": lambda: ([(tool("jump_player"), wait_game(1.1)) for _ in range(3)], wait_game(1.0)),
-    "dashes": lambda: (tool("dash_player", forward=0.0, right=1.0), wait_game(1.2), tool("dash_player", forward=0.0, right=-1.0), wait_game(1.5)),
-    "tile_change": lambda: (move(0, 1, 4.5), wait_game(2.0)),
+    "walk_lr": (move(0.0, 0, 1, 2.0) + move(3.0, 0, -1, 2.0), 6.5),
+    "walk_depth": (move(0.0, 1, 0, 1.2) + move(2.2, -1, 0, 1.2), 4.9),
+    "turns": ([i for k in range(10) for i in [at(0.58 * k, "set_player_facing", yaw=90.0 if k % 2 else -90.0)] + punch(0.58 * k)], 7.3),
+    "lunges": ([i for k in range(8) for i in punch(0.43 * k)], 4.94),
+    "jumps": ([at(1.1 * k, "jump_player") for k in range(3)], 4.3),
+    "dashes": ([at(0.0, "dash_player", forward=0.0, right=1.0), at(1.2, "dash_player", forward=0.0, right=-1.0)], 2.7),
+    "tile_change": (move(0.0, 0, 1, 4.5), 6.5),
 }
+
+
+def play(inputs, end):
+    """One scenario inside the engine: the recorder starts at 0 and stops at `end`, both on the game clock."""
+    spec = {"dummy": None, "duration": end + 0.05, "settle": 0.0,
+            "inputs": [at(0.0, "camera_record", action="start")] + inputs + [at(end, "camera_record", action="stop")]}
+    tool("run_timeline", spec=json.dumps(spec))
+    while not tool("timeline_result")["done"]:
+        time.sleep(0.05)
+    return tool("camera_record", action="stop")["samples"]  # already stopped inside: the same samples
 
 
 def metrics(samples):
@@ -99,26 +113,32 @@ def metrics(samples):
 
 
 def suite(ctx):
-    """The room camera never moves while the player stays put in a room, whatever they do; in every room the walls
-    between it and the camera are cut away, and only those."""
-    harness.use(ctx.ue)
+    """The room camera never moves while the player stays put in a room, whatever they do; every scenario's numbers
+    are the baseline's; in every room the walls between it and the camera are cut away, and only those."""
+    mygame.use(ctx)
     ctx.reset()
     results = run_all()
     (ctx.out / "camera.json").write_text(json.dumps(results))
+    numbers = {name: r["metrics"] for name, r in results.items()}
+    (ctx.out / BASELINE.name).write_text(json.dumps(numbers, indent=1))
     report_results(results)
     problems = []
     for name in ("turns", "lunges", "jumps"):
         m = results[name]["metrics"]
         if m.get("cam_xy") != 0 or m.get("cam_z") != 0:
             problems.append(f"{name}: the camera moved {m.get('cam_xy')} across and {m.get('cam_z')} up, the player in place")
+    expected = json.loads(BASELINE.read_text())
+    for name, m in expected.items():
+        got = numbers.get(name, {})
+        problems += [f"{name}.{k}: {v} -> {got.get(k)}" for k, v in m.items() if got.get(k) != v]
     cut = cutaway_check()
     (ctx.out / "cutaway.json").write_text(json.dumps(cut, indent=1))
     for room, r in cut.items():
         print(f"  cutaway {room}: " + ("ok" if r["pass"] else f"lowered {r['lowered']}, expected {r['expected']}"))
         if not r["pass"]:
             problems.append(f"cutaway {room}: lowered {r['lowered']}, expected {r['expected']}")
-    return {"ok": not problems, "checks": 3 + len(cut), "problems": problems,
-            "files": {"camera.json": None, "cutaway.json": None}}
+    return {"ok": not problems, "checks": 3 + len(expected) + len(cut), "problems": problems,
+            "files": {"camera.json": None, BASELINE.name: "Tests/baselines/" + BASELINE.name, "cutaway.json": None}}
 
 
 def run_all():
@@ -126,12 +146,10 @@ def run_all():
     freeze_enemies()
     tool("set_player_attribute", attribute="Mana", value=1000.0)
     results = {}
-    for name, act in SCENARIOS.items():
+    for name, (inputs, end) in SCENARIOS.items():
         reset()
-        tool("camera_record", action="start")
-        act()
-        rec = tool("camera_record", action="stop")
-        results[name] = {"metrics": metrics(rec["samples"]), "samples": rec["samples"]}
+        samples = play(inputs, end)
+        results[name] = {"metrics": metrics(samples), "samples": samples}
         print(name, results[name]["metrics"])
     return results
 

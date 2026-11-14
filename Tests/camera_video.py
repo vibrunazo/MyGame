@@ -1,6 +1,7 @@
 """Records the game camera through one scripted demo and encodes it as an mp4, to judge a camera by eye.
 
-Needs the editor running with a rendering PIE (editor_pie with -RenderOffscreen) and `-Seed=6032`.
+Needs MyGame's editor rendering with PIE running: `unreal-agent start --render`, then `unreal-agent pie`. The script
+starts the seed 6032 run itself.
 
     python Tests/camera_video.py out.mp4 [label]
 
@@ -15,8 +16,11 @@ import tempfile
 import time
 from pathlib import Path
 
-from harness import floor_z, tool
-from level_regression import wait_loaded
+from unreal_agent_tools import Client
+from unreal_agent_tools.testing import Context
+
+import mygame
+from mygame import floor_z, tool
 
 SLOW = 0.25
 SHOTS = Path(__file__).resolve().parent.parent / "Saved/Screenshots/WindowsEditor"
@@ -96,7 +100,8 @@ def encode(times, name, out, label):
 
 
 def main(out, label=""):
-    wait_loaded()
+    mygame.use(Context(ue=Client.for_project(Path(__file__).resolve().parent.parent), out=Path(out).resolve().parent))
+    mygame.start_run(6032)
     tool("learn_item_abilities", item_asset_path="/Game/Blueprints/Items/DA_LearnFireball")
     for attr, v in (("MaxHealth", 5000.0), ("Health", 5000.0), ("Defense", 1000.0), ("Mana", 1000.0)):
         tool("set_player_attribute", attribute=attr, value=v)

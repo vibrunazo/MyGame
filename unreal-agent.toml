@@ -2,6 +2,8 @@ version = "0.11"
 project = "MyGame.uproject"
 port = 18765
 editor_target = "MyGameEditor"
+reset = "Tests/mygame.py:reset"   # a new run on seed 6032, on its own floor
+fixed_fps = 60                     # every PIE frame is 1/60 s of game time
 
 [[suite]]
 name = "layout"
@@ -9,3 +11,29 @@ kind = "automation"
 filter = "MyGame.Layout"
 tier = "fast"
 timeout = 300
+
+[[suite]]
+name = "level"
+kind = "pie"
+run = "Tests/level_regression.py:suite"
+
+[[suite]]
+name = "abilities"
+kind = "pie"
+run = "Tests/ability_regression.py:suite"
+
+[[suite]]
+name = "loop"
+kind = "pie"
+run = "Tests/loop_regression.py:suite"
+
+[[suite]]
+name = "camera"
+kind = "pie"
+run = "Tests/camera_regression.py:suite"
+
+[[suite]]
+name = "framerate"
+kind = "pie"
+run = "Tests/framerate.py:suite"
+speed = "own"                      # its 1x and 3x runs

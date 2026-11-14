@@ -34,28 +34,31 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   path. MyGame's port is 18765 (`unreal-agent.toml`, and `Config/UserEditorPerProjectUserSettings.ini` for an editor
   opened by hand). `unreal-agent` is the way to reach the editor; the app's `unreal-mcp` connection is only a
   fallback, and it drops on every editor restart.
-- **PIE suites:** `python Tests/run_all.py` (on a fixed 1/60 step at speed 1, so runs repeat exactly; `--only
-  <suites>`, `--speed N`, `--keep-editor`), results and `summary.json` in `Tests/out/<time>/`. The baselines describe
-  the 1/60 step (the dash's two airborne frames show there, not on coarser frames). Each suite file has `suite(ctx)`
-  (the shared pie-suite contract):
+- **Tests:** `unreal-agent test` runs every suite in `unreal-agent.toml` (`--only <names>`, `--fast` for layout
+  alone), about 2 minutes; results, logs and `summary.json` in `Tests/out/<time>/`. The PIE suites run in a test
+  editor of their own on a fixed 1/60 step, so runs repeat exactly, and the baselines describe that step (the dash's two
+  airborne frames show there, not on coarser frames). `unreal-agent test --accept <suite>` copies a suite's results
+  over its baselines: only for a change meant to alter that behaviour, in a commit of its own. Each PIE suite file has
+  `suite(ctx)` (the shared pie-suite contract):
 
   | Suite | File | Checks | Baseline |
   |---|---|---|---|
   | level | `level_regression.py` | seeds 6032, 101 and 2024 build their recorded level; the doored-room flow | `level_seed_<seed>.json` |
   | abilities | `ability_regression.py` | every player move against a frozen dummy, the boss phases, enemy sight, an enemy attack | `abilities_phase3.json` |
   | loop | `loop_regression.py` | clear a floor, carry over, die, new run, the menu, Game Only input everywhere | none (asserts) |
-  | camera | `camera_regression.py` | the camera stays still with the player in place; each room's wall cutaway | none (asserts) |
+  | camera | `camera_regression.py` | every scenario's camera numbers, played inside the engine; the camera stays still with the player in place; each room's wall cutaway | `camera_room.json` |
   | framerate | `framerate.py` | multi-hit moves land the same hits at 1× and 3× (a 3× frame step) | none (compares) |
 
-- **Known state:** `harness.start_run(seed)` starts a run through `UMyGameInstance::StartNewRun` and fails when the
-  floor built isn't the seed's baseline floor; the runner's reset is `start_run(6032)`.
-- **Hooks:** the `MyGameTools` toolset in `Content/Python/mygame_tools/toolset.py`, called with `harness.tool()`.
+- **Known state:** `Tests/mygame.py` holds MyGame's own test helpers. `reset(ctx)` (named in `unreal-agent.toml`)
+  starts seed 6032; `start_run(seed)` starts a run through `UMyGameInstance::StartNewRun` and fails when the floor
+  built isn't the seed's baseline floor.
+- **Hooks:** the `MyGameTools` toolset in `Content/Python/mygame_tools/toolset.py`, called with `mygame.tool()` after
+  `mygame.use(ctx)`.
   `ability_regression.TRACE[0] = True` records every frame of each scenario.
-- **Logic tests:** `unreal-agent test --only layout` (or plain `unreal-agent test`, which runs every suite in
-  `unreal-agent.toml`): the `MyGame.Layout.*` automation tests in `Source/MyGameEditor/Private/Tests/FloorLayoutTests.cpp`,
-  about 15 s. The PIE suites above aren't in `unreal-agent test` yet; they move there in a later release.
-- **Video for the user:** `python Tests/camera_video.py <out.mp4> [label]`, with a rendering editor and PIE on seed
-  6032 already up (its docstring says how), plays a scripted camera demo, captured
+- **Logic tests:** the `layout` suite (`unreal-agent test --only layout`): the `MyGame.Layout.*` automation tests in
+  `Source/MyGameEditor/Private/Tests/FloorLayoutTests.cpp`, about 15 s.
+- **Video for the user:** `unreal-agent start --render`, `unreal-agent pie`, then `python Tests/camera_video.py
+  <out.mp4> [label]`: a scripted camera demo on seed 6032, captured
   frame by frame at quarter speed and resampled to 30 fps of game time (no HUD, no sound; not proof of flicker).
 - **Packaged build:** `RunUAT BuildCookRun -platform=Win64 -clientconfig=Development -build -cook -stage -pak -iostore
   -archive -archivedirectory=Saved/Packaged` (about 7.5 minutes), then `python Tests/package_smoke.py`. `Play.bat` runs it.
