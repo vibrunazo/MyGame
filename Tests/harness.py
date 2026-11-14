@@ -55,11 +55,12 @@ def game_time():
     return tool("game_time")["t"]
 
 
-def wait_game(seconds, poll=0.02):
-    """Waits `seconds` of game time (slowed or sped up by time dilation)."""
-    t0 = game_time()
-    while game_time() - t0 < seconds:
-        time.sleep(poll)
+def wait_game(seconds):
+    """Waits `seconds` of game time (slowed or sped up by time dilation): one call that the engine answers when the
+    play world's clock has moved that far, exact to the frame."""
+    UE.call_tool("AgentPlayToolset.AgentPlayToolset", "WaitGameSeconds",
+                 {"seconds": float(seconds), "timeoutSeconds": max(60.0, float(seconds) * 30)},
+                 timeout=max(90.0, float(seconds) * 40))
 
 
 def floor_z(x, y, from_z=500.0, tries=3):

@@ -59,13 +59,16 @@ def _tl_tick(delta_seconds):
             rec["dummy_tags"].update(t for t in dummy.get_tags_for_test() if t.startswith(("status.", "state.")))
             rec["dummy_z"] = max(rec["dummy_z"], dummy.get_actor_location().z)
         if spec.get("trace"):
-            # one row per frame: game time, montage section, dummy health, player-dummy distance
+            # one row per frame: game time, montage section, dummy health, player-dummy distance, the player's time
+            # dilation, montage position, x, y, z, and whether its movement is falling
             hp = json.loads(MyGameTools.character_state(spec["dummy"]))["health"] if dummy else 0.0
             gap = (dummy.get_actor_location() - player.get_actor_location()).length() if dummy else 0.0
             pos = anim.montage_get_position(montage) if montage else -1.0
+            loc = player.get_actor_location()
             rec.setdefault("trace", []).append([round(now, 4), rec["timeline"][-1] if rec["timeline"] else "", round(hp, 1), round(gap, 1),
                                                 round(player.get_editor_property("custom_time_dilation"), 3), round(pos, 3),
-                                                round(player.get_actor_location().x, 1), round(player.get_actor_location().y, 1)])
+                                                round(loc.x, 1), round(loc.y, 1), round(loc.z, 2),
+                                                bool(player.get_movement_component().is_falling())])
         if now >= spec["duration"]:
             _tl["phase"], _tl["settle_from"] = "settle", now
     elif _tl["phase"] == "settle":
