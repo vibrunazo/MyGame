@@ -1,4 +1,11 @@
-version = "0.5"
+version = "0.7"
 project = "MyGame.uproject"
 port = 18765
 editor_target = "MyGameEditor"
+
+[[suite]]
+name = "layout"
+kind = "automation"
+filter = "MyGame.Layout"
+tier = "fast"
+timeout = 300
