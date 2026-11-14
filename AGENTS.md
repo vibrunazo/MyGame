@@ -100,9 +100,9 @@ Rules:
 - `build`, `test` and `package` can take minutes: run them in the background or with a long timeout.
 - If `build` or `package` names an editor or a game you didn't start, ask the user to close it.
 - If the workflow lacks something or could be better, file it: `unreal-agent feedback add "<what, and where>"`. A small
-  addition any game could use may be made in UnrealAgentTools right away: `unreal-agent guide tools` says how. It
-  reaches this game in a release, with `unreal-agent update`. Anything bigger waits for a session working there.
-  Never build a private version in this game.
+  Python addition any game could use may be made in UnrealAgentTools right away: `unreal-agent guide tools` says how.
+  A plugin change, a new command, or a change to the client, launcher or runner is filed instead. It reaches this game
+  in a release, with `unreal-agent update`. Never build a private version in this game.
 - This game uses the release its `unreal-agent.toml` names. Update when you choose, read what changed, and commit the
   update on its own.
 - Only what knows this game lives here: its hooks, dev commands, suites and baselines.
