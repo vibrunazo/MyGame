@@ -91,4 +91,5 @@ Rules:
   update on its own.
 - Only what knows this game lives here: its hooks, dev commands, suites and baselines.
 - A baseline changes only with a change meant to alter that behaviour. If another one moves, stop and ask.
+- Ship only Shipping builds: a Development package carries the tools' bridge (off unless started with its switch).
 <!-- unreal-agent-tools workflow: end -->

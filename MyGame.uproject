@@ -33,21 +33,28 @@
 			"Enabled": true
 		},
 		{
-			"Name": "ModelContextProtocol",
+			"Name": "AllToolsets",
 			"Enabled": true,
 			"TargetAllowList": [
 				"Editor"
 			]
 		},
 		{
-			"Name": "AllToolsets",
+			"Name": "AgentPlayToolset",
 			"Enabled": true,
-			"TargetAllowList": [
-				"Editor"
+			"TargetConfigurationDenyList": [
+				"Shipping"
+			]
+		},
+		{
+			"Name": "ModelContextProtocol",
+			"Enabled": true,
+			"TargetConfigurationDenyList": [
+				"Shipping"
 			]
 		}
 	],
 	"AdditionalPluginDirectories": [
-		"../UnrealAgentTools/versions/0.13/Plugins"
+		"../UnrealAgentTools/versions/0.16/Plugins"
 	]
 }
