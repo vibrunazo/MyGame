@@ -3,3 +3,8 @@
 
 #include "MainMenu.h"
 
+void UMainMenu::NativeConstruct()
+{
+	Super::NativeConstruct();
+	FocusFirstButton();
+}

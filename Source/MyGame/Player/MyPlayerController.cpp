@@ -318,6 +318,7 @@ void AMyPlayerController::ShowGameOver()
     if (!GameOverWidget) return;
     GameOverWidgetRef = CreateWidget<UMyUserWidget>(this, GameOverWidget);
     GameOverWidgetRef->AddToViewport();
+    GameOverWidgetRef->FocusFirstButton();  // keys and pads work its buttons, not only a mouse
     SetInputMode(FInputModeUIOnly());
     bShowMouseCursor = true;
 }

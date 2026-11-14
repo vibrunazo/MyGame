@@ -4,6 +4,9 @@
 #include "MyUserWidget.h"
 #include "../MyGameInstance.h"
 #include "../Player/MyCharacter.h"
+#include "Blueprint/WidgetTree.h"
+#include "Components/Button.h"
+#include "Containers/Ticker.h"
 
 UMyGameInstance* UMyUserWidget::GetMyGameInstance()
 {
@@ -72,4 +75,27 @@ float UMyUserWidget::GetAttackSpeedAttr()
         return MyGI->PlayerCharRef->GetAttributes()->GetAttackSpeed();
     }
     return 0.0f;
+}
+
+void UMyUserWidget::FocusFirstButton()
+{
+    // next frame: a widget only takes focus once it's in the viewport's hierarchy
+    FTSTicker::GetCoreTicker().AddTicker(FTickerDelegate::CreateWeakLambda(this, [this](float)
+    {
+        UButton* First = nullptr;
+        if (WidgetTree)
+        {
+            WidgetTree->ForEachWidget([&First](UWidget* Widget)
+            {
+                UButton* Button = Cast<UButton>(Widget);
+                if (!First && Button && Button->GetIsEnabled() && Button->IsVisible() && Button->GetIsFocusable()) First = Button;
+            });
+        }
+        if (First)
+        {
+            if (APlayerController* PC = GetOwningPlayer()) First->SetUserFocus(PC);
+            else First->SetKeyboardFocus();
+        }
+        return false;  // once
+    }));
 }
