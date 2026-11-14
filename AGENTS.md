@@ -62,8 +62,9 @@ MyGame knows, and what `guide` doesn't list a command for yet:
 - **Logic tests:** the `layout` suite (`unreal-agent test --only layout`): the `MyGame.Layout.*` automation tests in
   `Source/MyGameEditor/Private/Tests/FloorLayoutTests.cpp`, about 15 s.
 - **Video for the user:** `unreal-agent start --render`, `unreal-agent pie`, then `python Tests/camera_video.py
-  <out.mp4> [label]`: a scripted camera demo on seed 6032, captured
-  frame by frame at quarter speed and resampled to 30 fps of game time (no HUD, no sound; not proof of flicker).
+  <out.mp4> [label] [--no-ui]`: a scripted camera demo on seed 6032, recorded by the tools (capture.Recording: a fixed
+  1/30 step, every frame taken, real speed; the HUD shows unless --no-ui; no sound, not proof of flicker). For any other
+  clip, `unreal-agent video --seconds N`.
 - **Packaged build:** `unreal-agent package` (a minute incremental, about 7.5 cold; `[package]` in `unreal-agent.toml`),
   then `unreal-agent test --on packaged` (smoke, menu-to-run and menu-cooked on the cooked game). `Play.bat` runs it.
   `unreal-agent start --packaged` starts it with its bridge (port 18965): `key`, `exec`, `shot`, `status`, then `stop`.
