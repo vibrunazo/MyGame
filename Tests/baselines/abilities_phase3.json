@@ -234,6 +234,7 @@
    "dummy_pushed": 0.0,
    "player_mana": 0.0,
    "player_tags": [
+    "status.airborne",
     "status.nocontrol"
    ],
    "player_moved": 227.6,
@@ -287,6 +288,7 @@
    "player_mana": 0.0,
    "player_tags": [
     "state.running",
+    "status.airborne",
     "status.nocontrol"
    ],
    "player_moved": 329.9,
