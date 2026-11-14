@@ -50,8 +50,9 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   floor built isn't the seed's baseline floor; the runner's reset is `start_run(6032)`.
 - **Hooks:** the `MyGameTools` toolset in `Content/Python/mygame_tools/toolset.py`, called with `harness.tool()`.
   `ability_regression.TRACE[0] = True` records every frame of each scenario.
-- **Logic tests:** `MyGame.Layout.*` automation tests (`Source/MyGameEditor/Private/Tests/FloorLayoutTests.cpp`), not in
-  `run_all.py` yet.
+- **Logic tests:** `unreal-agent test --only layout` (or plain `unreal-agent test`, which runs every suite in
+  `unreal-agent.toml`): the `MyGame.Layout.*` automation tests in `Source/MyGameEditor/Private/Tests/FloorLayoutTests.cpp`,
+  about 15 s. The PIE suites above aren't in `unreal-agent test` yet; they move there in a later release.
 - **Video for the user:** `python Tests/camera_video.py <out.mp4> [label]`, with a rendering editor and PIE on seed
   6032 already up (its docstring says how), plays a scripted camera demo, captured
   frame by frame at quarter speed and resampled to 30 fps of game time (no HUD, no sound; not proof of flicker).
