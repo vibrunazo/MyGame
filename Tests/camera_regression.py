@@ -1,9 +1,10 @@
 """Camera measurements for Phase 6: what the game camera does in scripted situations, as numbers.
 
-Needs the editor running with PIE started and `-Seed=6032` (the start room is open to the right, toward room 0,1).
+The `camera` suite of Tests/run_all.py (`suite(ctx)`), on seed 6032 (the start room is open to the right, toward
+room 0,1). It asserts that the camera stays still while the player stays in place, and each room's wall cutaway; the
+travel numbers are printed, not compared.
 
-    python Tests/camera_regression.py run out.json      # record every scenario
-    python Tests/camera_regression.py report out.json   # the summary table again
+    python Tests/camera_regression.py report out.json   # the summary table of a result file again
 
 Scenarios (each starts from the same spot, enemies frozen):
   walk_lr      walk right 2 s, stop, walk left 2 s, stop
@@ -23,6 +24,7 @@ import math
 import sys
 import time
 
+import harness
 from harness import floor_z, tool, wait_game
 from level_regression import wait_loaded
 
@@ -96,11 +98,27 @@ def metrics(samples):
             "yaw_range": rng(5), "pitch_range": rng(4), "fov_range": rng(6), "reversals_per_s": round(reversals / max(dur, 1e-3), 2)}
 
 
-def run(out):
+def suite(ctx):
+    """The room camera never moves while the player stays put in a room, whatever they do; in every room the walls
+    between it and the camera are cut away, and only those."""
+    harness.use(ctx.ue)
+    ctx.reset()
     results = run_all()
-    with open(out, "w") as f:
-        json.dump(results, f)
-    report(out)
+    (ctx.out / "camera.json").write_text(json.dumps(results))
+    report_results(results)
+    problems = []
+    for name in ("turns", "lunges", "jumps"):
+        m = results[name]["metrics"]
+        if m.get("cam_xy") != 0 or m.get("cam_z") != 0:
+            problems.append(f"{name}: the camera moved {m.get('cam_xy')} across and {m.get('cam_z')} up, the player in place")
+    cut = cutaway_check()
+    (ctx.out / "cutaway.json").write_text(json.dumps(cut, indent=1))
+    for room, r in cut.items():
+        print(f"  cutaway {room}: " + ("ok" if r["pass"] else f"lowered {r['lowered']}, expected {r['expected']}"))
+        if not r["pass"]:
+            problems.append(f"cutaway {room}: lowered {r['lowered']}, expected {r['expected']}")
+    return {"ok": not problems, "checks": 3 + len(cut), "problems": problems,
+            "files": {"camera.json": None, "cutaway.json": None}}
 
 
 def run_all():
@@ -151,4 +169,4 @@ def report_results(r):
 
 
 if __name__ == "__main__":
-    (run if sys.argv[1] == "run" else report)(sys.argv[2])
+    report(sys.argv[2])

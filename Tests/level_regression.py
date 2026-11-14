@@ -1,8 +1,7 @@
 """Level generator regression for Phase 4: what a seeded level looks like and how a doored room behaves.
 
-Needs the editor running with PIE started and a fixed seed (`-Seed=N` on the editor command line).
+The `level` suite of Tests/run_all.py (`suite(ctx)`): each reference seed's level, compared with its baseline.
 
-    python Tests/level_regression.py capture out.json      # this PIE session's level
     python Tests/level_regression.py diff before.json after.json
 
 Recorded: tile templates per grid coordinate, the rooms they form, walls (position, doorway), doors, room masters and their enemies,
@@ -12,8 +11,13 @@ and drops the reward.
 import json
 import sys
 import time
+from pathlib import Path
 
+import harness
 from harness import floor_z, tool
+
+SEEDS = (6032, 101, 2024)
+BASE = Path(__file__).resolve().parent / "baselines"
 
 
 def wait_game(seconds):
@@ -74,11 +78,22 @@ def doored_flow(state):
             "reward_drops": len(tool("list_actors", class_path="/Script/MyGame.Pickup")) - pickups_before}
 
 
-def capture(out):
-    result = capture_state()
-    print(json.dumps(result))
-    with open(out, "w") as f:
-        json.dump(result, f, indent=1)
+def suite(ctx):
+    """Each reference seed builds the level its baseline recorded."""
+    harness.use(ctx.ue)
+    checks, problems, files = 0, [], {}
+    for seed in SEEDS:
+        harness.start_run(seed, check_floor=False)  # a different floor is this suite's finding, not a crash
+        result = capture_state()
+        name = f"level_seed_{seed}.json"
+        (ctx.out / name).write_text(json.dumps(result, indent=1))
+        expected = json.loads((BASE / name).read_text())
+        diffs = compare(expected, result)
+        print(f"  seed {seed}: " + ("same level" if not diffs else "differs: " + "; ".join(diffs)))
+        checks += len(expected)
+        problems += [f"seed {seed}: {d}" for d in diffs]
+        files[name] = f"Tests/baselines/{name}"
+    return {"ok": not problems, "checks": checks, "problems": problems, "files": files}
 
 
 def capture_state():
@@ -112,7 +127,4 @@ def diff(a_path, b_path):
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "capture":
-        capture(sys.argv[2])
-    else:
-        diff(sys.argv[2], sys.argv[3])
+    diff(sys.argv[2], sys.argv[3])

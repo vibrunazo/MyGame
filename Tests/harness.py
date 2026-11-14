@@ -14,8 +14,15 @@ ROOT = Path(__file__).resolve().parent.parent
 PROJECT = ROOT / "MyGame.uproject"
 APP = "EditorToolset.EditorAppToolset"
 MYGAME_TOOLS = "mygame_tools.toolset.MyGameTools"
-# the editor's MCP server (port 18765, or UNREAL_MCP_PORT): one client for every suite
+# the editor's MCP server (port 18765, or UNREAL_MCP_PORT): one client for every suite; a suite points it at its
+# ctx.ue with use()
 UE = Client()
+
+
+def use(client):
+    """Sends every hook call to `client`: a suite's ctx.ue, the editor its runner started."""
+    global UE
+    UE = client
 
 
 def call_tool(toolset, name, arguments=None):
@@ -76,8 +83,10 @@ def set_speed(speed):
     tool("set_game_speed", speed=float(speed))
 
 
-def start_run(seed, timeout=60):
-    """A new run with this seed (the game instance's StartNewRun, as the menu does), loaded and unfrozen."""
+def start_run(seed, timeout=60, check_floor=True):
+    """A new run with this seed (the game instance's StartNewRun, as the menu does), loaded and unfrozen. Fails when
+    the floor isn't the one the seed's level baseline recorded, unless `check_floor` is off (the level suite compares
+    the floor itself)."""
     from level_regression import wait_loaded
     tool("start_run", seed=int(seed))
     t0 = time.time()
@@ -91,7 +100,7 @@ def start_run(seed, timeout=60):
     state = wait_loaded()
     # every suite's numbers assume the seed's own floor: fail here, clearly, if another one was built
     baseline = Path(__file__).parent / "baselines" / f"level_seed_{seed}.json"
-    if baseline.exists():
+    if check_floor and baseline.exists():
         want = sorted(sorted(map(list, r)) for r in json.loads(baseline.read_text())["rooms"])
         got = sorted(sorted(map(list, r)) for r in state["rooms"])
         if got != want:

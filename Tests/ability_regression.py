@@ -1,9 +1,8 @@
 """Ability regression run for Phase 3: presses the player's buttons in PIE and records what happens.
 
-Needs the editor running with PIE started (see MIGRATION.md "How we test"). Every enemy is frozen (AI and
-sensing off); one is brought into the start room as a still dummy in front of the player (Defense 1000).
+The `abilities` suite of Tests/run_all.py (`suite(ctx)`). Every enemy is frozen (AI and sensing off); one is brought
+into the start room as a still dummy in front of the player (Defense 1000).
 
-    python Tests/ability_regression.py run  out.json        # record (or through Tests/run_all.py)
     python Tests/ability_regression.py diff Tests/baselines/abilities_phase3.json out.json
 
 Per scenario it records the montage/section timeline, abilities seen active, the dummy's health
@@ -15,9 +14,13 @@ frame there, so a scenario behaves the same at any game speed (Tests/run_all.py 
 import json
 import sys
 import time
+from pathlib import Path
 
+import harness
 from harness import floor_z, game_time, wait_game
 from harness import call_tool, tool
+
+BASELINE = Path(__file__).resolve().parent / "baselines" / "abilities_phase3.json"
 
 GAS = "GASToolsets.AbilitySystemInspectorToolset"
 ITEMS = "/Game/Blueprints/Items/"
@@ -187,10 +190,21 @@ def run_scenarios(names):
     return out
 
 
-def run(out):
-    results = run_all()
-    with open(out, "w") as f:
-        json.dump(results, f, indent=1)
+def suite(ctx):
+    """Every scenario's outcome, the boss's phases, enemy sight and an enemy's attack, compared with the baseline
+    (lines starting with "note" don't count)."""
+    harness.use(ctx.ue)
+    ctx.reset()
+    result = run_all()
+    (ctx.out / "abilities.json").write_text(json.dumps(result, indent=1))
+    expected = json.loads(BASELINE.read_text())
+    lines = compare(expected, result)
+    for line in lines:
+        print("  " + line)
+    problems = [line for line in lines if not line.startswith("note")]
+    checks = len(expected["scenarios"]) + sum(1 for k in ("boss", "sight", "enemy_attack") if expected.get(k))
+    return {"ok": not problems, "checks": checks, "problems": problems,
+            "files": {"abilities.json": "Tests/baselines/" + BASELINE.name}}
 
 
 def run_all():
@@ -330,7 +344,4 @@ def diff(a_path, b_path):
 
 
 if __name__ == "__main__":
-    if sys.argv[1] == "run":
-        run(sys.argv[2])
-    else:
-        diff(sys.argv[2], sys.argv[3])
+    diff(sys.argv[2], sys.argv[3])

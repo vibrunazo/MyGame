@@ -1,8 +1,6 @@
 """Game loop regression for Phase 5: clear a floor, carry the run over, die, start again, go through the menu.
 
-Needs the editor running with PIE started on LevelPersistent and a fixed seed (`-Seed=N`).
-
-    python Tests/loop_regression.py run out.json
+The `loop` suite of Tests/run_all.py (`suite(ctx)`).
 
 Checks (each prints PASS/FAIL, the JSON keeps the states seen):
   floor_clear   killing the boss room and touching the flag travels to floor 2, one room bigger
@@ -15,9 +13,9 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
                 left in the menu's UI Only mode would pass every other check while real keys and pads do nothing)
 """
 import json
-import sys
 import time
 
+import harness
 from harness import wait_game
 from harness import tool
 from level_regression import wait_loaded
@@ -68,11 +66,15 @@ def player_pos():
     return next(c["location"] for c in tool("list_characters") if c["team"] == 0)
 
 
-def run(out):
+def suite(ctx):
+    """Each step of the loop checked in turn."""
+    harness.use(ctx.ue)
+    ctx.reset()
     run_all()
-    with open(out, "w") as f:
-        json.dump(results, f, indent=1)
-    print("ALL PASS" if all(v.get("pass", True) for v in results.values() if isinstance(v, dict) and "pass" in v) else "SOME FAILED")
+    (ctx.out / "loop.json").write_text(json.dumps(results, indent=1))
+    checked = {k: v for k, v in results.items() if isinstance(v, dict) and "pass" in v}
+    problems = [f"{k}: {v['detail']}" for k, v in checked.items() if not v["pass"]]
+    return {"ok": not problems, "checks": len(checked), "problems": problems, "files": {"loop.json": None}}
 
 
 def run_all():
@@ -128,8 +130,8 @@ def run_all():
 
     # new run from the game over screen
     tool("run_action", action="start_new_run")
-    time.sleep(3)  # the floor reloads: real time, the game clock restarts
-    fresh = wait_for(lambda s: s["player"] and s["map"] == "LevelPersistent")
+    # the floor reloads: the new level has no game over screen (the old one kept it, and its player, until it went)
+    fresh = wait_for(lambda s: s["player"] and s["map"] == "LevelPersistent" and "WBP_GameOver_C" not in s["widgets"])
     wait_loaded()
     fresh = tool("run_state")
     results["new_run"] = fresh
@@ -153,6 +155,3 @@ def run_all():
 
     return results
 
-
-if __name__ == "__main__":
-    run(sys.argv[2])
