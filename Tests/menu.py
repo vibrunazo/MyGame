@@ -6,13 +6,12 @@ reach UMG and UI Only menus only through Slate, as a real keyboard's do (ctx.key
 gamepad, it goes:
   menu         the main menu shows, in UI Only input
   start        confirm starts a run (keys only, no clicks), and the level loads
-  move         the run is in Game Only input and a held W moves the player (the cooked game's dead keyboard was a
-               level left in the menu's UI Only mode)
+  move         the run is in Game Only input and a held W (the stick, on the gamepad trip) moves the player (the cooked
+               game's dead keyboard was a level left in the menu's UI Only mode)
   pause        the pause key shows the pause menu and pauses the game; the pause key again resumes it
   back         pause, down to the pause menu's Exit button, confirm: back on the main menu, in UI Only input
 The gamepad's trip starts from the menu the keyboard's trip came back to, so its run is a second trip through the menu,
-where the bug lived. The stick can't be pressed (PressKey takes digital keys), so movement is checked with W both
-times; the input mode is the same for every device.
+where the bug lived; it moves with the left stick pushed forward.
 """
 import json
 import time
@@ -23,11 +22,12 @@ from mygame import tool, wait_loaded
 MENU_MAP, RUN_MAP = "MainMenu", "LevelPersistent"
 MENU_WIDGET, PAUSE_WIDGET = "WBP_MainMenu_C", "WBP_PauseMenu_C"
 DEVICES = [
-    {"name": "keyboard", "confirm": "Enter", "down": "Down", "pause": "Escape"},
-    {"name": "gamepad", "confirm": "Gamepad_FaceButton_Bottom", "down": "Gamepad_DPad_Down", "pause": "Gamepad_Special_Right"},
+    {"name": "keyboard", "confirm": "Enter", "down": "Down", "pause": "Escape", "move": "W"},
+    {"name": "gamepad", "confirm": "Gamepad_FaceButton_Bottom", "down": "Gamepad_DPad_Down", "pause": "Gamepad_Special_Right",
+     "move": "Gamepad_LeftY=1.0"},
 ]
-MOVE_KEY, MOVE_HOLD, MIN_MOVE = "W", 0.5, 50.0
-PAUSE_EXIT_DOWNS = 1  # the pause menu: New Game (restart) above Exit (back to the main menu)
+MOVE_HOLD, MIN_MOVE = 0.5, 50.0
+EXIT = "ExitButton in WBP_PauseMenu_C"  # the pause menu's button back to the main menu
 
 
 def input_mode(ctx):
@@ -69,10 +69,9 @@ class Trip:
             self.problems.append(f"{self.dev['name']} {step}: {json.dumps(seen)}")
         return ok
 
-    def to_exit(self):
-        """From the pause menu's first button (New Game: restart) down to Exit (back to the main menu). PressKey names
-        the focused widget only by its Slate type, so this goes by position; landing on the main menu checks it."""
-        return all(self.press(self.dev["down"]).get("down_handled") for _ in range(PAUSE_EXIT_DOWNS))
+    def to_exit(self, tries=4):
+        """Down through the pause menu until its Exit button has focus (PressKey's focus_after names the UMG widget)."""
+        return any(EXIT in str(self.press(self.dev["down"]).get("focus_after", "")) for _ in range(tries))
 
     def player_xy(self):
         return tool("pie_player_state")["location"][:2]
@@ -92,7 +91,7 @@ class Trip:
         wait_loaded()
         mode = input_mode(self.ctx)
         before = self.player_xy()
-        r = self.press(MOVE_KEY, hold=MOVE_HOLD)
+        r = self.press(dev["move"], hold=MOVE_HOLD)
         moved = round(sum((a - b) ** 2 for a, b in zip(self.player_xy(), before)) ** 0.5, 1)
         self.check("move", str(mode).startswith("Game Only") and moved >= MIN_MOVE,
                    {"input_mode": mode, "moved": moved, "key": r})

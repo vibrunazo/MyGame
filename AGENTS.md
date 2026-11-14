@@ -48,7 +48,7 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   | loop | `loop_regression.py` | clear a floor, carry over, die, new run, the menu, Game Only input everywhere | none (asserts) |
   | camera | `camera_regression.py` | every scenario's camera numbers, played inside the engine; the camera stays still with the player in place; each room's wall cutaway | `camera_room.json` |
   | framerate | `framerate.py` | multi-hit moves land the same hits at 1× and 3× (a 3× frame step) | none (compares) |
-  | menu (manual: `--only menu`) | `menu.py` | from the main menu map, with real keys then a gamepad: start a run, Game Only input and a held W moves, pause and resume, back to the menu; a rendering editor | none (asserts) |
+  | menu | `menu.py` | from the main menu map, with real keys then a gamepad: start a run, Game Only input and a held W (the stick) moves, pause and resume, back to the menu; runs last, in a rendering editor | none (asserts) |
   | menu-to-run (command; also cooked) | `Source/MyGame/Dev/MenuToRunTest.cpp` | the dev command `MyGame.MenuToRunTest quit`: from the main menu, a real Enter starts a run, which is in Game Only input and a held W moves the player | none (asserts) |
   | smoke (`--on packaged`) | `package_smoke.py` | the cooked game: the menu loads; seed 6032's run builds every room; no missing package; a clean log; every enemy has its AI | none (asserts) |
 
