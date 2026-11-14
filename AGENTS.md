@@ -30,9 +30,10 @@ The camera and the darkness work per room, never per tile: no spoiling across wa
 How to build, run and test is in the shared section at the end of this file and in `unreal-agent guide`. What only
 MyGame knows, and what `guide` doesn't list a command for yet:
 
-- **Build** (from PowerShell, with no editor of this project running): `& "C:\Program Files\Epic Games\UE_5.8\Engine\Build\BatchFiles\Build.bat"
-  MyGameEditor Win64 Development "-Project=<this folder>\MyGame.uproject" -WaitMutex`.
-- **Port:** 18765, the machine-wide default (`UNREAL_MCP_PORT` overrides it), until the plan gives MyGame its own.
+- **Editor:** `unreal-agent build`, `start [--render]`, `pie`, `status`, `stop`, from this folder, with no port or
+  path. MyGame's port is 18765 (`unreal-agent.toml`, and `Config/UserEditorPerProjectUserSettings.ini` for an editor
+  opened by hand). `unreal-agent` is the way to reach the editor; the app's `unreal-mcp` connection is only a
+  fallback, and it drops on every editor restart.
 - **PIE suites:** `python Tests/run_all.py` (game at 3× by default; `--only <suites>`, `--speed N`, `--max-fps N`,
   `--keep-editor`), about 3.5 minutes, results and `summary.json` in `Tests/out/<time>/`. Each suite file has
   `suite(ctx)` (the shared pie-suite contract):
