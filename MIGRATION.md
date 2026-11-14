@@ -56,7 +56,7 @@ Found and fixed along the way, beyond the original plan:
 
 Parity: you can't recall anything from the 4.25 game that's still missing, so the feature set counts as complete. Deleting anything still needs your explicit OK.
 
-**Regression test:** `Tests/ability_regression.py` (via `Tests/mcp_client.py`). In PIE it freezes every enemy, uses one as a still dummy, and presses the player's buttons through the same path the controller uses. It covers taps and holds of punch and kick, jump + kick and jump + punch, dash, every learned super move, Fireball, a punch after learning, the health-threshold check and an enemy attacking. `diff` compares outcomes: montages, abilities, hit, launch, mana, jump. Three fresh PIE runs gave identical outcomes. The reference is `Tests/baselines/abilities_before_phase3.json`; every step below must reproduce it.
+**Regression test:** `Tests/ability_regression.py` (via `Tests/mcp_client.py`). In PIE it freezes every enemy, uses one as a still dummy, and presses the player's buttons through the same path the controller uses. It covers taps and holds of punch and kick, jump + kick and jump + punch, dash, every learned super move, Fireball, a punch after learning, the health-threshold check and an enemy attacking. `diff` compares outcomes: montages, abilities, hit, launch, mana, jump. Three fresh PIE runs gave identical outcomes. The reference was a recording made before Phase 3 (deleted 2026-11-14 with your OK; `abilities_phase3.json`, below, replaced it); every step below had to reproduce it.
 
 **Steps, each tested against the baseline and committed on its own:**
 1. **Done:** native gameplay tags (`MyGameplayTags`, `UE_DEFINE_GAMEPLAY_TAG`) instead of ~55 `RequestGameplayTag` string lookups.
@@ -180,12 +180,12 @@ Your play-test of the height-filling framing (2026-11-12): "it's good now".
      - It bobs with jumps (5.6 m of vertical travel for three jumps).
      - Walking moves it 1.3 to 1.7 times as far as the player.
    - **Old numbers vary run to run:** the look-ahead depends on timing and frame rate.
-   - **References:** `Tests/baselines/camera_legacy_run1.json`, `camera_legacy_run2.json`.
+   - **References:** two recorded runs of the 2020 camera (deleted 2026-11-14 with your OK; the room camera replaced it, and `Tests/baselines/camera_room.json` holds today's numbers).
 2. **Tried, then replaced: a framed follow** (dead zone, critically damped smoothing, then a travel-based look-ahead). It was calmer than 2020's camera but still moved at walking speed. Your call (2026-10-12): it still moved too fast. You described the intent as The Binding of Isaac + Streets of Rage, with the camera confined to the room.
 3. **Done: the room camera** (`ARoomCameraPawn`, rewritten from scratch).
    - **Framing:** each room gets one fixed framing. It's solved at runtime so the whole cell (1400 × 2000, platforms up to 600 high, a character's height along the near edge) fits the screen at the current aspect ratio, at a fixed pitch (40°) and horizontal FoV (60°). Characters are about 9% of the screen's height, your pick, "whole room".
    - **Motion:** inside a room the camera doesn't move. Entering another room starts a 0.5 s smoothstep to its framing, once the player is 150 inside it (no flip-flop on borders).
-   - **Measured** (`Tests/baselines/camera_room.json`): 0 movement in every in-room scenario (walking, depth, turns, lunges, jumps, dashes); exactly one room's width on a room change.
+   - **Measured** (then; `camera_room.json` now holds the current camera's numbers): 0 movement in every in-room scenario (walking, depth, turns, lunges, jumps, dashes); exactly one room's width on a room change.
    - **Removed:** the look-ahead, dead zone, spring arm, wall clamps, FoV lerp, the homing movement component, both 2020 follow functions and the A/B switch.
    - **Rooms measured:** all 15 rooms reachable over five seeds fill their cell exactly. They vary in layout and height, not footprint, so the framing uses the cell. A room's real bounds would only matter for future multi-cell rooms.
 4. **Done: other rooms dark** (your pick: dark + camera).
