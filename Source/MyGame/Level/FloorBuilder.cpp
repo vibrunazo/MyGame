@@ -168,6 +168,7 @@ void AFloorBuilder::OnTilesReady()
 	if (bTilesReady) return;
 	bTilesReady = true;
 	GetWorldSettings()->SetTimeDilation(1.0f);
+	UE_LOG(LogTemp, Display, TEXT("Tiles ready: %d tiles streamed in, the game unfrozen"), Tiles.Num());
 	for (auto&& Tile : Tiles) DressTile(Tile.Key, Tile.Value);
 	// -Room=N: start there (next tick, so the player has spawned)
 	if (UMyGameInstance* GI = Cast<UMyGameInstance>(GetGameInstance()))

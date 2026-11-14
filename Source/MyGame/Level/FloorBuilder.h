@@ -113,6 +113,8 @@ class MYGAME_API AFloorBuilder : public AActor
 public:	
 	// Sets default values for this actor's properties
 	AFloorBuilder();
+	// Every room has streamed in and the game is unfrozen
+	bool AreTilesReady() const { return bTilesReady; }
 	void OnConstruction(const FTransform & Transform) override;
 
 	// Links a room master to the room whose streamed map it's in; returns that room, or null
