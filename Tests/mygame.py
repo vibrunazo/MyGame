@@ -40,7 +40,13 @@ def wait_game(seconds):
 
 
 def game_time():
-    return tool("game_time")["t"]
+    """The play world's game time (the plugin's play clock)."""
+    return _ctx.clock()["game_time"]
+
+
+def objects(cls_or_path, properties=()):
+    """Objects of a class (or the one at a path) in the play world, with properties read by reflection."""
+    return _ctx.objects(cls_or_path, list(properties)) or []
 
 
 def set_speed(speed):

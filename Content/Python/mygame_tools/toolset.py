@@ -757,19 +757,6 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def game_time() -> str:
-        """The PIE world's game time (seconds, slowed by time dilation), for scripts that wait in game time.
-
-        Returns:
-            JSON {"t": seconds}.
-        """
-        world = _pie_world()
-        if not world:
-            raise RuntimeError("PIE is not running")
-        return json.dumps({"t": unreal.GameplayStatics.get_time_seconds(world)})
-
-    @toolset_registry.tool_call
-    @staticmethod
     def camera_record(action: str) -> str:
         """Records what the game camera does, one sample per frame (the player camera manager's view, so whatever
         drives the camera), with the player's position and facing.
@@ -894,23 +881,6 @@ class MyGameTools(unreal.ToolsetDefinition):
         char = _player()
         char.set_actor_location(unreal.Vector(x, y, z), False, True)
         return MyGameTools.pie_player_state()
-
-    @toolset_registry.tool_call
-    @staticmethod
-    def console(command: str) -> str:
-        """Runs a console command in the PIE game, as the game's console would (e.g. GoToRoom 3).
-
-        Args:
-            command: The command line.
-
-        Returns:
-            JSON {"ran": command}.
-        """
-        world = _pie_world()
-        if not world:
-            raise RuntimeError("PIE is not running")
-        unreal.SystemLibrary.execute_console_command(world, command, unreal.GameplayStatics.get_player_controller(world, 0))
-        return json.dumps({"ran": command})
 
     @toolset_registry.tool_call
     @staticmethod
@@ -1090,28 +1060,6 @@ class MyGameTools(unreal.ToolsetDefinition):
                                   "color": str(buff.get_editor_property("color"))})
             bars.append(entry)
         return json.dumps(bars)
-
-    @toolset_registry.tool_call
-    @staticmethod
-    def list_actors(class_path: str) -> str:
-        """Lists PIE actors of a class (subclasses included) with path and location.
-
-        Args:
-            class_path: Class path, e.g. "/Script/MyGame.Pickup" or "/Game/Blueprints/Level/BP_Door.BP_Door_C".
-
-        Returns:
-            JSON list of actors.
-        """
-        world = _pie_world()
-        if not world:
-            raise RuntimeError("PIE is not running")
-        cls = unreal.load_class(None, class_path)
-        if not cls:
-            raise RuntimeError(f"class not found: {class_path}")
-        return json.dumps([
-            {"actor": a.get_name(), "path": a.get_path_name(), "class": a.get_class().get_name(),
-             "location": _vec(a.get_actor_location()), "hidden": a.is_hidden_ed() if hasattr(a, "is_hidden_ed") else None}
-            for a in unreal.GameplayStatics.get_all_actors_of_class(world, cls)])
 
     @toolset_registry.tool_call
     @staticmethod

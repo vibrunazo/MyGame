@@ -13,7 +13,7 @@ import sys
 from pathlib import Path
 
 import mygame
-from mygame import floor_z, tool, wait_game, wait_loaded
+from mygame import floor_z, objects, tool, wait_game, wait_loaded
 
 SEEDS = (6032, 101, 2024)
 BASE = Path(__file__).resolve().parent / "baselines"
@@ -48,7 +48,7 @@ def doored_flow(state):
     tool("teleport_player", x=cx, y=cy, z=z)
     wait_game(1.0)
     locked = [not d["open"] for d in tool("level_state")["doors"]]
-    pickups_before = len(tool("list_actors", class_path="/Script/MyGame.Pickup"))
+    pickups_before = len(objects("Pickup"))
     for c in tool("list_characters"):
         if c["team"] == 1 and c.get("health", 0) > 0 and room_of(c["location"], size) == room:
             tool("kill_character", actor_path=c["path"])
@@ -56,7 +56,7 @@ def doored_flow(state):
     after = tool("level_state")
     return {"room": room, "locked_on_entry": all(locked) and bool(locked),
             "open_after_clear": all(d["open"] for d in after["doors"]),
-            "reward_drops": len(tool("list_actors", class_path="/Script/MyGame.Pickup")) - pickups_before}
+            "reward_drops": len(objects("Pickup")) - pickups_before}
 
 
 def suite(ctx):

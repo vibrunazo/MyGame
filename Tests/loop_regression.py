@@ -15,7 +15,7 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
 import json
 
 import mygame
-from mygame import tool, wait_game, wait_loaded, wait_until
+from mygame import objects, tool, wait_game, wait_loaded, wait_until
 
 BOOK, ITEM = "/Game/Blueprints/Items/DA_LearnTat", "/Game/Blueprints/Items/DA_ItemFireHands"
 results = {}
@@ -41,7 +41,8 @@ def room_of(at, size):
 def clear_floor(level):
     """Kill the boss room's enemies, stand on the flag; returns the player's location just after."""
     size = level["tile_size"]
-    goal = tool("list_actors", class_path="/Script/MyGame.Goal")[0]["location"]
+    loc = objects("Goal", ["K2_GetActorLocation"])[0]["properties"]["K2_GetActorLocation"]
+    goal = [loc["x"], loc["y"], loc["z"]]
     room = room_of(goal, size)
     tool("set_player_attribute", attribute="Defense", value=1000.0)
     tool("teleport_player", x=room[0] * size[0], y=room[1] * size[1], z=goal[2] + 150)
