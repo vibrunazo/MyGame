@@ -12,7 +12,6 @@ real speed. The frames show the HUD, as a player sees them; --no-ui leaves it ou
 clock, inside the engine; only walk_until, which stops when the player reaches a line, polls.
 """
 import sys
-import time
 from pathlib import Path
 
 from unreal_agent_tools import Client, capture
@@ -63,7 +62,8 @@ def demo():
 
 def main(out, label="", ui=True):
     ue = Client.for_project(Path(__file__).resolve().parent.parent)
-    mygame.use(Context(ue=ue, out=Path(out).resolve().parent))
+    ctx = Context(ue=ue, out=Path(out).resolve().parent)
+    mygame.use(ctx)
     mygame.start_run(6032)
     tool("learn_item_abilities", item_asset_path="/Game/Blueprints/Items/DA_LearnFireball")
     for attr, v in (("MaxHealth", 5000.0), ("Health", 5000.0), ("Defense", 1000.0), ("Mana", 1000.0)):
@@ -73,7 +73,7 @@ def main(out, label="", ui=True):
     for c in tool("list_characters"):  # frozen, so the walk reaches the next room (it's a camera demo, not a fight)
         if c["team"] == 1:
             tool("set_ai_enabled", actor_path=c["path"], enabled=False, show_player=False)
-    time.sleep(60)  # setup, before recording: new shaders (the room darkness) finish compiling
+    print("shaders:", ctx.wait_shaders())  # new shaders (the room darkness) finish compiling before recording starts
     with capture.Recording(ue, out, label=label or None, ui=ui) as r:
         demo()
     print(r.result)
