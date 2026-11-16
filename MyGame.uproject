@@ -52,9 +52,14 @@
 			"TargetConfigurationDenyList": [
 				"Shipping"
 			]
+		},
+		{
+			"Name": "AbilityStrategySystem",
+			"Enabled": true
 		}
 	],
 	"AdditionalPluginDirectories": [
-		"../UnrealAgentTools/versions/0.23/Plugins"
+		"../UnrealAgentTools/versions/0.23/Plugins",
+		"../Ass/versions/0.1/Plugins"
 	]
 }

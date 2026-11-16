@@ -1,4 +1,4 @@
-version = "0.23"
+version = "0.24"
 project = "MyGame.uproject"
 port = 18765
 editor_target = "MyGameEditor"
@@ -69,3 +69,9 @@ timeout = 180
 name = "menu-cooked"
 kind = "packaged"
 run = "Tests/menu.py:packaged_suite"   # the menu suite's trips in the cooked game, through its bridge
+
+[[plugin]]
+name = "AbilityStrategySystem"
+repo = "../Ass"
+remote = "https://github.com/vibrunazo/Ass.git"
+version = "0.1"
