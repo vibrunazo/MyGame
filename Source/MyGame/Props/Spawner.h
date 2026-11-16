@@ -37,12 +37,14 @@ public:
 	// If true, will automatically Spawn on Begin Play. Else someone else will need to manually call SpawnActors() on me
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Spawner")
 	bool bSpawnOnBegin = true;
+	// Which of CharsToSpawn it picked (from the floor's seed and its position)
+	UPROPERTY(VisibleInstanceOnly, BlueprintReadOnly, Category = "Spawner")
+	uint8 IndexToSpawn = 0;
 
 private:
 	void TryToUpdateTileMasterRef();
 	void RegisterNewCharOnTileMaster(class AMyCharacter* NewChar);
 
-	uint8 IndexToSpawn = 0;
 	UPROPERTY()
 	class ATileMaster* TileMasterRef = nullptr;
 

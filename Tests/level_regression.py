@@ -5,7 +5,7 @@ The `level` suite of `unreal-agent test` (`suite(ctx)`): each reference seed's l
     python Tests/level_regression.py diff before.json after.json
 
 Recorded: tile templates per grid coordinate, the rooms they form, walls (position, doorway), doors, room masters and their enemies,
-enemies and props per room, and the doored-room flow: walking in locks the doors, killing the room's enemies opens them
+enemies and props per room, the enemy each spawner gave, and the doored-room flow: walking in locks the doors, killing the room's enemies opens them
 and drops the reward.
 """
 import json
@@ -89,6 +89,8 @@ def capture_state():
         "enemies": dict(sorted(s["enemies"].items())),
         "props": {k: dict(sorted(v.items())) for k, v in sorted(s.get("props", {}).items())},
         "unfrozen": s["time_dilation"] > 0.0,
+        # which enemy each spawner gave: the seed decides it, whatever order the tiles streamed in
+        "spawned": tool("spawners"),
     }
     result["doored_flow"] = doored_flow(s)
     return result

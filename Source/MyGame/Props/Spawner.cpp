@@ -90,7 +90,12 @@ void ASpawner::PickRandomSpawnIndex()
 	UMyGameInstance* MyGI = Cast<UMyGameInstance>(GetGameInstance());
 	if (MyGI)
 	{
-		IndexToSpawn = MyGI->RandomStream.RandRange(0, CharsToSpawn.Num() - 1);
+		// A stream of its own, from the floor's seed and where this spawner stands: the tiles stream in (and their
+		// spawners begin play) in an order that varies run to run, so drawing from the shared stream gave a seed
+		// different enemies each time
+		const FVector Loc = GetActorLocation();
+		const FIntVector Where(FMath::RoundToInt(Loc.X), FMath::RoundToInt(Loc.Y), FMath::RoundToInt(Loc.Z));
+		FRandomStream Stream((int32)HashCombine(GetTypeHash(MyGI->RandomStream.GetInitialSeed()), GetTypeHash(Where)));
+		IndexToSpawn = Stream.RandRange(0, CharsToSpawn.Num() - 1);
 	}
 }
-

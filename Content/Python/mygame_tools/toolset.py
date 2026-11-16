@@ -990,6 +990,24 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def spawners() -> str:
+        """Every enemy spawner in the PIE world and the character class it picked.
+
+        Returns:
+            JSON list of [x, y, z, class name], sorted.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        out = []
+        for sp in unreal.GameplayStatics.get_all_actors_of_class(world, unreal.load_class(None, "/Script/MyGame.Spawner")):
+            chars = sp.get_editor_property("chars_to_spawn")
+            i = sp.get_editor_property("index_to_spawn")
+            out.append(_vec(sp.get_actor_location()) + [chars[i].get_name() if i < len(chars) and chars[i] else None])
+        return json.dumps(sorted(out))
+
+    @toolset_registry.tool_call
+    @staticmethod
     def seed_random(seed: int) -> str:
         """Seeds the engine's global random (FMath::Rand, FRand and SRand) on the game thread and the AI system's stream
         (EQS random picks), so the AI's draws (stock tree nodes, EQS, Blueprint random nodes) repeat, and lifts the AI's
