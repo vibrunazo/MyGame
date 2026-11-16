@@ -122,6 +122,19 @@ public:
 	static UGameplayAbility* GetAnimatingAbilityFromActor(AActor* OnActor);
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = "MyLibrary")
 	static UGameplayAbility* GetAnimatingAbility(UAbilitySystemComponent* GAS);
+#if WITH_EDITOR
+	// PIE test hook: seeds the engine's global random (FMath::Rand/FRand and SRand, on the calling thread, the game
+	// thread) and the AI system's own stream (EQS random picks and tests), so a scenario's AI draws the same numbers
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	static void SeedRandomForTest(int32 Seed);
+	// PIE test hook: lifts the AI's wall-clock budgets in this world (EQS testing time per tick, sight's time slice), so
+	// a query or a sight check never finishes a frame later because the machine was busy. Returns what it set
+	UFUNCTION(BlueprintCallable, Category = "Testing", meta = (WorldContext = "WorldContext"))
+	static FString LiftAIBudgetsForTest(UObject* WorldContext);
+	// PIE test hook: the AI system's stream's current seed (read without drawing)
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	static int32 GetAIRandomSeedForTest();
+#endif
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// static TSubclassOf<class UCameraShakeBase> CamShakeClass;

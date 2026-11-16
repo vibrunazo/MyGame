@@ -8,6 +8,50 @@
 #include "Props/ItemDataAsset.h"
 
 #include "AbilitySystemInterface.h"
+#include "AISystem.h"
+#include "EnvironmentQuery/EnvQueryManager.h"
+#include "Perception/AISense_Sight.h"
+#include "UObject/UObjectIterator.h"
+
+#if WITH_EDITOR
+void UMyBlueprintFunctionLibrary::SeedRandomForTest(int32 Seed)
+{
+	FMath::RandInit(Seed);
+	FMath::SRandInit(Seed);
+	UAISystem::SeedRandomStream(Seed);
+}
+
+FString UMyBlueprintFunctionLibrary::LiftAIBudgetsForTest(UObject* WorldContext)
+{
+	UWorld* World = GEngine ? GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull) : nullptr;
+	if (!World) return TEXT("no world");
+	constexpr double Lifted = 1000.0;
+	FString Out;
+	if (UEnvQueryManager* EQS = UEnvQueryManager::GetCurrent(World))
+	{
+		if (FFloatProperty* Prop = FindFProperty<FFloatProperty>(UEnvQueryManager::StaticClass(), TEXT("MaxAllowedTestingTime")))
+		{
+			Prop->SetPropertyValue_InContainer(EQS, (float)Lifted);
+			Out += TEXT("EQS MaxAllowedTestingTime; ");
+		}
+	}
+	ForEachObjectOfClass(UAISense_Sight::StaticClass(), [&](UObject* Sense)
+	{
+		if (Sense->GetWorld() != World) return;
+		if (FDoubleProperty* Prop = FindFProperty<FDoubleProperty>(UAISense_Sight::StaticClass(), TEXT("MaxTimeSlicePerTick")))
+		{
+			Prop->SetPropertyValue_InContainer(Sense, Lifted);
+			Out += TEXT("sight MaxTimeSlicePerTick; ");
+		}
+	});
+	return Out;
+}
+
+int32 UMyBlueprintFunctionLibrary::GetAIRandomSeedForTest()
+{
+	return UAISystem::GetRandomStream().GetCurrentSeed();
+}
+#endif
 
 
 /// <summary>

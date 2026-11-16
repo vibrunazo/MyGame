@@ -75,3 +75,9 @@ name = "AbilityStrategySystem"
 repo = "../Ass"
 remote = "https://github.com/vibrunazo/Ass.git"
 version = "0.1"
+
+[[suite]]
+name = "ai-seed"
+kind = "pie"
+run = "Tests/ai_seed.py:suite"
+tier = "manual"                    # Step 0c's seeding try: seeded AI runs repeat frame for frame

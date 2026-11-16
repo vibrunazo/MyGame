@@ -41,6 +41,13 @@ def _tl_tick(delta_seconds):
     now = unreal.GameplayStatics.get_time_seconds(world) - _tl["t0"]
     player, dummy = _player(), _char(spec["dummy"]) if spec.get("dummy") else None
     if _tl["phase"] == "run":
+        if spec.get("canary") and rec.get("seeded"):
+            # where the global random is drawn between frames: draw once and reseed with the draw, so two runs part at
+            # the first frame whose draws differed
+            ai = unreal.MyBlueprintFunctionLibrary.get_ai_random_seed_for_test()
+            v = unreal.MathLibrary.random_integer(1 << 30)
+            unreal.MyBlueprintFunctionLibrary.seed_random_for_test(v)  # both streams
+            rec.setdefault("canary", []).append([now, v, ai])
         # at most one input per frame, so two inputs never land as one simultaneous press
         if _tl["pending"] and _tl["pending"][0][0] <= now:
             _, kind, hook, kwargs = (_tl["pending"].pop(0) + [None, None])[:4]
@@ -69,6 +76,16 @@ def _tl_tick(delta_seconds):
                                                 round(player.get_editor_property("custom_time_dilation"), 3), round(pos, 3),
                                                 round(loc.x, 1), round(loc.y, 1), round(loc.z, 2),
                                                 bool(player.get_movement_component().is_falling())])
+        for path in spec.get("watch", []):
+            # one row per frame per watched character, unrounded: [t, x, y, z, yaw, montage:section, health]
+            c = _char(path)
+            ca = c.get_editor_property("mesh").get_anim_instance() if c else None
+            cm = ca.get_current_active_montage() if ca else None
+            l = c.get_actor_location() if c else unreal.Vector()
+            rec.setdefault("watch", {}).setdefault(path, []).append(
+                [now, l.x, l.y, l.z, c.get_actor_rotation().yaw if c else 0.0,
+                 f"{cm.get_name()}:{ca.montage_get_current_section(cm)}" if cm else "",
+                 json.loads(MyGameTools.character_state(path))["health"] if c else 0.0])
         if now >= spec["duration"]:
             _tl["phase"], _tl["settle_from"] = "settle", now
     elif _tl["phase"] == "settle":
@@ -721,7 +738,8 @@ class MyGameTools(unreal.ToolsetDefinition):
         Args:
             spec: JSON {"dummy": actor path or null, "duration": game seconds, "trace": true for a per-frame trace
                 [t, montage section, dummy health, player-dummy distance,
-                player time dilation, montage position], "settle": max game seconds to wait
+                player time dilation, montage position], "watch": [actor paths] recorded every frame unrounded
+                ([t, x, y, z, yaw, montage:section, health]), "settle": max game seconds to wait
                 for the player's abilities to end afterwards, "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
                 t, calls one of these MyGameTools hooks (press_input, move_input, dash_player, learn_item_abilities,
                 give_item, set_character_attribute, set_player_attribute, refresh_health...).
@@ -969,6 +987,60 @@ class MyGameTools(unreal.ToolsetDefinition):
         """
         _set_attribute(_player(), attribute, value)
         return MyGameTools.pie_player_state()
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def seed_random(seed: int) -> str:
+        """Seeds the engine's global random (FMath::Rand, FRand and SRand) on the game thread and the AI system's stream
+        (EQS random picks), so the AI's draws (stock tree nodes, EQS, Blueprint random nodes) repeat, and lifts the AI's
+        wall-clock budgets (EQS testing time, sight's time slice) so no result lands a frame late. Editor only
+        (SeedRandomForTest, LiftAIBudgetsForTest).
+
+        Args:
+            seed: The seed.
+
+        Returns:
+            JSON {"seed"}.
+        """
+        unreal.MyBlueprintFunctionLibrary.seed_random_for_test(int(seed))
+        lifted = unreal.MyBlueprintFunctionLibrary.lift_ai_budgets_for_test(_pie_world())
+        if _tl["rec"] is not None and _tl["phase"] == "run":
+            _tl["rec"]["seeded"] = True
+        return json.dumps({"seed": int(seed), "lifted": lifted})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def spawn_enemy(class_path: str, x: float, y: float, z: float, yaw: float = 0.0, seed: int = -1, frozen: bool = True) -> str:
+        """Spawns an enemy of a class in the PIE world with its AI controller (in no room), for AI scenarios that must
+        start from a fresh enemy.
+
+        Args:
+            class_path: The character Blueprint's class path (e.g. /Game/Blueprints/Chars/EMelee1/BP_Enemy1.BP_Enemy1_C).
+            x: World X.
+            y: World Y.
+            z: World Z (the capsule's centre).
+            yaw: Facing.
+            seed: When 0 or more, seed_random(seed) first, so the enemy's own draws at spawn repeat.
+            frozen: Stop its tree and sight right away (wake it with set_ai_enabled).
+
+        Returns:
+            JSON {"path"}.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        if seed >= 0:
+            MyGameTools.seed_random(seed)
+        cls = unreal.load_class(None, class_path)
+        if not cls:
+            raise RuntimeError(f"no class at {class_path}")
+        char = unreal.AIHelperLibrary.spawn_ai_from_class(world, cls, None, unreal.Vector(x, y, z),
+                                                                   unreal.Rotator(roll=0.0, pitch=0.0, yaw=yaw), True)
+        if not char:
+            raise RuntimeError(f"couldn't spawn {class_path} at ({x}, {y}, {z})")
+        if frozen:
+            MyGameTools.set_ai_enabled(char.get_path_name(), False)
+        return json.dumps({"path": char.get_path_name()})
 
     @toolset_registry.tool_call
     @staticmethod

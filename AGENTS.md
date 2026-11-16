@@ -50,6 +50,7 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   | framerate | `framerate.py` | multi-hit moves land the same hits at 1× and 3× (a 3× frame step) | none (compares) |
   | menu | `menu.py` | from the main menu map, with real keys then a gamepad: start a run, Game Only input and a held W (the stick) moves, pause and resume, back to the menu; runs last, in a rendering editor | none (asserts) |
   | menu-to-run (command; also cooked) | `Source/MyGame/Dev/MenuToRunTest.cpp` | the dev command `MyGame.MenuToRunTest quit`: from the main menu, a real Enter starts a run, which is in Game Only input and a held W moves the player | none (asserts) |
+  | ai-seed (manual, `--only ai-seed`) | `ai_seed.py` | Step 0c's seeding try: a fresh enemy, both randoms seeded (`seed_random`), repeats frame for frame at 1/60 in three scenarios; another seed differs | none (compares) |
   | smoke (`--on packaged`) | `package_smoke.py` | the cooked game: the menu loads; seed 6032's run builds every room; no missing package; a clean log; every enemy has its AI | none (asserts) |
   | menu-cooked (`--on packaged`) | `menu.py` (`packaged_suite`) | the menu suite's two trips in the cooked game, through its bridge | none (asserts) |
 
@@ -82,7 +83,7 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   | F1 or V (key) | none | Kills every enemy in the room (`BP_MyController`) | no build check found: likely works in Shipping |
   | F5 / F6 (key) | none | Caps the frame rate at 30 / 60 (`BP_MyController`) | no build check found: likely works in Shipping |
   | F3 (key) | none | `stat fps` (`IA_ShowFPS`) | stat commands are compiled out |
-  | Test functions | none | `GetTagsForTest`, `SetAttributeBaseForTest`, `InjectTestInput`, `GetInputModeForTest`, `SetUsingGamepadForTest`: the C++ behind the editor-Python hooks (`set_player_attribute` is the tests' cheat) | editor only (`WITH_EDITOR`) |
+  | Test functions | none | `GetTagsForTest`, `SetAttributeBaseForTest`, `InjectTestInput`, `GetInputModeForTest`, `SetUsingGamepadForTest`, `SeedRandomForTest` (the global random and the AI system's stream), `LiftAIBudgetsForTest` (EQS and sight time budgets), `GetAIRandomSeedForTest`: the C++ behind the editor-Python hooks (`set_player_attribute` is the tests' cheat) | editor only (`WITH_EDITOR`) |
 - **Replaying a bug:** dev builds show seed, floor, room, tile and build date top left; `-Seed=N -Floor=N -Room=N`
   start there (`Play.bat` passes them through), and the console command `GoToRoom N` moves the player in game.
 
