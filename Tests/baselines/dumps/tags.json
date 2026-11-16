@@ -1,0 +1,1741 @@
+{
+ "EnhancedInput": {
+  "assets": [],
+  "children": [
+   "EnhancedInput.Modes"
+  ],
+  "code": [
+   "Config/DefaultInput.ini:133: DefaultPlayerInputClass=/Script/EnhancedInput.EnhancedPlayerInput",
+   "Config/DefaultInput.ini:134: DefaultInputComponentClass=/Script/EnhancedInput.EnhancedInputComponent"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "EnhancedInput.Modes": {
+  "assets": [],
+  "children": [
+   "EnhancedInput.Modes.Default"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "EnhancedInput.Modes.Default": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "GameplayCue": {
+  "assets": [],
+  "children": [
+   "GameplayCue.Test",
+   "GameplayCue.hit",
+   "GameplayCue.item",
+   "GameplayCue.status"
+  ],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.Test": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "GameplayAbilities",
+  "step": null
+ },
+ "GameplayCue.hit": {
+  "assets": [],
+  "children": [
+   "GameplayCue.hit.impact"
+  ],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "GameplayCue.hit.impact": {
+  "assets": [
+   "/Game/FX/Cues/GC_Hit_Impact"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:37: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Hit_Impact);",
+   "Source/MyGame/MyGameplayTags.cpp:30: UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, \"GameplayCue.hit.impact\");",
+   "Source/MyGame/Player/HitBox.cpp:116: GAS->ExecuteGameplayCue(MyGameplayTags::GameplayCue_Hit_Impact, Cue);"
+  ],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "GameplayCue.item": {
+  "assets": [],
+  "children": [
+   "GameplayCue.item.firehands",
+   "GameplayCue.item.horns",
+   "GameplayCue.item.redeyes",
+   "GameplayCue.item.turtle",
+   "GameplayCue.item.wingedboots"
+  ],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.item.firehands": {
+  "assets": [
+   "/Game/Abilities/GE_FirePunch",
+   "/Game/FX/GC_FireHands"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.item.horns": {
+  "assets": [
+   "/Game/Blueprints/Items/DA_ItemHorns",
+   "/Game/FX/GC_Horns"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.item.redeyes": {
+  "assets": [
+   "/Game/Blueprints/Items/DA_ItemRedEyes",
+   "/Game/FX/GC_RedEyes"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.item.turtle": {
+  "assets": [
+   "/Game/Blueprints/Items/DA_ItemTurtle",
+   "/Game/FX/GC_Turtle"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.item.wingedboots": {
+  "assets": [
+   "/Game/Blueprints/Items/DA_ItemSpeed",
+   "/Game/FX/GC_Boots"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.status": {
+  "assets": [],
+  "children": [
+   "GameplayCue.status.onfire",
+   "GameplayCue.status.stunimmune"
+  ],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.status.onfire": {
+  "assets": [
+   "/Game/Abilities/GE_FireDot",
+   "/Game/FX/GC_OnFire"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "GameplayCue.status.stunimmune": {
+  "assets": [
+   "/Game/Abilities/GE_StunImmune",
+   "/Game/FX/GC_StunImmune"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "InputUserSettings": {
+  "assets": [],
+  "children": [
+   "InputUserSettings.FailureReasons",
+   "InputUserSettings.Profiles"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "InputUserSettings.FailureReasons": {
+  "assets": [],
+  "children": [
+   "InputUserSettings.FailureReasons.InvalidMappingName",
+   "InputUserSettings.FailureReasons.NoKeyProfile",
+   "InputUserSettings.FailureReasons.NoMappingRowFound",
+   "InputUserSettings.FailureReasons.NoMatchingMappings"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "InputUserSettings.FailureReasons.InvalidMappingName": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "InputUserSettings.FailureReasons.NoKeyProfile": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "InputUserSettings.FailureReasons.NoMappingRowFound": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "InputUserSettings.FailureReasons.NoMatchingMappings": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "InputUserSettings.Profiles": {
+  "assets": [],
+  "children": [
+   "InputUserSettings.Profiles.Default"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "InputUserSettings.Profiles.Default": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "EnhancedInput",
+  "step": null
+ },
+ "Niagara": {
+  "assets": [],
+  "children": [
+   "Niagara.ScalabilityProfile"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Niagara",
+  "step": null
+ },
+ "Niagara.ScalabilityProfile": {
+  "assets": [],
+  "children": [
+   "Niagara.ScalabilityProfile.Critical",
+   "Niagara.ScalabilityProfile.High",
+   "Niagara.ScalabilityProfile.Low",
+   "Niagara.ScalabilityProfile.Medium"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Niagara",
+  "step": null
+ },
+ "Niagara.ScalabilityProfile.Critical": {
+  "assets": [
+   "/Niagara/Settings/BaseReadinessSettings_Burst",
+   "/Niagara/Settings/BaseReadinessSettings_Looping"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Niagara",
+  "step": null
+ },
+ "Niagara.ScalabilityProfile.High": {
+  "assets": [
+   "/Niagara/Settings/BaseReadinessSettings_Burst",
+   "/Niagara/Settings/BaseReadinessSettings_Looping"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Niagara",
+  "step": null
+ },
+ "Niagara.ScalabilityProfile.Low": {
+  "assets": [
+   "/Niagara/Settings/BaseReadinessSettings_Burst",
+   "/Niagara/Settings/BaseReadinessSettings_Looping"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Niagara",
+  "step": null
+ },
+ "Niagara.ScalabilityProfile.Medium": {
+  "assets": [
+   "/Niagara/Settings/BaseReadinessSettings_Burst",
+   "/Niagara/Settings/BaseReadinessSettings_Looping"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Niagara",
+  "step": null
+ },
+ "Test": {
+  "assets": [],
+  "children": [
+   "Test.StateTree"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Test.StateTree": {
+  "assets": [],
+  "children": [
+   "Test.StateTree.Tag",
+   "Test.StateTree.Tag2",
+   "Test.StateTree.Tag3",
+   "Test.StateTree.Tag4",
+   "Test.StateTree.Tag5",
+   "Test.StateTree.Tag6"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Test.StateTree.Tag": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Test.StateTree.Tag2": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Test.StateTree.Tag3": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Test.StateTree.Tag4": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Test.StateTree.Tag5": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Test.StateTree.Tag6": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "Native",
+  "step": null
+ },
+ "Tests": {
+  "assets": [],
+  "children": [
+   "Tests.GenericTag"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "GameplayAbilities",
+  "step": null
+ },
+ "Tests.GenericTag": {
+  "assets": [],
+  "children": [
+   "Tests.GenericTag.One",
+   "Tests.GenericTag.Two"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "GameplayAbilities",
+  "step": null
+ },
+ "Tests.GenericTag.One": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "GameplayAbilities",
+  "step": null
+ },
+ "Tests.GenericTag.Two": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "GameplayAbilities",
+  "step": null
+ },
+ "activate": {
+  "assets": [
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1"
+  ],
+  "children": [
+   "activate.cast",
+   "activate.flyingattack",
+   "activate.groundattack",
+   "activate.kick",
+   "activate.move",
+   "activate.punch"
+  ],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "activate.cast": {
+  "assets": [
+   "/Game/Abilities/GA_Cast"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "activate.flyingattack": {
+  "assets": [
+   "/Game/Abilities/GA_AirPunch",
+   "/Game/Abilities/GA_Voadora"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:27: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_FlyingAttack);",
+   "Source/MyGame/MyGameplayTags.cpp:22: UE_DEFINE_GAMEPLAY_TAG(Activate_FlyingAttack, \"activate.flyingattack\");",
+   "Source/MyGame/Player/MyCharacter.cpp:495: return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);",
+   "Source/MyGame/Player/MyCharacter.cpp:1083: FGameplayTag FlyingTag = MyGameplayTags::Activate_FlyingAttack;"
+  ],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "activate.groundattack": {
+  "assets": [
+   "/Game/Abilities/GA_BasicPunches",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Kkk",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Abilities/GA_Upper"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:26: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_GroundAttack);",
+   "Source/MyGame/MyGameplayTags.cpp:21: UE_DEFINE_GAMEPLAY_TAG(Activate_GroundAttack, \"activate.groundattack\");",
+   "Source/MyGame/Player/MyCharacter.cpp:1085: FGameplayTag GroundTag = MyGameplayTags::Activate_GroundAttack;"
+  ],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "activate.kick": {
+  "assets": [
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Kkk",
+   "/Game/Abilities/GA_Tat"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "activate.move": {
+  "assets": [
+   "/Game/Abilities/GA_Dash"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "activate.punch": {
+  "assets": [
+   "/Game/Abilities/GA_AirPunch",
+   "/Game/Abilities/GA_BasicPunches",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GE_FirePunch",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "buff": {
+  "assets": [],
+  "children": [
+   "buff.firetouch"
+  ],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "buff.firetouch": {
+  "assets": [
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GE_FirePunch"
+  ],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "combo": {
+  "assets": [],
+  "children": [
+   "combo.cancancel",
+   "combo.weak"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "combo.cancancel": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:10: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:37: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:70: && ASC->HasMatchingGameplayTag(MyGameplayTags::Combo_CanCancel)",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:115: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:165: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:386: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/MyGameplayTags.cpp:6: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"combo.cancancel\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "combo.weak": {
+  "assets": [
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_BasicPunches",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "cooldown": {
+  "assets": [],
+  "children": [
+   "cooldown.kickerkick"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "cooldown.kickerkick": {
+  "assets": [
+   "/Game/Blueprints/Chars/EKicker/GE_KickerCooldown"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data": {
+  "assets": [],
+  "children": [
+   "data.attack",
+   "data.attackspeed",
+   "data.camshake",
+   "data.damage",
+   "data.defense",
+   "data.hitstun",
+   "data.immune",
+   "data.knockback",
+   "data.launch",
+   "data.mana",
+   "data.noapply",
+   "data.nocontrol",
+   "data.nohit",
+   "data.nopawnblock",
+   "data.rotspeed",
+   "data.speed",
+   "data.stunimmune"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.attack": {
+  "assets": [
+   "/Game/Abilities/GE_Attack",
+   "/Game/Blueprints/Items/DA_ItemHorns",
+   "/Game/Blueprints/Items/DA_ItemRedEyes"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.attackspeed": {
+  "assets": [
+   "/Game/Abilities/GE_AttackSpeedAdd",
+   "/Game/Abilities/GE_AttackSpeedAddNoStack",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
+  ],
+  "children": [
+   "data.attackspeed.duration"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.attackspeed.duration": {
+  "assets": [
+   "/Game/Abilities/GE_AttackSpeedAdd",
+   "/Game/Abilities/GE_AttackSpeedAddNoStack",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.camshake": {
+  "assets": [
+   "/Game/Abilities/GA_AirPunch",
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Kkk",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_CamShake",
+   "/Game/Anims/SmashPlayer_Montage",
+   "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+   "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:49: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_CamShake);",
+   "Source/MyGame/MyGameplayTags.cpp:40: UE_DEFINE_GAMEPLAY_TAG(Data_CamShake, \"data.camshake\");",
+   "Source/MyGame/Player/MyCharacter.cpp:740: if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.damage": {
+  "assets": [
+   "/Game/Abilities/GA_AirPunch",
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Kkk",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_Damage",
+   "/Game/Abilities/GE_FireDot",
+   "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+   "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1",
+   "/Game/Blueprints/Items/DA_ItemHeart",
+   "/Game/FX/GC_FireHands",
+   "/Game/FX/GC_OnFire"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:46: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);",
+   "Source/MyGame/Abilities/DamageExec.cpp:78: // FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
+   "Source/MyGame/Abilities/DamageExec.cpp:79: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:326: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
+   "Source/MyGame/MyGameplayTags.cpp:37: UE_DEFINE_GAMEPLAY_TAG(Data_Damage, \"data.damage\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.defense": {
+  "assets": [
+   "/Game/Abilities/GE_Defense",
+   "/Game/Blueprints/Items/DA_ItemTurtle"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.hitstun": {
+  "assets": [
+   "/Game/Abilities/GA_AirPunch",
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Kkk",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_HitStun",
+   "/Game/Abilities/GE_StunImmune",
+   "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+   "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:47: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_HitStun);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:325: /*FGameplayTag HitStunTag = MyGameplayTags::Data_HitStun;",
+   "Source/MyGame/MyGameplayTags.cpp:38: UE_DEFINE_GAMEPLAY_TAG(Data_HitStun, \"data.hitstun\");",
+   "Source/MyGame/Player/MyCharacter.cpp:810: /*FGameplayTag HitStun = MyGameplayTags::Data_HitStun;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.immune": {
+  "assets": [],
+  "children": [
+   "data.immune.proj"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.immune.proj": {
+  "assets": [
+   "/Game/Abilities/GE_ImmuneToProjectile",
+   "/Game/Anims/Tat_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.knockback": {
+  "assets": [
+   "/Game/Abilities/GA_AirPunch",
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Kkk",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_Knockback",
+   "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+   "/Game/Blueprints/Chars/EKicker/KickerKick_Montage",
+   "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:48: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Knockback);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:327: FGameplayTag KnockbackTag = MyGameplayTags::Data_Knockback;",
+   "Source/MyGame/MyGameplayTags.cpp:39: UE_DEFINE_GAMEPLAY_TAG(Data_Knockback, \"data.knockback\");",
+   "Source/MyGame/Player/MyCharacter.cpp:733: ApplyKnockBack(SourceActor, Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Knockback, false));"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.launch": {
+  "assets": [
+   "/Game/Abilities/GE_Launch"
+  ],
+  "children": [
+   "data.launch.x",
+   "data.launch.y",
+   "data.launch.z"
+  ],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:50: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:328: FGameplayTag LaunchTag = MyGameplayTags::Data_Launch;",
+   "Source/MyGame/MyGameplayTags.cpp:41: UE_DEFINE_GAMEPLAY_TAG(Data_Launch, \"data.launch\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.launch.x": {
+  "assets": [
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:51: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_X);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:329: FGameplayTag LaunchXTag = MyGameplayTags::Data_Launch_X;",
+   "Source/MyGame/MyGameplayTags.cpp:42: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_X, \"data.launch.x\");",
+   "Source/MyGame/Player/MyCharacter.cpp:736: ApplyLaunchBack(SourceActor, FVector(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_X, false),"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.launch.y": {
+  "assets": [
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:52: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Y);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:330: FGameplayTag LaunchYTag = MyGameplayTags::Data_Launch_Y;",
+   "Source/MyGame/MyGameplayTags.cpp:43: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Y, \"data.launch.y\");",
+   "Source/MyGame/Player/MyCharacter.cpp:737: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.launch.z": {
+  "assets": [
+   "/Game/Abilities/GA_Kick",
+   "/Game/Abilities/GA_Smash",
+   "/Game/Abilities/GA_Upper",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:53: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Z);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:331: FGameplayTag LaunchZTag = MyGameplayTags::Data_Launch_Z;*/",
+   "Source/MyGame/MyGameplayTags.cpp:44: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Z, \"data.launch.z\");",
+   "Source/MyGame/Player/MyCharacter.cpp:737: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.mana": {
+  "assets": [
+   "/Game/Abilities/GE_ManaAdd",
+   "/Game/Blueprints/Items/DA_ItemMana",
+   "/Game/Blueprints/Items/DA_ItemMana2"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.noapply": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.nocontrol": {
+  "assets": [
+   "/Game/Abilities/GA_Dash",
+   "/Game/Abilities/GE_NoControl"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:55: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_NoControl);",
+   "Source/MyGame/MyGameplayTags.cpp:46: UE_DEFINE_GAMEPLAY_TAG(Data_NoControl, \"data.nocontrol\");",
+   "Source/MyGame/Player/MyCharacter.cpp:1246: FGameplayTag NoControlTag = MyGameplayTags::Data_NoControl;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.nohit": {
+  "assets": [
+   "/Game/Abilities/GE_FireDot"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.nopawnblock": {
+  "assets": [
+   "/Game/Abilities/GE_NoPawnBlock",
+   "/Game/Anims/Tat_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.rotspeed": {
+  "assets": [
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GE_RotSpeedMultiply",
+   "/Game/Anims/kkk_Montage"
+  ],
+  "children": [
+   "data.rotspeed.duration"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.rotspeed.duration": {
+  "assets": [
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GE_RotLock",
+   "/Game/Abilities/GE_RotSpeedMultiply",
+   "/Game/Anims/kkk_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.speed": {
+  "assets": [
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_AttackSpeedAdd",
+   "/Game/Abilities/GE_AttackSpeedAddNoStack",
+   "/Game/Abilities/GE_SpeedAdd",
+   "/Game/Abilities/GE_SpeedMultiply",
+   "/Game/Abilities/GE_SpeedMultiplyNoStack",
+   "/Game/Anims/AirPunch_Montage",
+   "/Game/Anims/Kick1_Montage",
+   "/Game/Anims/PunchL_Montage",
+   "/Game/Anims/PunchR_Montage",
+   "/Game/Anims/PunchRunR_Montage",
+   "/Game/Anims/SmashPlayer_Montage",
+   "/Game/Anims/Smash_Montage",
+   "/Game/Anims/Tat_Montage",
+   "/Game/Anims/Upper2_Montage",
+   "/Game/Anims/kkk_Montage",
+   "/Game/Blueprints/Chars/BP_Char",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
+   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
+   "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/PunchL_MontageEnemy2",
+   "/Game/Blueprints/Chars/EMelee3/PunchR_MontageEnemy2",
+   "/Game/Blueprints/Items/DA_ItemSpeed",
+   "/Game/Blueprints/Items/DA_ItemTurtle"
+  ],
+  "children": [
+   "data.speed.duration"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.speed.duration": {
+  "assets": [
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_SpeedAdd",
+   "/Game/Abilities/GE_SpeedLock",
+   "/Game/Abilities/GE_SpeedMultiply",
+   "/Game/Abilities/GE_SpeedMultiplyNoStack",
+   "/Game/Anims/AirPunch_Montage",
+   "/Game/Anims/Kick1_Montage",
+   "/Game/Anims/PunchL_Montage",
+   "/Game/Anims/PunchR_Montage",
+   "/Game/Anims/PunchRunR_Montage",
+   "/Game/Anims/SmashPlayer_Montage",
+   "/Game/Anims/Smash_Montage",
+   "/Game/Anims/Tat_Montage",
+   "/Game/Anims/Upper2_Montage",
+   "/Game/Anims/kkk_Montage",
+   "/Game/Blueprints/Chars/BP_Char",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
+   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
+   "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/PunchL_MontageEnemy2",
+   "/Game/Blueprints/Chars/EMelee3/PunchR_MontageEnemy2",
+   "/Game/Blueprints/Items/DA_ItemSpeed",
+   "/Game/Blueprints/Items/DA_ItemTurtle"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "data.stunimmune": {
+  "assets": [
+   "/Game/Abilities/GE_StunImmune",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:54: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_StunImmune);",
+   "Source/MyGame/MyGameplayTags.cpp:45: UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, \"data.stunimmune\");",
+   "Source/MyGame/Player/MyCharacter.cpp:778: FGameplayTag StunImmuneTag = MyGameplayTags::Data_StunImmune;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "event": {
+  "assets": [],
+  "children": [
+   "event.dash"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "event.dash": {
+  "assets": [
+   "/Game/Abilities/GA_Dash"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:35: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Dash);",
+   "Source/MyGame/MyGameplayTags.cpp:29: UE_DEFINE_GAMEPLAY_TAG(Event_Dash, \"event.dash\");",
+   "Source/MyGame/Player/MyCharacter.cpp:343: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, MyGameplayTags::Event_Dash, FGameplayEventData());"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "input": {
+  "assets": [],
+  "children": [
+   "input.release"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "input.release": {
+  "assets": [],
+  "children": [
+   "input.release.0",
+   "input.release.1",
+   "input.release.2",
+   "input.release.3"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "input.release.0": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:40: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_0);",
+   "Source/MyGame/MyGameplayTags.cpp:32: UE_DEFINE_GAMEPLAY_TAG(Input_Release_0, \"input.release.0\");",
+   "Source/MyGame/Player/MyPlayerController.cpp:215: static const FGameplayTag ReleaseTags[] = { MyGameplayTags::Input_Release_0, MyGameplayTags::Input_Release_1,"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "input.release.1": {
+  "assets": [
+   "/Game/Abilities/GA_Kkk"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:41: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_1);",
+   "Source/MyGame/MyGameplayTags.cpp:33: UE_DEFINE_GAMEPLAY_TAG(Input_Release_1, \"input.release.1\");",
+   "Source/MyGame/Player/MyPlayerController.cpp:215: static const FGameplayTag ReleaseTags[] = { MyGameplayTags::Input_Release_0, MyGameplayTags::Input_Release_1,"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "input.release.2": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:42: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_2);",
+   "Source/MyGame/MyGameplayTags.cpp:34: UE_DEFINE_GAMEPLAY_TAG(Input_Release_2, \"input.release.2\");",
+   "Source/MyGame/Player/MyPlayerController.cpp:216: MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "input.release.3": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:43: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_3);",
+   "Source/MyGame/MyGameplayTags.cpp:35: UE_DEFINE_GAMEPLAY_TAG(Input_Release_3, \"input.release.3\");",
+   "Source/MyGame/Player/MyPlayerController.cpp:216: MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "notify": {
+  "assets": [],
+  "children": [
+   "notify.hit",
+   "notify.projectile"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "notify.hit": {
+  "assets": [],
+  "children": [
+   "notify.hit.connect",
+   "notify.hit.end",
+   "notify.hit.start"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "notify.hit.connect": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:31: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Connect);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:24: ConnectHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Connect).AddUObject(this, &UAbilityTask_HitboxWindows",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:83: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Connect)) D->Remove(ConnectHandle",
+   "Source/MyGame/MyGameplayTags.cpp:26: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, \"notify.hit.connect\");",
+   "Source/MyGame/Player/HitBox.cpp:104: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "notify.hit.end": {
+  "assets": [
+   "/Game/Blueprints/Notifies/ANS_HitboxBP"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:30: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_End);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:23: EndHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_End).AddUObject(this, &UAbilityTask_HitboxWindows::Handle",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:82: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_End)) D->Remove(EndHandle);",
+   "Source/MyGame/Abilities/ANS_Hitbox.cpp:46: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_End, Payload);",
+   "Source/MyGame/MyGameplayTags.cpp:25: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, \"notify.hit.end\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "notify.hit.start": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:29: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Start);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:22: StartHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Start).AddUObject(this, &UAbilityTask_HitboxWindows::Ha",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:81: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Start)) D->Remove(StartHandle);",
+   "Source/MyGame/Abilities/ANS_Hitbox.cpp:18: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_Start, Payload);",
+   "Source/MyGame/MyGameplayTags.cpp:24: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, \"notify.hit.start\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "notify.projectile": {
+  "assets": [],
+  "children": [
+   "notify.projectile.cast"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "notify.projectile.cast": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:32: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Projectile_Cast);",
+   "Source/MyGame/Abilities/CastAbility.cpp:18: FGameplayTag CastTag = MyGameplayTags::Notify_Projectile_Cast;",
+   "Source/MyGame/MyGameplayTags.cpp:27: UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, \"notify.projectile.cast\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "state": {
+  "assets": [],
+  "children": [
+   "state.attacking",
+   "state.combat",
+   "state.running",
+   "state.walking"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "state.attacking": {
+  "assets": [
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_BasicPunches",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:9: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:35: FGameplayTag AttackTag = MyGameplayTags::State_Attacking;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp:69: && ASC->HasMatchingGameplayTag(MyGameplayTags::State_Attacking)",
+   "Source/MyGame/MyGameplayTags.cpp:5: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"state.attacking\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "state.combat": {
+  "assets": [
+   "/Game/Abilities/GE_IsInCombat"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "state.running": {
+  "assets": [
+   "/Game/Abilities/GE_Running"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "state.walking": {
+  "assets": [
+   "/Game/Abilities/GE_Walking"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status": {
+  "assets": [],
+  "children": [
+   "status.airborne",
+   "status.health",
+   "status.hitstun",
+   "status.immune",
+   "status.nocontrol",
+   "status.nomove",
+   "status.nopawnblock",
+   "status.stunimmune"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.airborne": {
+  "assets": [
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:19: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Airborne);",
+   "Source/MyGame/MyGameplayTags.cpp:14: UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, \"status.airborne\");",
+   "Source/MyGame/Player/MyCharacter.cpp:1087: AbilitySystem->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, GetMovementComponent()->IsFalling() ? 1 : 0);"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "status.health": {
+  "assets": [],
+  "children": [
+   "status.health.10",
+   "status.health.20",
+   "status.health.25",
+   "status.health.30",
+   "status.health.40",
+   "status.health.50",
+   "status.health.60",
+   "status.health.70",
+   "status.health.75",
+   "status.health.80",
+   "status.health.90"
+  ],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.10": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.20": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.25": {
+  "assets": [
+   "/Game/Blueprints/Chars/Boss1/BP_AIContBoss"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:24: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_25);",
+   "Source/MyGame/MyGameplayTags.cpp:19: UE_DEFINE_GAMEPLAY_TAG(Status_Health_25, \"status.health.25\");",
+   "Source/MyGame/Player/MyCharacter.cpp:599: FGameplayTag HealthTag = MyGameplayTags::Status_Health_25;"
+  ],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.30": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:23: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_30);",
+   "Source/MyGame/MyGameplayTags.cpp:18: UE_DEFINE_GAMEPLAY_TAG(Status_Health_30, \"status.health.30\");",
+   "Source/MyGame/Player/MyCharacter.cpp:594: FGameplayTag HealthTag = MyGameplayTags::Status_Health_30;"
+  ],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.40": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.50": {
+  "assets": [
+   "/Game/Blueprints/Chars/Boss1/BP_AIContBoss"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:22: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_50);",
+   "Source/MyGame/MyGameplayTags.cpp:17: UE_DEFINE_GAMEPLAY_TAG(Status_Health_50, \"status.health.50\");",
+   "Source/MyGame/Player/MyCharacter.cpp:589: FGameplayTag HealthTag = MyGameplayTags::Status_Health_50;"
+  ],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.60": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.70": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:21: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_70);",
+   "Source/MyGame/MyGameplayTags.cpp:16: UE_DEFINE_GAMEPLAY_TAG(Status_Health_70, \"status.health.70\");",
+   "Source/MyGame/Player/MyCharacter.cpp:584: FGameplayTag HealthTag = MyGameplayTags::Status_Health_70;"
+  ],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.75": {
+  "assets": [
+   "/Game/Blueprints/Chars/Boss1/BP_AIContBoss"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:20: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_75);",
+   "Source/MyGame/MyGameplayTags.cpp:15: UE_DEFINE_GAMEPLAY_TAG(Status_Health_75, \"status.health.75\");",
+   "Source/MyGame/Player/MyCharacter.cpp:579: FGameplayTag HealthTag = MyGameplayTags::Status_Health_75;"
+  ],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.80": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.health.90": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.hitstun": {
+  "assets": [
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_HitStun",
+   "/Game/Abilities/GE_StunImmune",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:12: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_HitStun);",
+   "Source/MyGame/MyGameplayTags.cpp:8: UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, \"status.hitstun\");",
+   "Source/MyGame/Player/MyCharacter.cpp:1266: FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;",
+   "Source/MyGame/Player/MyCharacter.cpp:1277: FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.immune": {
+  "assets": [],
+  "children": [
+   "status.immune.proj"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.immune.proj": {
+  "assets": [
+   "/Game/Abilities/GE_ImmuneToProjectile"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:17: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_ImmuneProjectile);",
+   "Source/MyGame/MyGameplayTags.cpp:13: UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, \"status.immune.proj\");",
+   "Source/MyGame/Player/MyCharacter.cpp:1420: FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.nocontrol": {
+  "assets": [
+   "/Game/Abilities/GE_NoControl"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:14: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoControl);",
+   "Source/MyGame/MyGameplayTags.cpp:10: UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, \"status.nocontrol\");",
+   "Source/MyGame/Player/MyCharacter.cpp:1267: FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;",
+   "Source/MyGame/Player/MyCharacter.cpp:1278: FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.nomove": {
+  "assets": [
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:15: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoMove);",
+   "Source/MyGame/MyGameplayTags.cpp:11: UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, \"status.nomove\");",
+   "Source/MyGame/Player/MyCharacter.cpp:1279: FGameplayTag NoMoveTag = MyGameplayTags::Status_NoMove;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.nopawnblock": {
+  "assets": [
+   "/Game/Abilities/GE_NoPawnBlock"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:16: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoPawnBlock);",
+   "Source/MyGame/MyGameplayTags.cpp:12: UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, \"status.nopawnblock\");",
+   "Source/MyGame/Player/MyCharacter.cpp:240: AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagCha",
+   "Source/MyGame/Player/MyCharacter.cpp:661: || (AbilitySystem && AbilitySystem->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.stunimmune": {
+  "assets": [
+   "/Game/Abilities/GE_HitStun",
+   "/Game/Abilities/GE_StunImmune"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h:13: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_StunImmune);",
+   "Source/MyGame/MyGameplayTags.cpp:9: UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, \"status.stunimmune\");",
+   "Source/MyGame/Player/HitBox.cpp:115: Cue.RawMagnitude = GAS->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune) ? 1.f : 0.f;",
+   "Source/MyGame/Player/MyCharacter.cpp:787: FGameplayTag ImmuneTag = MyGameplayTags::Status_StunImmune;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ }
+}

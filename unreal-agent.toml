@@ -45,6 +45,12 @@ run = "Tests/framerate.py:suite"
 speed = "own"                      # its 1x and 3x runs
 
 [[suite]]
+name = "dumps"
+kind = "pie"
+run = "Tests/dumps.py:suite"         # Step 0c's content dumps (abilities, effects, montages, AI, graphs, tags)
+timeout = 900
+
+[[suite]]
 name = "menu"
 kind = "pie"
 run = "Tests/menu.py:suite"

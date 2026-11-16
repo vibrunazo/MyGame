@@ -6,6 +6,7 @@
 
 class USoundCue;
 class USoundWave;
+class UAnimMontage;
 
 /**
  * Editor-only helpers for scripts (Python commandlets, editor utilities) where the engine exposes no scripting API.
@@ -23,5 +24,16 @@ public:
 	 */
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Audio")
 	static bool RebuildSoundCueFromWaves(USoundCue* Cue, const TArray<USoundWave*>& Waves, bool bLooping);
+
+	/**
+	 * A montage's composite sections, which scripts can't read: a JSON array of {"name", "start", "next"} in the
+	 * montage's order (start in seconds of montage time; next is the section it links to, "None" when it ends there).
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Dump")
+	static FString DescribeMontageSections(UAnimMontage* Montage);
+
+	/** The objects whose outer is Object (one level), by path: an asset's instanced subobjects that scripts can't list. */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Dump")
+	static TArray<FString> ListSubobjects(UObject* Object);
 
 };

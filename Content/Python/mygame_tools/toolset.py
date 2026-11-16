@@ -990,6 +990,21 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def dump_content(part: str) -> str:
+        """One part of Step 0c's content dump (mygame_tools.dump): abilities, effects, actors, montages, ai, graphs or
+        references. Reads assets only; PIE need not run.
+
+        Args:
+            part: The part's name.
+
+        Returns:
+            The part as JSON.
+        """
+        from mygame_tools import dump
+        return json.dumps(dump.dump(part), sort_keys=True)
+
+    @toolset_registry.tool_call
+    @staticmethod
     def spawners() -> str:
         """Every enemy spawner in the PIE world and the character class it picked.
 

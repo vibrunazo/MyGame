@@ -1,4 +1,8 @@
 #include "MyGameEditorLibrary.h"
+#include "Animation/AnimMontage.h"
+#include "Dom/JsonObject.h"
+#include "Serialization/JsonSerializer.h"
+#include "Serialization/JsonWriter.h"
 
 #include "Sound/SoundCue.h"
 #include "Sound/SoundNodeRandom.h"
@@ -47,4 +51,38 @@ bool UMyGameEditorLibrary::RebuildSoundCueFromWaves(USoundCue* Cue, const TArray
 	Cue->PostEditChange();
 	Cue->MarkPackageDirty();
 	return true;
+}
+
+FString UMyGameEditorLibrary::DescribeMontageSections(UAnimMontage* Montage)
+{
+	TArray<TSharedPtr<FJsonValue>> Sections;
+	if (Montage)
+	{
+		for (const FCompositeSection& Section : Montage->CompositeSections)
+		{
+			TSharedPtr<FJsonObject> Obj = MakeShared<FJsonObject>();
+			Obj->SetStringField(TEXT("name"), Section.SectionName.ToString());
+			Obj->SetNumberField(TEXT("start"), Section.GetTime());
+			Obj->SetStringField(TEXT("next"), Section.NextSectionName.ToString());
+			Sections.Add(MakeShared<FJsonValueObject>(Obj));
+		}
+	}
+	FString Out;
+	TSharedRef<TJsonWriter<>> Writer = TJsonWriterFactory<>::Create(&Out);
+	FJsonSerializer::Serialize(Sections, Writer);
+	return Out;
+}
+
+TArray<FString> UMyGameEditorLibrary::ListSubobjects(UObject* Object)
+{
+	TArray<FString> Out;
+	if (!Object) return Out;
+	TArray<UObject*> Inner;
+	GetObjectsWithOuter(Object, Inner, false);
+	for (UObject* Obj : Inner)
+	{
+		if (Obj) Out.Add(Obj->GetPathName());
+	}
+	Out.Sort();
+	return Out;
 }

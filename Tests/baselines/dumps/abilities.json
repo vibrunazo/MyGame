@@ -1,0 +1,3980 @@
+{
+ "/Game/Abilities/GA_AirPunch": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.flyingattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.4000000059604645
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 1000
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01lowpitch_Cue.punch01lowpitch_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/AirPunch_Montage.AirPunch_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_BaseAttack": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": []
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 2,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Script/MyGame.MyGameplayAbility"
+ },
+ "/Game/Abilities/GA_BasicPunches": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 2,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/PunchR_Montage.PunchR_Montage"
+    },
+    {
+     "refPath": "/Game/Anims/PunchL_Montage.PunchL_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Cast": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.cast"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "Casts a long range fire ball, costs 10 mana",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/fireball.fireball"
+     }
+    },
+    "name": "Fireball"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": true,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": true,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": true,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": "None",
+   "blockSound": "None",
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2,
+   "conditionalEffects": [],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": {
+    "refPath": "/Game/Abilities/GE_ManaCost.GE_ManaCost_C"
+   },
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -20
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.4000000059604645
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 200
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 20
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_RotLock.GE_RotLock_C"
+     },
+     "magnitudes": []
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_SpeedLock.GE_SpeedLock_C"
+     },
+     "magnitudes": []
+    }
+   ],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.10000000149011612,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 0.05000000074505806,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/CastForward_Montage.CastForward_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "projectileToSpawn": {
+    "refPath": "/Game/Blueprints/Chars/BP_Projectile1.BP_Projectile1_C"
+   },
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": [
+    "ObjectTypeQuery3"
+   ],
+   "validTargets": []
+  },
+  "parent": "/Script/MyGame.CastAbility"
+ },
+ "/Game/Abilities/GA_Dash": {
+  "asset_class": "GameplayAbilityBlueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": []
+   },
+   "abilityTriggers": [
+    {
+     "triggerSource": "GameplayEvent",
+     "triggerTag": {
+      "tagName": "event.dash"
+     }
+    }
+   ],
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.move"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.move"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bReplicateInputDirectly": false,
+   "bRetriggerInstancedAbility": false,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "cooldown": 0.5,
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "dashDistance": 1100,
+   "instancingPolicy": "InstancedPerExecution",
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   }
+  },
+  "parent": "/Script/GameplayAbilities.GameplayAbility"
+ },
+ "/Game/Abilities/GA_Kick": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.kick"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/kick.kick"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 2000
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Launch.GE_Launch_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.x"
+       },
+       "magnitude": 700
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.y"
+       },
+       "magnitude": 0
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.z"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/Kick1_Montage.Kick1_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Kkk": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.kick"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "Spam kicks",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/kick.kick"
+     }
+    },
+    "name": "Kick Kick Kick"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": true,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": true,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": true,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -10
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.20000000298023224
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 100
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.10000000149011612,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 5,
+   "montagesSpeed": 2,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/kkk_Montage.kkk_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "input.release.1"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_PunchRun": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "Runs and punches",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "Run Punch"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "combo.weak"
+     },
+     {
+      "tagName": "status.nomove"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": true,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -20
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_RotSpeedMultiply.GE_RotSpeedMultiply_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.rotspeed"
+       },
+       "magnitude": 0
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.rotspeed.duration"
+       },
+       "magnitude": -1
+      }
+     ]
+    }
+   ],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.20000000298023224,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 2,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 1,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/PunchRunR_Montage.PunchRunR_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 10,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_SelfEffect": {
+  "asset_class": "GameplayAbilityBlueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": []
+   },
+   "abilityTriggers": [],
+   "activationBlockedTags": {
+    "gameplayTags": []
+   },
+   "activationOwnedTags": {
+    "gameplayTags": []
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bReplicateInputDirectly": false,
+   "bRetriggerInstancedAbility": false,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [],
+   "instancingPolicy": "InstancedPerActor",
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   }
+  },
+  "parent": "/Script/GameplayAbilities.GameplayAbility"
+ },
+ "/Game/Abilities/GA_Smash": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.punch"
+     },
+     {
+      "tagName": "activate.groundattack"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "Smashes",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "Smash"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": []
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": false,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -30
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 1000
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Launch.GE_Launch_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.x"
+       },
+       "magnitude": 300
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.y"
+       },
+       "magnitude": 0
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.z"
+       },
+       "magnitude": 400
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 50
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01lowpitch_Cue.punch01lowpitch_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1.7000000476837158,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/SmashPlayer_Montage.SmashPlayer_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
+ },
+ "/Game/Abilities/GA_Summon": {
+  "asset_class": "GameplayAbilityBlueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": []
+   },
+   "abilityTriggers": [],
+   "activationBlockedTags": {
+    "gameplayTags": []
+   },
+   "activationOwnedTags": {
+    "gameplayTags": []
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bReplicateInputDirectly": false,
+   "bRetriggerInstancedAbility": false,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bestDistance": 0,
+   "bestSpawner": "None",
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "charRef": "None",
+   "charToSummon": {
+    "refPath": "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard.BP_EnemyWizard_C"
+   },
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "instancingPolicy": "InstancedPerActor",
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetCharRef": "None",
+   "targetRequiredTags": {
+    "gameplayTags": []
+   }
+  },
+  "parent": "/Script/GameplayAbilities.GameplayAbility"
+ },
+ "/Game/Abilities/GA_Tat": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.kick"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "Senpuukiaku",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/kick.kick"
+     }
+    },
+    "name": "Tatsumaki"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "status.nomove"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -12
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.5
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 50
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_RotLock.GE_RotLock_C"
+     },
+     "magnitudes": []
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_SpeedLock.GE_SpeedLock_C"
+     },
+     "magnitudes": []
+    }
+   ],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.10000000149011612,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/Tat_Montage.Tat_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Upper": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "Launches enemies to the air",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/upper.upper"
+     }
+    },
+    "name": "Uppercut"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Launch.GE_Launch_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.x"
+       },
+       "magnitude": 180
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.y"
+       },
+       "magnitude": 0
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.z"
+       },
+       "magnitude": 800
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 50
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/Upper2_Montage.Upper2_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Voadora": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.flyingattack"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_HitBlock.FX_HitBlock"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 1000
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Launch.GE_Launch_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.x"
+       },
+       "magnitude": 300
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.y"
+       },
+       "magnitude": 0
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.z"
+       },
+       "magnitude": 400
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_SpeedAdd.GE_SpeedAdd_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.speed"
+       },
+       "magnitude": -0.5
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.speed.duration"
+       },
+       "magnitude": 3
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.10000000149011612,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01lowpitch_Cue.punch01lowpitch_Cue"
+   },
+   "hitToComboDelay": 0.15000000596046448,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Anims/FlyingKick_Montage.FlyingKick_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossPunches": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": true,
+   "bCanCombo": true,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -6
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.550000011920929
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 800
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 80
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.30000001192092896,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01lowpitch_Cue.punch01lowpitch_Cue"
+   },
+   "hitToComboDelay": 2,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 0.4000000059604645,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Blueprints/Chars/Boss1/PunchR_Montage_Boss.PunchR_Montage_Boss"
+    },
+    {
+     "refPath": "/Game/Blueprints/Chars/Boss1/PunchL_Montage_Boss.PunchL_Montage_Boss"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": []
+   },
+   "abilityTriggers": [],
+   "activationBlockedTags": {
+    "gameplayTags": []
+   },
+   "activationOwnedTags": {
+    "gameplayTags": []
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "attackRangeKey": "AttackRange",
+   "bReplicateInputDirectly": false,
+   "bRetriggerInstancedAbility": false,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "buffedRange": 900,
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_SpeedMultiplyNoStack.GE_SpeedMultiplyNoStack_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.speed"
+       },
+       "magnitude": 0.20000000298023224
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.speed.duration"
+       },
+       "magnitude": 14
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.stunimmune"
+       },
+       "magnitude": 14
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_AttackSpeedAddNoStack.GE_AttackSpeedAddNoStack_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.attackspeed"
+       },
+       "magnitude": 2
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.attackspeed.duration"
+       },
+       "magnitude": 14
+      }
+     ]
+    }
+   ],
+   "instancingPolicy": "InstancedPerActor",
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "unbuffedRange": 220
+  },
+  "parent": "/Game/Abilities/GA_SelfEffect.GA_SelfEffect_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossSmash1": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": []
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": false,
+   "bLockRotationToTarget": false,
+   "bNeedsHitToCancel": false,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": [
+     {
+      "tagName": "activate"
+     }
+    ]
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -30
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 1000
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Launch.GE_Launch_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.x"
+       },
+       "magnitude": 300
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.y"
+       },
+       "magnitude": 0
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.z"
+       },
+       "magnitude": 400
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 50
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01lowpitch_Cue.punch01lowpitch_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 0.33000001311302185,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage.SmashBoss_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossSummon1": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": []
+   },
+   "abilityTriggers": [],
+   "activationBlockedTags": {
+    "gameplayTags": []
+   },
+   "activationOwnedTags": {
+    "gameplayTags": []
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bReplicateInputDirectly": false,
+   "bRetriggerInstancedAbility": false,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bestDistance": 0,
+   "bestSpawner": "None",
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "charRef": "None",
+   "charToSummon": {
+    "refPath": "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard.BP_EnemyWizard_C"
+   },
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "instancingPolicy": "InstancedPerActor",
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetCharRef": "None",
+   "targetRequiredTags": {
+    "gameplayTags": []
+   }
+  },
+  "parent": "/Game/Abilities/GA_Summon.GA_Summon_C"
+ },
+ "/Game/Blueprints/Chars/EKicker/GA_KickerKick": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "combo.weak"
+     },
+     {
+      "tagName": "status.nomove"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": true,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": false,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2.200000047683716,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": {
+    "refPath": "/Game/Blueprints/Chars/EKicker/GE_KickerCooldown.GE_KickerCooldown_C"
+   },
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -5
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 2000
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Launch.GE_Launch_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.x"
+       },
+       "magnitude": 700
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.y"
+       },
+       "magnitude": 0
+      },
+      {
+       "gameplayTag": {
+        "tagName": "data.launch.z"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Blueprints/Chars/EKicker/KickerKick_Montage.KickerKick_Montage"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": true,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 3,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1.PunchR_MontageEnemy1"
+    },
+    {
+     "refPath": "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1.PunchL_MontageEnemy1"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": true,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 3,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1.PunchR_MontageEnemy1"
+    },
+    {
+     "refPath": "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1.PunchL_MontageEnemy1"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": [
+     {
+      "tagName": "activate.groundattack"
+     },
+     {
+      "tagName": "activate.punch"
+     }
+    ]
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": {
+      "refPath": "/Game/tex/punch.punch"
+     }
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     },
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": true,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": {
+    "refPath": "/Game/FX/FX_ShieldImpact.FX_ShieldImpact"
+   },
+   "blockSound": {
+    "refPath": "/Game/Audio/metal_05_Cue.metal_05_Cue"
+   },
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 3,
+   "conditionalEffects": [
+    {
+     "conditionTag": {
+      "tagName": "buff.firetouch"
+     },
+     "effectToApply": {
+      "effectClass": {
+       "refPath": "/Game/Abilities/GE_FireDot.GE_FireDot_C"
+      },
+      "magnitudes": []
+     }
+    }
+   ],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -15
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.3499999940395355
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 300
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": {
+    "refPath": "/Game/FX/FX_HitSpark.FX_HitSpark"
+   },
+   "hitPause": 0.18000000715255737,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 5,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1.PunchR_MontageEnemy1"
+    },
+    {
+     "refPath": "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1.PunchL_MontageEnemy1"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": [
+     {
+      "tagName": "combo.weak"
+     }
+    ]
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EWizard/GA_Cast1": {
+  "asset_class": "Blueprint",
+  "defaults": {
+   "abilityTags": {
+    "gameplayTags": []
+   },
+   "abilityTriggers": [],
+   "abilityUIdata": {
+    "color": {
+     "a": 1,
+     "b": 1,
+     "g": 1,
+     "r": 1
+    },
+    "description": "None",
+    "icon": {
+     "resourceObject": "None"
+    },
+    "name": "None"
+   },
+   "activationBlockedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "status.hitstun"
+     },
+     {
+      "tagName": "status.airborne"
+     }
+    ]
+   },
+   "activationOwnedTags": {
+    "gameplayTags": [
+     {
+      "tagName": "state.attacking"
+     }
+    ]
+   },
+   "activationRequiredTags": {
+    "gameplayTags": []
+   },
+   "bAqcuireNewTargetFromDetectionBox": false,
+   "bCanCancelAfterHitboxEnds": false,
+   "bCanCombo": true,
+   "bLockRotationToTarget": true,
+   "bNeedsHitToCancel": true,
+   "bReplicateInputDirectly": false,
+   "bResetTarget": false,
+   "bRetriggerInstancedAbility": true,
+   "bServerRespectsRemoteAbilityCancellation": true,
+   "bSkipToRecovery": false,
+   "bStartsCombat": true,
+   "bUpdateRotationFromController": true,
+   "blockAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "blockParticles": "None",
+   "blockSound": "None",
+   "cancelAbilitiesWithTag": {
+    "gameplayTags": []
+   },
+   "comboResetDelay": 2,
+   "conditionalEffects": [],
+   "cooldownGameplayEffectClass": "None",
+   "costGameplayEffectClass": "None",
+   "effectsToApply": [
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Damage.GE_Damage_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.damage"
+       },
+       "magnitude": -8
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.hitstun"
+       },
+       "magnitude": 0.4000000059604645
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.knockback"
+       },
+       "magnitude": 200
+      }
+     ]
+    },
+    {
+     "effectClass": {
+      "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+     },
+     "magnitudes": [
+      {
+       "gameplayTag": {
+        "tagName": "data.camshake"
+       },
+       "magnitude": 30
+      }
+     ]
+    }
+   ],
+   "effectsToApplyToSelf": [],
+   "hitParticles": "None",
+   "hitPause": 0.10000000149011612,
+   "hitSound": {
+    "refPath": "/Game/Audio/punch01_Cue.punch01_Cue"
+   },
+   "hitToComboDelay": 0.05000000074505806,
+   "instancingPolicy": "InstancedPerActor",
+   "maxHits": 0,
+   "montagesSpeed": 1,
+   "montagesToPlay": [
+    {
+     "refPath": "/Game/Blueprints/Chars/EWizard/CastForward_Montage1.CastForward_Montage1"
+    }
+   ],
+   "netExecutionPolicy": "LocalPredicted",
+   "netSecurityPolicy": "ClientOrServer",
+   "projectileToSpawn": {
+    "refPath": "/Game/Blueprints/Chars/BP_Projectile.BP_Projectile_C"
+   },
+   "replicationPolicy": "ReplicateNo",
+   "rootMotionScale": {
+    "x": 1,
+    "y": 1,
+    "z": 1
+   },
+   "sourceBlockedTags": {
+    "gameplayTags": []
+   },
+   "sourceRequiredTags": {
+    "gameplayTags": []
+   },
+   "tagThatDeactivateMe": {
+    "tagName": "None"
+   },
+   "tagsIcanCancel": {
+    "gameplayTags": []
+   },
+   "targetBlockedTags": {
+    "gameplayTags": []
+   },
+   "targetRequiredTags": {
+    "gameplayTags": []
+   },
+   "typesToTestTargetLock": []
+  },
+  "parent": "/Script/MyGame.CastAbility"
+ }
+}

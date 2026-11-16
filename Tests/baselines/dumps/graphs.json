@@ -1,0 +1,1025 @@
+{
+ "/Game/Abilities/BP_BaseExec": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.BaseExec"
+ },
+ "/Game/Abilities/BP_DamageExec": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.DamageExec"
+ },
+ "/Game/Abilities/GA_AirPunch": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_BaseAttack": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyGameplayAbility"
+ },
+ "/Game/Abilities/GA_BasicPunches": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Cast": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.CastAbility"
+ },
+ "/Game/Abilities/GA_Dash": {
+  "graphs": {
+   "Gameplay Ability Graph": "(event Ability|EventActivateAbility\n  (Ability|CommitAbility)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Ability|GetAvatarActorFromActorInfo))\n    (:then\n      (bind _returnvalue (Ability|GameplayEffect|AssignTagSetByCallerMagnitude (GameplayEffects|MakeOutgoingSpec (Class|MyCharacter|GetAbilitySystem _asmy_character) \"/Game/Abilities/GE_NoControl.GE_NoControl_C\") \"(TagName=\\\"data.nocontrol\\\")\" 0.500000))\n      (GameplayEffects|ApplyGameplayEffectSpecToSelf (Class|MyCharacter|GetAbilitySystem _asmy_character) _returnvalue)\n      (Character|LaunchCharacter _asmy_character (Math|Vector|vector*float (Math|Vector|GetForwardVector (Pawn|GetControlRotation (Pawn|GetController _asmy_character))) (Variables|Default|GetDashDistance)) true)\n      (Ability|Tasks|WaitDelay (Variables|Default|GetCooldown)\n        (:OnFinish\n          (Ability|EndAbility))))\n    (:CastFailed\n      (Ability|EndAbility))))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "GameplayAbilityBlueprint",
+  "parent": "/Script/GameplayAbilities.GameplayAbility"
+ },
+ "/Game/Abilities/GA_Kick": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Kkk": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_PunchRun": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_SelfEffect": {
+  "graphs": {
+   "Gameplay Ability Graph": "(event Custom|EffectOver)\n\n(event Ability|EventActivateAbility\n  (Ability|CommitAbility)\n  (bind _returnvalue (MyLibrary|ApplyAllEffectContainersToActor (Ability|GetAvatarActorFromActorInfo) (Variables|Default|GetEffectstoApply)))\n  (Ability|EndAbility)\n  (bind _returnvalue_1 (Ability|GameplayEffect|GetActiveGameplayEffectTotalDuration (Utilities|Array|Get(aref) _returnvalue)))\n  (Utilities|Time|SetTimerbyEvent (AddEvent|Custom|EffectOver) _returnvalue_1))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "GameplayAbilityBlueprint",
+  "parent": "/Script/GameplayAbilities.GameplayAbility"
+ },
+ "/Game/Abilities/GA_Smash": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
+ },
+ "/Game/Abilities/GA_Summon": {
+  "graphs": {
+   "Gameplay Ability Graph": "(event Ability|EventActivateAbility\n  (bind _targetcharref (Variables|Default|GetTargetCharRef))\n  (bind _returnvalue (Transformation|GetDistanceTo (Utilities|Array|ForEachLoop (Collision|BoxOverlapActors (CallFunction|GetRoomCenter) (Class|BoxCollision|GetBoxExtent) (Utilities|Array|MakeArray \"ObjectTypeQuery1\") \"/Script/MyGame.Spawner\")) _targetcharref))\n  (bind _bestspawner (Variables|Default|GetBestSpawner))\n  (Ability|CommitAbility)\n  (CallFunction|InitialSetup)\n  (bind _outactors (Collision|BoxOverlapActors (CallFunction|GetRoomCenter) (Class|BoxCollision|GetBoxExtent) (Utilities|Array|MakeArray \"ObjectTypeQuery1\") \"/Script/MyGame.Spawner\"))\n  (for _array_element _outactors\n    (if (> _returnvalue (Variables|Default|GetBestDistance))\n      (Variables|Default|SetBestDistance _returnvalue)\n      (bind _asbp_spawner (Utilities|Casting|CastToBP_Spawner _array_element))\n      (Variables|Default|SetBestSpawner _asbp_spawner)))\n  (Utilities|IsValid _bestspawner\n    (:\"Is Valid\"\n      (Spawner|SpawnActors _bestspawner)\n      (Ability|EndAbility))\n    (:\"Is Not Valid\")))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n",
+   "GetBoxExtent": "(fn GetBoxExtent ()\n  (return (Math|Vector|vector/float (Class|TileTemplate|GetRoomSize) 2.000000) (Math|Vector|vector/float (Class|TileTemplate|GetRoomSize) 2.000000) (Math|Vector|vector/float (Class|TileTemplate|GetRoomSize) 2.000000)))\n",
+   "GetRoomCenter": "(fn GetRoomCenter ()\n  (return (CallFunction|GetRoomCenter (Transformation|GetActorLocation (Ability|GetAvatarActorFromActorInfo)))))\n",
+   "InitialSetup": "(fn InitialSetup ()\n  (Variables|Default|SetBestDistance 0.0)\n  (Variables|Default|SetBestSpawner 0)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Ability|GetAvatarActorFromActorInfo)))\n  (bind _output_get (Variables|Default|SetCharRef _asmy_character))\n  (Variables|Default|SetTargetCharRef (Abilities|GetTargetEnemy _output_get)))\n"
+  },
+  "kind": "GameplayAbilityBlueprint",
+  "parent": "/Script/GameplayAbilities.GameplayAbility"
+ },
+ "/Game/Abilities/GA_Tat": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Upper": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GA_Voadora": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
+ },
+ "/Game/Abilities/GE_Attack": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_AttackSpeedAdd": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_AttackSpeedAddNoStack": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_CamShake": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_Damage": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_Defense": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_FireDot": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_FirePunch": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_HitStun": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_ImmuneToProjectile": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_IsInCombat": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_Knockback": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_Launch": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_ManaAdd": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_ManaCost": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_NoControl": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_NoPawnBlock": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_RotLock": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_RotSpeedMultiply": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_Running": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_SpeedAdd": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_SpeedLock": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_SpeedMultiply": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_SpeedMultiplyNoStack": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_StunImmune": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Abilities/GE_Walking": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Anims/ABP_CharAnim": {
+  "graphs": {
+   "EventGraph": "(event EventBlueprintUpdateAnimation (DeltaTimeX)\n  (bind _returnvalue (Animation|TryGetPawnOwner))\n  (Utilities|IsValid _returnvalue\n    (:\"Is Valid\"\n      (Variables|Default|SetIsinAir? (AI|Components|NavMovement|IsFalling (Pawn|GetMovementComponent _returnvalue)))\n      (CallFunction|SetBlendspaceVariables _returnvalue))))\n",
+   "SetBlendspaceVariables": "(fn SetBlendspaceVariables (ControlledPawn)\n  (Variables|Default|SetSpeed (Math|Vector|VectorLength (Transformation|GetVelocity ControlledPawn)))\n  (Variables|Default|SetForward (Math|Vector|DotProduct (Math|Vector|GetForwardVector (Pawn|GetControlRotation ControlledPawn)) (Math|Vector|Vector_ClampSize2D (Math|Vector|vector/float (Transformation|GetVelocity ControlledPawn) (Variables|Default|GetMaxRunSpeed)) 0.0 1.000000)))\n  (Variables|Default|SetRight (Math|Vector|DotProduct (Math|Vector|GetRightVector (Pawn|GetControlRotation ControlledPawn)) (Math|Vector|Vector_ClampSize2D (Math|Vector|vector/float (Transformation|GetVelocity ControlledPawn) (Variables|Default|GetMaxStrafeSpeed)) 0.0 1.000000))))\n"
+  },
+  "kind": "AnimBlueprint",
+  "parent": "/Script/MyGame.MyAnimInstance"
+ },
+ "/Game/Blueprints/AI/BP_AIController": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyAIController"
+ },
+ "/Game/Blueprints/AI/BTDecorator_CanTagTarget": {
+  "graphs": {
+   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))\n        (:then\n          (bind _returnvalue (Abilities|IsInAggroList _asmy_character ControlledPawn))\n          (return _returnvalue))\n        (:CastFailed\n          (return false))))\n    (:\"Is Not Valid\")))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTDecorator_HasControl": {
+  "graphs": {
+   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _asenemy_char_base (Utilities|Casting|CastToEnemyCharBase ControlledPawn)\n    (:then\n      (bind _returnvalue (Abilities|HasControl _asenemy_char_base))\n      (return _returnvalue))\n    (:CastFailed\n      (return false))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTDecorator_HasMoveControl": {
+  "graphs": {
+   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _asenemy_char_base (Utilities|Casting|CastToEnemyCharBase ControlledPawn)\n    (:then\n      (bind _returnvalue (Abilities|HasMoveControl _asenemy_char_base))\n      (return _returnvalue))\n    (:CastFailed\n      (return false))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTDecorator_IsAlive": {
+  "graphs": {
+   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTestKey)))\n    (:then\n      (bind _returnvalue (Abilities|IsAlive _asmy_character))\n      (return _returnvalue))\n    (:CastFailed\n      (return false))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTDecorator_IsBehindEnemy": {
+  "graphs": {
+   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _targetkey (Variables|Default|GetTargetKey))\n  (bind _returnvalue (AI|BehaviorTree|GetBlackboardValueAsActor _targetkey))\n  (bind _returnvalue_yaw (Transformation|GetActorRotation _returnvalue))\n  (bind _returnvalue_1 (Transformation|GetActorLocation _returnvalue))\n  (bind _returnvalue_2 (Transformation|GetActorLocation ControlledPawn))\n  (bind _returnvalue_yaw_1 (Math|Rotator|FindLookAtRotation _returnvalue_2 _returnvalue_1))\n  (bind _returnvalue_3 (- _returnvalue_yaw_1 _returnvalue_yaw))\n  (bind _returnvalue_4 (+ _returnvalue_3 180.000000))\n  (bind _returnvalue_5 (Math|Float|%(Float) _returnvalue_4 360.000000))\n  (bind _returnvalue_6 (- _returnvalue_5 180.000000))\n  (bind _returnvalue_7 (Math|Float|Absolute(Float) _returnvalue_6))\n  (bind _returnvalue_8 (< _returnvalue_7 120.000000))\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (AI|BehaviorTree|SetBlackboardValueAsBool (Variables|Default|GetIsBehindKey) _returnvalue_8)\n      (return _returnvalue_8))\n    (:\"Is Not Valid\"\n      (return false))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTDecorator_IsInRange": {
+  "graphs": {
+   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _sourcekey (Variables|Default|GetSourceKey))\n  (bind _returnvalue (AI|BehaviorTree|GetBlackboardValueAsActor _sourcekey))\n  (Utilities|IsValid _returnvalue\n    (:\"Is Valid\"\n      (return (<= (Math|Vector|Distance2D(Vector) (Transformation|GetActorLocation _returnvalue) (Transformation|GetActorLocation (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))) (AI|BehaviorTree|GetBlackboardValueAsFloat (Variables|Default|GetRangeKey)))))\n    (:\"Is Not Valid\"\n      (return false))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_Attack": {
+  "graphs": {
+   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (bind _asaicontroller (Utilities|Casting|CastToAIController OwnerActor))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Pawn|GetControlledPawn _asaicontroller)))\n  (Abilities|SetAbilityKeyDown _asmy_character 0 true)\n  (AI|BehaviorTree|FinishExecute true))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_ClearTagTarget": {
+  "graphs": {
+   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))\n    (:then\n      (bind _returnvalue (Abilities|IsInAggroList _asmy_character ControlledPawn))\n      (if _returnvalue\n        (Abilities|ClearAggroList _asmy_character)\n        (AI|BehaviorTree|FinishExecute true)\n        (else\n          (AI|BehaviorTree|FinishExecute false))))\n    (:CastFailed)))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_FindLocationToRun": {
+  "graphs": {
+   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (bind _randomlocation (AI|Navigation|GetRandomLocationinNavigableRadius (Math|Vector|vector-vector (Transformation|GetActorLocation (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetActorKey))) (Math|Vector|vector*vector (Transformation|GetActorForwardVector (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetActorKey))) 400.0)) 600.0))\n  (AI|BehaviorTree|SetBlackboardValueAsVector (Variables|Default|GetLocationKey) _randomlocation)\n  (AI|BehaviorTree|FinishExecute true))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_FocusPlayer": {
+  "graphs": {
+   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (AI|SetFocus OwnerController (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetActorKey)))\n  (bind _ascharacter (Utilities|Casting|CastToCharacter ControlledPawn))\n  (|SetbUseControllerRotationYaw true _ascharacter)\n  (AI|BehaviorTree|FinishExecute true))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_ResetFocus": {
+  "graphs": {
+   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (AI|ClearFocus OwnerController)\n  (bind _ascharacter (Utilities|Casting|CastToCharacter ControlledPawn))\n  (|SetbUseControllerRotationYaw false _ascharacter)\n  (AI|BehaviorTree|FinishExecute true))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_ResetObjKey": {
+  "graphs": {
+   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (AI|BehaviorTree|SetBlackboardValueAsObject (Variables|Default|GetAttackRangeKey))\n  (AI|BehaviorTree|FinishExecute true))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_SetRange": {
+  "graphs": {
+   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (bind _asmy_aicontroller (Utilities|Casting|CastToMyAIController OwnerActor)\n    (:then\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetAttackRangeKey) (Class|MyAIController|GetAttackRange _asmy_aicontroller))\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetChaseRangeKey) (Class|MyAIController|GetChaseRange _asmy_aicontroller))\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetAggresiveRangeKey) (Class|MyAIController|GetAggressiveRange _asmy_aicontroller))\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetTooFarRange) 900.000000)\n      (AI|BehaviorTree|FinishExecute true))\n    (:CastFailed)))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_StartWalking": {
+  "graphs": {
+   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (bind _asmy_character (Utilities|Casting|CastToMyCharacter ControlledPawn)\n        (:then\n          (Abilities|SetWalking _asmy_character true)\n          (AI|BehaviorTree|FinishExecute true))\n        (:CastFailed\n          (AI|BehaviorTree|FinishExecute false))))\n    (:\"Is Not Valid\")))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_StopAttack": {
+  "graphs": {
+   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (bind _asaicontroller (Utilities|Casting|CastToAIController OwnerActor))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Pawn|GetControlledPawn _asaicontroller)))\n  (Abilities|SetAbilityKeyDown _asmy_character)\n  (AI|BehaviorTree|FinishExecute true))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_StopWalking": {
+  "graphs": {
+   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (bind _asmy_character (Utilities|Casting|CastToMyCharacter ControlledPawn)\n        (:then\n          (Abilities|SetWalking _asmy_character)\n          (AI|BehaviorTree|FinishExecute true))\n        (:CastFailed\n          (AI|BehaviorTree|FinishExecute false))))\n    (:\"Is Not Valid\")))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/BTTask_TagTarget": {
+  "graphs": {
+   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))\n    (:then\n      (bind _returnvalue (Abilities|IsInAggroList _asmy_character ControlledPawn))\n      (if _returnvalue\n        (Abilities|AddToAggroList _asmy_character ControlledPawn)\n        (AI|BehaviorTree|FinishExecute true)\n        (else\n          (AI|BehaviorTree|FinishExecute true))))\n    (:CastFailed)))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.BTTask_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/EQC_BehindPlayer": {
+  "graphs": {
+   "ProvideSingleLocation": "(fn ProvideSingleLocation (QuerierObject QuerierActor)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter QuerierActor))\n  (return (Math|Vector|vector-vector (Transformation|GetActorLocation (Abilities|GetTargetEnemy _asmy_character)) (Math|Vector|vector*float (Transformation|GetActorForwardVector (Abilities|GetTargetEnemy _asmy_character)) 300.000000))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.EnvQueryContext_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/EQC_PlayerContext": {
+  "graphs": {
+   "ProvideSingleActor": "(fn ProvideSingleActor (QuerierObject QuerierActor)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter QuerierActor))\n  (return (Abilities|GetTargetEnemy _asmy_character)))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.EnvQueryContext_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/EQC_TestContext": {
+  "graphs": {
+   "ProvideSingleActor": "(fn ProvideSingleActor (QuerierObject QuerierActor)\n  (bind _outactors (Actor|GetAllActorsOfClass \"/Script/MyGame.MyCharacter\"))\n  (return (Utilities|Array|Get(acopy) _outactors)))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.EnvQueryContext_BlueprintBase"
+ },
+ "/Game/Blueprints/AI/EQS_TestingPawn": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/AIModule.EQSTestingPawn"
+ },
+ "/Game/Blueprints/BP_DefaultPawn": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyDefaultPawn"
+ },
+ "/Game/Blueprints/BP_GameMode": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyGameMode"
+ },
+ "/Game/Blueprints/BP_MyGI": {
+  "graphs": {
+   "EventGraph": "(event EventInit\n  (Development|ExecuteConsoleCommand \"t.maxfps 60\"))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyGameInstance"
+ },
+ "/Game/Blueprints/BP_RoomCamera": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.RoomCamera"
+ },
+ "/Game/Blueprints/Chars/BP_Char": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (if (Pawn|IsPlayerControlled)\n    (bind _returnvalue (Actor|GetActorOfClass \"/Game/Blueprints/BP_RoomCamera.BP_RoomCamera_C\"))\n    (bind _asmy_player_controller (Utilities|Casting|CastToMyPlayerController (Pawn|GetController)))\n    (Game|Player|SetViewTargetWithBlend _asmy_player_controller _returnvalue)\n    (RoomCamera|SetPlayerRef _returnvalue self)\n    (Variables|Abilities|SetCamPawnRef _returnvalue))\n  (bind _asplayer_controller (Utilities|Casting|CastToPlayerController (Pawn|GetController)))\n  (Game|Audio|SetAudioListenerAttenuationOverride _asplayer_controller (Variables|Character|GetCapsuleComponent)))\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n",
+   "testfunction": "(fn testfunction ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyCharacter"
+ },
+ "/Game/Blueprints/Chars/BP_CheatManager": {
+  "graphs": {
+   "EventGraph": "(event Custom|KillRoom\n  (bind _playercharref (Class|MyGameInstance|GetPlayerCharRef (Utilities|Casting|CastToBP_MyGI (Game|GetGameInstance))))\n  (bind _asbp_my_gi (Utilities|Casting|CastToBP_MyGI (Game|GetGameInstance)))\n  (Utilities|IsValid _playercharref\n    (:\"Is Valid\"\n      (bind _outactors (Collision|BoxOverlapActors (Transformation|GetActorLocation _playercharref) \"1000.000000,1000.000000,1000.000000\" (Utilities|Array|MakeArray \"ObjectTypeQuery3\") \"/Script/MyGame.MyCharacter\" (Utilities|Array|MakeArray _playercharref)))\n      (for _array_element _outactors\n        (bind _asmy_character (Utilities|Casting|CastToMyCharacter _array_element))\n        (bind _returnvalue (Abilities|IsAlive _asmy_character))\n        (if _returnvalue\n          (Abilities|OnDie _asmy_character))))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/Engine.CheatManager"
+ },
+ "/Game/Blueprints/Chars/BP_EnemyBase": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.EnemyCharBase"
+ },
+ "/Game/Blueprints/Chars/BP_HitBox": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.HitBox"
+ },
+ "/Game/Blueprints/Chars/BP_MyController": {
+  "graphs": {
+   "EventGraph": "(event F1 (Key))\n\n(event V (Key))\n\n(event F5 (Key))\n\n(event F6 (Key))\n\n(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyPlayerController"
+ },
+ "/Game/Blueprints/Chars/BP_Projectile": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyProjectile"
+ },
+ "/Game/Blueprints/Chars/BP_Projectile1": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyProjectile"
+ },
+ "/Game/Blueprints/Chars/Boss1/BP_AIContBoss": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyAIController"
+ },
+ "/Game/Blueprints/Chars/Boss1/BP_Boss1": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossPunches": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (bind _buffedrange (Variables|Default|GetBuffedRange))\n  (Ability|Parent:ActivateAbility)\n  (bind _asmy_aicontroller (Utilities|Casting|CastToMyAIController (AI|GetAIController (Ability|GetAvatarActorFromActorInfo))))\n  (Class|MyAIController|SetAttackRange _buffedrange _asmy_aicontroller)\n  (AI|Components|Blackboard|SetValueAsFloat (AI|GetBlackboard _asmy_aicontroller) (Variables|Default|GetAttackRangeKey) _buffedrange))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n\n(event EventEffectOver\n  (bind _unbuffedrange (Variables|Default|GetUnbuffedRange))\n  (bind _asmy_aicontroller (Utilities|Casting|CastToMyAIController (AI|GetAIController (Ability|GetAvatarActorFromActorInfo))))\n  (Class|MyAIController|SetAttackRange _unbuffedrange _asmy_aicontroller)\n  (AI|Components|Blackboard|SetValueAsFloat (AI|GetBlackboard _asmy_aicontroller) (Variables|Default|GetAttackRangeKey) _unbuffedrange))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_SelfEffect.GA_SelfEffect_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossSmash1": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
+ },
+ "/Game/Blueprints/Chars/Boss1/GA_BossSummon1": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_Summon.GA_Summon_C"
+ },
+ "/Game/Blueprints/Chars/EKicker/BP_AIContKicker": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyAIController"
+ },
+ "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
+ },
+ "/Game/Blueprints/Chars/EKicker/GA_KickerKick": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EKicker/GE_KickerCooldown": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayEffect"
+ },
+ "/Game/Blueprints/Chars/EMelee1/BP_Enemy1": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
+ },
+ "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EMelee2/BP_Enemy2": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
+ },
+ "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EMelee3/BP_Enemy3": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (|Parent:BeginPlay))\n\n(event Collision|EventActorBeginOverlap (OtherActor)\n  (Collision|Parent:ActorBeginOverlap OtherActor))\n\n(event EventTick (DeltaSeconds)\n  (|Parent:Tick DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ()\n  (|Parent:ConstructionScript))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Chars/EMelee1/BP_Enemy1.BP_Enemy1_C"
+ },
+ "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+ },
+ "/Game/Blueprints/Chars/EWizard/BP_AIContWizard": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MyAIController"
+ },
+ "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
+ },
+ "/Game/Blueprints/Chars/EWizard/GA_Cast1": {
+  "graphs": {
+   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.CastAbility"
+ },
+ "/Game/Blueprints/ChildActorTest": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/Engine.Actor"
+ },
+ "/Game/Blueprints/DA_CharData": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/Engine.PrimaryDataAsset"
+ },
+ "/Game/Blueprints/Items/BP_Pickup": {
+  "graphs": {
+   "BP_GetChildActorRef": "(fn BP_GetChildActorRef ()\n  (bind _aspickup_mesh_actor (Utilities|Casting|CastToPickupMeshActor (Class|ChildActorComponent|GetChildActor (Variables|Default|GetSecondSon)))\n    (:then\n      (return _aspickup_mesh_actor))\n    (:CastFailed)))\n",
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n\n(event ItemPickup|EventBP_UpdateChildActor (NewMeshActorClass)\n  (ChildActorComponent|SetChildActorClass (Variables|Default|GetSecondSon) NewMeshActorClass))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.Pickup"
+ },
+ "/Game/Blueprints/Items/BP_PickupMeshActor": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.PickupMeshActor"
+ },
+ "/Game/Blueprints/Items/BP_PickupMeshActorHeart": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.PickupMeshActor"
+ },
+ "/Game/Blueprints/Items/BP_PickupMeshActor_Book": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (|Parent:BeginPlay)\n  (Class|GASummon|InitialSetup))\n\n(event Collision|EventActorBeginOverlap (OtherActor)\n  (Collision|Parent:ActorBeginOverlap OtherActor))\n\n(event EventTick (DeltaSeconds)\n  (|Parent:Tick DeltaSeconds))\n\n(event Custom|SetBookWidget (Tex NewName)\n  (bind _aswbp_book_cover (Utilities|Casting|CastToWBP_BookCover (UserInterface|GetUserWidgetObject (Variables|Default|GetWidget))))\n  (Class|WBPBookCover|SetSkillIcon _aswbp_book_cover Tex)\n  (Class|WBPBookCover|SetSkillNameText _aswbp_book_cover NewName)\n  (Class|WBPBookCover|SetBookTexture _aswbp_book_cover self))\n\n(event Custom|DelayedSetMatTex\n  (Rendering|Material|SetTextureParameterValue (Variables|Default|GetDynamat) \"Tex\" (CallFunction|GetWidgetRenderTarget)))\n",
+   "GetWidgetRenderTarget": "(fn GetWidgetRenderTarget ()\n  (return (UserInterface|GetRenderTarget (Variables|Default|GetWidget))))\n",
+   "InitialSetup": "(fn InitialSetup ()\n  (bind _returnvalue (Rendering|Material|CreateDynamicMaterialInstance (Variables|Default|GetBookMesh) 2))\n  (Variables|Default|SetDynamat _returnvalue)\n  (CallFunction|SetupParentAbilityClass)\n  (bind (_astexture_2d _skillname) (Utilities|TryGetDatafromAbility))\n  (CallFunction|SetBookWidget _astexture_2d _skillname))\n",
+   "SetupParentAbilityClass": "(fn SetupParentAbilityClass ()\n  (bind _abilitiestolearn (Class|LearnItemDataAsset|GetAbilitiestoLearn (Utilities|Casting|CastToLearnItemDataAsset (Class|Pickup|GetItemData (Utilities|Casting|CastToBP_Pickup (Actor|GetParentActor))))))\n  (bind _asbp_pickup (Utilities|Casting|CastToBP_Pickup (Actor|GetParentActor)))\n  (bind _aslearn_item_data_asset (Utilities|Casting|CastToLearnItemDataAsset (Class|Pickup|GetItemData _asbp_pickup)))\n  (if (> (Utilities|Array|Length _abilitiestolearn) 0)\n    (bind _asmy_gameplay_ability (Utilities|Casting|CastToMyGameplayAbilityClass (Utilities|Struct|BreakAbilityStruct (Utilities|Array|Get(aref) _abilitiestolearn))))\n    (Variables|Default|SetParentAbilityClass _asmy_gameplay_ability)))\n",
+   "TryGetDataFromAbility": "(fn Inputs ()\n  (bind _parentabilityclass (Variables|Default|GetParentAbilityClass))\n  (bind _abilityuidata (Class|GetClassDefaults _parentabilityclass)))\n",
+   "UserConstructionScript": "(fn ConstructionScript ()\n  (|Parent:ConstructionScript)\n  (Class|GASummon|InitialSetup))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Items/BP_PickupMeshActor.BP_PickupMeshActor_C"
+ },
+ "/Game/Blueprints/Items/BP_PickupMeshActor_FireHands": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (|Parent:BeginPlay))\n\n(event Collision|EventActorBeginOverlap (OtherActor)\n  (Collision|Parent:ActorBeginOverlap OtherActor))\n\n(event EventTick (DeltaSeconds)\n  (|Parent:Tick DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ()\n  (|Parent:ConstructionScript))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Items/BP_PickupMeshActor.BP_PickupMeshActor_C"
+ },
+ "/Game/Blueprints/Items/BP_PickupMeshActor_Horns": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (|Parent:BeginPlay))\n\n(event Collision|EventActorBeginOverlap (OtherActor)\n  (Collision|Parent:ActorBeginOverlap OtherActor))\n\n(event EventTick (DeltaSeconds)\n  (|Parent:Tick DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ()\n  (|Parent:ConstructionScript))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Items/BP_PickupMeshActor.BP_PickupMeshActor_C"
+ },
+ "/Game/Blueprints/Items/BP_PickupMeshActor_RedEyes": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay\n  (|Parent:BeginPlay))\n\n(event Collision|EventActorBeginOverlap (OtherActor)\n  (Collision|Parent:ActorBeginOverlap OtherActor))\n\n(event EventTick (DeltaSeconds)\n  (|Parent:Tick DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ()\n  (|Parent:ConstructionScript))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Game/Blueprints/Items/BP_PickupMeshActor.BP_PickupMeshActor_C"
+ },
+ "/Game/Blueprints/Level/BP_Door": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.Door"
+ },
+ "/Game/Blueprints/Level/BP_FloorBuilder": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.FloorBuilder"
+ },
+ "/Game/Blueprints/Level/BP_Goal": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.Goal"
+ },
+ "/Game/Blueprints/Level/BP_Spawner": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.Spawner"
+ },
+ "/Game/Blueprints/Level/BP_TileMaster": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.TileMaster"
+ },
+ "/Game/Blueprints/Level/BP_WAll": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.Wall"
+ },
+ "/Game/Blueprints/MyFuncLib": {
+  "graphs": {
+   "GetLevelBuilder": "(fn GetLevelBuilder ()\n  (bind _asbp_floor_builder (Utilities|Casting|CastToBP_FloorBuilder (Run|GetFloorBuilder 0)))\n  (return _asbp_floor_builder))\n",
+   "GetMyGI": "(fn GetMyGI ()\n  (bind _asbp_my_gi (Utilities|Casting|CastToBP_MyGI (Game|GetGameInstance 0)))\n  (return _asbp_my_gi))\n",
+   "GetRoomCenter": "(fn GetRoomCenter (CurrentLocation)\n  (return (FloorBuilder|GetTileCenter (Run|GetFloorBuilder 0) CurrentLocation)))\n",
+   "GetRoomSize": "(fn GetRoomSize ()\n  (return (Math|Vector|MakeVector (Class|FloorBuilder|GetTileSizeX (Run|GetFloorBuilder 0)) (Class|FloorBuilder|GetTileSizeY (Run|GetFloorBuilder 0)) 1000.0)))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/Engine.BlueprintFunctionLibrary"
+ },
+ "/Game/Blueprints/Notifies/ANS_HitboxBP": {
+  "graphs": {
+   "Received_NotifyBegin": "(fn Received_NotifyBegin (MeshComp Animation TotalDuration EventReference))\n",
+   "Received_NotifyEnd": "(fn Received_NotifyEnd (MeshComp Animation EventReference)\n  (Ability|SendGameplayEventToActor (Components|GetOwner MeshComp) \"(TagName=\\\"notify.hit.end\\\")\")\n  (return false))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.ANS_Hitbox"
+ },
+ "/Game/Blueprints/Notifies/ANS_ProjectileCast": {
+  "graphs": {
+   "Received_NotifyBegin": "(fn Received_NotifyBegin (MeshComp Animation TotalDuration EventReference)\n  (Ability|SendGameplayEventToActor (Components|GetOwner MeshComp) \"(TagName=\\\"notify.projectile.cast\\\")\")\n  (return false))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/Engine.AnimNotifyState"
+ },
+ "/Game/Blueprints/ParentActorTest": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ()\n  (Development|PrintString (Utilities|GetDisplayName (Variables|Default|GetChildActor (Variables|Default|GetChildActor)))))\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/Engine.Actor"
+ },
+ "/Game/FX/CamShake/Shake_Hit1": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/EngineCameras.LegacyCameraShake"
+ },
+ "/Game/FX/Cues/GC_Hit_Impact": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.GCN_HitImpact"
+ },
+ "/Game/FX/GC_Boots": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "OnActive": "(fn OnBurst (MyTarget Parameters)\n  (bind _mesh (Class|Character|GetMesh (Utilities|Casting|CastToMyCharacter MyTarget)))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (bind _returnvalue (AddComponent|Common|AddStaticMeshComponent _asmy_character true))\n  (Transformation|AttachComponentToComponent _returnvalue _mesh \"foot_lSocket\" \"SnapToTarget\" \"SnapToTarget\")\n  (Components|StaticMesh|SetStaticMesh _returnvalue \"/Game/Mesh/boots_boot_l.boots_boot_l\")\n  (bind _returnvalue_1 (AddComponent|Common|AddStaticMeshComponent true))\n  (Transformation|AttachComponentToComponent _returnvalue_1 _mesh \"foot_rSocket\" \"SnapToTarget\" \"SnapToTarget\")\n  (Components|StaticMesh|SetStaticMesh _returnvalue_1 \"/Game/Mesh/boots_boot_r.boots_boot_r\")\n  (return true))\n",
+   "OnRemove": "(fn OnCeaseRelevant (MyTarget Parameters))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayCueNotify_Actor"
+ },
+ "/Game/FX/GC_FireHands": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "OnActive": "(fn OnBurst (MyTarget Parameters)\n  (bind _mesh (Class|Character|GetMesh (Utilities|Casting|CastToMyCharacter MyTarget)))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (bind _returnvalue (Niagara|SpawnSystemAttached \"/Game/FX/FX_FireHands.FX_FireHands\" _mesh \"middle_01_r\" \"0, 0, 0\" \"0, 0, 0\" \"SnapToTarget\" true))\n  (|SetPart_rRef _returnvalue)\n  (bind _returnvalue_1 (Niagara|SpawnSystemAttached \"/Game/FX/FX_FireHands.FX_FireHands\" _mesh \"middle_01_l\" \"0, 0, 0\" \"0, 0, 0\" \"SnapToTarget\" true))\n  (|SetPart_lRef _returnvalue_1)\n  (Class|MyCharacter|SetPunchSlash \"/Game/FX/FX_TrailFire.FX_TrailFire\" _asmy_character)\n  (Class|MyCharacter|SetPunchWeakWoosh \"/Game/Audio/FireWhoosh_Cue.FireWhoosh_Cue\" _asmy_character)\n  (return true))\n",
+   "OnRemove": "(fn OnCeaseRelevant (MyTarget Parameters)\n  (bind _part_rref (|GetPart_rRef))\n  (bind _part_lref (|GetPart_lRef))\n  (Utilities|IsValid _part_rref\n    (:\"Is Valid\"\n      (Components|Activation|Deactivate _part_rref)))\n  (Utilities|IsValid _part_lref\n    (:\"Is Valid\"\n      (Components|Activation|Deactivate _part_lref)))\n  (return true))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayCueNotify_Actor"
+ },
+ "/Game/FX/GC_Horns": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "OnActive": "(fn OnBurst (MyTarget Parameters)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (bind _returnvalue (AddComponent|Common|AddStaticMeshComponent _asmy_character true))\n  (Transformation|AttachComponentToComponent _returnvalue (Class|Character|GetMesh _asmy_character) \"headSocket\" \"SnapToTarget\" \"SnapToTarget\")\n  (Components|StaticMesh|SetStaticMesh _returnvalue \"/Game/Mesh/SM_Horn.SM_Horn\")\n  (return true))\n",
+   "OnRemove": "(fn OnCeaseRelevant (MyTarget Parameters))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayCueNotify_Actor"
+ },
+ "/Game/FX/GC_OnFire": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "OnActive": "(fn OnBurst (MyTarget Parameters)\n  (bind _mesh (Class|Character|GetMesh (Utilities|Casting|CastToMyCharacter MyTarget)))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (bind _returnvalue (Niagara|SpawnSystemAttached \"/Game/FX/FX_EmitterFire_System.FX_EmitterFire_System\" _mesh \"spine_03\" (Transformation|GetSocketLocation _mesh \"spine_03\") \"0, 0, 0\" \"KeepWorldPosition\" true))\n  (|SetPart_rRef _returnvalue)\n  (Audio|PlaySoundAtLocation 0 \"/Game/Audio/Fire01Once_Cue.Fire01Once_Cue\" (Transformation|GetActorLocation MyTarget))\n  (bind _returnvalue_1 (Audio|SpawnSoundAttached \"/Game/Audio/Fire01Loop_Cue.Fire01Loop_Cue\" _mesh))\n  (Variables|Default|SetSoundRef _returnvalue_1)\n  (return true))\n",
+   "OnRemove": "(fn OnCeaseRelevant (MyTarget Parameters)\n  (bind _part_rref (|GetPart_rRef))\n  (bind _part_lref (|GetPart_lRef))\n  (Utilities|IsValid _part_rref\n    (:\"Is Valid\"\n      (Components|Activation|Deactivate _part_rref)))\n  (Utilities|IsValid _part_lref\n    (:\"Is Valid\"\n      (Components|Activation|Deactivate _part_lref)))\n  (Audio|Components|Audio|Stop (Variables|Default|GetSoundRef))\n  (return true))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayCueNotify_Actor"
+ },
+ "/Game/FX/GC_RedEyes": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "OnActive": "(fn OnBurst (MyTarget Parameters)\n  (bind _mesh (Class|Character|GetMesh (Utilities|Casting|CastToMyCharacter MyTarget)))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (bind _returnvalue (Niagara|SpawnSystemAttached \"/Game/FX/FX_RedEye.FX_RedEye\" _mesh \"eye_r\" (Transformation|GetSocketLocation _mesh \"eye_r\") \"0, 0, 0\" \"KeepWorldPosition\" true))\n  (|SetPart_rRef _returnvalue)\n  (bind _returnvalue_1 (Niagara|SpawnSystemAttached \"/Game/FX/FX_RedEye.FX_RedEye\" _mesh \"eye_l\" (Transformation|GetSocketLocation _mesh \"eye_l\") \"0, 0, 0\" \"KeepWorldPosition\" true))\n  (|SetPart_lRef _returnvalue_1)\n  (return true))\n",
+   "OnRemove": "(fn OnCeaseRelevant (MyTarget Parameters)\n  (Components|Activation|Deactivate (|GetPart_rRef))\n  (Components|Activation|Deactivate (|GetPart_lRef))\n  (return true))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayCueNotify_Actor"
+ },
+ "/Game/FX/GC_StunImmune": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "OnActive": "(fn OnBurst (MyTarget Parameters)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (Abilities|SetBodyColor _asmy_character \"(R=0.291667,G=0.012153,B=0.012153,A=1.000000)\")\n  (Abilities|SetGlow _asmy_character 1.000000)\n  (return true))\n",
+   "OnRemove": "(fn OnCeaseRelevant (MyTarget Parameters)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (Abilities|ResetBodyColor _asmy_character)\n  (Abilities|ResetGlow _asmy_character)\n  (return true))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayCueNotify_Actor"
+ },
+ "/Game/FX/GC_Turtle": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "OnActive": "(fn OnBurst (MyTarget Parameters)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter MyTarget))\n  (bind _returnvalue (AddComponent|Common|AddStaticMeshComponent _asmy_character true))\n  (Transformation|AttachComponentToComponent _returnvalue (Class|Character|GetMesh _asmy_character) \"spine_03Socket\" \"SnapToTarget\" \"SnapToTarget\")\n  (Components|StaticMesh|SetStaticMesh _returnvalue \"/Game/Mesh/turtle.turtle\")\n  (Rendering|SetCustomDepthStencilValue _returnvalue 2)\n  (Rendering|SetRenderCustomDepth _returnvalue true)\n  (return true))\n",
+   "OnRemove": "(fn OnCeaseRelevant (MyTarget Parameters))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/GameplayAbilities.GameplayCueNotify_Actor"
+ },
+ "/Game/Mannequin/Animations/ThirdPerson_AnimBP": {
+  "graphs": {
+   "EventGraph": "(event EventBlueprintUpdateAnimation (DeltaTimeX)\n  (bind _returnvalue (Animation|TryGetPawnOwner))\n  (Utilities|IsValid _returnvalue\n    (:\"Is Valid\"\n      (Variables|Default|SetIsinAir? (AI|Components|NavMovement|IsFalling (Pawn|GetMovementComponent _returnvalue)))\n      (Variables|Default|SetSpeed (Math|Vector|VectorLength (Transformation|GetVelocity _returnvalue))))))\n"
+  },
+  "kind": "AnimBlueprint",
+  "parent": "/Script/Engine.AnimInstance"
+ },
+ "/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "None"
+ },
+ "/Game/UI/BP_MenuController": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MenuController"
+ },
+ "/Game/UI/BP_MenuGameMode": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.MenuGameMode"
+ },
+ "/Game/UI/BP_UMGActor": {
+  "graphs": {
+   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
+   "UserConstructionScript": "(fn ConstructionScript ())\n"
+  },
+  "kind": "Blueprint",
+  "parent": "/Script/MyGame.WidgetActor"
+ },
+ "/Game/UI/MyButton": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/UMG.Button"
+ },
+ "/Game/UI/MyTextBlock": {
+  "graphs": {},
+  "kind": "Blueprint",
+  "parent": "/Script/UMG.TextBlock"
+ },
+ "/Game/UI/WBP_ActionBar": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/UMG.UserWidget"
+ },
+ "/Game/UI/WBP_ActionButton": {
+  "graphs": {
+   "ActionPressed": "(fn ActionPressed (IsPressed Duration)\n  (bind _actioncheckbox (Variables|WBP_ActionButton|GetActionCheckBox))\n  (if IsPressed\n    (Widget|SetCheckedState _actioncheckbox \"Checked\")\n    (if (not (Variables|Default|GetCurrentState))\n      (UserInterface|Animation|PlayAnimation (Variables|Animations|GetClick) 0.000000 1 \"Forward\" 2.000000)\n      (Variables|Default|SetCurrentState true)\n      (if (> Duration 0.0)\n        (CallFunction|SetTimertoCancelPress Duration)))\n    (else\n      (Widget|SetCheckedState _actioncheckbox)\n      (Variables|Default|SetCurrentState false))))\n",
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime)\n  (Widget|SetText(Text) (Variables|WBP_ActionButton|GetButtonTextWidget) (Variables|Default|GetButtonText))\n  (Widget|SetText(Text) (Variables|ActionButton|GetCommandTextWidget) (Variables|Default|GetKeyText))\n  (Appearance|SetBrushFromTexture (Variables|WBP_ActionButton|GetIcon) (Variables|Default|GetIconTex) false)\n  (Layout|CanvasSlot|SetSize (Slot|SlotAsCanvasSlot (Variables|WBP_ActionButton|GetButtonSize-Canvas)) (Variables|Default|GetButtonSize))\n  (CallFunction|SetHotkeyImages))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event Custom|StartCooldown (Duration)\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetCooldown) 0.000000 1 \"Forward\" (/ 1.000000 (* Duration 1.150000))))\n\n(event Custom|SetTimerToCancelPress (Duration)\n  (Utilities|Time|SetTimerbyEvent (AddEvent|Custom|CancelPressTimedOut) Duration))\n\n(event Custom|CancelPressTimedOut\n  (CallFunction|ActionPressed false))\n\n(event Custom|SetupActionAbility (NewAbility)\n  (bind _asmy_gameplay_ability (Utilities|Casting|CastToMyGameplayAbilityClass (Utilities|Struct|BreakAbilityStruct NewAbility)))\n  (Appearance|SetBrush (Variables|WBP_ActionButton|GetIcon) (Utilities|Struct|BreakBuffUI (Class|GetClassDefaults _asmy_gameplay_ability))))\n",
+   "IsSuperMod": "(fn IsSuperMod ()\n  (return (and (Math|Byte|Byte>=Byte (Variables|Default|GetButtonInput) (Utilities|Enum|LiteralenumEInput \"SuperPunch\")) (Math|Byte|Byte<=Byte (Variables|Default|GetButtonInput) (Utilities|Enum|LiteralenumEInput \"SuperJump\")))))\n",
+   "SetHotkeyImages": "(fn SetHotkeyImages ()\n  (bind _listofcontrols (Variables|Default|GetListOfControls))\n  (bind _modimage (Variables|WBP_ActionButton|GetModIMage))\n  (bind _modlessinput (Variables|Default|GetModlessInput))\n  (Appearance|SetBrushFromTexture (Variables|WBP_ActionButton|GetContImage) (Utilities|Map|Find (Variables|Default|GetListOfControls) \"Punch\") false)\n  (Variables|Default|SetModlessInput (Variables|Default|GetButtonInput))\n  (if (CallFunction|IsSuperMod)\n    (Appearance|SetBrushFromTexture _modimage (Variables|Default|GetSuperModImage) false)\n    (Widget|SetVisibility _modimage)\n    (Variables|Default|SetModlessInput (Utilities|Enum|BytetoEnumEInput (Math|Byte|Byte-Byte (Variables|Default|GetButtonInput) 10))))\n  (if (Utilities|Map|Find _listofcontrols _modlessinput)\n    (Appearance|SetBrushFromTexture (Variables|WBP_ActionButton|GetContImage) (Utilities|Map|Find _listofcontrols _modlessinput) false)))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.ActionButtonWidget"
+ },
+ "/Game/UI/WBP_AttrListItem": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MyUserWidget"
+ },
+ "/Game/UI/WBP_BookCover": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event Custom|SetSkillIcon (Tex)\n  (Appearance|SetBrushFromTexture (Variables|WBP_BookCover|GetSkillIcon) Tex false))\n\n(event Custom|SetSkillNameText (NewName)\n  (Widget|SetText(Text) (Variables|WBP_BookCover|GetSkillName) NewName))\n\n(event Custom|SetBookTexture (Parent)\n  (Utilities|FlowControl|Delay 0.100000)\n  (Utilities|IsValid Parent\n    (:\"Is Valid\"\n      (Class|BPPickupMeshActorBook|DelayedSetMatTex Parent)))\n  (Utilities|FlowControl|Delay 3.000000))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/UMG.UserWidget"
+ },
+ "/Game/UI/WBP_DurationBar": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct\n  (ToolMenus|SetIcon)\n  (CallFunction|ResetDuration (Variables|DurationBar|GetEffectDuration))\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetIconIni) 0.000000 0))\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event Custom|ResetDuration (NewDuration)\n  (UserInterface|Animation|PlayAnimationwithFinishedevent(legacy) self (Variables|Animations|GetBarDrain) 0.000000 1 \"Forward\" (/ 1.000000 NewDuration)\n    (:Finished\n      (Widget|RemoveFromParent))))\n",
+   "SetIcon": "(fn SetIcon ()\n  (bind _buffui (Variables|Default|GetBuffUI))\n  (bind _returnvalue (BuffUI|GetBuffUI _buffui))\n  (bind _color (Utilities|Struct|BreakBuffUI _returnvalue))\n  (bind _bufficon (Variables|WBP_DurationBar|GetBuffIcon))\n  (Utilities|IsValid _buffui\n    (:\"Is Valid\"\n      (Appearance|SetBrush _bufficon (Utilities|Struct|BreakBuffUI _returnvalue))\n      (Appearance|SetColorAndOpacity _bufficon _color)\n      (Progress|SetFillColorAndOpacity (Variables|WBP_DurationBar|GetBar) _color))))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/UMG.UserWidget"
+ },
+ "/Game/UI/WBP_GameOver": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event OnClicked(NewGameButton)\n  (MyGI|StartNewRun (MyUserWidget|GetMyGameInstance)))\n\n(event OnClicked(ExitButton)\n  (MyGI|QuitToMainMenu (MyUserWidget|GetMyGameInstance)))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MyUserWidget"
+ },
+ "/Game/UI/WBP_HUD": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event MyHUD|EventBPUpdateHealth (NewHealth)\n  (bind _output_get (Variables|MyHUD|SetHealth NewHealth))\n  (Widget|SetText(Text) (Variables|WBP_HUD|GetHealthText) (Utilities|Text|ToText(Integer) (Math|Float|Round _output_get))))\n\n(event MyHUD|EventBPUpdateMana (NewMana)\n  (Widget|SetText(Text) (Variables|WBP_HUD|GetManaText) (Utilities|Text|ToText(Integer) (Math|Float|Round NewMana))))\n\n(event MyHUD|EventBPUpdateAbilityKey (Index IsKeyDown Duration)\n  (bind _buttonref (CallFunction|GetButtonReffromIndex Index))\n  (Utilities|IsValid _buttonref\n    (:\"Is Valid\"\n      (Class|WBPActionButton|ActionPressed _buttonref IsKeyDown Duration))))\n\n(event MyHUD|EventBPUpdateCooldown (Index Cooldown)\n  (bind _buttonref (CallFunction|GetButtonReffromIndex Index))\n  (Utilities|IsValid _buttonref\n    (:\"Is Valid\"\n      (Class|WBPActionButton|StartCooldown _buttonref Cooldown))))\n\n(event MyHUD|EventBPUpdateActionSlot (Index NewState)\n  (bind _buttonref (CallFunction|GetButtonReffromIndex Index))\n  (Utilities|IsValid _buttonref\n    (:\"Is Valid\"\n      (Widget|SetVisibility _buttonref (select NewState \"Visible\" \"Hidden\")))))\n\n(event MyHUD|EventBPSetupAbility (NewAbility)\n  (Class|WBPActionButton|SetupActionAbility (CallFunction|GetButtonReffromIndex (Utilities|Struct|BreakAbilityStruct NewAbility)) NewAbility))\n",
+   "GetButtonRefFromIndex": "(fn GetButtonRefFromIndex (Index)\n  (bind _wbp_actionbar (Variables|WBP_HUD|GetWBP_ActionBar))\n  (switch Utilities|FlowControl|Switch|SwitchonEInput (Utilities|Enum|BytetoEnumEInput Index)\n    (:Punch\n      (return (Class|WidgetNavigation|GetLeft _wbp_actionbar)))\n    (:Kick\n      (return (Class|WBPActionBar|GetTop _wbp_actionbar)))\n    (:Cast\n      (return (Class|WidgetNavigation|GetRight _wbp_actionbar)))\n    (:Jump\n      (return (Class|WBPActionBar|GetBot _wbp_actionbar)))\n    (:SuperPunch\n      (return (Class|WBPActionBar|GetSuperLeft _wbp_actionbar)))\n    (:SuperKick\n      (return (Class|WBPActionBar|GetSuperTop _wbp_actionbar)))\n    (:SuperCast\n      (return (Class|WBPActionBar|GetSuperRight _wbp_actionbar)))\n    (:SuperJump\n      (return (Class|WBPActionBar|GetSuperBot _wbp_actionbar)))\n    (:Run\n      (return (Class|WBPActionBar|GetRun _wbp_actionbar)))\n    (:Dash\n      (return (Class|WBPActionBar|GetDash _wbp_actionbar)))))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MyHUDWidget"
+ },
+ "/Game/UI/WBP_Healthbar": {
+  "graphs": {
+   "BP_AddNewDurationBar": "(fn BP_AddNewDurationBar (Duration UIData)\n  (Utilities|IsValid UIData\n    (:\"Is Valid\"\n      (bind _returnvalue (UserInterface|CreateWidget \"/Game/UI/WBP_DurationBar.WBP_DurationBar_C\" 0 Duration UIData))\n      (Panel|AddChildToVerticalBox (Variables|WBP_Healthbar|GetPanelOfDurations) _returnvalue)\n      (return _returnvalue))))\n",
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event EventSetHealth (NewHealth)\n  (bind _thebar (Variables|WBP_Healthbar|GetTheBar))\n  (bind _output_get (Variables|HealthBar|SetHealth NewHealth))\n  (CallFunction|SetHealthText _output_get)\n  (CallFunction|SetBarSizefromHealth)\n  (Progress|SetPercent _thebar (Class|PCGRandomChoiceSettings|GetRatio))\n  (CallFunction|ScaleBar)\n  (Progress|SetFillColorAndOpacity _thebar (CallFunction|GetCurrentColor))\n  (CallFunction|SetBarBgColor))\n\n(event EventSetMaxHealth (NewMaxHealth)\n  (Variables|Default|SetPlayerMaxHealth NewMaxHealth))\n\n(event EventBP_ResetDurationBar (Duration BarRef)\n  (bind _aswbp_duration_bar (Utilities|Casting|CastToWBP_DurationBar BarRef))\n  (Class|WBPDurationBar|ResetDuration _aswbp_duration_bar Duration))\n",
+   "GetColorFromLevel": "(fn GetColorFromLevel (Level)\n  (return (Utilities|Array|Get(aref) (Variables|Default|GetColors) (Math|Integer|Clamp(Integer) Level 0 (- (Utilities|Array|Length (Variables|Default|GetColors)) 1)))))\n",
+   "GetCurrentColor": "(fn GetCurrentColor ()\n  (return (CallFunction|GetColorfromLevel (+ (Level|GetLevel) 1))))\n",
+   "GetLevel": "(fn GetLevel ()\n  (return (Math|Float|Floor (/ (Math|Float|Max(Float) (- (Variables|HealthBar|GetHealth) 1.000000)) (Variables|Default|GetBarSize)))))\n",
+   "GetRatio": "(fn GetRatio ()\n  (return (Math|Float|SelectFloat 1.000000 (/ (Math|Float|%(Float) (Variables|HealthBar|GetHealth) (Variables|Default|GetBarSize)) (Variables|Default|GetBarSize)) (and (> (Variables|HealthBar|GetHealth) 0.0) (== (Math|Float|%(Float) (Variables|HealthBar|GetHealth) (Variables|Default|GetBarSize)) 0.0)))))\n",
+   "ScaleBar": "(fn ScaleBar ()\n  (bind _returnvalue (Level|GetLevel))\n  (bind _returnvalue_1 (Math|Conversions|ToFloat(Integer) _returnvalue))\n  (bind _returnvalue_2 (* _returnvalue_1 0.500000))\n  (bind _returnvalue_3 (+ 1.000000 _returnvalue_2))\n  (Widget|Transform|SetRenderScale (Variables|WBP_Healthbar|GetTheBar) (/ (Variables|Default|GetBarSize) 100.000000) _returnvalue_3)\n  (Widget|Transform|SetRenderScale (Variables|WBP_Healthbar|GetGridOverlay) 1.000000 _returnvalue_3))\n",
+   "SetBarBgColor": "(fn SetBarBgColor ()\n  (Utilities|Struct|SetmembersinSlateColor (Utilities|Struct|BreakSlateBrush (Utilities|Struct|BreakProgressBarStyle (Class|EditableText(Multi-Line)|GetWidgetStyle (Variables|WBP_Healthbar|GetTheBar)))) (CallFunction|GetColorfromLevel (Level|GetLevel)) \"UseColor_Specified\"))\n",
+   "SetBarSizeFromHealth": "(fn SetBarSizeFromHealth ()\n  (Variables|Default|SetBarSize (Math|Float|Min(Float) (Variables|Default|GetPlayerMaxHealth) 200.000000)))\n",
+   "SetHealthText": "(fn SetHealthText (NewHealth)\n  (Widget|SetText(Text) (Variables|WBP_Healthbar|GetHealthTextBlock) (Utilities|Text|ToText(Float) NewHealth \"HalfToEven\" false true 1 324 0 0)))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MyHealthBar"
+ },
+ "/Game/UI/WBP_LevelClear": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct\n  (bind _asbp_my_gi (Utilities|Casting|CastToBP_MyGI (Game|GetGameInstance)))\n  (CallFunction|SetLevel (Class|MyGameInstance|GetFloorNumber _asbp_my_gi))\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetIntro))\n  (Utilities|FlowControl|Delay 2.000000)\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetOutro)))\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n",
+   "SetLevel": "(fn SetLevel (LevelDifficulty)\n  (Widget|SetText(Text) (Variables|WBP_LevelClear|GetLevelText) (Utilities|Text|ToText(String) (Utilities|String|Append \"Level \" (Utilities|String|ToString(Byte) LevelDifficulty) \" Cleared!\"))))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MyUserWidget"
+ },
+ "/Game/UI/WBP_LevelIntro": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct\n  (bind _asbp_my_gi (Utilities|Casting|CastToBP_MyGI (Game|GetGameInstance)))\n  (Class|WBPLevelClear|SetLevel (Class|MyGameInstance|GetFloorNumber _asbp_my_gi))\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetIntro))\n  (Utilities|FlowControl|Delay 2.000000)\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetOutro)))\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n",
+   "SetLevel": "(fn SetLevel (LevelDifficulty)\n  (Widget|SetText(Text) (Variables|WBP_LevelIntro|GetLevelText) (Utilities|Text|ToText(String) (Utilities|String|Append \"Level \" (Utilities|String|ToString(Byte) LevelDifficulty)))))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MyUserWidget"
+ },
+ "/Game/UI/WBP_MainMenu": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event OnClicked(NewGameButton)\n  (bind _asbp_my_gi (Utilities|Casting|CastToBP_MyGI (Game|GetGameInstance)))\n  (MyGI|StartNewRun _asbp_my_gi))\n\n(event OnClicked(ExitButton)\n  (Game|QuitGame 0))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MainMenu"
+ },
+ "/Game/UI/WBP_PauseMenu": {
+  "graphs": {
+   "EventGraph": "(event Custom|AddInvItem (Name Description)\n  (bind _returnvalue (UserInterface|CreateWidget \"/Game/UI/WBP_AttrListItem.WBP_AttrListItem_C\"))\n  (Widget|Panel|AddChild (Variables|WBP_PauseMenu|GetInvList) _returnvalue)\n  (Widget|SetText(Text) (Class|WBPAttrListItem|GetAttrName _returnvalue) Name)\n  (Widget|SetText(Text) (Class|WBPAttrListItem|GetAttrValue _returnvalue) Description))\n\n(event Custom|InitItems\n  (for _array_element (MyUserWidget|GetInventory)\n    (CallFunction|AddInvItem (Class|ItemDataAsset|GetItemName _array_element) (Class|FunctionalTest|GetDescription _array_element))))\n\n(event Custom|AddStatItem (Name Value)\n  (bind _returnvalue (UserInterface|CreateWidget \"/Game/UI/WBP_AttrListItem.WBP_AttrListItem_C\"))\n  (Widget|Panel|AddChild (Variables|WBP_PauseMenu|GetStatsList) _returnvalue)\n  (Widget|SetText(Text) (Class|WBPAttrListItem|GetAttrName _returnvalue) Name)\n  (Widget|SetText(Text) (Class|WBPAttrListItem|GetAttrValue _returnvalue) (Utilities|Text|ToText(Float) Value)))\n\n(event Custom|InitStats\n  (CallFunction|AddStatItem \"NSLOCTEXT(\\\"[BFD37237469247C22D9E97BFD19DD2E1]\\\", \\\"26C13EFD4726A2BD33D4E2B4398239BD\\\", \\\"Health\\\")\" (MyUserWidget|GetMaxHealthAttr))\n  (CallFunction|AddStatItem \"NSLOCTEXT(\\\"[BFD37237469247C22D9E97BFD19DD2E1]\\\", \\\"1F6580EB4F588A9393EFDB9E319444AF\\\", \\\"Attack\\\")\" (MyUserWidget|GetAttackAttr))\n  (CallFunction|AddStatItem \"NSLOCTEXT(\\\"[BFD37237469247C22D9E97BFD19DD2E1]\\\", \\\"8D4194B54B5C53E56A0BBFA5470F4E94\\\", \\\"Defense\\\")\" (MyUserWidget|GetDefenseAttr))\n  (CallFunction|AddStatItem \"NSLOCTEXT(\\\"[BFD37237469247C22D9E97BFD19DD2E1]\\\", \\\"6D262F3E4F7CA107DB95D483043395BE\\\", \\\"Speed\\\")\" (MyUserWidget|GetSpeedAttr))\n  (CallFunction|AddStatItem \"NSLOCTEXT(\\\"[BFD37237469247C22D9E97BFD19DD2E1]\\\", \\\"3BFE91FC4FFE6770B4A03983460A4A7C\\\", \\\"Attack Speed\\\")\" (MyUserWidget|GetAttackSpeedAttr)))\n\n(event UserInterface|EventPreConstruct (IsDesignTime))\n\n(event UserInterface|EventConstruct\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetIntro))\n  (Skills|InitStats)\n  (CallFunction|InitItems))\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event OnClicked(NewGameButton)\n  (MyGI|StartNewRun (MyUserWidget|GetMyGameInstance)))\n\n(event OnClicked(ExitButton)\n  (MyGI|QuitToMainMenu (MyUserWidget|GetMyGameInstance)))\n\n(event MyUserWidget|EventBPOnEnd\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetIntro) 0.000000 1 \"Reverse\")\n  (Utilities|FlowControl|Delay 0.500000)\n  (Widget|RemoveFromParent))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.MainMenu"
+ },
+ "/Game/UI/WBP_PickupText": {
+  "graphs": {
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime)\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetIntro))\n  (Utilities|FlowControl|Delay 2.500000)\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetOutro)))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event Pickup|EventSetWidgetText (NewItem)\n  (Widget|SetText(Text) (Variables|WBP_PickupText|GetItemNameText) (Utilities|Text|FormatText \"NSLOCTEXT(\\\"[D1894FCC468A43B958C68090C220E5FE]\\\", \\\"6654FD774BE25E16F848FDA86B31F24C\\\", \\\"{item}\\\")\" (Class|ItemDataAsset|GetItemName NewItem)))\n  (Widget|SetText(Text) (Variables|WBP_PickupText|GetDescriptionText) (Class|FunctionalTest|GetDescription NewItem)))\n"
+  },
+  "kind": "WidgetBlueprint",
+  "parent": "/Script/MyGame.PickupTextWidget"
+ }
+}

@@ -1,0 +1,5570 @@
+{
+ "montages": {
+  "/Game/Anims/AirPunch_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.75,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 1.6666666269302368,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.75,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.375
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 2.2083165645599365,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.6667666269277106,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.6122629642486572,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Punch",
+      "socketName": "hand_r",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.21867215633392334,
+     "track": 1
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.23537002503871918,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": "(set from the character's PunchWeakWoosh or PunchStrongWoosh at Notify)",
+      "volumeMultiplier": 1,
+      "wooshType": "PunchWeak"
+     },
+     "start": 0.23537002503871918,
+     "track": 3
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.9186537861824036,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 60
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.25,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/CastForward_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 1.600000023841858,
+        "animPlayRate": 6,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 2,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 1.600000023841858,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.18333333730697632
+       },
+       {
+        "animEndTime": 2.5999999046325684,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 2,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.3166666626930237
+       },
+       {
+        "animEndTime": 3.366666555404663,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 2.5999999046325684,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.916666567325592
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.1722166538238525,
+   "notifies": [
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.22124473750591278,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.22124473750591278,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_ProjectileCast.ANS_ProjectileCast_C",
+     "end": 0.3370761014521122,
+     "name": "ANS_ProjectileCast_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 0.30374276638031006,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/FlyingKick_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.33000001311302185,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/FlyingKick.FlyingKick"
+        },
+        "animStartTime": 0.10000000149011612,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.3700000047683716,
+        "animPlayRate": 0.029999999329447746,
+        "animReference": {
+         "refPath": "/Game/Anims/FlyingKick.FlyingKick"
+        },
+        "animStartTime": 0.33000001311302185,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.11500000953674316
+       }
+      ]
+     },
+     "slotName": "ArmsAndLegs"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.4483166933059692,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.16747605428099632,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Kick",
+      "socketName": "ball_lTrail",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.011988472193479538,
+     "track": 2
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 1.396964356303215,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "foot_l",
+         "calf_l",
+         "foot_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 60
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.10810761153697968,
+     "track": 0
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.12355155497789383,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickStrong"
+     },
+     "start": 0.12355155497789383,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/GetHit_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.05000000074505806,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.20000000298023224,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/GetHit.GetHit"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.30000001192092896,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/GetHit.GetHit"
+        },
+        "animStartTime": 0.20000000298023224,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.10000000149011612
+       },
+       {
+        "animEndTime": 0.9666666388511658,
+        "animPlayRate": 1.2000000476837158,
+        "animReference": {
+         "refPath": "/Game/Anims/GetHit.GetHit"
+        },
+        "animStartTime": 0.30000001192092896,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.30000001192092896
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 0.8555499911308289,
+   "notifies": [
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotify_PlayNiagaraEffect",
+     "end": 0.00048293120926246047,
+     "name": "PlayNiagaraEffect",
+     "settings": {
+      "attached": false,
+      "bAbsoluteScale": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": -20,
+       "z": 170
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 0.38823533058166504,
+       "g": 1,
+       "r": 0.7529412508010864
+      },
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": -90
+      },
+      "scale": {
+       "x": 0.5,
+       "y": 0.5,
+       "z": 0.5
+      },
+      "socketName": "None",
+      "template": {
+       "refPath": "/Game/InfinityBladeEffects/Effects/FX_Mobile/Impacts/NS_Impact_Player_Weak_small.NS_Impact_Player_Weak_small"
+      }
+     },
+     "start": 0.00048293120926246047,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/Kick1_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.3700000047683716,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Kick1.Kick1"
+        },
+        "animStartTime": 0.10000000149011612,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.4000000059604645,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Kick1.Kick1"
+        },
+        "animStartTime": 0.3700000047683716,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.27000001072883606
+       },
+       {
+        "animEndTime": 0.6000000238418579,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/Kick1.Kick1"
+        },
+        "animStartTime": 0.4000000059604645,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.33000001311302185
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Kick1.Kick1"
+        },
+        "animStartTime": 0.6000000238418579,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.39666667580604553
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.146649956703186,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 0.7365327311490546,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.43460220098495483,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Kick",
+      "socketName": "foot_r",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.31978797912597656,
+     "track": 3
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.33000001311302185,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickWeak"
+     },
+     "start": 0.33000001311302185,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.43501773476600647,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "foot_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.3841783106327057,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "ComboStart",
+     "start": 0
+    },
+    {
+     "name": "ComboStart",
+     "next": "None",
+     "start": 0.28245633840560913
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/PunchL_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.1666666716337204
+       },
+       {
+        "animEndTime": 1.100000023841858,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.3916666507720947
+       },
+       {
+        "animEndTime": 1.3666666746139526,
+        "animPlayRate": 0.699999988079071,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 1.100000023841858,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5416666865348816
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 0.9226166605949402,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 0.8501000238393317,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.5
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.4202067255973816,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Punch",
+      "socketName": "hand_lTrail",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.2384282797574997,
+     "track": 3
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.2750699818134308,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": "(set from the character's PunchWeakWoosh or PunchStrongWoosh at Notify)",
+      "volumeMultiplier": 1,
+      "wooshType": "PunchWeak"
+     },
+     "start": 0.2750699818134308,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.41875511407852173,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_l",
+         "lowerarm_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.35679131746292114,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "ComboStart",
+     "start": 0
+    },
+    {
+     "name": "ComboStart",
+     "next": "None",
+     "start": 0.15071146190166473
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/PunchR_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -0.10000000149011612,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.1666666716337204
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.3916666507720947
+       },
+       {
+        "animEndTime": 1.5333329439163208,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 1.2000000476837158,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.6416667103767395
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.058316707611084,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.0000999999974738,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.5
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.4391627907752991,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Punch",
+      "socketName": "hand_rTrail",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.2190723568201065,
+     "track": 3
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.2956897020339966,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": "(set from the character's PunchWeakWoosh or PunchStrongWoosh at Notify)",
+      "volumeMultiplier": 1,
+      "wooshType": "PunchWeak"
+     },
+     "start": 0.2956897020339966,
+     "track": 1
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.43970978260040283,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r",
+         "lowerarm_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.3916666507720947,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "ComboStart",
+     "start": 0
+    },
+    {
+     "name": "ComboStart",
+     "next": "None",
+     "start": 0.1666666716337204
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/PunchRunR_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -0.10000000149011612,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.1666666716337204
+       },
+       {
+        "animEndTime": 0.03333299979567528,
+        "animPlayRate": 0.03333299979567528,
+        "animReference": {
+         "refPath": "/Game/Anims/PunchRActive_PoseSeq.PunchRActive_PoseSeq"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.3916666507720947
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.3916666507720947
+       },
+       {
+        "animEndTime": 1.5333329439163208,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 1.2000000476837158,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.6416666507720947
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {
+    "RootSpeedX": [
+     [
+      0.20000000298023224,
+      4.113702090080551e-08
+     ],
+     [
+      0.4000000059604645,
+      1.0
+     ],
+     [
+      1.399999976158142,
+      0.9999999403953552
+     ],
+     [
+      1.600000023841858,
+      0.0
+     ]
+    ]
+   },
+   "length": 2.058316707611084,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.465407831761695,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.6488029509782791,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Punch",
+      "socketName": "hand_rTrail",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.2190723568201065,
+     "track": 3
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.2956897020339966,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": "(set from the character's PunchWeakWoosh or PunchStrongWoosh at Notify)",
+      "volumeMultiplier": 1,
+      "wooshType": "PunchWeak"
+     },
+     "start": 0.2956897020339966,
+     "track": 1
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 1.391566663980484,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r",
+         "lowerarm_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.391566663980484,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Startup",
+     "next": "ComboStart",
+     "start": 0
+    },
+    {
+     "name": "ComboStart",
+     "next": "Active",
+     "start": 0.1666666716337204
+    },
+    {
+     "name": "Active",
+     "next": "Recovery",
+     "start": 0.3916666507720947
+    },
+    {
+     "name": "Recovery",
+     "next": "None",
+     "start": 1.3916666507720947
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/SmashPlayer_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.30000001192092896,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.44999998807907104,
+        "animPlayRate": 0.20000000298023224,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.30000001192092896,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.6000000238418579
+       },
+       {
+        "animEndTime": 0.75,
+        "animPlayRate": 1.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.44999998807907104,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.3499999046325684
+       },
+       {
+        "animEndTime": 1.6666666269302368,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.75,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.5499999523162842
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 2.4666666984558105,
+   "notifies": [
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotifyState_TimedNiagaraEffect",
+     "end": 1.3212153745625983,
+     "name": "TimedNiagaraEffect",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "hand_r",
+      "template": {
+       "refPath": "/Game/FX/FX_BossCharge.FX_BossCharge"
+      }
+     },
+     "start": 9.999999747378752e-05,
+     "track": 1
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.9497991634343634,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 5
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 9.999999747378752e-05,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 9.999999747378752e-05,
+     "track": 7
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 1.2443715333938599,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_attack_groan_03_Cue.voice_male_d_attack_groan_03_Cue"
+      },
+      "volumeMultiplier": 1.5
+     },
+     "start": 1.2443715333938599,
+     "track": 7
+    },
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotifyState_TimedNiagaraEffect",
+     "end": 1.7435907125473022,
+     "name": "TimedNiagaraEffect",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "hand_r",
+      "template": {
+       "refPath": "/Game/FX/FX_Trail.FX_Trail"
+      }
+     },
+     "start": 1.3499999046325684,
+     "track": 2
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 1.3499999046325684,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 1.3499999046325684,
+     "track": 6
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 1.522567868232727,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/punch01verylowpitch_Cue1.punch01verylowpitch_Cue1"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 1.522567868232727,
+     "track": 6
+    },
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotify_PlayNiagaraEffect",
+     "end": 1.541753888130188,
+     "name": "PlayNiagaraEffect",
+     "settings": {
+      "attached": false,
+      "bAbsoluteScale": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 0.38823533058166504,
+       "g": 1,
+       "r": 0.7529412508010864
+      },
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "None",
+      "template": {
+       "refPath": "/Game/FX/FX_GroundImpact1.FX_GroundImpact1"
+      }
+     },
+     "start": 1.541753888130188,
+     "track": 1
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 1.6089047193527222,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": false,
+        "boneNames": [
+         "None"
+        ],
+        "boxExtent": {
+         "x": 220,
+         "y": 220,
+         "z": 10
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 44.99999827040028
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 300
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 1.5499999523162842,
+     "track": 0
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.954252004623413,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.camshake"
+          },
+          "magnitude": 100
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 1.5499999523162842,
+     "track": 4
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.954252004623413,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.camshake"
+          },
+          "magnitude": 80
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 1.7240204811096191,
+     "track": 3
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "ComboStart",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/Smash_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.75,
+        "animPlayRate": 1.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 1.6666666269302368,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.75,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 2.3333165645599365,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.6667666269277106,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.75,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Punch",
+      "socketName": "hand_r",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.3564091920852661,
+     "track": 1
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.3781587779521942,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.3781587779521942,
+     "track": 3
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.8214635848999023,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 60
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.45903196930885315,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/Tat_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.05000000074505806,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -0.10000000149011612,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.4000000059604645,
+        "animPlayRate": 4,
+        "animReference": {
+         "refPath": "/Game/Anims/Tat.Tat"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.44999998807907104,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Tat.Tat"
+        },
+        "animStartTime": 0.4000000059604645,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.10000000149011612
+       },
+       {
+        "animEndTime": 0.75,
+        "animPlayRate": 4,
+        "animReference": {
+         "refPath": "/Game/Anims/Tat.Tat"
+        },
+        "animStartTime": 0.44999998807907104,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.1499999761581421
+       },
+       {
+        "animEndTime": 1,
+        "animPlayRate": 0.20000000298023224,
+        "animReference": {
+         "refPath": "/Game/Anims/Tat.Tat"
+        },
+        "animStartTime": 0.75,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.22499997913837433
+       },
+       {
+        "animEndTime": 1.5,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/Tat.Tat"
+        },
+        "animStartTime": 1,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.475000023841858
+       },
+       {
+        "animEndTime": 1.9583333730697632,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/Tat.Tat"
+        },
+        "animStartTime": 1.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.725000023841858
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {
+    "RootMoveZ": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.4000000059604645,
+      0.800000011920929
+     ],
+     [
+      1.399999976158142,
+      0.7999999523162842
+     ],
+     [
+      1.7999999523162842,
+      0.050000011920928955
+     ]
+    ],
+    "RootSpeedX": [
+     [
+      0.0,
+      0.0
+     ],
+     [
+      0.20000000298023224,
+      1.600000023841858
+     ],
+     [
+      1.7000000476837158,
+      1.600000023841858
+     ],
+     [
+      1.75,
+      0.0
+     ]
+    ]
+   },
+   "length": 1.9541499614715576,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_RotateChar",
+     "end": 1.4508750289678574,
+     "name": "ANS_RotateChar",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationSpeed": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 4
+      }
+     },
+     "start": -1.4901161193847656e-08,
+     "track": 1
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.9492531848882209,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 4
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.873185969889164,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.immune.proj"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 0.07110200077295303,
+     "track": 5
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.8731858730316162,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_NoPawnBlock.GE_NoPawnBlock_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.nopawnblock"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 0.07110202312469482,
+     "track": 6
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.09999999403953552,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickWeak"
+     },
+     "start": 0.09999999403953552,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 1.5382349491119385,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Kick",
+      "socketName": "ball_r",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.1774599552154541,
+     "track": 3
+    },
+    {
+     "class": "/Script/MyGame.ANS_Hitbox",
+     "end": 1.4750001579523087,
+     "name": "ANS_Hitbox",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.20000000298023224,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "foot_r",
+         "thigh_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 70
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 5
+     },
+     "start": 0.18436338007450104,
+     "track": 0
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.4333401024341583,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickWeak"
+     },
+     "start": 0.4333401024341583,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.6540823578834534,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickWeak"
+     },
+     "start": 0.6540823578834534,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.9903293251991272,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickWeak"
+     },
+     "start": 0.9903293251991272,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 1.21620512008667,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickWeak"
+     },
+     "start": 1.21620512008667,
+     "track": 2
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/Upper2_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.4000000059604645,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Upper2.Upper2"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.75,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/Upper2.Upper2"
+        },
+        "animStartTime": 0.4000000059604645,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.4000000059604645
+       },
+       {
+        "animEndTime": 1.5666667222976685,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Upper2.Upper2"
+        },
+        "animStartTime": 0.75,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5166666507720947
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.537500023841858,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.0000999999974738,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.37875717878341675,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": "(set from the character's PunchWeakWoosh or PunchStrongWoosh at Notify)",
+      "volumeMultiplier": 1,
+      "wooshType": "PunchWeak"
+     },
+     "start": 0.37875717878341675,
+     "track": 0
+    },
+    {
+     "class": "/Script/MyGame.ANS_PlaySlash",
+     "end": 0.5057594180107117,
+     "name": "ANS_PlaySlash",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "slashLocation": "Punch",
+      "socketName": "hand_r",
+      "template": "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
+     },
+     "start": 0.38721761107444763,
+     "track": 4
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.5166666507720947,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r",
+         "lowerarm_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 60
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.4599774479866028,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "combostart",
+     "start": 0
+    },
+    {
+     "name": "combostart",
+     "next": "None",
+     "start": 0.2992290258407593
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Anims/kkk_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/kkk.kkk"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 1,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/kkk.kkk"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       },
+       {
+        "animEndTime": 1.6666666269302368,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/kkk.kkk"
+        },
+        "animStartTime": 1,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.75
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 2.0833165645599365,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.5000999999974738,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       },
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_RotSpeedMultiply.GE_RotSpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.rotspeed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.rotspeed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 2
+    },
+    {
+     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "end": 0.5264984965324402,
+     "name": "AN_PlaySoundFromChar",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1,
+      "wooshType": "KickWeak"
+     },
+     "start": 0.5264984965324402,
+     "track": 3
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.6537922620773315,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "foot_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 25
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.6200204491615295,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Startup",
+     "next": "Active",
+     "start": 0
+    },
+    {
+     "name": "Active",
+     "next": "Active",
+     "start": 0.5015802979469299
+    },
+    {
+     "name": "Recovery",
+     "next": "None",
+     "start": 0.75
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/Boss1/PunchL_Montage_Boss": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.8999999761581421,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.1666666716337204
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.8999999761581421,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.30000001192092896
+       },
+       {
+        "animEndTime": 1.100000023841858,
+        "animPlayRate": 0.8999999761581421,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.3500000238418579
+       },
+       {
+        "animEndTime": 1.3666666746139526,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 1.100000023841858,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5166667699813843
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 0.8500000238418579,
+   "notifies": [
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotifyState_TimedNiagaraEffect",
+     "end": 0.41962289810180664,
+     "name": "TimedNiagaraEffect",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "hand_lTrail",
+      "template": {
+       "refPath": "/Game/FX/FX_TrailRed.FX_TrailRed"
+      }
+     },
+     "start": 0.19425077736377716,
+     "track": 3
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.2569078803062439,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.2569078803062439,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.4000000134110451,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_l",
+         "lowerarm_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.30000001192092896,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/Boss1/PunchR_Montage_Boss": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 2,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.8999999761581421,
+        "animPlayRate": 4,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.25
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 0.699999988079071,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.8999999761581421,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.3499999940395355
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.4214285910129547
+       },
+       {
+        "animEndTime": 1.5333329439163208,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 1.2000000476837158,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.6714286804199219
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.0880833864212036,
+   "notifies": [
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotifyState_TimedNiagaraEffect",
+     "end": 0.5,
+     "name": "TimedNiagaraEffect",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "hand_rTrail",
+      "template": {
+       "refPath": "/Game/FX/FX_TrailRed.FX_TrailRed"
+      }
+     },
+     "start": 0.3077227771282196,
+     "track": 3
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.3334561884403229,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.3334561884403229,
+     "track": 1
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.44999999552965164,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r",
+         "lowerarm_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 50
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.3499999940395355,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.30000001192092896,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.44999998807907104,
+        "animPlayRate": 0.20000000298023224,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.30000001192092896,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.6000000238418579
+       },
+       {
+        "animEndTime": 0.75,
+        "animPlayRate": 1.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.44999998807907104,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.3499999046325684
+       },
+       {
+        "animEndTime": 1.6666666269302368,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Smash.Smash"
+        },
+        "animStartTime": 0.75,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.5499999523162842
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 2.4666666984558105,
+   "notifies": [
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotifyState_TimedNiagaraEffect",
+     "end": 1.3210153745676507,
+     "name": "TimedNiagaraEffect",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "hand_r",
+      "template": {
+       "refPath": "/Game/FX/FX_BossCharge.FX_BossCharge"
+      }
+     },
+     "start": -9.999999747378752e-05,
+     "track": 1
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.9497991634343634,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": 2
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 9.999999747378752e-05,
+     "track": 5
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 9.999999747378752e-05,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 9.999999747378752e-05,
+     "track": 7
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 1.2443715333938599,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_attack_groan_03_Cue.voice_male_d_attack_groan_03_Cue"
+      },
+      "volumeMultiplier": 1.5
+     },
+     "start": 1.2443715333938599,
+     "track": 7
+    },
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotifyState_TimedNiagaraEffect",
+     "end": 1.7435907125473022,
+     "name": "TimedNiagaraEffect",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "hand_r",
+      "template": {
+       "refPath": "/Game/FX/FX_Trail.FX_Trail"
+      }
+     },
+     "start": 1.3499999046325684,
+     "track": 2
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 1.3499999046325684,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 1.3499999046325684,
+     "track": 6
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 1.522567868232727,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/punch01verylowpitch_Cue1.punch01verylowpitch_Cue1"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 1.522567868232727,
+     "track": 6
+    },
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotify_PlayNiagaraEffect",
+     "end": 1.541753888130188,
+     "name": "PlayNiagaraEffect",
+     "settings": {
+      "attached": false,
+      "bAbsoluteScale": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 0.38823533058166504,
+       "g": 1,
+       "r": 0.7529412508010864
+      },
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "None",
+      "template": {
+       "refPath": "/Game/FX/FX_GroundImpact1.FX_GroundImpact1"
+      }
+     },
+     "start": 1.541753888130188,
+     "track": 1
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 1.6089047193527222,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": false,
+        "boneNames": [
+         "None"
+        ],
+        "boxExtent": {
+         "x": 220,
+         "y": 220,
+         "z": 10
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 44.99999827040028
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 300
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 1.5499999523162842,
+     "track": 0
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.954252004623413,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.camshake"
+          },
+          "magnitude": 100
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 1.5499999523162842,
+     "track": 4
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.954252004623413,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.camshake"
+          },
+          "magnitude": 80
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 1.7240204811096191,
+     "track": 3
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "ComboStart",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EKicker/KickerKick_Montage": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.05000000074505806,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Kick1.Kick1"
+        },
+        "animStartTime": 0.20000000298023224,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.6000000238418579,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Kick1.Kick1"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.30000001192092896
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Kick1.Kick1"
+        },
+        "animStartTime": 0.6000000238418579,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.40000003576278687
+       }
+      ]
+     },
+     "slotName": "DefaultSlot"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1,
+   "notifies": [
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.1996515840291977,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.1996515840291977,
+     "track": 0
+    },
+    {
+     "class": "/Script/NiagaraAnimNotifies.AnimNotifyState_TimedNiagaraEffect",
+     "end": 0.4418286383152008,
+     "name": "TimedNiagaraEffect",
+     "settings": {
+      "bApplyRateScaleAsTimeDilation": false,
+      "bDestroyAtEnd": false,
+      "bShouldFireInEditor": true,
+      "locationOffset": {
+       "x": 0,
+       "y": 0,
+       "z": 0
+      },
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "rotationOffset": {
+       "pitch": 0,
+       "roll": 0,
+       "yaw": 0
+      },
+      "scale": {
+       "x": 1,
+       "y": 1,
+       "z": 1
+      },
+      "socketName": "foot_r",
+      "template": {
+       "refPath": "/Game/FX/FX_Trail.FX_Trail"
+      }
+     },
+     "start": 0.22462479770183563,
+     "track": 3
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.4322507455945015,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "foot_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.3322507441043854,
+     "track": 1
+    },
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 0.5978119969367981,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.knockback"
+          },
+          "magnitude": 1400
+         }
+        ]
+       },
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_NoPawnBlock.GE_NoPawnBlock_C"
+        },
+        "magnitudes": []
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 0.34563732147216797,
+     "track": 5
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       },
+       {
+        "animEndTime": 1.100000023841858,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.949999988079071
+       },
+       {
+        "animEndTime": 1.3666666746139526,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 1.100000023841858,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.100000023841858
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.6333166360855103,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.41038693657174,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.5
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": -9.999999747378752e-05,
+     "track": 1
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.7420913577079773,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.7420913577079773,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.9203120172023773,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_l",
+         "lowerarm_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.8303120136260986,
+     "track": 2
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 1.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.7999999523162842
+       },
+       {
+        "animEndTime": 1.5333329439163208,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 1.2000000476837158,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.0499999523162842
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.4666500091552734,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.161987118422985,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.10000000149011612
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 0.10866110771894455,
+     "track": 1
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.7028560042381287,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.7028560042381287,
+     "track": 2
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.7966405041515827,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r",
+         "lowerarm_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.7466405034065247,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       },
+       {
+        "animEndTime": 1.100000023841858,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.949999988079071
+       },
+       {
+        "animEndTime": 1.3666666746139526,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 1.100000023841858,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.100000023841858
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.6333166360855103,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.41038693657174,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.5
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": -9.999999747378752e-05,
+     "track": 1
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.7420913577079773,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.7420913577079773,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.9203120172023773,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_l",
+         "lowerarm_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.8303120136260986,
+     "track": 2
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 1.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.7999999523162842
+       },
+       {
+        "animEndTime": 1.5333329439163208,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 1.2000000476837158,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.0499999523162842
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.4666500091552734,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.161987118422985,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.10000000149011612
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 0.10866110771894455,
+     "track": 1
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.7028560042381287,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.7028560042381287,
+     "track": 2
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.7966405041515827,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r",
+         "lowerarm_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.7466405034065247,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EMelee3/PunchL_MontageEnemy2": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       },
+       {
+        "animEndTime": 1.100000023841858,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.949999988079071
+       },
+       {
+        "animEndTime": 1.3666666746139526,
+        "animPlayRate": 0.5,
+        "animReference": {
+         "refPath": "/Game/Anims/LeftHook.LeftHook"
+        },
+        "animStartTime": 1.100000023841858,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.100000023841858
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.6333166360855103,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.41038693657174,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.5
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": -9.999999747378752e-05,
+     "track": 1
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.7420913577079773,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.7420913577079773,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.9203120172023773,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_l",
+         "lowerarm_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.8303120136260986,
+     "track": 2
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EMelee3/PunchR_MontageEnemy2": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 0.5,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 0.949999988079071,
+        "animPlayRate": 1.5,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.5
+       },
+       {
+        "animEndTime": 1.2000000476837158,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 0.949999988079071,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0.7999999523162842
+       },
+       {
+        "animEndTime": 1.5333329439163208,
+        "animPlayRate": 0.800000011920929,
+        "animReference": {
+         "refPath": "/Game/Anims/Punching.Punching"
+        },
+        "animStartTime": 1.2000000476837158,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.0499999523162842
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 1.4666500091552734,
+   "notifies": [
+    {
+     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "end": 1.161987118422985,
+     "name": "ANS_ApplyEffect",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "effectsToApply": [
+       {
+        "effectClass": {
+         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
+        },
+        "magnitudes": [
+         {
+          "gameplayTag": {
+           "tagName": "data.speed"
+          },
+          "magnitude": 0.10000000149011612
+         },
+         {
+          "gameplayTag": {
+           "tagName": "data.speed.duration"
+          },
+          "magnitude": -1
+         }
+        ]
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 0.10866110771894455,
+     "track": 1
+    },
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 0.7028560042381287,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 0.7028560042381287,
+     "track": 2
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_HitboxBP.ANS_HitboxBP_C",
+     "end": 0.7966405041515827,
+     "name": "ANS_Hitbox_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "hitCooldown": 0.10000000149011612,
+      "hitboxes": [
+       {
+        "bIsSphere": true,
+        "boneNames": [
+         "hand_r",
+         "lowerarm_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0,
+          "y": 0,
+          "z": 0
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       }
+      ],
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0,
+      "numHits": 1
+     },
+     "start": 0.7466405034065247,
+     "track": 0
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  },
+  "/Game/Blueprints/Chars/EWizard/CastForward_Montage1": {
+   "BlendIn": {
+    "blendOption": "Linear",
+    "blendTime": 0.10000000149011612,
+    "customCurve": "None"
+   },
+   "BlendOut": {
+    "blendOption": "Linear",
+    "blendTime": 0.25,
+    "customCurve": "None"
+   },
+   "BlendOutTriggerTime": -1,
+   "RateScale": 1,
+   "SlotAnimTracks": [
+    {
+     "animTrack": {
+      "animSegments": [
+       {
+        "animEndTime": 1.600000023841858,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 0.5,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 0
+       },
+       {
+        "animEndTime": 2,
+        "animPlayRate": 3,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 1.600000023841858,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.100000023841858
+       },
+       {
+        "animEndTime": 2.5999999046325684,
+        "animPlayRate": 1,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 2,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.2333333492279053
+       },
+       {
+        "animEndTime": 3.366666555404663,
+        "animPlayRate": 0.7523810267448425,
+        "animReference": {
+         "refPath": "/Game/Anims/CastForward.CastForward"
+        },
+        "animStartTime": 2.5999999046325684,
+        "cachedPlayLength": 0,
+        "loopingCount": 1,
+        "startPos": 1.8333332538604736
+       }
+      ]
+     },
+     "slotName": "UpperBody"
+    }
+   ],
+   "bEnableAutoBlendOut": true,
+   "curves": {},
+   "length": 2.8523166179656982,
+   "notifies": [
+    {
+     "class": "/Script/Engine.AnimNotify_PlaySound",
+     "end": 1.100000023841858,
+     "name": "PlaySound",
+     "settings": {
+      "attachName": "None",
+      "bFollow": false,
+      "bPreviewIgnoreAttenuation": false,
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.5568627715110779,
+       "r": 0.7686275243759155
+      },
+      "pitchMultiplier": 1,
+      "sound": {
+       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
+      },
+      "volumeMultiplier": 1
+     },
+     "start": 1.100000023841858,
+     "track": 0
+    },
+    {
+     "class": "/Game/Blueprints/Notifies/ANS_ProjectileCast.ANS_ProjectileCast_C",
+     "end": 1.456566572189331,
+     "name": "ANS_ProjectileCast_C",
+     "settings": {
+      "bShouldFireInEditor": true,
+      "notifyColor": {
+       "a": 1,
+       "b": 1,
+       "g": 0.7843137979507446,
+       "r": 0.7843137979507446
+      },
+      "notifyStateBehaviorFlags": 0
+     },
+     "start": 1.2333333492279053,
+     "track": 1
+    }
+   ],
+   "sections": [
+    {
+     "name": "Default",
+     "next": "None",
+     "start": 0
+    }
+   ],
+   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+  }
+ },
+ "sequences": {
+  "/Game/Anims/CastForward": {
+   "curves": {},
+   "frames": 101,
+   "length": 3.366666555404663,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/FlyingKick": {
+   "curves": {},
+   "frames": 45,
+   "length": 1.5,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/GetHit": {
+   "curves": {},
+   "frames": 29,
+   "length": 0.9666666388511658,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/Kick1": {
+   "curves": {},
+   "frames": 2752,
+   "length": 1.4333332777023315,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/LeftHook": {
+   "curves": {},
+   "frames": 41,
+   "length": 1.3666666746139526,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/PunchRActive_PoseSeq": {
+   "curves": {},
+   "frames": 1,
+   "length": 0.03333333507180214,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/Punching": {
+   "curves": {},
+   "frames": 46,
+   "length": 1.5333333015441895,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/Smash": {
+   "curves": {},
+   "frames": 40,
+   "length": 1.6666666269302368,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/Tat": {
+   "curves": {},
+   "frames": 47,
+   "length": 1.9583333730697632,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/Upper2": {
+   "curves": {},
+   "frames": 517,
+   "length": 1.5666667222976685,
+   "notifies": [],
+   "root_motion": false
+  },
+  "/Game/Anims/kkk": {
+   "curves": {},
+   "frames": 40,
+   "length": 1.6666666269302368,
+   "notifies": [],
+   "root_motion": false
+  }
+ }
+}
