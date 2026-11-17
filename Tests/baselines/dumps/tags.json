@@ -5,8 +5,8 @@
    "EnhancedInput.Modes"
   ],
   "code": [
-   "Config/DefaultInput.ini:133: DefaultPlayerInputClass=/Script/EnhancedInput.EnhancedPlayerInput",
-   "Config/DefaultInput.ini:134: DefaultInputComponentClass=/Script/EnhancedInput.EnhancedInputComponent"
+   "Config/DefaultInput.ini: DefaultPlayerInputClass=/Script/EnhancedInput.EnhancedPlayerInput",
+   "Config/DefaultInput.ini: DefaultInputComponentClass=/Script/EnhancedInput.EnhancedInputComponent"
   ],
   "owner": null,
   "plugin_name": null,
@@ -73,9 +73,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:37: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Hit_Impact);",
-   "Source/MyGame/MyGameplayTags.cpp:30: UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, \"GameplayCue.hit.impact\");",
-   "Source/MyGame/Player/HitBox.cpp:116: GAS->ExecuteGameplayCue(MyGameplayTags::GameplayCue_Hit_Impact, Cue);"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Hit_Impact);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, \"GameplayCue.hit.impact\");",
+   "Source/MyGame/Player/HitBox.cpp: GAS->ExecuteGameplayCue(MyGameplayTags::GameplayCue_Hit_Impact, Cue);"
   ],
   "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
   "plugin_name": null,
@@ -506,10 +506,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:27: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_FlyingAttack);",
-   "Source/MyGame/MyGameplayTags.cpp:22: UE_DEFINE_GAMEPLAY_TAG(Activate_FlyingAttack, \"activate.flyingattack\");",
-   "Source/MyGame/Player/MyCharacter.cpp:495: return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);",
-   "Source/MyGame/Player/MyCharacter.cpp:1083: FGameplayTag FlyingTag = MyGameplayTags::Activate_FlyingAttack;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_FlyingAttack);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Activate_FlyingAttack, \"activate.flyingattack\");",
+   "Source/MyGame/Player/MyCharacter.cpp: return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag FlyingTag = MyGameplayTags::Activate_FlyingAttack;"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -529,9 +529,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:26: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_GroundAttack);",
-   "Source/MyGame/MyGameplayTags.cpp:21: UE_DEFINE_GAMEPLAY_TAG(Activate_GroundAttack, \"activate.groundattack\");",
-   "Source/MyGame/Player/MyCharacter.cpp:1085: FGameplayTag GroundTag = MyGameplayTags::Activate_GroundAttack;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_GroundAttack);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Activate_GroundAttack, \"activate.groundattack\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag GroundTag = MyGameplayTags::Activate_GroundAttack;"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -618,13 +618,13 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:10: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:37: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:70: && ASC->HasMatchingGameplayTag(MyGameplayTags::Combo_CanCancel)",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:115: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:165: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:386: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/MyGameplayTags.cpp:6: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"combo.cancancel\");"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: && ASC->HasMatchingGameplayTag(MyGameplayTags::Combo_CanCancel)",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"combo.cancancel\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -761,9 +761,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:49: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_CamShake);",
-   "Source/MyGame/MyGameplayTags.cpp:40: UE_DEFINE_GAMEPLAY_TAG(Data_CamShake, \"data.camshake\");",
-   "Source/MyGame/Player/MyCharacter.cpp:740: if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_CamShake);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_CamShake, \"data.camshake\");",
+   "Source/MyGame/Player/MyCharacter.cpp: if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));"
   ],
   "owner": null,
   "plugin_name": null,
@@ -797,11 +797,11 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:46: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);",
-   "Source/MyGame/Abilities/DamageExec.cpp:78: // FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
-   "Source/MyGame/Abilities/DamageExec.cpp:79: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:326: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
-   "Source/MyGame/MyGameplayTags.cpp:37: UE_DEFINE_GAMEPLAY_TAG(Data_Damage, \"data.damage\");"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);",
+   "Source/MyGame/Abilities/DamageExec.cpp: // FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
+   "Source/MyGame/Abilities/DamageExec.cpp: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Damage, \"data.damage\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -844,10 +844,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:47: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_HitStun);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:325: /*FGameplayTag HitStunTag = MyGameplayTags::Data_HitStun;",
-   "Source/MyGame/MyGameplayTags.cpp:38: UE_DEFINE_GAMEPLAY_TAG(Data_HitStun, \"data.hitstun\");",
-   "Source/MyGame/Player/MyCharacter.cpp:810: /*FGameplayTag HitStun = MyGameplayTags::Data_HitStun;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_HitStun);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: /*FGameplayTag HitStunTag = MyGameplayTags::Data_HitStun;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_HitStun, \"data.hitstun\");",
+   "Source/MyGame/Player/MyCharacter.cpp: /*FGameplayTag HitStun = MyGameplayTags::Data_HitStun;"
   ],
   "owner": null,
   "plugin_name": null,
@@ -901,10 +901,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:48: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Knockback);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:327: FGameplayTag KnockbackTag = MyGameplayTags::Data_Knockback;",
-   "Source/MyGame/MyGameplayTags.cpp:39: UE_DEFINE_GAMEPLAY_TAG(Data_Knockback, \"data.knockback\");",
-   "Source/MyGame/Player/MyCharacter.cpp:733: ApplyKnockBack(SourceActor, Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Knockback, false));"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Knockback);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag KnockbackTag = MyGameplayTags::Data_Knockback;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Knockback, \"data.knockback\");",
+   "Source/MyGame/Player/MyCharacter.cpp: ApplyKnockBack(SourceActor, Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Knockback, false));"
   ],
   "owner": null,
   "plugin_name": null,
@@ -921,9 +921,9 @@
    "data.launch.z"
   ],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:50: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:328: FGameplayTag LaunchTag = MyGameplayTags::Data_Launch;",
-   "Source/MyGame/MyGameplayTags.cpp:41: UE_DEFINE_GAMEPLAY_TAG(Data_Launch, \"data.launch\");"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchTag = MyGameplayTags::Data_Launch;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch, \"data.launch\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -941,10 +941,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:51: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_X);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:329: FGameplayTag LaunchXTag = MyGameplayTags::Data_Launch_X;",
-   "Source/MyGame/MyGameplayTags.cpp:42: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_X, \"data.launch.x\");",
-   "Source/MyGame/Player/MyCharacter.cpp:736: ApplyLaunchBack(SourceActor, FVector(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_X, false),"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_X);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchXTag = MyGameplayTags::Data_Launch_X;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_X, \"data.launch.x\");",
+   "Source/MyGame/Player/MyCharacter.cpp: ApplyLaunchBack(SourceActor, FVector(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_X, false),"
   ],
   "owner": null,
   "plugin_name": null,
@@ -962,10 +962,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:52: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Y);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:330: FGameplayTag LaunchYTag = MyGameplayTags::Data_Launch_Y;",
-   "Source/MyGame/MyGameplayTags.cpp:43: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Y, \"data.launch.y\");",
-   "Source/MyGame/Player/MyCharacter.cpp:737: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Y);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchYTag = MyGameplayTags::Data_Launch_Y;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Y, \"data.launch.y\");",
+   "Source/MyGame/Player/MyCharacter.cpp: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));"
   ],
   "owner": null,
   "plugin_name": null,
@@ -983,10 +983,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:53: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Z);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:331: FGameplayTag LaunchZTag = MyGameplayTags::Data_Launch_Z;*/",
-   "Source/MyGame/MyGameplayTags.cpp:44: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Z, \"data.launch.z\");",
-   "Source/MyGame/Player/MyCharacter.cpp:737: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Z);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchZTag = MyGameplayTags::Data_Launch_Z;*/",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Z, \"data.launch.z\");",
+   "Source/MyGame/Player/MyCharacter.cpp: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1022,9 +1022,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:55: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_NoControl);",
-   "Source/MyGame/MyGameplayTags.cpp:46: UE_DEFINE_GAMEPLAY_TAG(Data_NoControl, \"data.nocontrol\");",
-   "Source/MyGame/Player/MyCharacter.cpp:1246: FGameplayTag NoControlTag = MyGameplayTags::Data_NoControl;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_NoControl);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_NoControl, \"data.nocontrol\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag NoControlTag = MyGameplayTags::Data_NoControl;"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1165,9 +1165,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:54: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_StunImmune);",
-   "Source/MyGame/MyGameplayTags.cpp:45: UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, \"data.stunimmune\");",
-   "Source/MyGame/Player/MyCharacter.cpp:778: FGameplayTag StunImmuneTag = MyGameplayTags::Data_StunImmune;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_StunImmune);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, \"data.stunimmune\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag StunImmuneTag = MyGameplayTags::Data_StunImmune;"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1191,9 +1191,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:35: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Dash);",
-   "Source/MyGame/MyGameplayTags.cpp:29: UE_DEFINE_GAMEPLAY_TAG(Event_Dash, \"event.dash\");",
-   "Source/MyGame/Player/MyCharacter.cpp:343: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, MyGameplayTags::Event_Dash, FGameplayEventData());"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Dash);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Event_Dash, \"event.dash\");",
+   "Source/MyGame/Player/MyCharacter.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(this, MyGameplayTags::Event_Dash, FGameplayEventData());"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1229,9 +1229,9 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:40: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_0);",
-   "Source/MyGame/MyGameplayTags.cpp:32: UE_DEFINE_GAMEPLAY_TAG(Input_Release_0, \"input.release.0\");",
-   "Source/MyGame/Player/MyPlayerController.cpp:215: static const FGameplayTag ReleaseTags[] = { MyGameplayTags::Input_Release_0, MyGameplayTags::Input_Release_1,"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_0);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Input_Release_0, \"input.release.0\");",
+   "Source/MyGame/Player/MyPlayerController.cpp: static const FGameplayTag ReleaseTags[] = { MyGameplayTags::Input_Release_0, MyGameplayTags::Input_Release_1,"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1244,9 +1244,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:41: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_1);",
-   "Source/MyGame/MyGameplayTags.cpp:33: UE_DEFINE_GAMEPLAY_TAG(Input_Release_1, \"input.release.1\");",
-   "Source/MyGame/Player/MyPlayerController.cpp:215: static const FGameplayTag ReleaseTags[] = { MyGameplayTags::Input_Release_0, MyGameplayTags::Input_Release_1,"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_1);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Input_Release_1, \"input.release.1\");",
+   "Source/MyGame/Player/MyPlayerController.cpp: static const FGameplayTag ReleaseTags[] = { MyGameplayTags::Input_Release_0, MyGameplayTags::Input_Release_1,"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1257,9 +1257,9 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:42: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_2);",
-   "Source/MyGame/MyGameplayTags.cpp:34: UE_DEFINE_GAMEPLAY_TAG(Input_Release_2, \"input.release.2\");",
-   "Source/MyGame/Player/MyPlayerController.cpp:216: MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_2);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Input_Release_2, \"input.release.2\");",
+   "Source/MyGame/Player/MyPlayerController.cpp: MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1270,9 +1270,9 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:43: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_3);",
-   "Source/MyGame/MyGameplayTags.cpp:35: UE_DEFINE_GAMEPLAY_TAG(Input_Release_3, \"input.release.3\");",
-   "Source/MyGame/Player/MyPlayerController.cpp:216: MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_3);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Input_Release_3, \"input.release.3\");",
+   "Source/MyGame/Player/MyPlayerController.cpp: MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1308,11 +1308,11 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:31: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Connect);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:24: ConnectHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Connect).AddUObject(this, &UAbilityTask_HitboxWindows",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:83: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Connect)) D->Remove(ConnectHandle",
-   "Source/MyGame/MyGameplayTags.cpp:26: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, \"notify.hit.connect\");",
-   "Source/MyGame/Player/HitBox.cpp:104: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Connect);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: ConnectHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Connect).AddUObject(this, &UAbilityTask_HitboxWindows",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Connect)) D->Remove(ConnectHandle",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, \"notify.hit.connect\");",
+   "Source/MyGame/Player/HitBox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1325,11 +1325,11 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:30: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_End);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:23: EndHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_End).AddUObject(this, &UAbilityTask_HitboxWindows::Handle",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:82: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_End)) D->Remove(EndHandle);",
-   "Source/MyGame/Abilities/ANS_Hitbox.cpp:46: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_End, Payload);",
-   "Source/MyGame/MyGameplayTags.cpp:25: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, \"notify.hit.end\");"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_End);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: EndHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_End).AddUObject(this, &UAbilityTask_HitboxWindows::Handle",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_End)) D->Remove(EndHandle);",
+   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_End, Payload);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, \"notify.hit.end\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1340,11 +1340,11 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:29: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Start);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:22: StartHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Start).AddUObject(this, &UAbilityTask_HitboxWindows::Ha",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp:81: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Start)) D->Remove(StartHandle);",
-   "Source/MyGame/Abilities/ANS_Hitbox.cpp:18: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_Start, Payload);",
-   "Source/MyGame/MyGameplayTags.cpp:24: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, \"notify.hit.start\");"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Start);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: StartHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Start).AddUObject(this, &UAbilityTask_HitboxWindows::Ha",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Start)) D->Remove(StartHandle);",
+   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_Start, Payload);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, \"notify.hit.start\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1366,9 +1366,9 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:32: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Projectile_Cast);",
-   "Source/MyGame/Abilities/CastAbility.cpp:18: FGameplayTag CastTag = MyGameplayTags::Notify_Projectile_Cast;",
-   "Source/MyGame/MyGameplayTags.cpp:27: UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, \"notify.projectile.cast\");"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Projectile_Cast);",
+   "Source/MyGame/Abilities/CastAbility.cpp: FGameplayTag CastTag = MyGameplayTags::Notify_Projectile_Cast;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, \"notify.projectile.cast\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1403,10 +1403,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:9: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:35: FGameplayTag AttackTag = MyGameplayTags::State_Attacking;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp:69: && ASC->HasMatchingGameplayTag(MyGameplayTags::State_Attacking)",
-   "Source/MyGame/MyGameplayTags.cpp:5: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"state.attacking\");"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag AttackTag = MyGameplayTags::State_Attacking;",
+   "Source/MyGame/Abilities/MyGameplayAbility.cpp: && ASC->HasMatchingGameplayTag(MyGameplayTags::State_Attacking)",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"state.attacking\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1470,9 +1470,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:19: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Airborne);",
-   "Source/MyGame/MyGameplayTags.cpp:14: UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, \"status.airborne\");",
-   "Source/MyGame/Player/MyCharacter.cpp:1087: AbilitySystem->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, GetMovementComponent()->IsFalling() ? 1 : 0);"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Airborne);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, \"status.airborne\");",
+   "Source/MyGame/Player/MyCharacter.cpp: AbilitySystem->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, GetMovementComponent()->IsFalling() ? 1 : 0);"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1524,9 +1524,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:24: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_25);",
-   "Source/MyGame/MyGameplayTags.cpp:19: UE_DEFINE_GAMEPLAY_TAG(Status_Health_25, \"status.health.25\");",
-   "Source/MyGame/Player/MyCharacter.cpp:599: FGameplayTag HealthTag = MyGameplayTags::Status_Health_25;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_25);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Health_25, \"status.health.25\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag HealthTag = MyGameplayTags::Status_Health_25;"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -1537,9 +1537,9 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:23: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_30);",
-   "Source/MyGame/MyGameplayTags.cpp:18: UE_DEFINE_GAMEPLAY_TAG(Status_Health_30, \"status.health.30\");",
-   "Source/MyGame/Player/MyCharacter.cpp:594: FGameplayTag HealthTag = MyGameplayTags::Status_Health_30;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_30);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Health_30, \"status.health.30\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag HealthTag = MyGameplayTags::Status_Health_30;"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -1561,9 +1561,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:22: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_50);",
-   "Source/MyGame/MyGameplayTags.cpp:17: UE_DEFINE_GAMEPLAY_TAG(Status_Health_50, \"status.health.50\");",
-   "Source/MyGame/Player/MyCharacter.cpp:589: FGameplayTag HealthTag = MyGameplayTags::Status_Health_50;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_50);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Health_50, \"status.health.50\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag HealthTag = MyGameplayTags::Status_Health_50;"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -1583,9 +1583,9 @@
   "assets": [],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:21: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_70);",
-   "Source/MyGame/MyGameplayTags.cpp:16: UE_DEFINE_GAMEPLAY_TAG(Status_Health_70, \"status.health.70\");",
-   "Source/MyGame/Player/MyCharacter.cpp:584: FGameplayTag HealthTag = MyGameplayTags::Status_Health_70;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_70);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Health_70, \"status.health.70\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag HealthTag = MyGameplayTags::Status_Health_70;"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -1598,9 +1598,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:20: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_75);",
-   "Source/MyGame/MyGameplayTags.cpp:15: UE_DEFINE_GAMEPLAY_TAG(Status_Health_75, \"status.health.75\");",
-   "Source/MyGame/Player/MyCharacter.cpp:579: FGameplayTag HealthTag = MyGameplayTags::Status_Health_75;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_75);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Health_75, \"status.health.75\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag HealthTag = MyGameplayTags::Status_Health_75;"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -1636,10 +1636,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:12: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_HitStun);",
-   "Source/MyGame/MyGameplayTags.cpp:8: UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, \"status.hitstun\");",
-   "Source/MyGame/Player/MyCharacter.cpp:1266: FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;",
-   "Source/MyGame/Player/MyCharacter.cpp:1277: FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_HitStun);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, \"status.hitstun\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1663,9 +1663,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:17: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_ImmuneProjectile);",
-   "Source/MyGame/MyGameplayTags.cpp:13: UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, \"status.immune.proj\");",
-   "Source/MyGame/Player/MyCharacter.cpp:1420: FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_ImmuneProjectile);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, \"status.immune.proj\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1678,10 +1678,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:14: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoControl);",
-   "Source/MyGame/MyGameplayTags.cpp:10: UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, \"status.nocontrol\");",
-   "Source/MyGame/Player/MyCharacter.cpp:1267: FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;",
-   "Source/MyGame/Player/MyCharacter.cpp:1278: FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoControl);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, \"status.nocontrol\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1696,9 +1696,9 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:15: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoMove);",
-   "Source/MyGame/MyGameplayTags.cpp:11: UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, \"status.nomove\");",
-   "Source/MyGame/Player/MyCharacter.cpp:1279: FGameplayTag NoMoveTag = MyGameplayTags::Status_NoMove;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoMove);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, \"status.nomove\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag NoMoveTag = MyGameplayTags::Status_NoMove;"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1711,10 +1711,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:16: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoPawnBlock);",
-   "Source/MyGame/MyGameplayTags.cpp:12: UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, \"status.nopawnblock\");",
-   "Source/MyGame/Player/MyCharacter.cpp:240: AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagCha",
-   "Source/MyGame/Player/MyCharacter.cpp:661: || (AbilitySystem && AbilitySystem->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoPawnBlock);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, \"status.nopawnblock\");",
+   "Source/MyGame/Player/MyCharacter.cpp: AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagCha",
+   "Source/MyGame/Player/MyCharacter.cpp: || (AbilitySystem && AbilitySystem->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1728,10 +1728,10 @@
   ],
   "children": [],
   "code": [
-   "Source/MyGame/MyGameplayTags.h:13: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_StunImmune);",
-   "Source/MyGame/MyGameplayTags.cpp:9: UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, \"status.stunimmune\");",
-   "Source/MyGame/Player/HitBox.cpp:115: Cue.RawMagnitude = GAS->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune) ? 1.f : 0.f;",
-   "Source/MyGame/Player/MyCharacter.cpp:787: FGameplayTag ImmuneTag = MyGameplayTags::Status_StunImmune;"
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_StunImmune);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, \"status.stunimmune\");",
+   "Source/MyGame/Player/HitBox.cpp: Cue.RawMagnitude = GAS->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune) ? 1.f : 0.f;",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag ImmuneTag = MyGameplayTags::Status_StunImmune;"
   ],
   "owner": null,
   "plugin_name": null,

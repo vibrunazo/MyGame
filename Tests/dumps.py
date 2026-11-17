@@ -69,7 +69,8 @@ NATIVE = {}
 
 
 def source_lines(tag):
-    """The C++ and config lines that name the tag: as a string, or by its native declaration's name."""
+    """The C++ and config lines that name the tag, as a string or by its native declaration's name: each as its file
+    and its text, without a line number (which any edit above it would move)."""
     if not NATIVE:
         NATIVE.update(native_names() or {"": []})
     needle = f'"{tag}"'
@@ -80,9 +81,9 @@ def source_lines(tag):
             for f in sorted((ROOT / folder).rglob(g)):
                 if f.name == "DefaultGameplayTags.ini":
                     continue
-                for i, line in enumerate(f.read_text(encoding="utf-8", errors="replace").splitlines(), 1):
-                    if needle in line or any(i.search(line) for i in idents) or (f.suffix == ".ini" and re.search(r"\b" + re.escape(tag) + r"\b", line)):
-                        hits.append(f"{f.relative_to(ROOT).as_posix()}:{i}: {line.strip()[:160]}")
+                for line in f.read_text(encoding="utf-8", errors="replace").splitlines():
+                    if needle in line or any(n.search(line) for n in idents) or (f.suffix == ".ini" and re.search(r"\b" + re.escape(tag) + r"\b", line)):
+                        hits.append(f"{f.relative_to(ROOT).as_posix()}: {line.strip()[:160]}")
     return hits
 
 
