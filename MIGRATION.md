@@ -220,6 +220,33 @@ Your play-test of the height-filling framing (2026-11-12): "it's good now".
    - **Screen shake:** `Shake_Hit1` is a pitch wobble, now 0.8° at 20 Hz for 0.25 s (was 2° at 13 Hz for 0.4 s). The new camera's narrower view made 2° a bigger share of the screen.
    - **Replaying a bug:** dev builds show seed, floor, room, tile (and its map) and build date in the top-left corner. `-Seed=N -Floor=N -Room=N` start there (`Play.bat -Seed=6032 -Room=3`), and the console command `GoToRoom N` moves the player in game. Floors 2 and up used to come from the run's random stream after floor 1's loot and spawns, so a seed only replayed floor 1. Now each floor is seeded from the run seed and its number (`UMyGameInstance::SeedFloor`). Floor 1 is unchanged, so the baselines hold.
 
+## Where the montages' animations come from (Ass Plan.md, Step 0c item 7; read 2026-11-17)
+
+All 24 montages play 11 animation sequences, all in `/Game/Anims`, all on the UE4 mannequin's skeleton
+(`/Game/Mannequin/.../UE4_Mannequin_Skeleton`). None comes from the AdvancedLocomotionV4, ParagonMinions or
+InfinityBladeEffects packs (the only pack asset in any montage is one InfinityBladeEffects impact effect in a notify,
+`NS_Impact_Player_Weak_small`). Read from each sequence's import data (its source file), in the editor:
+
+| Sequence | Montages | Source file at import | Where it likely came from |
+|---|---|---|---|
+| CastForward | CastForward_Montage, CastForward_Montage1 | `Downloads/Fireball.fbx` | Mixamo ("Fireball") |
+| FlyingKick | FlyingKick_Montage | `Downloads/Flying Kick.fbx` | Mixamo ("Flying Kick") |
+| GetHit | GetHit_Montage | `Downloads/Standing React Small From Headshot (1).fbx` | Mixamo |
+| Kick1 | Kick1_Montage, KickerKick_Montage | `Downloads/Standing Melee Kick.fbx` | Mixamo |
+| LeftHook | PunchL_Montage, PunchL_MontageEnemy1, PunchL_MontageEnemy2, PunchL_Montage_Boss | `Downloads/Punching (3).fbx` | Mixamo ("Punching") |
+| Punching | PunchR_Montage, PunchR_MontageEnemy1, PunchR_MontageEnemy2, PunchR_Montage_Boss, PunchRunR_Montage | `Downloads/Punching (1).fbx` | Mixamo ("Punching") |
+| Upper2 | Upper2_Montage | `Downloads/Surprise Uppercut (1).fbx` | Mixamo |
+| Smash | AirPunch_Montage, SmashBoss_Montage, SmashPlayer_Montage, Smash_Montage | `C:/dev/blender/fbx/mrmann/UE4_Mannequin_Skeleton_smash.FBX` | made in Blender on the mannequin's rig (the user's own, presumably) |
+| Tat | Tat_Montage | `.../mrmann/UE4_Mannequin_Skeleton_Tat.FBX` | the same |
+| kkk | kkk_Montage | `.../mrmann/UE4_Mannequin_Skeleton_kkk.FBX` | the same |
+| PunchRActive_PoseSeq | PunchRunR_Montage | none (made in the editor from a pose) | made in the editor, from Punching |
+
+"Mixamo" is inferred from the file names, which are Mixamo's own animation names, downloaded to a Downloads folder
+in 2020; nothing in the assets names Mixamo. Mixamo's terms (Adobe) allow its animations royalty free in commercial
+games, but not redistributing the animation files on their own; to read again before anything ships. The three
+Blender ones and the pose sequence: the user's own work, unless the user remembers otherwise. To confirm with the user:
+both readings.
+
 ## Starting point
 
 - UE 4.25 C++ project: one module `MyGame`, about 8.4k lines. 502 assets (186 MB), 39 room maps, each with a `DA_Room*` data asset. Last commit was November 2020.
