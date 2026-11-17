@@ -44,8 +44,9 @@ enum class EGameplayCueExecutionOptions : int32;
  *
  * The recorder also fixes the order the roles tick in, which the engine leaves to chance between sessions (a hit
  * starts the victim's reaction while the attacker ticks, and whether the victim's mesh has ticked yet that frame moved
- * its montage by a frame): within each tick group, every tick function of a role runs after those of the roles named
- * before it, the ones named at the start in their order, then each that spawns. The order goes when it stops.
+ * its montage by a frame): within each tick group, every tick function of a role and its controller runs after those
+ * of the roles named before it (the ones named at the start in their order, then each that spawns), and a role's own
+ * run in one fixed order (the engine's prerequisites kept). The order goes when it stops.
  *
  * An ability or effect id is its asset's package path (/Game/Abilities/GA_Punch), the name the templates of Step 3
  * take from folder and name; a native class gives its class path. A frame's number counts the world's ticks since the
@@ -72,7 +73,6 @@ private:
 		TArray<TPair<FGameplayAttribute, FDelegateHandle>> AttributeHandles;
 		FDelegateHandle Applied, Periodic, Removed, Tags, Activated, Ended, Failed;
 		TSet<FString> ActiveStates;
-		int32 LastAnimUpdate = -1;
 		TArray<TSharedPtr<FJsonValue>> Frames;
 	};
 

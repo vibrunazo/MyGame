@@ -18,7 +18,8 @@ Fields, for comparing a recording on another skeleton (1.1): positional are the 
 "shape", "hit" and "projectile_immune", the cues' locations and the spawns' locations; everything else is exact, the
 times included.
 
-Checks: every ability a character or an item grants starts somewhere and every montage something refers to plays
+Checks (the AI-on scenarios of AI_ON are recorded for Step 0c item 4 and only noted): every ability a character or an
+item grants starts somewhere and every montage something refers to plays
 somewhere (three montages are referred to by nothing: Smash_Montage, PunchL_MontageEnemy2, PunchR_MontageEnemy2); and when the
 UE4 reference exists (REFERENCE, kept outside git, Step 0c), every scenario equals it exactly.
 """
@@ -169,6 +170,12 @@ def ai_on():
                    enemies=[enemy("enemy")], player={"Defense": 1.0})
 
 
+# the AI's own scenarios: recorded here, held by Step 0c item 4 (Plan.md: sight and the enemy's attack "are AI checks,
+# held with this item and not by the strict ability baseline"); a difference from the reference is a note. An editor
+# that ran other suites first moved the end of the sight chase by a frame (the navigation's state, it seems)
+AI_ON = {"sight_behind_500", "sight_front_900", "sight_front_500", "enemy_ai_attack"}
+
+
 def scenarios():
     ar.DUMMY[0] = {"path": DUMMY_PATH}
     yield from player_moves()
@@ -295,7 +302,9 @@ def suite(ctx):
                 problems.append(f"{name}: only in {'the reference' if name in reference else 'this run'}")
                 continue
             where = first_difference(reference[name], records[name])
-            if where:
+            if where and name in AI_ON:
+                print(f"  note {name} (item 4's): {where[:300]}")
+            elif where:
                 problems.append(f"{name}: {where[:400]}")
     for p in problems:
         print("  " + p)

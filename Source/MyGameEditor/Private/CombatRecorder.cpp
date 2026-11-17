@@ -15,6 +15,7 @@
 #include "Engine/World.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/Controller.h"
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
@@ -115,7 +116,7 @@ void UCombatRecorder::AddRole(const FString& Name, AActor* Actor)
 
 namespace
 {
-	void TickFunctionsOf(AActor* Actor, TArray<TPair<UObject*, FTickFunction*>>& Out)
+	void AddTickFunctions(AActor* Actor, TArray<TPair<UObject*, FTickFunction*>>& Out)
 	{
 		if (Actor->PrimaryActorTick.bCanEverTick) Out.Emplace(Actor, &Actor->PrimaryActorTick);
 		for (UActorComponent* Component : Actor->GetComponents())
@@ -123,25 +124,67 @@ namespace
 			if (Component && Component->PrimaryComponentTick.bCanEverTick) Out.Emplace(Component, &Component->PrimaryComponentTick);
 		}
 	}
+
+	// A role's tick functions, its controller's included (an AI's tree presses its buttons), in one fixed order: the
+	// engine's own prerequisites first (a mesh after its movement), then the controller's side, the actor before its
+	// components, and names without their instance numbers
+	TArray<TPair<UObject*, FTickFunction*>> TickFunctionsOf(AActor* Actor)
+	{
+		TArray<TPair<UObject*, FTickFunction*>> All;
+		if (const APawn* Pawn = Cast<APawn>(Actor))
+		{
+			if (AController* Controller = Pawn->GetController()) AddTickFunctions(Controller, All);
+		}
+		AddTickFunctions(Actor, All);
+		auto Key = [Actor](const TPair<UObject*, FTickFunction*>& F)
+		{
+			const AActor* Owner = Cast<AActor>(F.Key) ? Cast<AActor>(F.Key) : F.Key->GetTypedOuter<AActor>();
+			return FString::Printf(TEXT("%d%d%s"), Owner == Actor ? 1 : 0, F.Key->IsA<AActor>() ? 0 : 1, *F.Key->GetFName().GetPlainNameString());
+		};
+		All.Sort([&Key](const TPair<UObject*, FTickFunction*>& A, const TPair<UObject*, FTickFunction*>& B) { return Key(A) < Key(B); });
+		// topological: take the first in key order whose prerequisites among these are all taken
+		TArray<TPair<UObject*, FTickFunction*>> Sorted;
+		while (All.Num())
+		{
+			int32 Next = 0;
+			for (int32 i = 0; i < All.Num(); ++i)
+			{
+				const bool bReady = !All[i].Value->GetPrerequisites().ContainsByPredicate([&All](const FTickPrerequisite& Pre)
+				{
+					return All.ContainsByPredicate([&Pre](const TPair<UObject*, FTickFunction*>& F) { return F.Value == Pre.PrerequisiteTickFunction; });
+				});
+				if (bReady) { Next = i; break; }
+			}
+			Sorted.Add(All[Next]);
+			All.RemoveAt(Next);
+		}
+		return Sorted;
+	}
 }
 
 void UCombatRecorder::TickAfterEarlierRoles(AActor* Actor)
 {
-	TArray<TPair<UObject*, FTickFunction*>> Mine, Before;
-	TickFunctionsOf(Actor, Mine);
+	const TArray<TPair<UObject*, FTickFunction*>> Mine = TickFunctionsOf(Actor);
+	TArray<TPair<UObject*, FTickFunction*>> Before;
 	for (const FRole& Earlier : Roles)
 	{
 		AActor* Other = Earlier.Actor.Get();
-		if (Other && Other != Actor) TickFunctionsOf(Other, Before);
+		if (Other && Other != Actor) Before.Append(TickFunctionsOf(Other));
 	}
-	for (const TPair<UObject*, FTickFunction*>& After : Mine)
+	auto Order = [this](const TPair<UObject*, FTickFunction*>& After, const TPair<UObject*, FTickFunction*>& First)
 	{
-		for (const TPair<UObject*, FTickFunction*>& First : Before)
+		// only inside one group: a prerequisite from a later group would move this tick to that group
+		if (First.Value->TickGroup != After.Value->TickGroup) return;
+		After.Value->AddPrerequisite(First.Key, *First.Value);
+		Orders.Add({After.Key, After.Value, First.Key, First.Value});
+	};
+	for (int32 i = 0; i < Mine.Num(); ++i)
+	{
+		for (const TPair<UObject*, FTickFunction*>& First : Before) Order(Mine[i], First);
+		// the role's own functions, each after the one before it in its group
+		for (int32 j = i - 1; j >= 0; --j)
 		{
-			// only inside one group: a prerequisite from a later group would move this tick to that group
-			if (First.Value->TickGroup != After.Value->TickGroup) continue;
-			After.Value->AddPrerequisite(First.Key, *First.Value);
-			Orders.Add({After.Key, After.Value, First.Key, First.Value});
+			if (Mine[j].Value->TickGroup == Mine[i].Value->TickGroup) { Order(Mine[i], Mine[j]); break; }
 		}
 	}
 }
@@ -242,11 +285,10 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 				Section = Anim->Montage_GetCurrentSection(Active).ToString();
 				Position = Anim->Montage_GetPosition(Active);
 			}
-			// the notifies of this frame's animation update; one that didn't update this frame still holds the last
-			const int32 Update = Anim->GetUpdateCounter().Get();
-			if (Update != Role.LastAnimUpdate)
+			// the notifies of this frame's pose tick; a mesh that didn't tick this frame still holds the last ones (a mesh
+			// that only ticks its montages, when not rendered, doesn't move its graph's update counter, so that can't tell)
+			if (Char->GetMesh()->PoseTickedThisFrame())
 			{
-				Role.LastAnimUpdate = Update;
 				for (const FAnimNotifyEventReference& Ref : Anim->NotifyQueue.AnimNotifies)
 				{
 					const FAnimNotifyEvent* Notify = Ref.GetNotify();
