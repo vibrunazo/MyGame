@@ -150,9 +150,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddItemToInventory(class UItemDataAsset* NewItem) override;
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category = Abilities)
-	AActor* GetTargetEnemy();
+	AActor* GetTargetEnemy() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	void SetTargetEnemy(AActor* NewTarget);
+	void SetTargetEnemy(AActor* NewTarget) override;
+	UPrimitiveComponent* GetTargetDetection() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddToAggroList(AActor* NewActor);
 	UFUNCTION(BlueprintCallable, Category = Abilities)

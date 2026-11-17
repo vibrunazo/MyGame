@@ -1141,6 +1141,11 @@ void AMyCharacter::SetTargetEnemy(AActor* NewTarget)
 	TargetEnemy = NewTarget;
 }
 
+UPrimitiveComponent* AMyCharacter::GetTargetDetection()
+{
+	return TargetDetection;
+}
+
 void AMyCharacter::AddToAggroList(AActor* NewActor)
 {
 	if (NewActor)

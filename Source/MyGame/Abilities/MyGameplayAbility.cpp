@@ -4,6 +4,7 @@
 #include "MyGameplayAbility.h"
 #include "../MyGameplayTags.h"
 #include "IGetHit.h"
+#include "AssCombatant.h"
 #include "../Player/MyCharacter.h"
 #include "../Player/HitBox.h"
 #include "../Player/HitboxSettings.h"
@@ -218,9 +219,9 @@ void UMyGameplayAbility::OnHitConnect()
 
 void UMyGameplayAbility::ResetTarget()
 {
-    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
-    if (!MyChar) return;
-    MyChar->SetTargetEnemy(nullptr);
+    IAssCombatant* Me = Cast<IAssCombatant>(GetAvatarActorFromActorInfo());
+    if (!Me) return;
+    Me->SetTargetEnemy(nullptr);
 
 }
 
@@ -231,9 +232,10 @@ void UMyGameplayAbility::ResetTarget()
 /// </summary>
 void UMyGameplayAbility::AcquireNewTarget()
 {
-    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
-    if (!MyChar) return;
-    UPrimitiveComponent* Box = Cast<UPrimitiveComponent>(MyChar->TargetDetection);
+    AActor* Avatar = GetAvatarActorFromActorInfo();
+    IAssCombatant* Me = Cast<IAssCombatant>(Avatar);
+    UPrimitiveComponent* Box = Me ? Me->GetTargetDetection() : nullptr;
+    if (!Box) return;
     FTransform Tran = Box->GetComponentTransform();
     TArray < TEnumAsByte < EObjectTypeQuery > > ObjectTypes = TArray < TEnumAsByte < EObjectTypeQuery > >();
     //ObjectTypes.Add(TEnumAsByte < EObjectTypeQuery >(TestNum));
@@ -244,27 +246,27 @@ void UMyGameplayAbility::AcquireNewTarget()
     ActorsToIgnore.Add(GetAvatarActorFromActorInfo());
     TArray < class AActor* > OutActors;
     Box->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
-    UKismetSystemLibrary::ComponentOverlapActors(Box, Tran, ObjectTypes, AMyCharacter::StaticClass(), ActorsToIgnore, OutActors);
+    UKismetSystemLibrary::ComponentOverlapActors(Box, Tran, ObjectTypes, nullptr, ActorsToIgnore, OutActors);
     Box->SetCollisionEnabled(ECollisionEnabled::NoCollision);
     //MyChar->TargetDetection->GetOverlappingActors(OutActors, AMyCharacter::StaticClass());
     //UE_LOG(LogTemp, Warning, TEXT("Looking for overlapped chars"));
-    AMyCharacter* Closest = nullptr;
+    AActor* Closest = nullptr;
     float Best = 9000.f;
     for (auto&& Overlapped : OutActors)
     {
+        IAssCombatant* Other = Cast<IAssCombatant>(Overlapped);
+        if (!Other || !Other->IsAlive()) continue;
         UE_LOG(LogTemp, Warning, TEXT("Overlapped: %s"), *Overlapped->GetName());
-        AMyCharacter* OtherChar = Cast<AMyCharacter>(Overlapped);
-        if (!OtherChar || !OtherChar->IsAlive()) continue;
-        float Dist = FVector::Dist2D(MyChar->GetActorLocation(), OtherChar->GetActorLocation());
+        float Dist = FVector::Dist2D(Avatar->GetActorLocation(), Overlapped->GetActorLocation());
         if (Dist < Best)
         {
             Best = Dist;
-            Closest = OtherChar;
+            Closest = Overlapped;
         }
     }
     if (Closest)
     {
-        MyChar->SetTargetEnemy(Closest);
+        Me->SetTargetEnemy(Closest);
     }
 }
 
@@ -275,14 +277,15 @@ void UMyGameplayAbility::AcquireNewTarget()
 void UMyGameplayAbility::LockToTarget()
 {
     UE_LOG(LogTemp, Warning, TEXT("Ability Locking to target"));
-    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
-    if (!MyChar) return;
+    AActor* Avatar = GetAvatarActorFromActorInfo();
+    IAssCombatant* Me = Cast<IAssCombatant>(Avatar);
+    if (!Me) return;
     
-    AActor* EnemyTarget = MyChar->GetTargetEnemy();
+    AActor* EnemyTarget = Me->GetTargetEnemy();
     if (!EnemyTarget) return;
-    FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(MyChar->GetActorLocation(), EnemyTarget->GetActorLocation());
-    NewRot.Pitch = MyChar->GetActorRotation().Pitch; NewRot.Roll = MyChar->GetActorRotation().Roll;
-    MyChar->SetActorRotation(NewRot);
+    FRotator NewRot = UKismetMathLibrary::FindLookAtRotation(Avatar->GetActorLocation(), EnemyTarget->GetActorLocation());
+    NewRot.Pitch = Avatar->GetActorRotation().Pitch; NewRot.Roll = Avatar->GetActorRotation().Roll;
+    Avatar->SetActorRotation(NewRot);
     //UE_LOG(LogTemp, Warning, TEXT("Rotated %s %s"), *MyChar->GetName(), *NewRot.ToCompactString());
 }
 

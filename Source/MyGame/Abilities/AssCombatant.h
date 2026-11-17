@@ -37,4 +37,10 @@ public:
 	virtual FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle Effect) = 0;
 	// A hit reaction's camera shake at this strength; the game decides what shakes
 	virtual void PlayHitCameraShake(float Strength) = 0;
+	// The enemy its abilities aim at (lock-on, summons, the AI's queries); nullptr when none. The target is the actor's
+	// own state: MyGame's AI sets it when it aggros
+	virtual AActor* GetTargetEnemy() = 0;
+	virtual void SetTargetEnemy(AActor* NewTarget) = 0;
+	// Where an ability looks for a new target (the nearest live combatant overlapping it), or nullptr
+	virtual UPrimitiveComponent* GetTargetDetection() = 0;
 };
