@@ -57,6 +57,12 @@ run = "Tests/strict.py:suite"        # Step 0c's strict recorder: every scenario
 timeout = 1800
 
 [[suite]]
+name = "cancel"
+kind = "pie"
+run = "Tests/cancel.py:suite"        # Step 0c's cancel matrix: what each character could start in each state of each ability
+timeout = 1800
+
+[[suite]]
 name = "strict-breaks"
 kind = "pie"
 run = "Tests/strict_breaks.py:suite"  # Step 0c: each deliberate break changes its strict recording

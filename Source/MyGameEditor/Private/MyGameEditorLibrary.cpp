@@ -132,3 +132,8 @@ bool UMyGameEditorLibrary::SetPropertyTextForTest(UObject* Object, FName Propert
 	if (!Prop) return false;
 	return Prop->ImportText_Direct(*Text, Prop->ContainerPtrToValuePtr<void>(Object), Object, PPF_None) != nullptr;
 }
+
+void UMyGameEditorLibrary::QueryCombatRecordRoles(const TArray<FString>& Roles)
+{
+	UCombatRecorder::QueryRoles(Roles);
+}

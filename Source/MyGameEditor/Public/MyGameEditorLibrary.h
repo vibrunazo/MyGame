@@ -61,6 +61,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
 	static bool SetPropertyTextForTest(UObject* Object, FName Property, const FString& Text);
 
+	/** The cancel matrix's query: these roles of the running recording add, per frame, the abilities they could start. */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
+	static void QueryCombatRecordRoles(const TArray<FString>& Roles);
+
 	/** Stops the strict recorder and returns its record as JSON ("" when none ran). */
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
 	static FString StopCombatRecord();

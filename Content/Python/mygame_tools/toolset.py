@@ -749,7 +749,8 @@ class MyGameTools(unreal.ToolsetDefinition):
                 ([t, x, y, z, yaw, montage:section, health]), "seed": seed_random's seed, set as the
                 timeline starts (also the current state of the run's shared stream, which loot draws from), "record": {role: actor path} for the strict recorder
                 (MyGameEditor's UCombatRecorder: every frame and event of those characters and what they spawn, from
-                now until the settle ends; its JSON comes back as "record"), "settle": max game seconds to wait
+                now until the settle ends; its JSON comes back as "record"), "query": [roles] whose frames also list the
+                abilities they could start (the cancel matrix), "settle": max game seconds to wait
                 for the player's abilities to end afterwards ("settle_fixed": true waits all of it), "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
                 t, calls one of these MyGameTools hooks (press_input, move_input, dash_player, learn_item_abilities,
                 give_item, set_character_attribute, set_player_attribute, refresh_health...).
@@ -782,6 +783,8 @@ class MyGameTools(unreal.ToolsetDefinition):
             if missing:
                 raise RuntimeError(f"no actor for roles {missing}")
             unreal.MyGameEditorLibrary.start_combat_record(world, [n for n, _ in roles], actors)
+            if sp.get("query"):
+                unreal.MyGameEditorLibrary.query_combat_record_roles(sp["query"])
         if not _tl["handle"]:
             _tl["handle"] = unreal.register_slate_post_tick_callback(_tl_tick)
         return json.dumps({"started": True})
