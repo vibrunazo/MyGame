@@ -22,10 +22,7 @@ enum class EHitReaction : uint8;
 
 //DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FDieSignature, AMyCharacter, OnDieDelegate, AMyCharacter*, WhoDied);
 //DECLARE_MULTICAST_DELEGATE_OneParam(FDieSignature, AMyCharacter*);
-//DECLARE_MULTICAST_DELEGATE_OneParam(FCastDelegate, class UMyGameplayAbility*);
 
-//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(DelegateName, Param1Type, Param1Name)
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCastDelegate, class UMyGameplayAbility*, CastingAbility);
 
 
 
@@ -112,6 +109,7 @@ public:
 	void SetAggroTarget(APawn* NewTarget);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetIsInCombat(bool NewState);
+	void EnterCombat() override { SetIsInCombat(true); }
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsInCombat();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -128,8 +126,6 @@ public:
 	//UPROPERTY(BlueprintAssignable, Category="Abilities")
 	FDieSignature& GetReportDeathDelegate() override;
 	FDieSignature OnDieDelegate;
-	UPROPERTY(BlueprintAssignable, Category = "Abilities")
-	FCastDelegate OnCastDelegate;
 
 	FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)

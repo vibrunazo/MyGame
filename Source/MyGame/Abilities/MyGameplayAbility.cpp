@@ -84,15 +84,10 @@ void UMyGameplayAbility::ActivateAbility(const FGameplayAbilitySpecHandle Handle
     }
     if (!IsValid(GetAvatarActorFromActorInfo())) return;
     CommitAbility(Handle, ActorInfo, ActivationInfo);
-    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo()); 
     if (bStartsCombat)
     {
-        if (MyChar)
-        {
-            MyChar->SetIsInCombat(true);
-        }
+        if (IAssCombatant* Me = Cast<IAssCombatant>(GetAvatarActorFromActorInfo())) Me->EnterCombat();
     }
-    if (MyChar) MyChar->OnCastDelegate.Broadcast(this);
     //UE_LOG(LogTemp, Warning, TEXT("Activating Ability: %s on %s"), *GetName(), *GetAvatarActorFromActorInfo()->GetName());
     // ResetHitBoxes();
     UpdateCombo();

@@ -45,4 +45,6 @@ public:
 	virtual void SetTargetEnemy(AActor* NewTarget) = 0;
 	// Where an ability looks for a new target (the nearest live combatant overlapping it), or nullptr
 	virtual UPrimitiveComponent* GetTargetDetection() = 0;
+	// An ability that starts combat says so (MyGame: the in-combat effect, which stops running)
+	virtual void EnterCombat() = 0;
 };
