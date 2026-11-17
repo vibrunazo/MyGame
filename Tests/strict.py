@@ -22,8 +22,9 @@ Events are compared with each frame's grouped by role (by_role). Checks (the AI-
 Step 0c item 4 and only noted): every ability a character or an
 item grants starts somewhere and every montage something refers to plays
 somewhere (three montages are referred to by nothing: Smash_Montage, PunchL_MontageEnemy2, PunchR_MontageEnemy2); and when the
-UE4 reference exists (REFERENCE, kept outside git, Step 0c), every scenario equals it as 1.1 allows on the UE5 mannequin
-(TOLERANCE_CM: positions within a stated distance, everything else exact).
+committed baseline exists (BASELINE, recorded on the UE5 mannequin after the move), every scenario equals it exactly;
+before it, the UE4 reference (REFERENCE, kept outside git) as 1.1 allows (TOLERANCE_CM: positions within a stated
+distance, everything else exact).
 """
 import json
 from pathlib import Path
@@ -35,6 +36,7 @@ import ability_regression as ar
 ROOT = Path(__file__).resolve().parent.parent
 DUMPS = ROOT / "Tests" / "baselines" / "dumps"
 REFERENCE = ROOT / "Saved" / "AssReference" / "strict.json"
+BASELINE = ROOT / "Tests" / "baselines" / "strict.json"  # recorded on the UE5 mannequin after the move (Step 0c)
 SEED = 6032
 CHARS = {
     "enemy1": "/Game/Blueprints/Chars/EMelee1/BP_Enemy1.BP_Enemy1_C",
@@ -362,14 +364,16 @@ def suite(ctx):
     records = record_all()
     (ctx.out / "strict.json").write_text(json.dumps(records, sort_keys=True))
     problems = coverage(records)
-    if REFERENCE.exists():
-        reference = json.loads(REFERENCE.read_text())
+    # the committed baseline, exactly; before it existed, the UE4 reference under the tolerance (1.1)
+    against, tolerant = (BASELINE, False) if BASELINE.exists() else (REFERENCE, True)
+    if against.exists():
+        reference = json.loads(against.read_text())
         for name in sorted(set(reference) | set(records)):
             if name not in records or name not in reference:
-                problems.append(f"{name}: only in {'the reference' if name in reference else 'this run'}")
+                problems.append(f"{name}: only in {'the baseline' if name in reference else 'this run'}")
                 continue
             worst = {}
-            where = first_difference(reference[name], records[name], tolerant=True, worst=worst)
+            where = first_difference(reference[name], records[name], tolerant=tolerant, worst=worst)
             if worst:
                 print(f"  {name}: apart from the reference (cm): " + ", ".join(f"{k} {v:.1f}" for k, v in sorted(worst.items())))
             if where and name in AI_ON:
@@ -378,4 +382,4 @@ def suite(ctx):
                 problems.append(f"{name}: {where[:400]}")
     for p in problems:
         print("  " + p)
-    return {"ok": not problems, "checks": len(records), "problems": problems, "files": {}}
+    return {"ok": not problems, "checks": len(records), "problems": problems, "files": {"strict.json": "Tests/baselines/strict.json"}}

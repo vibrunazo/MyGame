@@ -13,7 +13,8 @@ ability pressed while it runs is covered). Each frame is labelled with the state
 and the matrix keeps, per run, each state in the order it came with the abilities that could start in it (a state
 whose set changes inside it appears again). About 40 runs; the frames themselves stay in the output.
 
-The matrix must equal the UE4 reference (REFERENCE, kept outside git, Step 0c) when there is one.
+The matrix must equal the committed baseline (BASELINE, recorded on the UE5 mannequin after the move, Step 0c), or
+before it existed the UE4 reference (REFERENCE, kept outside git).
 """
 import json
 from pathlib import Path
@@ -26,6 +27,7 @@ from strict import scenario, enemy, tap, press, learn, at, activate, target_play
 
 ROOT = Path(__file__).resolve().parent.parent
 REFERENCE = ROOT / "Saved" / "AssReference" / "cancel.json"
+BASELINE = ROOT / "Tests" / "baselines" / "cancel.json"  # recorded on the UE5 mannequin after the move (Step 0c)
 FAR = X - 700  # an enemy's target out of reach: its attack misses
 
 
@@ -105,11 +107,12 @@ def suite(ctx):
     (ctx.out / "cancel.json").write_text(json.dumps(matrix, indent=1, sort_keys=True))
     (ctx.out / "cancel_records.json").write_text(json.dumps(records, sort_keys=True))
     problems = [f"{name}: no ability started" for name, m in matrix.items() if not m["ability"]]
-    if REFERENCE.exists():
-        reference = json.loads(REFERENCE.read_text())
+    against = BASELINE if BASELINE.exists() else REFERENCE
+    if against.exists():
+        reference = json.loads(against.read_text())
         for name in sorted(set(reference) | set(matrix)):
             if reference.get(name) != matrix.get(name):
                 problems.append(f"{name}: {json.dumps(reference.get(name))[:300]} -> {json.dumps(matrix.get(name))[:300]}")
     for p in problems:
         print("  " + p)
-    return {"ok": not problems, "checks": len(matrix), "problems": problems, "files": {}}
+    return {"ok": not problems, "checks": len(matrix), "problems": problems, "files": {"cancel.json": "Tests/baselines/cancel.json"}}
