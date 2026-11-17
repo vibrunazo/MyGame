@@ -5,6 +5,8 @@
 #include "AbilitySystemGlobals.h"
 #include "Abilities/AssCombatComponent.h"
 #include "MyGameInstance.h"
+#include "UI/AbilityUIDataAsset.h"
+#include "GameMapsSettings.h"
 #include "Player/MyCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "Props/ItemDataAsset.h"
@@ -178,3 +180,11 @@ TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectC
 }
 /** Returns const pointer to the actual active gamepay effect structure */
 //const FActiveGameplayEffect* GetActiveGameplayEffect(const FActiveGameplayEffectHandle Handle) const;
+FBuffUI UMyBlueprintFunctionLibrary::GetAbilityUI(TSubclassOf<UGameplayAbility> AbilityClass)
+{
+	// from the game instance class's defaults, so it answers in the editor too (a book's construction script)
+	const UClass* GameInstanceClass = GetDefault<UGameMapsSettings>()->GameInstanceClass.TryLoadClass<UMyGameInstance>();
+	const UMyGameInstance* GameInstance = GameInstanceClass ? GameInstanceClass->GetDefaultObject<UMyGameInstance>() : nullptr;
+	const FBuffUI* Found = GameInstance && GameInstance->AbilityUI && AbilityClass ? GameInstance->AbilityUI->Abilities.Find(AbilityClass) : nullptr;
+	return Found ? *Found : FBuffUI();
+}

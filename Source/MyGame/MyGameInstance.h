@@ -50,6 +50,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShakeBase> CamShakeClass;
+	// Each ability's UI, for the HUD and the ability books: read through UMyBlueprintFunctionLibrary::GetAbilityUI
+	UPROPERTY(EditDefaultsOnly, Category = MyGI)
+	TObjectPtr<class UAbilityUIDataAsset> AbilityUI;
 
 	// The generated level a run plays on, and the main menu
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyGI)

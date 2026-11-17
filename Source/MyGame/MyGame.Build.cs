@@ -11,5 +11,6 @@ public class MyGame : ModuleRules
 		PublicIncludePaths.Add(ModuleDirectory);
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTasks", "GameplayTags", "UMG", "Slate", "SlateCore", "AIModule", "Niagara", "NiagaraAnimNotifies", "PCG" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "EngineSettings" });
 	}
 }

@@ -8,6 +8,7 @@
 #include "Containers/Map.h"
 #include "GameplayTagContainer.h"
 #include "Abilities/AssCombatant.h"
+#include "Abilities/MyGameplayEffectUIData.h"
 // #include "Props/ItemDataAsset.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
 
@@ -107,6 +108,11 @@ class MYGAME_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
+	// An ability's UI (name, description, color, icon) for the HUD's buttons and the ability books; empty when it has
+	// none. The only reader of the game's ability UI table (UAbilityUIDataAsset on the game instance class)
+	UFUNCTION(BlueprintPure, Category = "UI")
+	static FBuffUI GetAbilityUI(TSubclassOf<UGameplayAbility> AbilityClass);
+
 	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
 	// MaxDuration > 0 caps HasDuration effects (including "forever" ones with a negative duration)
 	static FActiveGameplayEffectHandle ApplyEffectContainerToChar(IAssCombatant* Char, FEffectContainer Container, UItemDataAsset* Item = nullptr, float MaxDuration = -1.f);

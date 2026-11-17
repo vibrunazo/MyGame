@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/GameplayAbility.h"
-#include "MyGameplayEffectUIData.h"
 #include "../MyBlueprintFunctionLibrary.h"
 #include "MyGameplayAbility.generated.h"
 
@@ -32,8 +31,6 @@ public:
 	TArray<UAnimMontage*> MontagesToPlay;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	float MontagesSpeed = 1.0f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Meta")
-	FBuffUI AbilityUIData;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Ability")
 	TArray<FEffectContainer> EffectsToApply;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
