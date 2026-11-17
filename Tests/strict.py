@@ -72,12 +72,12 @@ def enemy(role="dummy", kind="enemy1", x=X, y=Y, yaw=180.0, **attributes):
     return (role, kind, x, y, yaw, attributes)
 
 
-def scenario(name, inputs, duration, enemies=(enemy(),), player_x=CLOSE, player_y=Y, player_yaw=0.0, player=None, setup=()):
+def scenario(name, inputs, duration, enemies=(enemy(),), player_x=CLOSE, player_y=Y, player_yaw=0.0, player=None, setup=(), wait=2.5):
     """A scenario: inputs on the game clock ([t, "call", hook, kwargs], kwargs may name a role as "@role"), the
     enemies it spawns, where the player stands, the player's attributes on top of the base ones, and hook calls
-    [hook, kwargs] made before the timeline."""
+    [hook, kwargs] made before the timeline; wait is the game time let pass first (2.5 s: past every combo's reset)."""
     return {"name": name, "inputs": inputs, "duration": duration, "enemies": list(enemies), "player": (player_x, player_y, player_yaw),
-            "attributes": player or {}, "setup": list(setup)}
+            "attributes": player or {}, "setup": list(setup), "wait": wait}
 
 
 at, tap, press, move, double_tap, learn = ar.at, ar.tap, ar.press, ar.move, ar.double_tap, ar.learn
@@ -201,7 +201,7 @@ def run(sc, base, query=None):
         tool("press_input", button=b, pressed=False)
     tool("move_input", forward=0.0, right=0.0)
     ar.freeze_enemies()
-    wait_game(2.5)  # past every combo's reset (2.2 s), whatever the wall clock let pass
+    wait_game(sc.get("wait", 2.5))  # past every combo's reset (2.2 s), whatever the wall clock let pass
     for a, v in {**base, **sc["attributes"]}.items():
         tool("set_player_attribute", attribute=a, value=v)
     tool("reset_stun_count", actor_path=ar.PLAYER_PATH[0])

@@ -10,6 +10,17 @@ a real hit from the player that crosses its health marks (75, 50 and 25% of MaxH
   boss_two_marks   one punch takes it from 52 to 22 of 100: across 50% and 25%
 Each records which of its moves started, on which frame, and whether it was stunned.
 
+The decision matrix (Plan.md 1.1): each enemy type in each of a fixed set of situations, and what it does in the next
+second, its AI woken with the player as its target (sight is the strict suite's):
+  facing   the player faces it, faces away (it is behind the player), or stands side on
+  range    inside its attack range, between its attack and aggressive ranges, or beyond its aggressive range
+  token    the player's attack token is free, already this enemy's, or another enemy's
+  control  it has control, or a 0.6 s hitstun starts as it wakes
+The first decision (an ability it starts, or a tree task it starts) is exact in kind and within one frame of the
+reference; everything after it in that second is exact in kind and order, its frames not compared (Plan.md, Step 0c
+item 4: a start one frame off changes how far a moving enemy walks), but for one decision that falls inside the second
+in one recording and just outside it in the other.
+
 How a recording is compared with the reference (Plan.md, Step 0c item 4, the terms of 2026-11-17): each character's
 decisions (abilities started, ended or cancelled, its tree's tasks, its stuns, its health) equal and in the same order;
 and each decision's frame, counted from what caused it, equal, except that a start the AI makes itself (an ability it
@@ -20,6 +31,7 @@ scenario's start, the decision just before it (any character's), or for an abili
 held to the same.
 """
 import json
+import re
 from pathlib import Path
 
 import mygame
@@ -45,6 +57,77 @@ def boss_scenarios():
     yield scenario("boss_two_marks", wake + tap("Punch", 0.2), 4.0,
                    enemies=[enemy("boss", "boss", x=CLOSE + 95, yaw=0.0, MaxHealth=100.0, Health=52.0, Defense=1.0, **FROZEN)],
                    player={"Defense": 1000.0, "Attack": 2.0})
+
+
+# each enemy type: its class and its controller's ranges (attack, aggressive; the dumps' actors.json)
+TYPES = {"enemy1": (140, 200), "enemy2": (140, 200), "enemy3": (140, 200), "kicker": (230, 300), "wizard": (550, 550)}
+FACING = {"toward": 0.0, "away": 180.0, "side": 90.0}
+HITSTUN = "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+
+
+def matrix_scenarios():
+    for kind, (attack, aggressive) in TYPES.items():
+        ranges = {"attack": 0.7 * attack, "between": (attack + aggressive) / 2 if aggressive > attack else attack * 1.15,
+                  "beyond": min(1.6 * aggressive, 900.0)}
+        for facing, yaw in FACING.items():
+            for rng, gap in ranges.items():
+                for token in ("free", "mine", "other"):
+                    for control in ("yes", "stunned"):
+                        enemies = [enemy("enemy", kind)]
+                        setup = [target_player("enemy")]
+                        if token == "mine":
+                            setup.append(["aggro_add", {"actor_path": "@player", "target_path": "@enemy"}])
+                        if token == "other":
+                            enemies.append(enemy("other", "enemy1", x=X + 300, y=Y + 400))
+                            setup.append(["aggro_add", {"actor_path": "@player", "target_path": "@other"}])
+                        inputs = []
+                        if control == "stunned":
+                            inputs.append(at(0.0, "apply_effect", actor_path="@enemy", effect_class_path=HITSTUN,
+                                             set_by_caller=json.dumps({"data.hitstun": 0.6})))
+                        inputs.append(at(0.0, "set_ai_enabled", actor_path="@enemy", enabled=True))
+                        yield scenario(f"{kind}.{facing}.{rng}.{token}.{control}", inputs, 1.0, enemies=enemies,
+                                       player_x=X - gap, player_yaw=yaw, setup=setup, wait=0.5)
+
+
+def main_task(snapshot):
+    """The main tree's (BT_AIBase's) task in a snapshot of the active tasks, or None."""
+    found = re.findall(r"BT_AIBase::([^\]]+\])", snapshot)
+    return found[-1] if found else None
+
+
+def matrix_entry(record, role="enemy"):
+    """{"first": [kind, detail, frame], "then": [[kind, detail], ...]} of the enemy's decisions in the second: its
+    abilities started, ended or cancelled, its stuns, and the main tree's tasks it moves to (the bt events sample the
+    active tasks once a frame, so a task shorter than a frame shows in one recording and not another: the background
+    attack subtree's tasks are left to the abilities they start, and repeats of a main task are folded)."""
+    ds = [d for d in decisions(record, {role}) if d[1] == role and d[2] in ("activated", "ended", "cancelled", "bt", "stun")]
+    first = next((i for i, d in enumerate(ds) if d[2] == "activated" or (d[2] == "bt" and "::" in d[3])), None)
+    if first is None:
+        return {"first": None, "then": []}
+    then, last_task = [], main_task(ds[first][3]) if ds[first][2] == "bt" else None
+    for d in ds[first + 1:]:
+        if d[2] == "bt":
+            task = main_task(d[3])
+            if task and task != last_task:
+                then.append(["task", task])
+            last_task = task or last_task
+        else:
+            then.append([d[2], d[3]])
+    return {"first": [ds[first][2], ds[first][3], ds[first][0]], "then": then}
+
+
+def matrix_difference(a, b):
+    if (a["first"] is None) != (b["first"] is None):
+        return f"first decision {a['first']} -> {b['first']}"
+    if a["first"] and (a["first"][:2] != b["first"][:2] or abs(a["first"][2] - b["first"][2]) > 1):
+        return f"first decision {a['first']} -> {b['first']}"
+    short, long_ = sorted((a["then"], b["then"]), key=len)
+    if long_[:len(short)] == short and len(long_) - len(short) <= 1:
+        return None  # one decision at the second's end, inside one recording and just outside the other
+    if a["then"] != b["then"]:
+        i = next((i for i, (x, y) in enumerate(zip(a["then"], b["then"])) if x != y), min(len(a["then"]), len(b["then"])))
+        return f"decision {i + 1} after the first: {a['then'][i] if i < len(a['then']) else None} -> {b['then'][i] if i < len(b['then']) else None}"
+    return None
 
 
 def decisions(record, ai_roles):
@@ -117,24 +200,34 @@ def summary(record, role):
 
 
 def suite(ctx):
+    """The boss scenarios and the decision matrix, each compared with the UE4 reference on its terms when there is one."""
     mygame.use(ctx)
     ctx.reset()
     player = tool("pie_player_state")
     ar.PLAYER_PATH[0] = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
     base = strict.base_attributes(player)
     ar.DUMMY[0] = {"path": strict.DUMMY_PATH}
-    results, records = {}, {}
+    result = {"boss": {}, "matrix": {}}
     for sc in boss_scenarios():
-        records[sc["name"]] = strict.run(sc, base)
-        results[sc["name"]] = summary(records[sc["name"]], "boss")
-        print(f"  {sc['name']}: {json.dumps(results[sc['name']])[:300]}")
-    (ctx.out / "ai.json").write_text(json.dumps(results, indent=1))
-    (ctx.out / "ai_records.json").write_text(json.dumps(records, sort_keys=True))
+        record = strict.run(sc, base)
+        result["boss"][sc["name"]] = record
+        print(f"  {sc['name']}: {json.dumps(summary(record, 'boss'))[:250]}")
+    for sc in matrix_scenarios():
+        result["matrix"][sc["name"]] = matrix_entry(strict.run(sc, base))
+    (ctx.out / "ai.json").write_text(json.dumps(result, sort_keys=True))
+    (ctx.out / "matrix.json").write_text(json.dumps(result["matrix"], indent=1, sort_keys=True))
     problems = []
     if REFERENCE.exists():
         reference = json.loads(REFERENCE.read_text())
-        problems = [f"{k}: {json.dumps(reference.get(k))[:200]} -> {json.dumps(results.get(k))[:200]}" for k in sorted(set(reference) | set(results))
-                    if reference.get(k) != results.get(k)]
+        for name in sorted(set(reference["boss"]) | set(result["boss"])):
+            where = compare(reference["boss"][name], result["boss"][name], {"boss"}) if name in reference["boss"] and name in result["boss"] else "missing"
+            if where:
+                problems.append(f"{name}: {where}")
+        for name in sorted(set(reference["matrix"]) | set(result["matrix"])):
+            a, b = reference["matrix"].get(name), result["matrix"].get(name)
+            where = matrix_difference(a, b) if a and b else "missing"
+            if where:
+                problems.append(f"{name}: {where}")
     for p in problems:
         print("  " + p)
-    return {"ok": not problems, "checks": len(results), "problems": problems, "files": {}}
+    return {"ok": not problems, "checks": len(result["boss"]) + len(result["matrix"]), "problems": problems, "files": {}}

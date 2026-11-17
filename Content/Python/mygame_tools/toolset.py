@@ -187,6 +187,13 @@ def _inject(action_name, value_type, value):
     _player().get_controller().inject_test_input(action, unreal.Vector2D(x, y), value is not None)
 
 
+def _tag(name):
+    """A GameplayTag by name."""
+    tag = unreal.GameplayTag()
+    tag.import_text(f'(TagName="{name}")')
+    return tag
+
+
 def _set_attribute(char, attribute, value):
     """Sets a MyAttributeSet attribute's base value through the ability system (effects and damage see it)."""
     attr = unreal.GameplayAttribute()
@@ -1125,12 +1132,13 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def apply_effect(actor_path: str, effect_class_path: str) -> str:
+    def apply_effect(actor_path: str, effect_class_path: str, set_by_caller: str = "{}") -> str:
         """Applies a gameplay effect to a PIE character from itself, as a test setup (e.g. GE_ImmuneToProjectile).
 
         Args:
             actor_path: Full path of a PIE character.
             effect_class_path: e.g. "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C".
+            set_by_caller: JSON {tag: magnitude} (e.g. {"data.hitstun": 0.6} for GE_HitStun's duration).
 
         Returns:
             JSON {"applied": bool}.
@@ -1140,8 +1148,29 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char or not cls:
             raise RuntimeError("actor or effect class not found")
         asc = char.get_editor_property("ability_system")
-        asc.apply_gameplay_effect_to_self(cls, 1.0, asc.make_effect_context())
+        spec = asc.make_outgoing_spec(cls, 1.0, asc.make_effect_context())
+        for tag, value in (json.loads(set_by_caller) if set_by_caller else {}).items():
+            spec = unreal.AbilitySystemBlueprintLibrary.assign_tag_set_by_caller_magnitude(spec, _tag(tag), float(value))
+        asc.apply_gameplay_effect_spec_to_self(spec)
         return json.dumps({"applied": True})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def aggro_add(actor_path: str, target_path: str) -> str:
+        """Test setup: puts an enemy on a character's aggro list (it holds that character's attack token).
+
+        Args:
+            actor_path: Full path of the character whose token it is (the player).
+            target_path: Full path of the enemy.
+
+        Returns:
+            JSON {"added": true}.
+        """
+        char, enemy = unreal.find_object(None, actor_path), unreal.find_object(None, target_path)
+        if not char or not enemy:
+            raise RuntimeError("actor not found")
+        char.add_to_aggro_list(enemy)
+        return json.dumps({"added": True})
 
     @toolset_registry.tool_call
     @staticmethod
