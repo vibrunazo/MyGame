@@ -134,10 +134,10 @@ public:
 	// PIE test hook: the AI system's stream's current seed (read without drawing)
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	static int32 GetAIRandomSeedForTest();
-	// PIE test hook: a character's landed stuns counted towards stun immunity (they never decay) go back to none, so a
-	// test scenario starts from none. Returns the count before
+	// PIE test hook: a combatant's landed stuns counted towards stun immunity (they never decay) go back to none, so a
+	// test scenario starts from none. Returns the count before. Takes the actor, wherever its combat state lives
 	UFUNCTION(BlueprintCallable, Category = "Testing")
-	static int32 ResetHitStunCountForTest(class AMyCharacter* Character);
+	static int32 ResetHitStunCountForTest(AActor* Combatant);
 	// PIE test hook: from the next world tick on, every tick of WorldContext's world starts by seeding the randoms
 	// (SeedRandomForTest) from Seed and the tick's number, so a tick's draws never depend on how many draws came
 	// before it (other code draws from the same game-thread random between ticks, a varying number of times).

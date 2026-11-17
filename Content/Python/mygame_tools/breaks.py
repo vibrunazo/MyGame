@@ -60,6 +60,26 @@ def _edit_class(class_path, prop, change, instances=False):
     _edit(_targets(class_path, instances), prop, change)
 
 
+def _holders(objects, prop):
+    """Where a combat setting lives on each of objects: the object itself, or one of its subobjects (a component; the
+    combat settings leave AMyCharacter for its combat component in Step 1)."""
+    out = []
+    for obj in objects:
+        if _lib.get_property_text_for_test(obj, prop):
+            out.append(obj)
+            continue
+        subs = [unreal.find_object(None, p) for p in _lib.list_subobjects(obj)]
+        found = [s for s in subs if s and _lib.get_property_text_for_test(s, prop)]
+        if len(found) != 1:
+            raise RuntimeError(f"{obj.get_path_name()}: {len(found)} holders of {prop}")
+        out += found
+    return out
+
+
+def _edit_combat_setting(class_path, prop, change, instances=False):
+    _edit(_holders(_targets(class_path, instances), prop), prop, change)
+
+
 def _items(text):
     """An exported array's items, "(a,b)" -> ["a", "b"] (split at the top level, outside quotes)."""
     if not text.startswith("(") or not text.endswith(")"):
@@ -130,7 +150,7 @@ BREAKS = {
     "stun_before_damage": ("enemy1_attack", "GA_DamageEnemy1 (EMelee1) applies GE_HitStun before GE_Damage",
                            lambda: _edit_class(GA_ENEMY1, "EffectsToApply",
                                                lambda t: _join(sorted(_items(t), key=lambda i: ".GE_HitStun_C" not in i)))),
-    "nth_stun": ("nth_stun", "the player's MaxStuns 3 -> 4", lambda: _edit_class(BP_CHAR, "MaxStuns", lambda t: "4", True)),
+    "nth_stun": ("nth_stun", "the player's MaxStuns 3 -> 4", lambda: _edit_combat_setting(BP_CHAR, "MaxStuns", lambda t: "4", True)),
     "stun_immune_target": ("stun_immune_boss", "GA_BossSelfDebuff no longer applies GE_StunImmune",
                            lambda: _edit_class(GA_DEBUFF, "EffectsToApply",
                                                lambda t: _join([i for i in _items(t) if ".GE_StunImmune_C" not in i]))),
