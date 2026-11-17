@@ -22,7 +22,8 @@ Events are compared with each frame's grouped by role (by_role). Checks (the AI-
 Step 0c item 4 and only noted): every ability a character or an
 item grants starts somewhere and every montage something refers to plays
 somewhere (three montages are referred to by nothing: Smash_Montage, PunchL_MontageEnemy2, PunchR_MontageEnemy2); and when the
-UE4 reference exists (REFERENCE, kept outside git, Step 0c), every scenario equals it exactly.
+UE4 reference exists (REFERENCE, kept outside git, Step 0c), every scenario equals it as 1.1 allows on the UE5 mannequin
+(TOLERANCE_CM: positions within a stated distance, everything else exact).
 """
 import json
 from pathlib import Path
@@ -270,20 +271,66 @@ def by_role(events):
     return [e for _, e in sorted(enumerate(events), key=lambda p: (p[1][0], p[1][3], p[0]))]
 
 
-def first_difference(a, b):
-    """Where two records of one scenario part: the first frame row or event that differs (events compared by_role)."""
+# The tolerance for a recording on another skeleton against the UE4 reference (1.1, approved by the user 2026-11-17):
+# actor positions in frames within 5 cm; hit-shape centres, hit contacts, refused projectiles' points, cue and spawn
+# locations within 10 cm; everything else exact, rotations, times and the hit's sample included. Where each positional
+# field is: a frame row's x, y, z; an event kind's vector (a probe's only for the kinds named here).
+TOLERANCE_CM = {"frame": 5.0, "shape": 10.0, "hit": 10.0, "projectile_immune": 10.0, "cue": 10.0, "spawn": 10.0}
+VECTOR_AT = {"cue": 8, "spawn": 7, "probe": 7}
+
+
+def _apart(u, v):
+    return sum((p - q) ** 2 for p, q in zip(u, v)) ** 0.5
+
+
+def _positional(e):
+    """An event's tolerance name and its vector's index, or None when the event is exact."""
+    kind = e[2] if len(e) > 2 else None
+    if kind == "probe":
+        return (e[4], VECTOR_AT["probe"]) if e[4] in TOLERANCE_CM else None
+    return (kind, VECTOR_AT[kind]) if kind in VECTOR_AT else None
+
+
+def _same(x, y, worst, tolerant):
+    """Whether two event or frame rows agree (frame rows are told by their number, not a kind); worst gathers the
+    largest distance per tolerance name."""
+    if x == y:
+        return True
+    if not tolerant or len(x) != len(y):
+        return False
+    if isinstance(x[2], str):
+        where = _positional(x)
+        if not where or where != _positional(y):
+            return False
+        name, i = where
+        lo, hi = (x[i], y[i]) if isinstance(x[i], list) and isinstance(y[i], list) and len(x[i]) == len(y[i]) == 3 else (None, None)
+        if lo is None or x[:i] + x[i + 1:] != y[:i] + y[i + 1:]:
+            return False
+    else:
+        name, lo, hi = "frame", x[2:5], y[2:5]
+        if x[:2] + x[5:] != y[:2] + y[5:]:
+            return False
+    d = _apart(lo, hi)
+    worst[name] = max(worst.get(name, 0.0), d)
+    return d <= TOLERANCE_CM[name]
+
+
+def first_difference(a, b, tolerant=False, worst=None):
+    """Where two records of one scenario part: the first frame row or event that differs (events compared by_role).
+    tolerant: positions within TOLERANCE_CM count as equal, and worst (a dict) gathers the largest distances."""
+    worst = {} if worst is None else worst
     if a.get("roles") != b.get("roles"):
         return f"roles {a.get('roles')} -> {b.get('roles')}"
     ea, eb = by_role(a["events"]), by_role(b["events"])
     for i, (x, y) in enumerate(zip(ea, eb)):
-        if x != y:
+        if not _same(x, y, worst, tolerant):
             return f"event {i}: {x} -> {y}"
     if len(ea) != len(eb):
         return f"{len(ea)} events -> {len(eb)}"
     for role in sorted(set(a["frames"]) | set(b["frames"])):
         fa, fb = a["frames"].get(role, []), b["frames"].get(role, [])
         for x, y in zip(fa, fb):
-            if x != y:
+            if not _same(x, y, worst, tolerant):
                 return f"{role} frame {x[0]}: {x} -> {y}"
         if len(fa) != len(fb):
             return f"{role}: {len(fa)} frames -> {len(fb)}"
@@ -321,7 +368,10 @@ def suite(ctx):
             if name not in records or name not in reference:
                 problems.append(f"{name}: only in {'the reference' if name in reference else 'this run'}")
                 continue
-            where = first_difference(reference[name], records[name])
+            worst = {}
+            where = first_difference(reference[name], records[name], tolerant=True, worst=worst)
+            if worst:
+                print(f"  {name}: apart from the reference (cm): " + ", ".join(f"{k} {v:.1f}" for k, v in sorted(worst.items())))
             if where and name in AI_ON:
                 print(f"  note {name} (item 4's): {where[:300]}")
             elif where:
