@@ -1,6 +1,13 @@
 {
- "HitBox.HitboxTouched": [],
- "HitBox.OnOwnerDestroyed": [],
+ "AssAbility.BPOnAbilityActivated": [],
+ "AssAbility.GetAbilityTags": [],
+ "AssAbility.OnDeactivateEvent": [],
+ "AssAbility.OnHitConnect": [],
+ "AssAbility.OnHitEnd": [],
+ "AssAbility.OnHitStart": [],
+ "AssAbility.OnMontageComplete": [],
+ "AssHitBox.HitboxTouched": [],
+ "AssHitBox.OnOwnerDestroyed": [],
  "MyCharacter.ActivateAbilityByInput": [],
  "MyCharacter.AddDurationToHealthBar": [],
  "MyCharacter.AddItemToInventory": [],
@@ -77,12 +84,5 @@
   "/Game/Blueprints/AI/BTTask_StartWalking :: EventGraph",
   "/Game/Blueprints/AI/BTTask_StopWalking :: EventGraph"
  ],
- "MyCharacter.UpdateHealthBar": [],
- "MyGameplayAbility.BPOnAbilityActivated": [],
- "MyGameplayAbility.GetAbilityTags": [],
- "MyGameplayAbility.OnDeactivateEvent": [],
- "MyGameplayAbility.OnHitConnect": [],
- "MyGameplayAbility.OnHitEnd": [],
- "MyGameplayAbility.OnHitStart": [],
- "MyGameplayAbility.OnMontageComplete": []
+ "MyCharacter.UpdateHealthBar": []
 }

@@ -334,7 +334,7 @@
    },
    "typesToTestTargetLock": []
   },
-  "parent": "/Script/MyGame.MyGameplayAbility"
+  "parent": "/Script/AssCombat.AssAbility"
  },
  "/Game/Abilities/GA_BasicPunches": {
   "asset_class": "Blueprint",
@@ -693,7 +693,7 @@
    ],
    "validTargets": []
   },
-  "parent": "/Script/MyGame.CastAbility"
+  "parent": "/Script/AssCombat.AssCastAbility"
  },
  "/Game/Abilities/GA_Dash": {
   "asset_class": "GameplayAbilityBlueprint",
@@ -3707,6 +3707,6 @@
    },
    "typesToTestTargetLock": []
   },
-  "parent": "/Script/MyGame.CastAbility"
+  "parent": "/Script/AssCombat.AssCastAbility"
  }
 }

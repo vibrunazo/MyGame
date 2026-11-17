@@ -49,7 +49,7 @@
    "length": 2.2083165645599365,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.6667666269277106,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -87,7 +87,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.6122629642486572,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -124,7 +124,7 @@
      "track": 1
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.23537002503871918,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -376,7 +376,7 @@
    "length": 1.4483166933059692,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.16747605428099632,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -465,7 +465,7 @@
      "track": 0
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.12355155497789383,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -676,7 +676,7 @@
    "length": 1.146649956703186,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 0.7365327311490546,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -714,7 +714,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.43460220098495483,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -751,7 +751,7 @@
      "track": 3
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.33000001311302185,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -911,7 +911,7 @@
    "length": 0.9226166605949402,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 0.8501000238393317,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -949,7 +949,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.4202067255973816,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -986,7 +986,7 @@
      "track": 3
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.2750699818134308,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -1173,7 +1173,7 @@
    "length": 1.058316707611084,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.0000999999974738,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -1211,7 +1211,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.4391627907752991,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -1248,7 +1248,7 @@
      "track": 3
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.2956897020339966,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -1465,7 +1465,7 @@
    "length": 2.058316707611084,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.465407831761695,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -1503,7 +1503,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.6488029509782791,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -1540,7 +1540,7 @@
      "track": 3
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.2956897020339966,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -1775,7 +1775,7 @@
      "track": 1
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.9497991634343634,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2034,7 +2034,7 @@
      "track": 0
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.954252004623413,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2066,7 +2066,7 @@
      "track": 4
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.954252004623413,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2156,7 +2156,7 @@
    "length": 2.3333165645599365,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.6667666269277106,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2194,7 +2194,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.75,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -2444,7 +2444,7 @@
    "length": 1.9541499614715576,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_RotateChar",
+     "class": "/Script/AssCombat.AssRotateNotifyState",
      "end": 1.4508750289678574,
      "name": "ANS_RotateChar",
      "settings": {
@@ -2466,7 +2466,7 @@
      "track": 1
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.9492531848882209,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2504,7 +2504,7 @@
      "track": 4
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.873185969889164,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2536,7 +2536,7 @@
      "track": 5
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.8731858730316162,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2568,7 +2568,7 @@
      "track": 6
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.09999999403953552,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -2593,7 +2593,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 1.5382349491119385,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -2630,7 +2630,7 @@
      "track": 3
     },
     {
-     "class": "/Script/MyGame.ANS_Hitbox",
+     "class": "/Script/AssCombat.AssHitboxNotifyState",
      "end": 1.4750001579523087,
      "name": "ANS_Hitbox",
      "settings": {
@@ -2709,7 +2709,7 @@
      "track": 0
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.4333401024341583,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -2734,7 +2734,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.6540823578834534,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -2759,7 +2759,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.9903293251991272,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -2784,7 +2784,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 1.21620512008667,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -2878,7 +2878,7 @@
    "length": 1.537500023841858,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.0000999999974738,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -2916,7 +2916,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.37875717878341675,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -2939,7 +2939,7 @@
      "track": 0
     },
     {
-     "class": "/Script/MyGame.ANS_PlaySlash",
+     "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.5057594180107117,
      "name": "ANS_PlaySlash",
      "settings": {
@@ -3129,7 +3129,7 @@
    "length": 2.0833165645599365,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.5000999999974738,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -3186,7 +3186,7 @@
      "track": 2
     },
     {
-     "class": "/Script/MyGame.AN_PlaySoundFromChar",
+     "class": "/Script/AssCombat.AssCharacterSoundNotify",
      "end": 0.5264984965324402,
      "name": "AN_PlaySoundFromChar",
      "settings": {
@@ -3853,7 +3853,7 @@
      "track": 1
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.9497991634343634,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -4112,7 +4112,7 @@
      "track": 0
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.954252004623413,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -4144,7 +4144,7 @@
      "track": 4
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.954252004623413,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -4357,7 +4357,7 @@
      "track": 1
     },
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 0.5978119969367981,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -4475,7 +4475,7 @@
    "length": 1.6333166360855103,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.41038693657174,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -4696,7 +4696,7 @@
    "length": 1.4666500091552734,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.161987118422985,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -4917,7 +4917,7 @@
    "length": 1.6333166360855103,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.41038693657174,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -5138,7 +5138,7 @@
    "length": 1.4666500091552734,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.161987118422985,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -5359,7 +5359,7 @@
    "length": 1.6333166360855103,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.41038693657174,
      "name": "ANS_ApplyEffect",
      "settings": {
@@ -5552,7 +5552,7 @@
    "length": 1.4666500091552734,
    "notifies": [
     {
-     "class": "/Script/MyGame.ANS_ApplyEffect",
+     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
      "end": 1.161987118422985,
      "name": "ANS_ApplyEffect",
      "settings": {

@@ -9,7 +9,7 @@
   "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data": {
@@ -25,7 +25,7 @@
   "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.CamShake": {
@@ -52,14 +52,10 @@
    "/Game/Blueprints/Chars/EWizard/GA_Cast1"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_CamShake);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: if (Combatant) Combatant->PlayHitCameraShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_CamShake, \"Ass.Data.CamShake\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.HitStun": {
@@ -85,15 +81,10 @@
    "/Game/Blueprints/Chars/EWizard/GA_Cast1"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_HitStun);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: /*FGameplayTag HitStunTag = MyGameplayTags::Data_HitStun;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_HitStun, \"Ass.Data.HitStun\");",
-   "Source/MyGame/Player/MyCharacter.cpp: /*FGameplayTag HitStun = MyGameplayTags::Data_HitStun;"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.Knockback": {
@@ -119,15 +110,10 @@
    "/Game/Blueprints/Chars/EWizard/GA_Cast1"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Knockback);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: ApplyKnockBack(SourceActor, Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Knockback, false));",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag KnockbackTag = MyGameplayTags::Data_Knockback;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Knockback, \"Ass.Data.Knockback\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.Launch": {
@@ -139,14 +125,10 @@
    "Ass.Data.Launch.Y",
    "Ass.Data.Launch.Z"
   ],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchTag = MyGameplayTags::Data_Launch;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch, \"Ass.Data.Launch\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.Launch.X": {
@@ -159,15 +141,10 @@
    "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_X);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: ApplyLaunchBack(SourceActor, FVector(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_X, false),",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchXTag = MyGameplayTags::Data_Launch_X;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_X, \"Ass.Data.Launch.X\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.Launch.Y": {
@@ -180,15 +157,10 @@
    "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Y);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchYTag = MyGameplayTags::Data_Launch_Y;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Y, \"Ass.Data.Launch.Y\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.Launch.Z": {
@@ -201,15 +173,10 @@
    "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Launch_Z);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag LaunchZTag = MyGameplayTags::Data_Launch_Z;*/",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Z, \"Ass.Data.Launch.Z\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.NoControl": {
@@ -218,14 +185,10 @@
    "/Game/Abilities/GE_NoControl"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_NoControl);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: Handle.Data.Get()->SetSetByCallerMagnitude(MyGameplayTags::Data_NoControl, 0.5f);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_NoControl, \"Ass.Data.NoControl\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data.StunImmune": {
@@ -234,14 +197,10 @@
    "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_StunImmune);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: Handle.Data.Get()->SetSetByCallerMagnitude(MyGameplayTags::Data_StunImmune, StunImmuneCooldown);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, \"Ass.Data.StunImmune\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Notify": {
@@ -253,7 +212,7 @@
   "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Notify.Hit": {
@@ -266,22 +225,16 @@
   "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Notify.Hit.Connect": {
   "assets": [],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Connect);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: ConnectHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Connect).AddUObject(this, &UAbilityTask_HitboxWindows",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Connect)) D->Remove(ConnectHandle",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, \"Ass.Notify.Hit.Connect\");",
-   "Source/MyGame/Player/HitBox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Notify.Hit.End": {
@@ -289,31 +242,19 @@
    "/Game/Blueprints/Notifies/ANS_HitboxBP"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_End);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: EndHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_End).AddUObject(this, &UAbilityTask_HitboxWindows::Handle",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_End)) D->Remove(EndHandle);",
-   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_End, Payload);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, \"Ass.Notify.Hit.End\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Notify.Hit.Start": {
   "assets": [],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Start);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: StartHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Start).AddUObject(this, &UAbilityTask_HitboxWindows::Ha",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Start)) D->Remove(StartHandle);",
-   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_Start, Payload);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, \"Ass.Notify.Hit.Start\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Notify.Projectile": {
@@ -324,7 +265,7 @@
   "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Notify.Projectile.Cast": {
@@ -332,14 +273,10 @@
    "/Game/Blueprints/Notifies/ANS_ProjectileCast"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Projectile_Cast);",
-   "Source/MyGame/Abilities/CastAbility.cpp: FGameplayTag CastTag = MyGameplayTags::Notify_Projectile_Cast;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, \"Ass.Notify.Projectile.Cast\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status": {
@@ -356,7 +293,7 @@
   "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status.Airborne": {
@@ -364,14 +301,10 @@
    "/Game/Blueprints/Chars/EWizard/GA_Cast1"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Airborne);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: ASC->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, Char->GetMovementComponent()->IsFalling() ? 1 : 0);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, \"Ass.Status.Airborne\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status.HitStun": {
@@ -384,15 +317,10 @@
    "/Game/Blueprints/Chars/EWizard/GA_Cast1"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_HitStun);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: if (ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun) || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)))",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: return !(ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun)",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, \"Ass.Status.HitStun\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status.ImmuneProjectile": {
@@ -400,14 +328,10 @@
    "/Game/Abilities/GE_ImmuneToProjectile"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_ImmuneProjectile);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, \"Ass.Status.ImmuneProjectile\");",
-   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status.NoControl": {
@@ -415,15 +339,10 @@
    "/Game/Abilities/GE_NoControl"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoControl);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: if (ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun) || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)))",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, \"Ass.Status.NoControl\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status.NoMove": {
@@ -433,14 +352,10 @@
    "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoMove);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoMove)));",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, \"Ass.Status.NoMove\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status.NoPawnBlock": {
@@ -448,15 +363,10 @@
    "/Game/Abilities/GE_NoPawnBlock"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoPawnBlock);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: InAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAssCombatComponent::PawnBl",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: || (ASC && ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, \"Ass.Status.NoPawnBlock\");"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status.StunImmune": {
@@ -465,15 +375,10 @@
    "/Game/Abilities/GE_StunImmune"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_StunImmune);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: return ASC && ASC->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, \"Ass.Status.StunImmune\");",
-   "Source/MyGame/Player/HitBox.cpp: Cue.RawMagnitude = GAS->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune) ? 1.f : 0.f;"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "EnhancedInput": {
@@ -532,7 +437,7 @@
   "code": [],
   "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "GameplayCue.Ass.Hit": {
@@ -543,7 +448,7 @@
   "code": [],
   "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "GameplayCue.Ass.Hit.Impact": {
@@ -551,14 +456,10 @@
    "/Game/FX/Cues/GC_Hit_Impact"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Hit_Impact);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, \"GameplayCue.Ass.Hit.Impact\");",
-   "Source/MyGame/Player/HitBox.cpp: GAS->ExecuteGameplayCue(MyGameplayTags::GameplayCue_Hit_Impact, Cue);"
-  ],
+  "code": [],
   "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "GameplayCue.Test": {
@@ -970,7 +871,10 @@
    "activate.move",
    "activate.punch"
   ],
-  "code": [],
+  "code": [
+   "Config/DefaultGame.ini: GroundAbilityTag=(TagName=\"activate.groundattack\")",
+   "Config/DefaultGame.ini: AirAbilityTag=(TagName=\"activate.flyingattack\")"
+  ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
@@ -995,9 +899,9 @@
   "children": [],
   "code": [
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_FlyingAttack);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(MyGameplayTags::Activate_FlyingAttack);",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Activate_FlyingAttack, \"activate.flyingattack\");",
-   "Source/MyGame/Player/MyCharacter.cpp: return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);"
+   "Source/MyGame/Player/MyCharacter.cpp: return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);",
+   "Config/DefaultGame.ini: AirAbilityTag=(TagName=\"activate.flyingattack\")"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -1018,8 +922,8 @@
   "children": [],
   "code": [
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_GroundAttack);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: FGameplayTagContainer GroundTagContainer = FGameplayTagContainer(MyGameplayTags::Activate_GroundAttack);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Activate_GroundAttack, \"activate.groundattack\");"
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Activate_GroundAttack, \"activate.groundattack\");",
+   "Config/DefaultGame.ini: GroundAbilityTag=(TagName=\"activate.groundattack\")"
   ],
   "owner": "MyGame (3.11)",
   "plugin_name": null,
@@ -1096,7 +1000,9 @@
    "combo.cancancel",
    "combo.weak"
   ],
-  "code": [],
+  "code": [
+   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"combo.cancancel\")"
+  ],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
@@ -1107,12 +1013,8 @@
   "children": [],
   "code": [
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: && ASC->HasMatchingGameplayTag(MyGameplayTags::Combo_CanCancel)",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag CanCancelState = MyGameplayTags::Combo_CanCancel;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"combo.cancancel\");"
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"combo.cancancel\");",
+   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"combo.cancancel\")"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1248,7 +1150,6 @@
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);",
    "Source/MyGame/Abilities/DamageExec.cpp: // FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
    "Source/MyGame/Abilities/DamageExec.cpp: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Damage, \"data.damage\");"
   ],
   "owner": null,
@@ -1553,7 +1454,9 @@
    "state.running",
    "state.walking"
   ],
-  "code": [],
+  "code": [
+   "Config/DefaultGame.ini: AttackingTag=(TagName=\"state.attacking\")"
+  ],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
@@ -1574,9 +1477,8 @@
   "children": [],
   "code": [
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: FGameplayTag AttackTag = MyGameplayTags::State_Attacking;",
-   "Source/MyGame/Abilities/MyGameplayAbility.cpp: && ASC->HasMatchingGameplayTag(MyGameplayTags::State_Attacking)",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"state.attacking\");"
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"state.attacking\");",
+   "Config/DefaultGame.ini: AttackingTag=(TagName=\"state.attacking\")"
   ],
   "owner": null,
   "plugin_name": null,

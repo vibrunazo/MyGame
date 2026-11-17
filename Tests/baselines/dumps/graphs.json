@@ -21,7 +21,7 @@
    "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
   },
   "kind": "Blueprint",
-  "parent": "/Script/MyGame.MyGameplayAbility"
+  "parent": "/Script/AssCombat.AssAbility"
  },
  "/Game/Abilities/GA_BasicPunches": {
   "graphs": {
@@ -35,7 +35,7 @@
    "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
   },
   "kind": "Blueprint",
-  "parent": "/Script/MyGame.CastAbility"
+  "parent": "/Script/AssCombat.AssCastAbility"
  },
  "/Game/Abilities/GA_Dash": {
   "graphs": {
@@ -465,7 +465,7 @@
    "UserConstructionScript": "(fn ConstructionScript ())\n"
   },
   "kind": "Blueprint",
-  "parent": "/Script/MyGame.HitBox"
+  "parent": "/Script/AssCombat.AssHitBox"
  },
  "/Game/Blueprints/Chars/BP_MyController": {
   "graphs": {
@@ -629,7 +629,7 @@
    "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
   },
   "kind": "Blueprint",
-  "parent": "/Script/MyGame.CastAbility"
+  "parent": "/Script/AssCombat.AssCastAbility"
  },
  "/Game/Blueprints/ChildActorTest": {
   "graphs": {
@@ -674,7 +674,7 @@
    "EventGraph": "(event EventBeginPlay\n  (|Parent:BeginPlay)\n  (Class|GASummon|InitialSetup))\n\n(event Collision|EventActorBeginOverlap (OtherActor)\n  (Collision|Parent:ActorBeginOverlap OtherActor))\n\n(event EventTick (DeltaSeconds)\n  (|Parent:Tick DeltaSeconds))\n\n(event Custom|SetBookWidget (Tex NewName)\n  (bind _aswbp_book_cover (Utilities|Casting|CastToWBP_BookCover (UserInterface|GetUserWidgetObject (Variables|Default|GetWidget))))\n  (Class|WBPBookCover|SetSkillIcon _aswbp_book_cover Tex)\n  (Class|WBPBookCover|SetSkillNameText _aswbp_book_cover NewName)\n  (Class|WBPBookCover|SetBookTexture _aswbp_book_cover self))\n\n(event Custom|DelayedSetMatTex\n  (Rendering|Material|SetTextureParameterValue (Variables|Default|GetDynamat) \"Tex\" (CallFunction|GetWidgetRenderTarget)))\n",
    "GetWidgetRenderTarget": "(fn GetWidgetRenderTarget ()\n  (return (UserInterface|GetRenderTarget (Variables|Default|GetWidget))))\n",
    "InitialSetup": "(fn InitialSetup ()\n  (bind _returnvalue (Rendering|Material|CreateDynamicMaterialInstance (Variables|Default|GetBookMesh) 2))\n  (Variables|Default|SetDynamat _returnvalue)\n  (CallFunction|SetupParentAbilityClass)\n  (bind (_astexture_2d _skillname) (Utilities|TryGetDatafromAbility))\n  (CallFunction|SetBookWidget _astexture_2d _skillname))\n",
-   "SetupParentAbilityClass": "(fn SetupParentAbilityClass ()\n  (bind _abilitiestolearn (Class|LearnItemDataAsset|GetAbilitiestoLearn (Utilities|Casting|CastToLearnItemDataAsset (Class|Pickup|GetItemData (Utilities|Casting|CastToBP_Pickup (Actor|GetParentActor))))))\n  (bind _asbp_pickup (Utilities|Casting|CastToBP_Pickup (Actor|GetParentActor)))\n  (bind _aslearn_item_data_asset (Utilities|Casting|CastToLearnItemDataAsset (Class|Pickup|GetItemData _asbp_pickup)))\n  (if (> (Utilities|Array|Length _abilitiestolearn) 0)\n    (bind _asmy_gameplay_ability (Utilities|Casting|CastToMyGameplayAbilityClass (Utilities|Struct|BreakAbilityStruct (Utilities|Array|Get(aref) _abilitiestolearn))))\n    (Variables|Default|SetParentAbilityClass _asmy_gameplay_ability)))\n",
+   "SetupParentAbilityClass": "(fn SetupParentAbilityClass ()\n  (bind _abilitiestolearn (Class|LearnItemDataAsset|GetAbilitiestoLearn (Utilities|Casting|CastToLearnItemDataAsset (Class|Pickup|GetItemData (Utilities|Casting|CastToBP_Pickup (Actor|GetParentActor))))))\n  (bind _asbp_pickup (Utilities|Casting|CastToBP_Pickup (Actor|GetParentActor)))\n  (bind _aslearn_item_data_asset (Utilities|Casting|CastToLearnItemDataAsset (Class|Pickup|GetItemData _asbp_pickup)))\n  (if (> (Utilities|Array|Length _abilitiestolearn) 0)\n    (bind _asass_ability (Utilities|Casting|CastToAssAbilityClass (Utilities|Struct|BreakAbilityStruct (Utilities|Array|Get(aref) _abilitiestolearn))))\n    (Variables|Default|SetParentAbilityClass _asass_ability)))\n",
    "TryGetDataFromAbility": "(fn Inputs ()\n  (bind _parentabilityclass (Variables|Default|GetParentAbilityClass))\n  (bind _returnvalue (UI|GetAbilityUI _parentabilityclass)))\n",
    "UserConstructionScript": "(fn ConstructionScript ()\n  (|Parent:ConstructionScript)\n  (Class|GASummon|InitialSetup))\n"
   },
@@ -769,7 +769,7 @@
    "Received_NotifyEnd": "(fn Received_NotifyEnd (MeshComp Animation EventReference)\n  (Ability|SendGameplayEventToActor (Components|GetOwner MeshComp) \"(TagName=\\\"Ass.Notify.Hit.End\\\")\")\n  (return false))\n"
   },
   "kind": "Blueprint",
-  "parent": "/Script/MyGame.ANS_Hitbox"
+  "parent": "/Script/AssCombat.AssHitboxNotifyState"
  },
  "/Game/Blueprints/Notifies/ANS_ProjectileCast": {
   "graphs": {
@@ -794,7 +794,7 @@
  "/Game/FX/Cues/GC_Hit_Impact": {
   "graphs": {},
   "kind": "Blueprint",
-  "parent": "/Script/MyGame.GCN_HitImpact"
+  "parent": "/Script/AssCombat.AssHitImpactCue"
  },
  "/Game/FX/GC_Boots": {
   "graphs": {
@@ -925,7 +925,7 @@
  "/Game/UI/WBP_ActionButton": {
   "graphs": {
    "ActionPressed": "(fn ActionPressed (IsPressed Duration)\n  (bind _actioncheckbox (Variables|WBP_ActionButton|GetActionCheckBox))\n  (if IsPressed\n    (Widget|SetCheckedState _actioncheckbox \"Checked\")\n    (if (not (Variables|Default|GetCurrentState))\n      (UserInterface|Animation|PlayAnimation (Variables|Animations|GetClick) 0.000000 1 \"Forward\" 2.000000)\n      (Variables|Default|SetCurrentState true)\n      (if (> Duration 0.0)\n        (CallFunction|SetTimertoCancelPress Duration)))\n    (else\n      (Widget|SetCheckedState _actioncheckbox)\n      (Variables|Default|SetCurrentState false))))\n",
-   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime)\n  (Widget|SetText(Text) (Variables|WBP_ActionButton|GetButtonTextWidget) (Variables|Default|GetButtonText))\n  (Widget|SetText(Text) (Variables|ActionButton|GetCommandTextWidget) (Variables|Default|GetKeyText))\n  (Appearance|SetBrushFromTexture (Variables|WBP_ActionButton|GetIcon) (Variables|Default|GetIconTex) false)\n  (Layout|CanvasSlot|SetSize (Slot|SlotAsCanvasSlot (Variables|WBP_ActionButton|GetButtonSize-Canvas)) (Variables|Default|GetButtonSize))\n  (CallFunction|SetHotkeyImages))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event Custom|StartCooldown (Duration)\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetCooldown) 0.000000 1 \"Forward\" (/ 1.000000 (* Duration 1.150000))))\n\n(event Custom|SetTimerToCancelPress (Duration)\n  (Utilities|Time|SetTimerbyEvent (AddEvent|Custom|CancelPressTimedOut) Duration))\n\n(event Custom|CancelPressTimedOut\n  (CallFunction|ActionPressed false))\n\n(event Custom|SetupActionAbility (NewAbility)\n  (bind _asmy_gameplay_ability (Utilities|Casting|CastToMyGameplayAbilityClass (Utilities|Struct|BreakAbilityStruct NewAbility)))\n  (Appearance|SetBrush (Variables|WBP_ActionButton|GetIcon) (Utilities|Struct|BreakBuffUI (UI|GetAbilityUI _asmy_gameplay_ability))))\n",
+   "EventGraph": "(event UserInterface|EventPreConstruct (IsDesignTime)\n  (Widget|SetText(Text) (Variables|WBP_ActionButton|GetButtonTextWidget) (Variables|Default|GetButtonText))\n  (Widget|SetText(Text) (Variables|ActionButton|GetCommandTextWidget) (Variables|Default|GetKeyText))\n  (Appearance|SetBrushFromTexture (Variables|WBP_ActionButton|GetIcon) (Variables|Default|GetIconTex) false)\n  (Layout|CanvasSlot|SetSize (Slot|SlotAsCanvasSlot (Variables|WBP_ActionButton|GetButtonSize-Canvas)) (Variables|Default|GetButtonSize))\n  (CallFunction|SetHotkeyImages))\n\n(event UserInterface|EventConstruct)\n\n(event UserInterface|EventTick (MyGeometry InDeltaTime))\n\n(event Custom|StartCooldown (Duration)\n  (UserInterface|Animation|PlayAnimation (Variables|Animations|GetCooldown) 0.000000 1 \"Forward\" (/ 1.000000 (* Duration 1.150000))))\n\n(event Custom|SetTimerToCancelPress (Duration)\n  (Utilities|Time|SetTimerbyEvent (AddEvent|Custom|CancelPressTimedOut) Duration))\n\n(event Custom|CancelPressTimedOut\n  (CallFunction|ActionPressed false))\n\n(event Custom|SetupActionAbility (NewAbility)\n  (bind _asass_ability (Utilities|Casting|CastToAssAbilityClass (Utilities|Struct|BreakAbilityStruct NewAbility)))\n  (Appearance|SetBrush (Variables|WBP_ActionButton|GetIcon) (Utilities|Struct|BreakBuffUI (UI|GetAbilityUI _asass_ability))))\n",
    "IsSuperMod": "(fn IsSuperMod ()\n  (return (and (Math|Byte|Byte>=Byte (Variables|Default|GetButtonInput) (Utilities|Enum|LiteralenumEInput \"SuperPunch\")) (Math|Byte|Byte<=Byte (Variables|Default|GetButtonInput) (Utilities|Enum|LiteralenumEInput \"SuperJump\")))))\n",
    "SetHotkeyImages": "(fn SetHotkeyImages ()\n  (bind _listofcontrols (Variables|Default|GetListOfControls))\n  (bind _modimage (Variables|WBP_ActionButton|GetModIMage))\n  (bind _modlessinput (Variables|Default|GetModlessInput))\n  (Appearance|SetBrushFromTexture (Variables|WBP_ActionButton|GetContImage) (Utilities|Map|Find (Variables|Default|GetListOfControls) \"Punch\") false)\n  (Variables|Default|SetModlessInput (Variables|Default|GetButtonInput))\n  (if (CallFunction|IsSuperMod)\n    (Appearance|SetBrushFromTexture _modimage (Variables|Default|GetSuperModImage) false)\n    (Widget|SetVisibility _modimage)\n    (Variables|Default|SetModlessInput (Utilities|Enum|BytetoEnumEInput (Math|Byte|Byte-Byte (Variables|Default|GetButtonInput) 10))))\n  (if (Utilities|Map|Find _listofcontrols _modlessinput)\n    (Appearance|SetBrushFromTexture (Variables|WBP_ActionButton|GetContImage) (Utilities|Map|Find _listofcontrols _modlessinput) false)))\n"
   },

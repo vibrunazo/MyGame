@@ -5110,7 +5110,7 @@
    "tags": [],
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault"
   },
-  "parent": "/Script/MyGame.HitBox"
+  "parent": "/Script/AssCombat.AssHitBox"
  },
  "/Game/Blueprints/Chars/BP_Projectile": {
   "asset_class": "Blueprint",
@@ -5161,7 +5161,6 @@
    "defaultUpdateOverlapsMethodDuringLevelStreaming": "OnlyUpdateMovable",
    "externalDataLayerAsset": "None",
    "hLODLayer": "None",
-   "hitboxRef": "None",
    "initialLifeSpan": 2,
    "inputPriority": 0,
    "instigator": "None",
@@ -5980,7 +5979,6 @@
    "defaultUpdateOverlapsMethodDuringLevelStreaming": "OnlyUpdateMovable",
    "externalDataLayerAsset": "None",
    "hLODLayer": "None",
-   "hitboxRef": "None",
    "initialLifeSpan": 2,
    "inputPriority": 0,
    "instigator": "None",

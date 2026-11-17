@@ -1969,9 +1969,9 @@
      "subobject": "AssetTagsGameplayEffectComponent"
     },
     {
-     "editorFriendlyName": "Hit Reaction Effect Component",
+     "editorFriendlyName": "Ass Hit Reaction Effect Component",
      "reaction": "CameraShake",
-     "subobject": "HitReactionEffectComponent"
+     "subobject": "AssHitReactionEffectComponent"
     }
    ],
    "gameplayCues": [],
@@ -4792,9 +4792,9 @@
      "subobject": "TargetTagsGameplayEffectComponent"
     },
     {
-     "editorFriendlyName": "Hit Reaction Effect Component",
+     "editorFriendlyName": "Ass Hit Reaction Effect Component",
      "reaction": "HitStun",
-     "subobject": "HitReactionEffectComponent"
+     "subobject": "AssHitReactionEffectComponent"
     }
    ],
    "gameplayCues": [],
@@ -6173,9 +6173,9 @@
      "subobject": "AssetTagsGameplayEffectComponent"
     },
     {
-     "editorFriendlyName": "Hit Reaction Effect Component",
+     "editorFriendlyName": "Ass Hit Reaction Effect Component",
      "reaction": "Knockback",
-     "subobject": "HitReactionEffectComponent"
+     "subobject": "AssHitReactionEffectComponent"
     }
    ],
    "gameplayCues": [],
@@ -6618,9 +6618,9 @@
      "subobject": "AssetTagsGameplayEffectComponent"
     },
     {
-     "editorFriendlyName": "Hit Reaction Effect Component",
+     "editorFriendlyName": "Ass Hit Reaction Effect Component",
      "reaction": "Launch",
-     "subobject": "HitReactionEffectComponent"
+     "subobject": "AssHitReactionEffectComponent"
     }
    ],
    "gameplayCues": [],
