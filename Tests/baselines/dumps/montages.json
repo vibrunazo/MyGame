@@ -2047,7 +2047,7 @@
         "magnitudes": [
          {
           "gameplayTag": {
-           "tagName": "data.camshake"
+           "tagName": "Ass.Data.CamShake"
           },
           "magnitude": 100
          }
@@ -2079,7 +2079,7 @@
         "magnitudes": [
          {
           "gameplayTag": {
-           "tagName": "data.camshake"
+           "tagName": "Ass.Data.CamShake"
           },
           "magnitude": 80
          }
@@ -4125,7 +4125,7 @@
         "magnitudes": [
          {
           "gameplayTag": {
-           "tagName": "data.camshake"
+           "tagName": "Ass.Data.CamShake"
           },
           "magnitude": 100
          }
@@ -4157,7 +4157,7 @@
         "magnitudes": [
          {
           "gameplayTag": {
-           "tagName": "data.camshake"
+           "tagName": "Ass.Data.CamShake"
           },
           "magnitude": 80
          }
@@ -4370,7 +4370,7 @@
         "magnitudes": [
          {
           "gameplayTag": {
-           "tagName": "data.knockback"
+           "tagName": "Ass.Data.Knockback"
           },
           "magnitude": 1400
          }

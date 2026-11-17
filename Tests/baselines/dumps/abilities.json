@@ -91,7 +91,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.4000000059604645
       }
@@ -104,7 +104,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 1000
       }
@@ -117,7 +117,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -256,7 +256,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -269,7 +269,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 300
       }
@@ -282,7 +282,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -431,7 +431,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -444,7 +444,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 300
       }
@@ -457,7 +457,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -596,7 +596,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.4000000059604645
       }
@@ -609,7 +609,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 200
       }
@@ -622,7 +622,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 20
       }
@@ -850,7 +850,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -863,7 +863,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 2000
       }
@@ -876,19 +876,19 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.launch.x"
+        "tagName": "Ass.Data.Launch.X"
        },
        "magnitude": 700
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.y"
+        "tagName": "Ass.Data.Launch.Y"
        },
        "magnitude": 0
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.z"
+        "tagName": "Ass.Data.Launch.Z"
        },
        "magnitude": 300
       }
@@ -901,7 +901,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -1051,7 +1051,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.20000000298023224
       }
@@ -1064,7 +1064,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 100
       }
@@ -1077,7 +1077,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -1233,7 +1233,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -1246,7 +1246,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 300
       }
@@ -1259,7 +1259,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -1468,7 +1468,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -1481,7 +1481,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 1000
       }
@@ -1494,19 +1494,19 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.launch.x"
+        "tagName": "Ass.Data.Launch.X"
        },
        "magnitude": 300
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.y"
+        "tagName": "Ass.Data.Launch.Y"
        },
        "magnitude": 0
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.z"
+        "tagName": "Ass.Data.Launch.Z"
        },
        "magnitude": 400
       }
@@ -1519,7 +1519,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 50
       }
@@ -1725,7 +1725,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.5
       }
@@ -1738,7 +1738,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 50
       }
@@ -1751,7 +1751,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -1914,7 +1914,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -1927,7 +1927,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 300
       }
@@ -1940,19 +1940,19 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.launch.x"
+        "tagName": "Ass.Data.Launch.X"
        },
        "magnitude": 180
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.y"
+        "tagName": "Ass.Data.Launch.Y"
        },
        "magnitude": 0
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.z"
+        "tagName": "Ass.Data.Launch.Z"
        },
        "magnitude": 800
       }
@@ -1965,7 +1965,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 50
       }
@@ -2103,7 +2103,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -2116,7 +2116,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 1000
       }
@@ -2129,19 +2129,19 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.launch.x"
+        "tagName": "Ass.Data.Launch.X"
        },
        "magnitude": 300
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.y"
+        "tagName": "Ass.Data.Launch.Y"
        },
        "magnitude": 0
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.z"
+        "tagName": "Ass.Data.Launch.Z"
        },
        "magnitude": 400
       }
@@ -2154,7 +2154,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -2322,7 +2322,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.550000011920929
       }
@@ -2335,7 +2335,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 800
       }
@@ -2348,7 +2348,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 80
       }
@@ -2465,7 +2465,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.stunimmune"
+        "tagName": "Ass.Data.StunImmune"
        },
        "magnitude": 14
       }
@@ -2600,7 +2600,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -2613,7 +2613,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 1000
       }
@@ -2626,19 +2626,19 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.launch.x"
+        "tagName": "Ass.Data.Launch.X"
        },
        "magnitude": 300
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.y"
+        "tagName": "Ass.Data.Launch.Y"
        },
        "magnitude": 0
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.z"
+        "tagName": "Ass.Data.Launch.Z"
        },
        "magnitude": 400
       }
@@ -2651,7 +2651,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 50
       }
@@ -2862,7 +2862,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -2875,7 +2875,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 2000
       }
@@ -2888,19 +2888,19 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.launch.x"
+        "tagName": "Ass.Data.Launch.X"
        },
        "magnitude": 700
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.y"
+        "tagName": "Ass.Data.Launch.Y"
        },
        "magnitude": 0
       },
       {
        "gameplayTag": {
-        "tagName": "data.launch.z"
+        "tagName": "Ass.Data.Launch.Z"
        },
        "magnitude": 300
       }
@@ -2913,7 +2913,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -3066,7 +3066,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -3079,7 +3079,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 300
       }
@@ -3092,7 +3092,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -3105,7 +3105,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -3261,7 +3261,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -3274,7 +3274,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 300
       }
@@ -3287,7 +3287,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -3300,7 +3300,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -3456,7 +3456,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.3499999940395355
       }
@@ -3469,7 +3469,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 300
       }
@@ -3482,7 +3482,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -3495,7 +3495,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }
@@ -3628,7 +3628,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.hitstun"
+        "tagName": "Ass.Data.HitStun"
        },
        "magnitude": 0.4000000059604645
       }
@@ -3641,7 +3641,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.knockback"
+        "tagName": "Ass.Data.Knockback"
        },
        "magnitude": 200
       }
@@ -3654,7 +3654,7 @@
      "magnitudes": [
       {
        "gameplayTag": {
-        "tagName": "data.camshake"
+        "tagName": "Ass.Data.CamShake"
        },
        "magnitude": 30
       }

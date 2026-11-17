@@ -1951,14 +1951,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "data.camshake"
+         "tagName": "Ass.Data.CamShake"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "data.camshake"
+         "tagName": "Ass.Data.CamShake"
         }
        ]
       },
@@ -2044,14 +2044,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "data.camshake"
+       "tagName": "Ass.Data.CamShake"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "data.camshake"
+       "tagName": "Ass.Data.CamShake"
       }
      ]
     },
@@ -4680,7 +4680,7 @@
     "setByCallerMagnitude": {
      "dataName": "None",
      "dataTag": {
-      "tagName": "data.hitstun"
+      "tagName": "Ass.Data.HitStun"
      }
     }
    },
@@ -4694,14 +4694,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "data.hitstun"
+         "tagName": "Ass.Data.HitStun"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "data.hitstun"
+         "tagName": "Ass.Data.HitStun"
         }
        ]
       },
@@ -4867,14 +4867,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "data.hitstun"
+       "tagName": "Ass.Data.HitStun"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "data.hitstun"
+       "tagName": "Ass.Data.HitStun"
       }
      ]
     },
@@ -6155,14 +6155,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "data.knockback"
+         "tagName": "Ass.Data.Knockback"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "data.knockback"
+         "tagName": "Ass.Data.Knockback"
         }
        ]
       },
@@ -6248,14 +6248,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "data.knockback"
+       "tagName": "Ass.Data.Knockback"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "data.knockback"
+       "tagName": "Ass.Data.Knockback"
       }
      ]
     },
@@ -6600,14 +6600,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "data.launch"
+         "tagName": "Ass.Data.Launch"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "data.launch"
+         "tagName": "Ass.Data.Launch"
         }
        ]
       },
@@ -6693,14 +6693,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "data.launch"
+       "tagName": "Ass.Data.Launch"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "data.launch"
+       "tagName": "Ass.Data.Launch"
       }
      ]
     },
@@ -8125,7 +8125,7 @@
     "setByCallerMagnitude": {
      "dataName": "None",
      "dataTag": {
-      "tagName": "data.nocontrol"
+      "tagName": "Ass.Data.NoControl"
      }
     }
    },
@@ -8139,14 +8139,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "data.nocontrol"
+         "tagName": "Ass.Data.NoControl"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "data.nocontrol"
+         "tagName": "Ass.Data.NoControl"
         }
        ]
       },
@@ -8250,14 +8250,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "data.nocontrol"
+       "tagName": "Ass.Data.NoControl"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "data.nocontrol"
+       "tagName": "Ass.Data.NoControl"
       }
      ]
     },
@@ -13187,7 +13187,7 @@
     "setByCallerMagnitude": {
      "dataName": "None",
      "dataTag": {
-      "tagName": "data.stunimmune"
+      "tagName": "Ass.Data.StunImmune"
      }
     }
    },
@@ -13225,7 +13225,7 @@
         ],
         "tagDictionary": [
          {
-          "tagName": "data.hitstun"
+          "tagName": "Ass.Data.HitStun"
          }
         ],
         "tokenStreamVersion": 0,
