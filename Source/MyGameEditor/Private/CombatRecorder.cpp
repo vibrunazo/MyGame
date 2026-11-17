@@ -56,6 +56,12 @@ bool UCombatRecorder::Start(UWorld* World, const TArray<FString>& RoleNames, con
 	return true;
 }
 
+void UCombatRecorder::QueryRoles(const TArray<FString>& Names)
+{
+	if (!Current) return;
+	for (FRole& Role : Current->Roles) Role.bQuery = Names.Contains(Role.Name);
+}
+
 bool UCombatRecorder::IsRecording()
 {
 	return Current != nullptr;
@@ -285,9 +291,20 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 				Section = Anim->Montage_GetCurrentSection(Active).ToString();
 				Position = Anim->Montage_GetPosition(Active);
 			}
+			const UAnimMontage* Active = Anim->GetCurrentActiveMontage();
+			const float At = Active ? Anim->Montage_GetPosition(Active) : -1.f;
+			TSet<FString> States;
+			TMap<FString, TPair<FString, FString>> Labels;
+			auto AddState = [&States, &Labels](const FAnimNotifyEvent& State)
+			{
+				const FString Key = FString::Printf(TEXT("%s|%s|%.6f"), *State.NotifyName.ToString(), *ObjectId(State.NotifyStateClass), State.GetTriggerTime());
+				States.Add(Key);
+				Labels.Add(Key, {State.NotifyName.ToString(), ObjectId(State.NotifyStateClass)});
+			};
 			// the notifies of this frame's pose tick; a mesh that didn't tick this frame still holds the last ones (a mesh
 			// that only ticks its montages, when not rendered, doesn't move its graph's update counter, so that can't tell)
-			if (Char->GetMesh()->PoseTickedThisFrame())
+			const bool bTicked = Char->GetMesh()->PoseTickedThisFrame();
+			if (bTicked)
 			{
 				for (const FAnimNotifyEventReference& Ref : Anim->NotifyQueue.AnimNotifies)
 				{
@@ -297,34 +314,70 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 						Event(TEXT("anim"), Role.Name, {Str(TEXT("fired")), Str(Notify->NotifyName.ToString()), Str(ObjectId(Notify->Notify))});
 					}
 				}
-				TSet<FString> States;
-				TMap<FString, TPair<FString, FString>> Labels;
-				for (const FAnimNotifyEvent& State : Anim->ActiveAnimNotifyState)
+				for (const FAnimNotifyEvent& State : Anim->ActiveAnimNotifyState) AddState(State);
+			}
+			// the montage's branching points, from its position as the engine takes them
+			if (Active)
+			{
+				const bool bSame = Role.LastMontage.Get() == Active;
+				const float Before = bSame ? Role.LastPosition : -1.f;
+				for (const FAnimNotifyEvent& Notify : Active->Notifies)
 				{
-					const FString Key = FString::Printf(TEXT("%s|%s|%.6f"), *State.NotifyName.ToString(), *ObjectId(State.NotifyStateClass), State.GetTriggerTime());
-					States.Add(Key);
-					Labels.Add(Key, {State.NotifyName.ToString(), ObjectId(State.NotifyStateClass)});
-				}
-				for (const FString& Key : Role.ActiveStates)
-				{
-					if (!States.Contains(Key))
+					if (Notify.MontageTickType != EMontageNotifyTickType::BranchingPoint) continue;
+					if (Notify.NotifyStateClass)
 					{
-						TArray<FString> Parts;
-						Key.ParseIntoArray(Parts, TEXT("|"));
-						Event(TEXT("anim"), Role.Name, {Str(TEXT("end")), Str(Parts[0]), Str(Parts.Num() > 1 ? Parts[1] : FString())});
+						if (At >= Notify.GetTriggerTime() && At < Notify.GetEndTriggerTime()) AddState(Notify);
+					}
+					else if (Notify.Notify && At >= Notify.GetTriggerTime() && Before < Notify.GetTriggerTime())
+					{
+						Event(TEXT("anim"), Role.Name, {Str(TEXT("fired")), Str(Notify.NotifyName.ToString()), Str(ObjectId(Notify.Notify))});
 					}
 				}
-				for (const FString& Key : States)
-				{
-					if (!Role.ActiveStates.Contains(Key)) Event(TEXT("anim"), Role.Name, {Str(TEXT("begin")), Str(Labels[Key].Key), Str(Labels[Key].Value)});
-				}
-				Role.ActiveStates = MoveTemp(States);
 			}
+			Role.LastMontage = Active;
+			Role.LastPosition = At;
+			if (!bTicked)
+			{
+				// keep the queue's states of the last tick
+				for (const FString& Key : Role.ActiveStates)
+				{
+					if (!States.Contains(Key) && !Key.IsEmpty()) { TArray<FString> P; Key.ParseIntoArray(P, TEXT("|")); States.Add(Key); Labels.Add(Key, {P[0], P.Num() > 1 ? P[1] : FString()}); }
+				}
+			}
+			for (const FString& Key : Role.ActiveStates)
+			{
+				if (!States.Contains(Key))
+				{
+					TArray<FString> Parts;
+					Key.ParseIntoArray(Parts, TEXT("|"));
+					Event(TEXT("anim"), Role.Name, {Str(TEXT("end")), Str(Parts[0]), Str(Parts.Num() > 1 ? Parts[1] : FString())});
+				}
+			}
+			for (const FString& Key : States)
+			{
+				if (!Role.ActiveStates.Contains(Key)) Event(TEXT("anim"), Role.Name, {Str(TEXT("begin")), Str(Labels[Key].Key), Str(Labels[Key].Value)});
+			}
+			Role.ActiveStates = MoveTemp(States);
 		}
 		if (Char && Char->GetCharacterMovement()) Mode = Char->GetCharacterMovement()->MovementMode;
-		Role.Frames.Add(MakeShared<FJsonValueArray>(TArray<TSharedPtr<FJsonValue>>{
+		TArray<TSharedPtr<FJsonValue>> Row{
 			Num(Frame), Num(T), Num(L.X), Num(L.Y), Num(L.Z), Num(R.Pitch), Num(R.Yaw), Num(R.Roll),
-			Str(Montage), Str(Section), Num(Position), Num(Actor->CustomTimeDilation), Num(Mode)}));
+			Str(Montage), Str(Section), Num(Position), Num(Actor->CustomTimeDilation), Num(Mode)};
+		UAbilitySystemComponent* ASC = Role.ASC.Get();
+		if (Role.bQuery && ASC && ASC->AbilityActorInfo.IsValid())
+		{
+			TArray<FString> Can;
+			for (const FGameplayAbilitySpec& Spec : ASC->GetActivatableAbilities())
+			{
+				const UGameplayAbility* Ability = Spec.GetPrimaryInstance() ? Spec.GetPrimaryInstance() : Spec.Ability.Get();
+				if (Ability && Ability->CanActivateAbility(Spec.Handle, ASC->AbilityActorInfo.Get())) Can.AddUnique(ObjectId(Ability));
+			}
+			Can.Sort();
+			TArray<TSharedPtr<FJsonValue>> Ids;
+			for (const FString& Id : Can) Ids.Add(Str(Id));
+			Row.Add(MakeShared<FJsonValueArray>(Ids));
+		}
+		Role.Frames.Add(MakeShared<FJsonValueArray>(Row));
 	}
 }
 

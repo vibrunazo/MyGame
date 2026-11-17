@@ -18,7 +18,8 @@ Fields, for comparing a recording on another skeleton (1.1): positional are the 
 "shape", "hit" and "projectile_immune", the cues' locations and the spawns' locations; everything else is exact, the
 times included.
 
-Checks (the AI-on scenarios of AI_ON are recorded for Step 0c item 4 and only noted): every ability a character or an
+Events are compared with each frame's grouped by role (by_role). Checks (the AI-on scenarios of AI_ON are recorded for
+Step 0c item 4 and only noted): every ability a character or an
 item grants starts somewhere and every montage something refers to plays
 somewhere (three montages are referred to by nothing: Smash_Montage, PunchL_MontageEnemy2, PunchR_MontageEnemy2); and when the
 UE4 reference exists (REFERENCE, kept outside git, Step 0c), every scenario equals it exactly.
@@ -194,7 +195,8 @@ def resolve(value, paths):
     return value
 
 
-def run(sc, base):
+def run(sc, base, query=None):
+    """Runs one scenario and returns its record; query names roles whose frames also list what they could start."""
     for b in ("Punch", "Kick", "Cast", "Jump", "Super", "Ultra"):
         tool("press_input", button=b, pressed=False)
     tool("move_input", forward=0.0, right=0.0)
@@ -223,7 +225,8 @@ def run(sc, base):
         tool(hook, **resolve(kwargs, paths))
     inputs = [[i[0], i[1], i[2], resolve(i[3], paths)] for i in sc["inputs"]]
     tool("run_timeline", spec=json.dumps({"dummy": None, "duration": sc["duration"], "settle": 0.0, "settle_fixed": True,
-                                          "inputs": inputs, "record": paths, "seed": SEED}))
+                                          "inputs": inputs, "record": paths, "seed": SEED,
+                                          **({"query": list(query)} if query else {})}))
     r = wait_until(lambda: (t := tool("timeline_result"))["done"] and t, timeout=180, every=0.1, what=f"the {sc['name']} timeline")
     if r["result"].get("errors"):
         raise RuntimeError(f"{sc['name']}: inputs failed: {r['result']['errors']}")
@@ -252,15 +255,23 @@ def coverage(records):
            [f"never played: {m}" for m in sorted(montages) if m not in played and refs.get(m)]
 
 
+def by_role(events):
+    """The events with each frame's grouped by role, each role's in its own order. Inside one frame, the order between
+    two characters can be a tie the engine breaks by its own history (two effects applied in one frame expire in one
+    frame, in the timer queue's order); a role's own order (the hits, each victim's effects) is kept."""
+    return [e for _, e in sorted(enumerate(events), key=lambda p: (p[1][0], p[1][3], p[0]))]
+
+
 def first_difference(a, b):
-    """Where two records of one scenario part: the first frame row or event that differs."""
+    """Where two records of one scenario part: the first frame row or event that differs (events compared by_role)."""
     if a.get("roles") != b.get("roles"):
         return f"roles {a.get('roles')} -> {b.get('roles')}"
-    for i, (x, y) in enumerate(zip(a["events"], b["events"])):
+    ea, eb = by_role(a["events"]), by_role(b["events"])
+    for i, (x, y) in enumerate(zip(ea, eb)):
         if x != y:
             return f"event {i}: {x} -> {y}"
-    if len(a["events"]) != len(b["events"]):
-        return f"{len(a['events'])} events -> {len(b['events'])}"
+    if len(ea) != len(eb):
+        return f"{len(ea)} events -> {len(eb)}"
     for role in sorted(set(a["frames"]) | set(b["frames"])):
         fa, fb = a["frames"].get(role, []), b["frames"].get(role, [])
         for x, y in zip(fa, fb):

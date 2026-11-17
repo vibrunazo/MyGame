@@ -23,7 +23,9 @@ enum class EGameplayCueExecutionOptions : int32;
  *   roles   {role: class path}: the characters named at the start, then each actor that spawns while recording, named
  *           by its class and order ("BP_Projectile_C#1"); a record never names an instance
  *   frames  {role: [[frame, t, x, y, z, pitch, yaw, roll, montage, section, position, dilation, movement mode], ...]}
- *           after every frame's actors ticked (montage is its package path, "" when none)
+ *           after every frame's actors ticked (montage is its package path, "" when none); a queried role's rows end
+ *           with [the ids of its granted abilities that could start now], each asked as a press would ask it
+ *           (CanActivateAbility on its primary instance, starting nothing)
  *   events  [[frame, t, kind, role, ...], ...] in the order they happened:
  *           ability   role, "activated" | "ended" | "cancelled", ability id
  *           failed    role, ability id, [the tags that blocked it]
@@ -35,7 +37,10 @@ enum class EGameplayCueExecutionOptions : int32;
  *           attribute role, attribute, old value, new value
  *           cue       role (target), tag, event (0 OnActive, 1 WhileActive, 2 Executed, 3 Removed), raw magnitude,
  *                     normalized magnitude, location in the target's actor space
- *           anim      role, "fired" | "begin" | "end", the anim notify's name, its class
+ *           anim      role, "fired" | "begin" | "end", the anim notify's name, its class (a montage's branching-point
+ *                     notifies, which the engine runs from the montage and not from the queue, are taken from the
+ *                     montage's position as the engine takes them: a state while the position is inside it, a
+ *                     notify when the position passes it)
  *           spawn     role (the new actor's), class path, owner role, instigator role, location (not a cue's actor,
  *                     which comes from a pool)
  *           probe     role, what, other role, detail, [x, y, z], number (Source/MyGame/Dev/TestProbe.h: a hit shape's
@@ -63,6 +68,8 @@ public:
 	static bool Start(UWorld* World, const TArray<FString>& Roles, const TArray<AActor*>& Actors);
 	static FString Stop();
 	static bool IsRecording();
+	/** The cancel matrix's query: from now on these roles' frame rows end with the abilities they could start. */
+	static void QueryRoles(const TArray<FString>& Names);
 
 private:
 	struct FRole
@@ -73,6 +80,9 @@ private:
 		TArray<TPair<FGameplayAttribute, FDelegateHandle>> AttributeHandles;
 		FDelegateHandle Applied, Periodic, Removed, Tags, Activated, Ended, Failed;
 		TSet<FString> ActiveStates;
+		bool bQuery = false;
+		TWeakObjectPtr<const class UAnimMontage> LastMontage;
+		float LastPosition = -1.f;
 		TArray<TSharedPtr<FJsonValue>> Frames;
 	};
 
