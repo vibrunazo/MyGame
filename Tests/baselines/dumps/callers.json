@@ -51,8 +51,6 @@
   "/Game/Blueprints/Chars/BP_CheatManager :: EventGraph"
  ],
  "MyCharacter.OnPawnSeen": [],
- "MyCharacter.PawnBlockTagChanged": [],
- "MyCharacter.RefreshPawnCollision": [],
  "MyCharacter.RemoveFromAggroList": [],
  "MyCharacter.ResetBodyColor": [
   "/Game/FX/GC_StunImmune :: OnRemove"

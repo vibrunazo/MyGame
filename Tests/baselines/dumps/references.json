@@ -183,7 +183,9 @@
  ],
  "/Game/Abilities/GE_NoControl": [
   "/Game/Abilities/GA_Dash",
-  "/Game/Blueprints/BP_MyGI"
+  "/Game/Blueprints/BP_MyGI",
+  "/Game/Blueprints/Chars/BP_Char",
+  "/Game/Blueprints/Chars/BP_EnemyBase"
  ],
  "/Game/Abilities/GE_NoPawnBlock": [
   "/Game/Anims/Tat_Montage",
@@ -234,6 +236,8 @@
  ],
  "/Game/Abilities/GE_StunImmune": [
   "/Game/Blueprints/BP_MyGI",
+  "/Game/Blueprints/Chars/BP_Char",
+  "/Game/Blueprints/Chars/BP_EnemyBase",
   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
  ],
  "/Game/Abilities/GE_Walking": [

@@ -1001,6 +1001,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 3,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 2,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -1315,9 +1349,6 @@
     "widgetClass": "None",
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": {
     "refPath": "/Game/Abilities/GE_IsInCombat.GE_IsInCombat_C"
    },
@@ -1367,7 +1398,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 100,
-   "maxStuns": 3,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -2272,8 +2302,6 @@
    },
    "spawnCollisionHandlingMethod": "AdjustIfPossibleButDontSpawnIfColliding",
    "spriteScale": 1,
-   "stunImmune": false,
-   "stunImmuneCooldown": 2,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
@@ -3312,6 +3340,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 0,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 5,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -3626,9 +3688,6 @@
     },
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": "None",
    "initialHealth": -1,
    "initialLifeSpan": 0,
@@ -3669,7 +3728,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 100,
-   "maxStuns": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -4567,8 +4625,6 @@
    },
    "spawnCollisionHandlingMethod": "AdjustIfPossibleButDontSpawnIfColliding",
    "spriteScale": 1,
-   "stunImmune": false,
-   "stunImmuneCooldown": 5,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
@@ -7743,6 +7799,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 0,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 5,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -8059,9 +8149,6 @@
     },
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": "None",
    "initialHealth": -1,
    "initialLifeSpan": 0,
@@ -8102,7 +8189,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 400,
-   "maxStuns": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -9002,8 +9088,6 @@
    "sphere": "None",
    "spriteScale": 1,
    "staticMesh": "None",
-   "stunImmune": false,
-   "stunImmuneCooldown": 5,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
@@ -10275,6 +10359,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 0,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 5,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -10589,9 +10707,6 @@
     },
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": "None",
    "initialHealth": -1,
    "initialLifeSpan": 0,
@@ -10639,7 +10754,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 80,
-   "maxStuns": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -11538,8 +11652,6 @@
    "spawnCollisionHandlingMethod": "AdjustIfPossibleButDontSpawnIfColliding",
    "spriteScale": 1,
    "staticMesh_0": "None",
-   "stunImmune": false,
-   "stunImmuneCooldown": 5,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
@@ -12586,6 +12698,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 0,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 5,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -12900,9 +13046,6 @@
     },
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": "None",
    "initialHealth": -1,
    "initialLifeSpan": 0,
@@ -12968,7 +13111,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 100,
-   "maxStuns": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -13867,8 +14009,6 @@
    "spawnCollisionHandlingMethod": "AdjustIfPossibleButDontSpawnIfColliding",
    "spriteScale": 1,
    "staticMesh": "None",
-   "stunImmune": false,
-   "stunImmuneCooldown": 5,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
@@ -14915,6 +15055,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 0,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 5,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -15229,9 +15403,6 @@
     },
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": "None",
    "initialHealth": -1,
    "initialLifeSpan": 0,
@@ -15297,7 +15468,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 120,
-   "maxStuns": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -16196,8 +16366,6 @@
    "spawnCollisionHandlingMethod": "AdjustIfPossibleButDontSpawnIfColliding",
    "spriteScale": 1,
    "staticMesh": "None",
-   "stunImmune": false,
-   "stunImmuneCooldown": 5,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
@@ -17244,6 +17412,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 0,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 5,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -17558,9 +17760,6 @@
     },
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": "None",
    "initialHealth": -1,
    "initialLifeSpan": 0,
@@ -17626,7 +17825,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 70,
-   "maxStuns": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -18525,8 +18723,6 @@
    "spawnCollisionHandlingMethod": "AdjustIfPossibleButDontSpawnIfColliding",
    "spriteScale": 1,
    "staticMesh": "None",
-   "stunImmune": false,
-   "stunImmuneCooldown": 5,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
@@ -19795,6 +19991,40 @@
      "z": 0
     }
    },
+   "combat": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "hitBoxClass": {
+     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
+    },
+    "maxStuns": 0,
+    "noControlEffect": {
+     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+    },
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "stunImmuneCooldown": 5,
+    "stunImmuneEffect": {
+     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
+    },
+    "subobject": "AssCombatComponent"
+   },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
@@ -20109,9 +20339,6 @@
     },
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "hitBoxClass": {
-    "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-   },
    "inCombatBuff": "None",
    "initialHealth": -1,
    "initialLifeSpan": 0,
@@ -20159,7 +20386,6 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 60,
-   "maxStuns": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": {
@@ -21058,8 +21284,6 @@
    "spawnCollisionHandlingMethod": "AdjustIfPossibleButDontSpawnIfColliding",
    "spriteScale": 1,
    "staticMesh": "None",
-   "stunImmune": false,
-   "stunImmuneCooldown": 5,
    "tags": [],
    "targetDetection": {
     "areaClassOverride": {
