@@ -34,10 +34,44 @@ def _char(path):
     return unreal.find_object(None, path)
 
 
+def _tl_start(world):
+    """Starts an armed timeline: the seeds, the recorder and the clock, between two world ticks."""
+    sp = _tl["spec"]
+    player = _player()
+    dummy = _char(sp["dummy"]) if sp.get("dummy") else None
+    # the clock counts from the start of the tick just ended, as when the timeline started before it
+    t0 = unreal.GameplayStatics.get_time_seconds(world) - unreal.GameplayStatics.get_world_delta_seconds(world)
+    _tl.update(spec=sp, t0=t0, phase="run", result=None,
+               pending=sorted([list(i) for i in sp["inputs"]], key=lambda i: i[0]),
+               rec={"timeline": [], "abilities": set(), "player_tags": set(), "dummy_tags": set(),
+                    "player_z": player.get_actor_location().z,
+                    "dummy_z": dummy.get_actor_location().z if dummy else 0.0})
+    if sp.get("seed") is not None:
+        MyGameTools.seed_random(int(sp["seed"]))
+        _tl["rec"]["seeded"] = True
+        # and again at the start of every tick, from the seed and the tick's number (until the timeline ends)
+        unreal.MyBlueprintFunctionLibrary.seed_every_tick_for_test(world, int(sp["seed"]))
+        # the run's shared stream too (loot draws from it): its current state, not the run's seed
+        gi = unreal.GameplayStatics.get_game_instance(world)
+        stream = unreal.MyGameEditorLibrary.get_property_text_for_test(gi, "RandomStream")
+        unreal.MyGameEditorLibrary.set_property_text_for_test(gi, "RandomStream", re.sub(r"(?<!Initial)Seed=-?\d+", f"Seed={int(sp['seed'])}", stream))
+    if sp.get("record"):
+        roles = sorted(sp["record"].items(), key=lambda r: (r[0] != "player", r[0]))  # the player ticks first
+        actors = [_char(path) for _, path in roles]
+        missing = [name for (name, _), a in zip(roles, actors) if not a]
+        if missing:
+            raise RuntimeError(f"no actor for roles {missing}")
+        unreal.MyGameEditorLibrary.start_combat_record(world, [n for n, _ in roles], actors)
+        if sp.get("query"):
+            unreal.MyGameEditorLibrary.query_combat_record_roles(sp["query"])
+
+
 def _tl_tick(delta_seconds):
     world = _pie_world()
     if not world or _tl["phase"] in ("idle", "done"):
         return
+    if _tl["phase"] == "arm":
+        _tl_start(world)
     spec, rec = _tl["spec"], _tl["rec"]
     now = unreal.GameplayStatics.get_time_seconds(world) - _tl["t0"]
     player, dummy = _player(), _char(spec["dummy"]) if spec.get("dummy") else None
@@ -100,6 +134,8 @@ def _tl_tick(delta_seconds):
             rec["end_player"] = json.loads(MyGameTools.pie_player_state())
             rec["end_dummy"] = json.loads(MyGameTools.character_state(spec["dummy"])) if dummy else None
             rec["lingering"] = sorted(t for t in player.get_tags_for_test() if t.startswith("combo."))
+            if spec.get("seed") is not None:
+                unreal.MyBlueprintFunctionLibrary.seed_every_tick_for_test(world, -1)
             if spec.get("record"):
                 rec["record"] = json.loads(unreal.MyGameEditorLibrary.stop_combat_record() or "null")
             _tl["phase"] = "done"
@@ -747,7 +783,8 @@ class MyGameTools(unreal.ToolsetDefinition):
                 [t, montage section, dummy health, player-dummy distance,
                 player time dilation, montage position], "watch": [actor paths] recorded every frame unrounded
                 ([t, x, y, z, yaw, montage:section, health]), "seed": seed_random's seed, set as the
-                timeline starts (also the current state of the run's shared stream, which loot draws from), "record": {role: actor path} for the strict recorder
+                timeline starts and again at the start of every tick from the seed and the tick's number
+                (SeedEveryTickForTest), and the current state of the run's shared stream, which loot draws from, "record": {role: actor path} for the strict recorder
                 (MyGameEditor's UCombatRecorder: every frame and event of those characters and what they spawn, from
                 now until the settle ends; its JSON comes back as "record"), "query": [roles] whose frames also list the
                 abilities they could start (the cancel matrix), "settle": max game seconds to wait
@@ -762,29 +799,13 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not world:
             raise RuntimeError("PIE is not running")
         sp = json.loads(spec)
-        player = _player()
-        dummy = _char(sp["dummy"]) if sp.get("dummy") else None
-        _tl.update(spec=sp, t0=unreal.GameplayStatics.get_time_seconds(world), phase="run", result=None,
-                   pending=sorted([list(i) for i in sp["inputs"]], key=lambda i: i[0]),
-                   rec={"timeline": [], "abilities": set(), "player_tags": set(), "dummy_tags": set(),
-                        "player_z": player.get_actor_location().z,
-                        "dummy_z": dummy.get_actor_location().z if dummy else 0.0})
-        if sp.get("seed") is not None:
-            MyGameTools.seed_random(int(sp["seed"]))
-            _tl["rec"]["seeded"] = True
-            # the run's shared stream too (loot draws from it): its current state, not the run's seed
-            gi = unreal.GameplayStatics.get_game_instance(world)
-            stream = unreal.MyGameEditorLibrary.get_property_text_for_test(gi, "RandomStream")
-            unreal.MyGameEditorLibrary.set_property_text_for_test(gi, "RandomStream", re.sub(r"(?<!Initial)Seed=-?\d+", f"Seed={int(sp['seed'])}", stream))
         if sp.get("record"):
-            roles = sorted(sp["record"].items(), key=lambda r: (r[0] != "player", r[0]))  # the player ticks first
-            actors = [_char(path) for _, path in roles]
-            missing = [name for (name, _), a in zip(roles, actors) if not a]
+            missing = [name for name, path in sp["record"].items() if not _char(path)]
             if missing:
                 raise RuntimeError(f"no actor for roles {missing}")
-            unreal.MyGameEditorLibrary.start_combat_record(world, [n for n, _ in roles], actors)
-            if sp.get("query"):
-                unreal.MyGameEditorLibrary.query_combat_record_roles(sp["query"])
+        # armed now, started by the next post-tick: always between two world ticks (this call can come at any point of
+        # a frame)
+        _tl.update(spec=sp, phase="arm", result=None)
         if not _tl["handle"]:
             _tl["handle"] = unreal.register_slate_post_tick_callback(_tl_tick)
         return json.dumps({"started": True})
@@ -1184,6 +1205,24 @@ class MyGameTools(unreal.ToolsetDefinition):
             raise RuntimeError("actor or effect class not found")
         char.get_editor_property("ability_system").remove_active_gameplay_effect_by_source_effect(cls, None, -1)
         return json.dumps({"removed": True})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def clear_aggro_list(actor_path: str) -> str:
+        """Test setup: empties a character's aggro list (the enemies holding its attack token). An enemy a test removes
+        without a death would stay in it, alive by its health, until garbage collection clears the entry.
+
+        Args:
+            actor_path: Full path of a PIE character (the player).
+
+        Returns:
+            JSON {"cleared": true}.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        char.clear_aggro_list()
+        return json.dumps({"cleared": True})
 
     @toolset_registry.tool_call
     @staticmethod

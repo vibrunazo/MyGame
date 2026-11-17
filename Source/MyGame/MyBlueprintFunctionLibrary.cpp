@@ -53,6 +53,33 @@ int32 UMyBlueprintFunctionLibrary::GetAIRandomSeedForTest()
 	return UAISystem::GetRandomStream().GetCurrentSeed();
 }
 
+namespace
+{
+	struct FTickSeed
+	{
+		FDelegateHandle Handle;
+		TWeakObjectPtr<UWorld> World;
+		int32 Seed = -1;
+		int32 Tick = 0;
+	};
+	FTickSeed GTickSeed;
+}
+
+void UMyBlueprintFunctionLibrary::SeedEveryTickForTest(UObject* WorldContext, int32 Seed)
+{
+	if (GTickSeed.Handle.IsValid()) FWorldDelegates::OnWorldTickStart.Remove(GTickSeed.Handle);
+	GTickSeed = FTickSeed();
+	UWorld* World = WorldContext ? WorldContext->GetWorld() : nullptr;
+	if (Seed < 0 || !World) return;
+	GTickSeed.World = World;
+	GTickSeed.Seed = Seed;
+	GTickSeed.Handle = FWorldDelegates::OnWorldTickStart.AddLambda([](UWorld* Ticking, ELevelTick, float)
+	{
+		if (Ticking != GTickSeed.World.Get()) return;
+		SeedRandomForTest((int32)HashCombine(GetTypeHash(GTickSeed.Seed), GetTypeHash(++GTickSeed.Tick)));
+	});
+}
+
 int32 UMyBlueprintFunctionLibrary::ResetHitStunCountForTest(AMyCharacter* Character)
 {
 	if (!Character) return 0;

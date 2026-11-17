@@ -205,6 +205,7 @@ def run(sc, base, query=None):
     for a, v in {**base, **sc["attributes"]}.items():
         tool("set_player_attribute", attribute=a, value=v)
     tool("reset_stun_count", actor_path=ar.PLAYER_PATH[0])
+    tool("clear_aggro_list", actor_path=ar.PLAYER_PATH[0])  # the last scenario's enemies were removed, not killed
     for effect in LEFTOVERS:
         tool("remove_effect", actor_path=ar.PLAYER_PATH[0], effect_class_path=effect)
     before = {cls: set(tool("actors_of_class", class_path=cls)) for cls in CLEANUP}

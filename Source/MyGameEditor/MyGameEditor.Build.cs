@@ -7,6 +7,6 @@ public class MyGameEditor : ModuleRules
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "GameplayAbilities", "GameplayTags", "MyGame" });
-		PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd", "Json" });
+		PrivateDependencyModuleNames.AddRange(new string[] { "UnrealEd", "Json", "AIModule" });
 	}
 }

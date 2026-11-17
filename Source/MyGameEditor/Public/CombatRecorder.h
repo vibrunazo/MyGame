@@ -41,6 +41,7 @@ enum class EGameplayCueExecutionOptions : int32;
  *                     notifies, which the engine runs from the montage and not from the queue, are taken from the
  *                     montage's position as the engine takes them: a state while the position is inside it, a
  *                     notify when the position passes it)
+ *           bt        role, its behaviour tree's active tasks (when they change; a stopped tree has none)
  *           spawn     role (the new actor's), class path, owner role, instigator role, location (not a cue's actor,
  *                     which comes from a pool)
  *           probe     role, what, other role, detail, [x, y, z], number (Source/MyGame/Dev/TestProbe.h: a hit shape's
@@ -83,6 +84,7 @@ private:
 		bool bQuery = false;
 		TWeakObjectPtr<const class UAnimMontage> LastMontage;
 		float LastPosition = -1.f;
+		FString LastTasks;
 		TArray<TSharedPtr<FJsonValue>> Frames;
 	};
 

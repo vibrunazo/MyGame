@@ -138,6 +138,12 @@ public:
 	// test scenario starts from none. Returns the count before
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	static int32 ResetHitStunCountForTest(class AMyCharacter* Character);
+	// PIE test hook: from the next world tick on, every tick of WorldContext's world starts by seeding the randoms
+	// (SeedRandomForTest) from Seed and the tick's number, so a tick's draws never depend on how many draws came
+	// before it (other code draws from the same game-thread random between ticks, a varying number of times).
+	// A Seed below 0 stops it
+	UFUNCTION(BlueprintCallable, Category = "Testing", meta = (WorldContext = "WorldContext"))
+	static void SeedEveryTickForTest(UObject* WorldContext, int32 Seed);
 #endif
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

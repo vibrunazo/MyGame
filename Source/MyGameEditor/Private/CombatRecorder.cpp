@@ -16,6 +16,8 @@
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
+#include "AIController.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
@@ -272,6 +274,7 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 {
 	if (InWorld != World.Get()) return;
 	const double T = Now();
+
 	for (FRole& Role : Roles)
 	{
 		AActor* Actor = Role.Actor.Get();
@@ -360,6 +363,14 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 			Role.ActiveStates = MoveTemp(States);
 		}
 		if (Char && Char->GetCharacterMovement()) Mode = Char->GetCharacterMovement()->MovementMode;
+		const AAIController* AI = Char ? Cast<AAIController>(Char->GetController()) : nullptr;
+		const UBehaviorTreeComponent* Tree = AI ? Cast<UBehaviorTreeComponent>(AI->GetBrainComponent()) : nullptr;
+		const FString Tasks = Tree && Tree->IsRunning() ? Tree->DescribeActiveTasks() : FString();
+		if (Tasks != Role.LastTasks)
+		{
+			Event(TEXT("bt"), Role.Name, {Str(Tasks)});
+			Role.LastTasks = Tasks;
+		}
 		TArray<TSharedPtr<FJsonValue>> Row{
 			Num(Frame), Num(T), Num(L.X), Num(L.Y), Num(L.Z), Num(R.Pitch), Num(R.Yaw), Num(R.Roll),
 			Str(Montage), Str(Section), Num(Position), Num(Actor->CustomTimeDilation), Num(Mode)};
