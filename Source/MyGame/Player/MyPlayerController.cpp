@@ -2,6 +2,7 @@
 
 
 #include "MyPlayerController.h"
+#include "../Abilities/AssCombatComponent.h"
 #include "../MyGameplayTags.h"
 #include "MyCharacter.h"
 #include "MyDefaultPawn.h"
@@ -88,7 +89,8 @@ void AMyPlayerController::InjectTestInput(UInputAction* Action, FVector2D Value,
 AMyCharacter* AMyPlayerController::GetControlledChar() const
 {
     AMyCharacter* MyChar = GetPawn<AMyCharacter>();
-    return MyChar && MyChar->bHasControl ? MyChar : nullptr;
+    const UAssCombatComponent* Combat = UAssCombatComponent::Find(MyChar);
+    return MyChar && Combat && Combat->IsControlEnabled() ? MyChar : nullptr;
 }
 
 void AMyPlayerController::OnMove(const FInputActionValue& Value)
@@ -327,7 +329,7 @@ void AMyPlayerController::OnLevelWin(AMyCharacter* CharRef)
 {
     if (bIsLevelOver) return;
     bIsLevelOver = true;
-    CharRef->bHasControl = false;
+    if (UAssCombatComponent* Combat = UAssCombatComponent::Find(CharRef)) Combat->SetControlEnabled(false);
 	CharRef->DisableInput(nullptr);
     FVector Loc = CharRef->GetActorLocation();
     FActorSpawnParameters params;

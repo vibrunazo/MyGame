@@ -97,9 +97,9 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool HasMoveControl() override;
 	void PlayHitCameraShake(float Strength) override;
+	void PlayHitStunMontage() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	class UMyGameInstance* GetMyGameInstance();
-	bool HasStunImmune();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetBodyColor(FLinearColor NewColor);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -132,7 +132,6 @@ public:
 	FCastDelegate OnCastDelegate;
 
 	FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect) override;
-	void OnHitReaction(EHitReaction Reaction, const FGameplayEffectSpec& Spec) override;
 	UFUNCTION(BlueprintImplementableEvent, Category = Abilities)
 	void OnDamagedBP(AActor* SourceActor);
 	void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) override;
@@ -140,10 +139,6 @@ public:
 	void OnDie() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsAlive() override;
-	// Freezes this character (almost) for Duration of game time, from the moment its hit connected
-	void OnHitPause(float Duration) override;
-	// A hit of this character's connected at Time (game time; it can fall between frames)
-	void NoteHitConnect(double Time) { LastHitConnectTime = Time; LastHitConnectFrame = GFrameCounter; }
 	uint8 GetTeam() override;
 	UMyAttributeSet* GetAttributes() override;
 	FTransform GetProjectileSpawn() override;
@@ -165,48 +160,12 @@ public:
 
 	void ApplyAllItemEffects();
 	void ApplyOneItemEffect(class UItemDataAsset* NewItem);
-	void ApplyKnockBack(AActor* SourceActor, float Power);
-	void ApplyLaunchBack(AActor* SourceActor, FVector Power);
-	void OnDelayedLaunch();
 	void OnDelayedLaunch2();
-	// Every frame, before anything ticks: records where the frame starts, and the hit pause's share of the frame
-	// sets this character's time dilation
-	void OnFrameStart(UWorld* World, ELevelTick TickType, float DeltaSeconds);
-	void SetHitPauseFX(bool bPaused);
-	// A montage's RootSpeedX curve (m/s, times the ability's RootMotionScale.X) moves the character forward, at the
-	// speed it had at 60 fps (after a frame of braking), averaged over the montage time this frame plays: a root
-	// motion source for exactly this frame, so the move covers the same ground at any frame rate
-	void ApplyRootSpeedCurve(float DeltaSeconds);
-	// the montage whose RootSpeedX has moved this character up to RootSpeedCovered (its time), and the last frame's
-	// movement time
-	TWeakObjectPtr<const class UAnimMontage> RootSpeedMontage;
-	float RootSpeedCovered = 0.f;
-	float LastMoveTime = 0.f;
-	// how fast a hit-paused character runs
-	static constexpr float HitPauseRate = 0.01f;
-	// the pause, in game time
-	double HitPauseStart = 0.0;
-	double HitPauseEnd = 0.0;
-	// game time this character ran beyond the pause (a frame runs at full speed past the hit that starts one)
-	double HitPauseDebt = 0.0;
-	bool bHitPaused = false;
-	// when this character's last hit connected (a hit window's sample time), and in which frame
-	double LastHitConnectTime = 0.0;
-	uint64 LastHitConnectFrame = 0;
-	FDelegateHandle PreActorTickHandle;
 	void OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode) override;
 	void OnSpeedChange(const FOnAttributeChangeData& Data);
 	void OnRotSpeedChange(const FOnAttributeChangeData& Data);
 	void UpdateRotationRate();
 	void OnEffectApplied(UAbilitySystemComponent* SourceComp, const FGameplayEffectSpec& EffectSpec, FActiveGameplayEffectHandle ActiveEffect);
-	UFUNCTION()
-	void PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount);
-	UFUNCTION()
-	void RefreshPawnCollision();
-	const ACharacter* FindOverlappingCharacter() const;
-	void StepOutOf(const ACharacter* Other);
-	FTimerHandle PawnBlockRetryTimer;
-	float PawnBlockWaitStart = -1.f;
 	void RemoveOutline();
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
@@ -214,17 +173,13 @@ public:
 	class UAbilitySystemComponent* AbilitySystem;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	class ULootComponent* LootComponent;
+	// The combat mechanics (UAssCombatComponent; COMBAT.md)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UAssCombatComponent> Combat;
 	// UPROPERTY(BlueprintReadOnly, Category = Abilities)
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<struct FAbilityStruct> Abilities;
-	// The hitbox this character's attacks spawn (its look and sound on hit)
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Abilities)
-	TSubclassOf<class AHitBox> HitBoxClass;
-	// Where this character was when the frame started: melee hit windows place their samples from there to now
-	const FHitboxPose& GetFrameStartPose() const { return FrameStartPose; }
-	// Advances this melee hit window after every animation update, until it's destroyed
-	void TrackHitWindow(class AHitBox* Hitbox) { HitWindows.AddUnique(Hitbox); }
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TArray<FLootDrop> LootTable;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
@@ -251,14 +206,6 @@ public:
 	class UBoxComponent* TargetDetection;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	uint8 Team = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	bool StunImmune = false;
-	uint8 HitStunCount = 0;
-	float LastHitstunTime = -990.f;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	uint8 MaxStuns = 0;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	float StunImmuneCooldown = 5.0f;
 	// The dash's double tap is IA_Dash's Directional Double Tap trigger; these two only drive running:
 	// holding past DoubleTapAxisDepth runs, and a quick tap in another direction within DoubleTapDelay stops it
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities, meta = (ToolTip = "Seconds between taps for a quick turn to stop running."))
@@ -269,7 +216,6 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float TimeRequiredToRun = 1.1f;
 	float TimeHoldingRun = 0.f;
-	bool bHasControl = true;
 	// one per material slot of the mesh: body colour and glow are set on all of them (the UE5 mannequin's body has two)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
 	TArray<TObjectPtr<class UMaterialInstanceDynamic>> BodyMaterials;
@@ -316,11 +262,7 @@ public:
 private:
 	
 	void OnDelayedDeath();
-	void StartBackslide(FVector Dir);
-	void OnBackslide();
-	FVector KnockBackVector;
 	void CheckWalls();
-	void IncrementHitStunCount();
 	void UpdateRun(float DeltaSeconds);
 	void TryRun(float DeltaSeconds);
 	float GetInputAngle();
@@ -333,7 +275,6 @@ private:
 	float LastInputApexTime = -990.0f;
 	float LastInputZeroTime = -990.0f;
 	FVector LastInputVector = FVector(0.0f, 0.0f, 0.0f);
-	FVector LastLaunchBack = FVector(0.0f, 0.0f, 0.0f);
 	UPROPERTY()
 	TObjectPtr<class UMyGameInstance> MyGIRef;
 	FVector LastGroundLocation = FVector();
@@ -347,11 +288,6 @@ private:
 protected:
 	void BeginPlay() override;
 	void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
-	// after each animation update: open hit windows test up to the montage's new position
-	void OnPoseFinalized();
-	FHitboxPose FrameStartPose;
-	TArray<TWeakObjectPtr<class AHitBox>> HitWindows;
-	FDelegateHandle PoseFinalizedHandle;
 	void MoveRight(float Value);
 	void MoveForward(float Value);
 	void TurnAtRate(float Rate);

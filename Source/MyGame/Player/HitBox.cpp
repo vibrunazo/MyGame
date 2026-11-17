@@ -19,7 +19,8 @@
 #include "AbilitySystemComponent.h"
 #include "NiagaraFunctionLibrary.h"
 #include "DrawDebugHelpers.h"
-#include "MyCharacter.h"
+#include "../Abilities/AssCombatComponent.h"
+#include "GameFramework/Character.h"
 #include "Animation/AnimInstance.h"
 #include "Animation/AnimMontage.h"
 #include "Animation/AnimSequence.h"
@@ -108,7 +109,7 @@ void AHitBox::TryHit(AActor* Other, const FVector& From, double Time)
 	CurEnemyState.LastHitTime = Time;
 	ActorsHit.Emplace(Other, CurEnemyState);
 	// the attacker's hit pause starts at this contact, not at the end of the frame
-	if (AMyCharacter* Attacker = Cast<AMyCharacter>(GetInstigator())) Attacker->NoteHitConnect(Time);
+	if (UAssCombatComponent* Attacker = UAssCombatComponent::Find(GetInstigator())) Attacker->NoteHitConnect(Time);
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());
 	ApplyAllEffects(Target);
 	// sound and sparks: a stun-immune target blocks
@@ -138,11 +139,12 @@ void FHitboxPose::Capture(const ACharacter* Char, double AtTime)
 	ActorToWorld = Char->GetActorTransform();
 }
 
-void AHitBox::BeginWindow(AMyCharacter* Char, const UAnimMontage* Montage, float Start, float End, const TArray<FHitboxSettings>& Settings, uint8 InNumHits, float InHitCooldown)
+void AHitBox::BeginWindow(ACharacter* Char, const UAnimMontage* Montage, float Start, float End, const TArray<FHitboxSettings>& Settings, uint8 InNumHits, float InHitCooldown)
 {
 	NumHits = InNumHits;
 	HitCooldown = InHitCooldown;
 	WindowChar = Char;
+	WindowCombat = UAssCombatComponent::Find(Char);
 	WindowMontage = Montage;
 	WindowEnd = FMath::Max(Start, End);
 	NextSample = Start;
@@ -174,14 +176,14 @@ void AHitBox::BeginWindow(AMyCharacter* Char, const UAnimMontage* Montage, float
 			}
 		}
 	}
-	Char->TrackHitWindow(this);
+	if (WindowCombat.IsValid()) WindowCombat->TrackHitWindow(this);
 	// the window opened during this animation update: test it up to now
 	AdvanceWindow();
 }
 
 void AHitBox::AdvanceWindow()
 {
-	const AMyCharacter* Char = WindowChar.Get();
+	const ACharacter* Char = WindowChar.Get();
 	const UAnimInstance* Anim = Char ? Char->GetMesh()->GetAnimInstance() : nullptr;
 	const UAnimMontage* Montage = WindowMontage.Get();
 	// a montage that stopped tests no more of its window
@@ -196,13 +198,14 @@ void AHitBox::FinishWindow()
 
 void AHitBox::SampleWindowUntil(float Position)
 {
-	const AMyCharacter* Char = WindowChar.Get();
+	const ACharacter* Char = WindowChar.Get();
 	const USkeletalMeshComponent* Mesh = Char ? Char->GetMesh() : nullptr;
 	const UAnimInstance* Anim = Mesh ? Mesh->GetAnimInstance() : nullptr;
 	const UAnimMontage* Montage = WindowMontage.Get();
 	if (bWindowDone || !Anim || !Montage || !GetWorld()) return;
+	if (!WindowCombat.IsValid()) return;
 	// the frame started with the montage at P0 and is at P1 now: a sample's montage time says how far into the frame it is
-	const FHitboxPose& Start = Char->GetFrameStartPose();
+	const FHitboxPose& Start = WindowCombat->GetFrameStartPose();
 	const float P1 = Anim->Montage_IsActive(Montage) ? Anim->Montage_GetPosition(Montage) : Position;
 	const bool bInterpolate = Start.Montage == Montage && Start.MontagePosition <= P1;
 	const float P0 = bInterpolate ? Start.MontagePosition : P1;
@@ -277,10 +280,10 @@ bool AHitBox::MontageBoneInComponent(const UAnimMontage* Montage, const TArray<i
 
 void AHitBox::SampleWindowAt(float At, float Alpha, bool bInterpolate, double Time)
 {
-	const AMyCharacter* Char = WindowChar.Get();
+	const ACharacter* Char = WindowChar.Get();
 	const USkeletalMeshComponent* Mesh = Char->GetMesh();
 	// the mesh and actor where they were at this sample: between where the frame started and where it ended
-	const FHitboxPose& Start = Char->GetFrameStartPose();
+	const FHitboxPose& Start = WindowCombat->GetFrameStartPose();
 	FTransform MeshToWorld = Mesh->GetComponentTransform();
 	FTransform ActorToWorld = Char->GetActorTransform();
 	if (bInterpolate)
@@ -338,10 +341,11 @@ void AHitBox::SampleWindowAt(float At, float Alpha, bool bInterpolate, double Ti
 			AActor* Other = Overlap.GetActor();
 			if (!Other || Touching.Contains(Other)) continue;
 			bool bTouches;
-			const AMyCharacter* Target = Cast<AMyCharacter>(Other);
-			if (Shape.Settings.bIsSphere && Target && Target->GetCapsuleComponent())
+			const ACharacter* Target = Cast<ACharacter>(Other);
+			const UAssCombatComponent* TargetCombat = UAssCombatComponent::Find(Target);
+			if (Shape.Settings.bIsSphere && Target && TargetCombat && Target->GetCapsuleComponent())
 			{
-				const FHitboxPose& TargetStart = Target->GetFrameStartPose();
+				const FHitboxPose& TargetStart = TargetCombat->GetFrameStartPose();
 				const double Now = GetWorld()->GetTimeSeconds();
 				const double Beta = Now > TargetStart.Time ? FMath::Clamp((Time - TargetStart.Time) / (Now - TargetStart.Time), 0.0, 1.0) : 1.0;
 				const FVector Center = FMath::Lerp(TargetStart.ActorToWorld.GetLocation(), Target->GetActorLocation(), Beta);

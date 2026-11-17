@@ -50,10 +50,6 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShakeBase> CamShakeClass;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
-	TSubclassOf<class UGameplayEffect> StunImmuneEffectRef;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
-	TSubclassOf<class UGameplayEffect> NoControlEffectRef;
 
 	// The generated level a run plays on, and the main menu
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyGI)

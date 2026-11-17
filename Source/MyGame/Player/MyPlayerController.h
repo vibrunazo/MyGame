@@ -148,7 +148,7 @@ protected:
 	virtual bool InputKey(const FInputKeyEventArgs& Params) override;
 	void Jump();
 	void StopJump();
-	// The pawn while it takes input: null after death or the level-clear flag (both clear bHasControl)
+	// The pawn while it takes input: null after death or the level-clear flag (both turn its combat component's control off)
 	class AMyCharacter* GetControlledChar() const;
 	void OnMove(const struct FInputActionValue& Value);
 	void OnDash(const struct FInputActionValue& Value);

@@ -15,6 +15,7 @@
 #include "../Props/Pickup.h"
 #include "../UI/MyHealthBar.h"
 #include "../Abilities/HitReactionEffectComponent.h"
+#include "../Abilities/AssCombatComponent.h"
 
 //#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -108,6 +109,7 @@ AMyCharacter::AMyCharacter()
 	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
+	Combat = CreateDefaultSubobject<UAssCombatComponent>(TEXT("Combat"));
 
 
 	SetDefaultProperties();
@@ -215,28 +217,16 @@ UAbilitySystemComponent* AMyCharacter::GetAbilitySystemComponent() const
 
 void AMyCharacter::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	if (GetMesh()) GetMesh()->UnregisterOnBoneTransformsFinalizedDelegate(PoseFinalizedHandle);
-	FWorldDelegates::OnWorldPreActorTick.Remove(PreActorTickHandle);
 	Super::EndPlay(EndPlayReason);
-}
-
-void AMyCharacter::OnPoseFinalized()
-{
-	HitWindows.RemoveAll([](const TWeakObjectPtr<AHitBox>& Hitbox) { return !Hitbox.IsValid(); });
-	for (const TWeakObjectPtr<AHitBox>& Hitbox : TArray<TWeakObjectPtr<AHitBox>>(HitWindows))
-	{
-		if (Hitbox.IsValid()) Hitbox->AdvanceWindow();
-	}
 }
 
 void AMyCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-	PoseFinalizedHandle = GetMesh()->RegisterOnBoneTransformsFinalizedDelegate(FOnBoneTransformsFinalizedMultiCast::FDelegate::CreateUObject(this, &AMyCharacter::OnPoseFinalized));
-	PreActorTickHandle = FWorldDelegates::OnWorldPreActorTick.AddUObject(this, &AMyCharacter::OnFrameStart);
+	Combat->BeginCombat();
 	if(!AbilitySystem) return;
 	AbilitySystem->InitAbilityActorInfo(this, this);
-	AbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &AMyCharacter::PawnBlockTagChanged);
+	Combat->BindAbilitySystem(AbilitySystem);
 	// on later floors the player starts with the moves carried from the last one, learned books included
 	if (IsPlayerControlled() && GetMyGameInstance() && GetMyGameInstance()->CarriedAbilities.Num() > 0)
 	{
@@ -277,7 +267,7 @@ void AMyCharacter::BeginPlay()
 	}
 	UpdateHealthBar();
 	SetIsInCombat(true);
-	RefreshPawnCollision();
+	Combat->RefreshPawnCollision();
 }
 
 
@@ -647,70 +637,6 @@ void AMyCharacter::OnEffectApplied(UAbilitySystemComponent* SourceComp, const FG
 
 }
 
-void AMyCharacter::PawnBlockTagChanged(const FGameplayTag CallbackTag, int32 NewCount)
-{
-	RefreshPawnCollision();
-}
-
-// The only place that sets the capsule's response to other pawns: ignore them while dead, airborne or
-// while an effect grants status.nopawnblock (moves that pass through enemies); block otherwise
-void AMyCharacter::RefreshPawnCollision()
-{
-	UCapsuleComponent* Capsule = GetCapsuleComponent();
-	const bool bIgnorePawns = !IsAlive()
-		|| (GetCharacterMovement() && GetCharacterMovement()->IsFalling())
-		|| (AbilitySystem && AbilitySystem->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));
-	if (bIgnorePawns)
-	{
-		GetWorldTimerManager().ClearTimer(PawnBlockRetryTimer);
-		PawnBlockWaitStart = -1.f;
-		Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Ignore);
-		return;
-	}
-	// Blocking again while inside another character makes movement shove the capsules apart, which can push
-	// one into level geometry. Wait briefly for them to separate; if they don't (an enemy standing in us),
-	// step out sideways ourselves, swept so we never go through walls
-	if (const ACharacter* Other = FindOverlappingCharacter())
-	{
-		const float Now = GetWorld()->GetTimeSeconds();
-		if (PawnBlockWaitStart < 0.f) PawnBlockWaitStart = Now;
-		if (Now - PawnBlockWaitStart < 0.3f)
-		{
-			GetWorldTimerManager().SetTimer(PawnBlockRetryTimer, this, &AMyCharacter::RefreshPawnCollision, 0.05f, false);
-			return;
-		}
-		StepOutOf(Other);
-	}
-	PawnBlockWaitStart = -1.f;
-	Capsule->SetCollisionResponseToChannel(ECollisionChannel::ECC_Pawn, ECollisionResponse::ECR_Block);
-}
-
-const ACharacter* AMyCharacter::FindOverlappingCharacter() const
-{
-	const UCapsuleComponent* Capsule = GetCapsuleComponent();
-	TArray<FOverlapResult> Overlaps;
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(PawnOverlap), false, this);
-	GetWorld()->OverlapMultiByObjectType(Overlaps, Capsule->GetComponentLocation(), Capsule->GetComponentQuat(),
-		FCollisionObjectQueryParams(ECollisionChannel::ECC_Pawn), Capsule->GetCollisionShape(), Params);
-	for (const FOverlapResult& Overlap : Overlaps)
-	{
-		const ACharacter* Other = Cast<ACharacter>(Overlap.GetActor());
-		// only other characters' capsules count; their meshes overlap pawns by design
-		if (Other && Overlap.GetComponent() == Other->GetCapsuleComponent()) return Other;
-	}
-	return nullptr;
-}
-
-void AMyCharacter::StepOutOf(const ACharacter* Other)
-{
-	FVector Away = GetActorLocation() - Other->GetActorLocation();
-	Away.Z = 0.f;
-	if (!Away.Normalize()) Away = -GetActorForwardVector().GetSafeNormal2D();
-	const float Needed = GetCapsuleComponent()->GetScaledCapsuleRadius() + Other->GetCapsuleComponent()->GetScaledCapsuleRadius()
-		- FVector::Dist2D(GetActorLocation(), Other->GetActorLocation()) + 2.f;
-	if (Needed > 0.f) SetActorLocation(GetActorLocation() + Away * Needed, true);
-}
-
 FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHandle NewEffect)
 {
 	if (!ensure(NewEffect.Data) || !ensure(AbilitySystem)) return FActiveGameplayEffectHandle();
@@ -718,29 +644,6 @@ FActiveGameplayEffectHandle AMyCharacter::OnGetHitByEffect(FGameplayEffectSpecHa
 	FActiveGameplayEffectHandle ActiveEffect = AbilitySystem->ApplyGameplayEffectSpecToSelf(*NewEffect.Data.Get());
 	UpdateHealthBar();
 	return ActiveEffect;
-}
-
-void AMyCharacter::OnHitReaction(EHitReaction Reaction, const FGameplayEffectSpec& Spec)
-{
-	AActor* SourceActor = Spec.GetEffectContext().GetEffectCauser();
-	switch (Reaction)
-	{
-	case EHitReaction::HitStun:
-		// the effect can't apply while stun immune, so getting here means the stun landed
-		PlayAnimMontage(GetHitMontage);
-		IncrementHitStunCount();
-		break;
-	case EHitReaction::Knockback:
-		ApplyKnockBack(SourceActor, Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Knockback, false));
-		break;
-	case EHitReaction::Launch:
-		ApplyLaunchBack(SourceActor, FVector(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_X, false),
-			Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));
-		break;
-	case EHitReaction::CameraShake:
-		PlayHitCameraShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));
-		break;
-	}
 }
 
 /* Removes the outline of an enemy character by setting the custom depth stencil back to zero.
@@ -762,35 +665,6 @@ void AMyCharacter::RemoveOutline()
 			ChildMesh->SetCustomDepthStencilValue(0);
 		}
 	}
-}
-
-void AMyCharacter::IncrementHitStunCount()
-{
-	// if (StunImmune || GetWorld()->GetTimeSeconds() > LastHitstunTime + StunImmuneCooldown) {HitStunCount = 0; StunImmune = false;}
-	HitStunCount++;
-	// LastHitstunTime = GetWorld()->GetTimeSeconds();
-	if (MaxStuns > 0 && HitStunCount >= MaxStuns)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("%s is Stunimmune"), *GetName());
-		StunImmune = true;
-		HitStunCount = 0;
-		TSubclassOf<UGameplayEffect> StunImmuneEffect = GetMyGameInstance()->StunImmuneEffectRef;
-		const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(StunImmuneEffect, 0.f, AbilitySystem->MakeEffectContext());
-		FGameplayTag StunImmuneTag = MyGameplayTags::Data_StunImmune;
-		Handle.Data.Get()->SetSetByCallerMagnitude(StunImmuneTag, StunImmuneCooldown);
-		AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
-	}
-}
-
-/* Returns true if the Character is immune to stun. Checks if the Char has the Gameplay Tag status.stunimmune */
-bool AMyCharacter::HasStunImmune()
-{
-	FGameplayTag ImmuneTag = MyGameplayTags::Status_StunImmune;
-    if(AbilitySystem->HasMatchingGameplayTag(ImmuneTag))
-	{
-		return true;
-	}
-	return false;
 }
 
 void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect)
@@ -824,21 +698,6 @@ void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectS
 	OnDamagedBP(SourceActor);
 }
 
-void AMyCharacter::StartBackslide(FVector Dir)
-{
-	MYGAME_TEST_PROBE(this, "backslide", nullptr, FString(), KnockBackVector);
-	for (uint8 i = 0; i < 10; i++)
-	{
-		FTimerHandle Handle;
-		GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnBackslide, i*0.01f, false);
-	}
-}
-
-void AMyCharacter::OnBackslide()
-{
-	AddActorWorldOffset(KnockBackVector*0.01f, true);
-}
-
 void AMyCharacter::OnDie()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("I died"));
@@ -852,7 +711,7 @@ void AMyCharacter::OnDie()
 	FTimerHandle Handle2;
 	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 5.0f, false);
 	GetWorldTimerManager().SetTimer(Handle2, this, &AMyCharacter::OnDelayedLaunch2, .05f, false);
-	bHasControl = false;
+	Combat->SetControlEnabled(false);
 	DisableInput(nullptr);
 	if (HealthBarComp) HealthBarComp->SetVisibility(false);
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
@@ -869,7 +728,7 @@ void AMyCharacter::OnDie()
 	GetMesh()->SetSimulatePhysics(true);
 	GetMesh()->SetCollisionEnabled(ECollisionEnabled::PhysicsOnly);
 	// GetMesh()->SetPhysicsLinearVelocity(FVector(200.f, 0.f, 5000.f));
-	RefreshPawnCollision();
+	Combat->RefreshPawnCollision();
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
 
@@ -937,119 +796,6 @@ bool AMyCharacter::IsAlive()
 	return AttributeSetBase->GetHealth() > 0;
 }
 
-void AMyCharacter::OnHitPause(float Duration)
-{
-	if (!GetWorld()) return;
-	const double Now = GetWorld()->GetTimeSeconds();
-	// the pause starts when the hit connected, which may be earlier in this frame
-	const double Start = LastHitConnectFrame == GFrameCounter ? FMath::Min(LastHitConnectTime, Now) : Now;
-	const double End = Start + Duration;
-	// this frame ran on at its own speed past the hit: owe back what the pause would have taken
-	HitPauseDebt += FMath::Max(0.0, (CustomTimeDilation - HitPauseRate) * (FMath::Min(Now, End) - Start));
-	if (!bHitPaused || Now >= HitPauseEnd) HitPauseStart = Start;
-	HitPauseEnd = FMath::Max(HitPauseEnd, End);
-	CustomTimeDilation = HitPauseRate;
-	if (!bHitPaused) SetHitPauseFX(true);
-	bHitPaused = true;
-}
-
-void AMyCharacter::OnFrameStart(UWorld* World, ELevelTick TickType, float DeltaSeconds)
-{
-	if (World != GetWorld() || DeltaSeconds <= 0.f) return;
-	// game time has already moved on to this frame's end; nothing has moved yet
-	FrameStartPose.Capture(this, World->GetTimeSeconds() - DeltaSeconds);
-	if (!bHitPaused)
-	{
-		// the frame the pause ended in ran partly paused; the ones after run at full speed
-		CustomTimeDilation = 1.f;
-		ApplyRootSpeedCurve(DeltaSeconds);
-		return;
-	}
-	// this frame covers game time T0..T1; it should run at full speed except where it overlaps the pause
-	const double T1 = World->GetTimeSeconds();
-	const double T0 = T1 - DeltaSeconds;
-	const double Paused = FMath::Max(0.0, FMath::Min(T1, HitPauseEnd) - FMath::Max(T0, HitPauseStart));
-	const double Ideal = DeltaSeconds - (1.0 - HitPauseRate) * Paused;
-	const double Given = FMath::Clamp(Ideal - HitPauseDebt, HitPauseRate * DeltaSeconds, (double)DeltaSeconds);
-	HitPauseDebt += Given - Ideal;
-	CustomTimeDilation = Given / DeltaSeconds;
-	if (T1 >= HitPauseEnd && HitPauseDebt <= KINDA_SMALL_NUMBER)
-	{
-		HitPauseDebt = 0.0;
-		bHitPaused = false;
-		SetHitPauseFX(false);
-	}
-	ApplyRootSpeedCurve(DeltaSeconds);
-}
-
-void AMyCharacter::ApplyRootSpeedCurve(float DeltaSeconds)
-{
-	static const FName CurveName(TEXT("RootSpeedX"));
-	static const FName SourceName(TEXT("RootSpeedCurve"));
-	const float MoveTime = DeltaSeconds * CustomTimeDilation;
-	const float PreviousMoveTime = LastMoveTime;
-	LastMoveTime = MoveTime;
-	UCharacterMovementComponent* Move = GetCharacterMovement();
-	const UAnimInstance* Anim = GetMesh() ? GetMesh()->GetAnimInstance() : nullptr;
-	const UAnimMontage* Montage = Anim ? Anim->GetCurrentActiveMontage() : nullptr;
-	const UMyGameplayAbility* Ability = Cast<UMyGameplayAbility>(UMyBlueprintFunctionLibrary::GetAnimatingAbilityFromActor(this));
-	if (!Move || !Montage || !Ability || !Montage->HasCurveData(CurveName)) return;
-	// the montage time this frame plays, plus any its curve hasn't moved the character for yet: a montage that started
-	// during the last frame already played part of it
-	const float Rate = Anim->Montage_GetPlayRate(Montage) * Montage->RateScale;
-	const float Now = Anim->Montage_GetPosition(Montage);
-	// a new montage (or the same one restarted): it began playing during the last frame
-	if (RootSpeedMontage != Montage || RootSpeedCovered - Now > PreviousMoveTime * Rate + KINDA_SMALL_NUMBER)
-	{
-		RootSpeedMontage = Montage;
-		RootSpeedCovered = FMath::Max(0.f, Now - PreviousMoveTime * Rate);
-	}
-	// (if the last frame played less than it planned, as when a hit paused it, this frame's span is that much shorter)
-	const float From = RootSpeedCovered;
-	const float Span = Now + MoveTime * Rate - From;
-	RootSpeedCovered = From + Span;
-	if (MoveTime <= 0.f || Span <= 0.f) return;
-	// The curves were tuned at 60 fps, where the velocity they set was braked for one frame before it moved the
-	// character: each 1/60 s of curve moves it at that braked speed, so the moves keep their tuned distances
-	const float Step = 1.f / 60.f;
-	const float Friction = (Move->bUseSeparateBrakingFriction ? Move->BrakingFriction : Move->GroundFriction) * FMath::Max(0.f, Move->BrakingFrictionFactor);
-	const float Braking = Move->GetMaxBrakingDeceleration();
-	const int32 Samples = FMath::Clamp(FMath::CeilToInt(Span * 240.f), 1, 64);
-	float Sum = 0.f;
-	for (int32 Sample = 0; Sample < Samples; ++Sample)
-	{
-		const float Set = 100.f * Ability->RootMotionScale.X * Montage->EvaluateCurveData(CurveName, FAnimExtractContext((double)(From + Span * (Sample + 0.5f) / Samples)));
-		Sum += Set > 0.f ? FMath::Max(0.f, Set - (Friction * Set + Braking) * Step) : 0.f;
-	}
-	// the distance over this frame's span, covered in this frame's movement time
-	const float Speed = Sum / Samples * Span / (MoveTime * Rate);
-	// past the curve's end the last velocity is kept and brakes as usual
-	if (Speed <= 0.f) return;
-	TSharedPtr<FRootMotionSource_ConstantForce> Source = MakeShared<FRootMotionSource_ConstantForce>();
-	Source->InstanceName = SourceName;
-	Source->AccumulateMode = ERootMotionAccumulateMode::Override;
-	Source->Priority = 5;
-	Source->Force = GetActorForwardVector() * Speed;
-	Source->Duration = MoveTime;
-	Source->FinishVelocityParams.Mode = ERootMotionFinishVelocityMode::MaintainLastRootMotionVelocity;
-	Move->RemoveRootMotionSource(SourceName);
-	Move->ApplyRootMotionSource(Source);
-}
-
-void AMyCharacter::SetHitPauseFX(bool bPaused)
-{
-	if (!GetMesh()) return;
-	TArray<USceneComponent*> MeshChildren;
-	GetMesh()->GetChildrenComponents(false, MeshChildren);
-	for (USceneComponent* Component : MeshChildren)
-	{
-		if (UNiagaraComponent* FXSystemComponent = Cast<UNiagaraComponent>(Component))
-		{
-			FXSystemComponent->SetPaused(bPaused);
-		}
-	}
-}
-
 UMyGameInstance* AMyCharacter::GetMyGameInstance()
 {
 	if (MyGIRef) return MyGIRef;
@@ -1083,29 +829,10 @@ void AMyCharacter::OnPawnSeen(APawn* SeenPawn)
 void AMyCharacter::OnMovementModeChanged(EMovementMode PrevMovementMode, uint8 PrevCustomMode)
 {
 	Super::OnMovementModeChanged(PrevMovementMode, PrevCustomMode);
-	FGameplayTag FlyingTag = MyGameplayTags::Activate_FlyingAttack;
-	FGameplayTagContainer FlyingTagContainer = FGameplayTagContainer(FlyingTag);
-	FGameplayTag GroundTag = MyGameplayTags::Activate_GroundAttack;
-	FGameplayTagContainer GroundTagContainer = FGameplayTagContainer(GroundTag);
-	AbilitySystem->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, GetMovementComponent()->IsFalling() ? 1 : 0);
-	if (!GetMovementComponent()->IsFalling())	// I'm on ground
-	{
-		AbilitySystem->BlockAbilitiesWithTags(FlyingTagContainer);
-		AbilitySystem->UnBlockAbilitiesWithTags(GroundTagContainer);
-		AbilitySystem->CancelAbilities(&FlyingTagContainer);
-		GetCapsuleComponent()->SetGenerateOverlapEvents(true);
-		GetMesh()->SetGenerateOverlapEvents(false);
-	}
-	else										// I'm falling
-	{
-		AbilitySystem->BlockAbilitiesWithTags(GroundTagContainer);
-		AbilitySystem->UnBlockAbilitiesWithTags(FlyingTagContainer);
-		AbilitySystem->CancelAbilities(&GroundTagContainer);
-		GetCapsuleComponent()->SetGenerateOverlapEvents(false);
-		GetMesh()->SetGenerateOverlapEvents(true);
-		LastGroundLocation = GetActorLocation();
-	}
-	RefreshPawnCollision();
+	// the airborne tag, the ground and air ability blocks, which of capsule and mesh generate overlaps
+	Combat->OnMovementModeChanged();
+	if (GetMovementComponent()->IsFalling()) LastGroundLocation = GetActorLocation();
+	Combat->RefreshPawnCollision();
 }
 
 uint8 AMyCharacter::GetTeam()
@@ -1211,58 +938,6 @@ UMyAttributeSet* AMyCharacter::GetAttributes()
 	return AttributeSetBase;
 }
 
-void AMyCharacter::ApplyKnockBack(AActor* SourceActor, float Power)
-{
-	if (SourceActor)
-	{
-		/*FVector A = FVector(GetActorLocation().X, GetActorLocation().Y, 0.0f);
-		FVector B = FVector(SourceActor->GetActorLocation().X, SourceActor->GetActorLocation().Y, 0.0f);
-		KnockBackVector = (A - B).GetSafeNormal() * Power;*/
-		KnockBackVector = SourceActor->GetActorForwardVector().GetSafeNormal() * Power;
-	}
-	else
-	{
-		KnockBackVector = GetActorForwardVector().GetSafeNormal() * Power;
-	}
-	
-	// FVector KnockBackVector = (GetActorLocation() - SourceActor->GetActorLocation()).GetSafeNormal() * 400.0f;
-	// GetMovementComponent()->Velocity = KnockBackVector;
-	StartBackslide(KnockBackVector);
-}
-
-void AMyCharacter::ApplyLaunchBack(AActor* SourceActor, FVector Power)
-{
-	FVector LaunchDir = FVector();
-	if (SourceActor) LaunchDir = SourceActor->GetActorForwardVector();
-	else LaunchDir = GetActorForwardVector();
-	FRotator DRot = LaunchDir.Rotation();
-	FRotator PRot = Power.Rotation();
-	float Angle = DRot.Yaw - PRot.Yaw;
-	Power = Power.RotateAngleAxis(Angle, FVector(0.f, 0.f, 1.f));
-	// Power = FVector(0.f, 600.f, 300.f);
-
-	/*if (SourceActor) Power = -SourceActor->GetActorForwardVector() * Power;
-	else Power = GetActorForwardVector().GetSafeNormal() * Power;*/
-	//UE_LOG(LogTemp, Warning, TEXT("FV: %s, power: %s"), *SourceActor->GetActorForwardVector().ToString(), *Power.ToString());
-	LastLaunchBack = Power;
-	// LaunchDir.Z = Power.Z;
-	FTimerHandle TimerHandle;
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AMyCharacter::OnDelayedLaunch, 0.05f, false);
-	
-	TSubclassOf<UGameplayEffect> NoControlEffect = GetMyGameInstance()->NoControlEffectRef;
-	const FGameplayEffectSpecHandle Handle = AbilitySystem->MakeOutgoingSpec(NoControlEffect, 0.f, AbilitySystem->MakeEffectContext());
-	FGameplayTag NoControlTag = MyGameplayTags::Data_NoControl;
-	Handle.Data.Get()->SetSetByCallerMagnitude(NoControlTag, 0.5f);
-	AbilitySystem->ApplyGameplayEffectSpecToSelf(*(Handle.Data.Get()));
-	// UE_LOG(LogTemp, Warning, TEXT("Applying Launch: %s"), *Power.ToString());
-}
-
-void AMyCharacter::OnDelayedLaunch()
-{
-	LaunchCharacter(LastLaunchBack, true, true);
-
-}
-
 FTransform AMyCharacter::GetProjectileSpawn()
 {
 	return SpawnArrow->GetComponentTransform();
@@ -1274,27 +949,21 @@ void AMyCharacter::PlayHitCameraShake(float Strength)
 	if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Strength);
 }
 
+void AMyCharacter::PlayHitStunMontage()
+{
+	// GetHitMontage is fetched from the anim instance the first time this character is damaged (OnDamaged): a stun
+	// that lands before any damage plays none
+	PlayAnimMontage(GetHitMontage);
+}
+
 bool AMyCharacter::HasControl()
 {
-	FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;
-	FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;
-    if(AbilitySystem->HasMatchingGameplayTag(HitStunTag) || AbilitySystem->HasMatchingGameplayTag(NoControlTag))
-	{
-		return false;
-	}
-	return bHasControl;
+	return Combat->HasControl();
 }
 
 bool AMyCharacter::HasMoveControl()
 {
-	FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;
-	FGameplayTag NoControlTag = MyGameplayTags::Status_NoControl;
-	FGameplayTag NoMoveTag = MyGameplayTags::Status_NoMove;
-	if (AbilitySystem->HasMatchingGameplayTag(HitStunTag) || AbilitySystem->HasMatchingGameplayTag(NoControlTag) || AbilitySystem->HasMatchingGameplayTag(NoMoveTag))
-	{
-		return false;
-	}
-	return true;
+	return Combat->HasMoveControl();
 }
 
 

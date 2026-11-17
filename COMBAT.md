@@ -1,7 +1,10 @@
 # MyGame's combat: its clocks, its order in a frame, and what will replicate
 
-Ass Plan.md Step 1, item 1: written before the combat mechanics leave `AMyCharacter` for `UAssCombatComponent`, so the
-move keeps every timer on the clock it uses today and the frame's order as it is. Read from the code on 2026-11-17
+Ass Plan.md Step 1, item 1: written before the combat mechanics left `AMyCharacter` for `UAssCombatComponent`
+(`Source/MyGame/Abilities/AssCombatComponent.h`), so the move kept every timer on the clock it used and the frame's
+order as it was. The names below are the component's since item 4; `AMyCharacter` calls its hooks at the points it
+called its own code before (the start of `BeginPlay`, after its ability system knows its actor, the end of
+`BeginPlay`, its movement mode changing, its death). Read from the code on 2026-11-17
 (`ue58`, after the move to the UE5 mannequin); the strict baseline (`Tests/baselines/strict.json`) holds the result.
 
 ## The clocks
@@ -11,7 +14,7 @@ move keeps every timer on the clock it uses today and the frame's order as it is
    timers (`FTimerManager`) and gameplay effects' durations and periods run on it.
 2. **An actor's time**, world time times the actor's `CustomTimeDilation`: the delta an actor's own tick and its
    components get (the character's tick, `UCharacterMovementComponent`, the skeletal mesh and its anim instance). The
-   hit pause is this clock slowing down: `AMyCharacter::OnFrameStart` sets `CustomTimeDilation` every frame (1, or
+   hit pause is this clock slowing down: `UAssCombatComponent::OnFrameStart` sets the owner's `CustomTimeDilation` every frame (1, or
    `HitPauseRate` = 0.01 while paused, or a fraction in the frame a pause starts or ends, with a debt so the frame a
    hit lands in pays back what it ran past the hit).
 3. **Montage position**, `UAnimInstance::Montage_GetPosition`: the montage's own time. The anim instance advances it
@@ -34,9 +37,9 @@ move keeps every timer on the clock it uses today and the frame's order as it is
 | Combo reset | `UpdateCombo`: world time past `LastComboTime + ComboResetDelay`; `LastComboTime` is the frame's world time when a hit connects (not the sample's) | world time |
 | The cancel window (`combo.cancancel`) | set on hit connect and at a window's end, cleared when an ability starts and when its montage ends | events, on montage position |
 | Hit stun | `GE_HitStun`'s duration (`data.hitstun`); its reaction plays the GetHit montage, under the victim's dilation | world time |
-| Stun count and immunity | `IncrementHitStunCount` on every landed stun; at `MaxStuns` it applies the game instance's `StunImmuneEffectRef` for `StunImmuneCooldown` seconds (`data.stunimmune`). The count never decays | world time (the effect) |
+| Stun count and immunity | `IncrementHitStunCount` on every landed stun; at `MaxStuns` it applies the component's `StunImmuneEffect` for `StunImmuneCooldown` seconds (`data.stunimmune`). The count never decays | world time (the effect) |
 | Knockback | `ApplyKnockBack` sets ten timers at `i * 0.01` s for i = 0..9; the engine sets none at rate 0, so nine fire, each moving the victim 1% of the vector along the attacker's facing (`AddActorWorldOffset`, swept, no gravity) | world time (timers) |
-| Launch | `ApplyLaunchBack`: `LaunchCharacter` after a 0.05 s timer, and the game instance's `NoControlEffectRef` for 0.5 s (`data.nocontrol`) | world time |
+| Launch | `ApplyLaunchBack`: `LaunchCharacter` after a 0.05 s timer, and the component's `NoControlEffect` for 0.5 s (`data.nocontrol`) | world time |
 | Body block | `RefreshPawnCollision` on the tag `status.nopawnblock`, movement mode and death; inside another character it retries every 0.05 s and steps out after 0.3 s | world time (timers) |
 | Airborne tag and the ground/air ability blocks | `OnMovementModeChanged` | movement events |
 | Root-motion speed curves | `ApplyRootSpeedCurve` in `OnFrameStart`: the `RootSpeedX` curve over the montage time this frame plays, as a root motion source for the frame's movement time (`DeltaSeconds * CustomTimeDilation`) | montage position and actor time |
@@ -55,7 +58,7 @@ move keeps every timer on the clock it uses today and the frame's order as it is
    - the skeletal mesh and anim instance: the montage advances and its notifies fire. A window's start event
      spawns the `AHitBox`, which samples at once up to the montage's position. `UANS_ApplyEffect` applies its
      effects here.
-   - after the pose: `OnBoneTransformsFinalized` calls `AMyCharacter::OnPoseFinalized`, and every open window samples
+   - after the pose: `OnBoneTransformsFinalized` calls `UAssCombatComponent::OnPoseFinalized`, and every open window samples
      up to the montage's new position. A hit applies its effects one by one, in the ability's order: damage and what
      it sets off (death, the health bar, the health marks' events, the boss's response), then stun, knockback and
      launch through `UHitReactionEffectComponent`. The attacker's hit pause starts at the hit's sample time.

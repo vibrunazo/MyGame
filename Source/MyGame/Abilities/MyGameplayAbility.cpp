@@ -5,6 +5,7 @@
 #include "../MyGameplayTags.h"
 #include "IGetHit.h"
 #include "AssCombatant.h"
+#include "AssCombatComponent.h"
 #include "../Player/MyCharacter.h"
 #include "../Player/HitBox.h"
 #include "../Player/HitboxSettings.h"
@@ -211,7 +212,7 @@ void UMyGameplayAbility::OnHitConnect()
          if (bSkipToRecovery) MontageJumpToSection(TEXT("Recovery"));
          else MontageSetNextSectionName(TEXT("Active"), TEXT("Recovery"));
      }
-    IGetHit *Source = Cast<IGetHit>(GetAvatarActorFromActorInfo());
+    UAssCombatComponent* Source = UAssCombatComponent::Find(GetAvatarActorFromActorInfo());
 	if (!Source) return;
     Source->OnHitPause(HitPause);
     
@@ -291,9 +292,9 @@ void UMyGameplayAbility::LockToTarget()
 
 float UMyGameplayAbility::GetAttackSpeed()
 {
-    AMyCharacter* MyChar = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
-    if (!MyChar || !MyChar->GetAttributes()) return 1.0f;
-    return MyChar->GetAttributes()->GetAttackSpeed() * MontagesSpeed;
+    IGetHit* Me = Cast<IGetHit>(GetAvatarActorFromActorInfo());
+    if (!Me || !Me->GetAttributes()) return 1.0f;
+    return Me->GetAttributes()->GetAttackSpeed() * MontagesSpeed;
 }
 
 /// <summary>
@@ -417,11 +418,11 @@ void UMyGameplayAbility::UpdateCombo()
     // UE_LOG(LogTemp, Warning, TEXT("Updated combo to %d"), CurrentComboCount);
 }
 
-// The hitbox the character performing this ability uses (AMyCharacter::HitBoxClass, set on the character Blueprints)
+// The hitbox the character performing this ability uses (its combat component's HitBoxClass, set on the character Blueprints)
 UClass* UMyGameplayAbility::GetHitBoxClass()
 {
-    const AMyCharacter* Char = Cast<AMyCharacter>(GetAvatarActorFromActorInfo());
-    if (Char && Char->HitBoxClass) return Char->HitBoxClass;
-    UE_LOG(LogTemp, Error, TEXT("%s: %s has no HitBoxClass, using a bare AHitBox"), *GetName(), *GetNameSafe(Char));
+    const UAssCombatComponent* Combat = UAssCombatComponent::Find(GetAvatarActorFromActorInfo());
+    if (Combat && Combat->HitBoxClass) return Combat->HitBoxClass;
+    UE_LOG(LogTemp, Error, TEXT("%s: %s has no HitBoxClass, using a bare AHitBox"), *GetName(), *GetNameSafe(GetAvatarActorFromActorInfo()));
     return AHitBox::StaticClass();
 }

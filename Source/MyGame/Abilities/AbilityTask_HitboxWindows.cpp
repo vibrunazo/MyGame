@@ -2,7 +2,7 @@
 #include "ANS_Hitbox.h"
 #include "../MyGameplayTags.h"
 #include "../Player/HitBox.h"
-#include "../Player/MyCharacter.h"
+#include "GameFramework/Character.h"
 
 #include "Animation/AnimMontage.h"
 
@@ -40,7 +40,7 @@ void UAbilityTask_HitboxWindows::HandleWindowStart(const FGameplayEventData* Pay
 	const UANS_Hitbox* Notify = Payload ? Cast<UANS_Hitbox>(Payload->OptionalObject) : nullptr;
 	if (!Notify) return;
 	// a montage's window is tested at fixed animation times, whatever the frame rate; anything else on overlaps
-	AMyCharacter* Char = Cast<AMyCharacter>(Avatar);
+	ACharacter* Char = Cast<ACharacter>(Avatar);
 	const UAnimMontage* Montage = Cast<UAnimMontage>(Payload->OptionalObject2);
 	float Start, End;
 	if (Char && Montage && Notify->GetWindow(Montage, Start, End))

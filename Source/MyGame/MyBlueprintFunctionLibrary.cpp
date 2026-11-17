@@ -3,6 +3,7 @@
 
 #include "MyBlueprintFunctionLibrary.h"
 #include "AbilitySystemGlobals.h"
+#include "Abilities/AssCombatComponent.h"
 #include "MyGameInstance.h"
 #include "Player/MyCharacter.h"
 #include "AbilitySystemComponent.h"
@@ -82,11 +83,8 @@ void UMyBlueprintFunctionLibrary::SeedEveryTickForTest(UObject* WorldContext, in
 
 int32 UMyBlueprintFunctionLibrary::ResetHitStunCountForTest(AActor* Combatant)
 {
-	AMyCharacter* Character = Cast<AMyCharacter>(Combatant);
-	if (!Character) return 0;
-	const int32 Was = Character->HitStunCount;
-	Character->HitStunCount = 0;
-	return Was;
+	UAssCombatComponent* Combat = UAssCombatComponent::Find(Combatant);
+	return Combat ? Combat->ResetHitStunCount() : 0;
 }
 #endif
 

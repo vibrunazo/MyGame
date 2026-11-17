@@ -7,7 +7,6 @@
 #include "GameplayEffectTypes.h"
 #include "IGetHit.generated.h"
 
-enum class EHitReaction : uint8;
 
 // This class does not need to be modified.
 UINTERFACE(MinimalAPI)
@@ -25,13 +24,8 @@ class MYGAME_API IGetHit
 	GENERATED_BODY()
 
 public:
-	// An applied effect's UHitReactionEffectComponent asks for a reaction; the attacker is the spec's effect causer
-	// (leaves for the combat component with the mechanics, Step 1 item 4)
-	virtual void OnHitReaction(EHitReaction Reaction, const FGameplayEffectSpec& Spec) = 0;
 	virtual void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) = 0;
 	virtual void OnDie() = 0;
-	// (leaves for the combat component with the mechanics, Step 1 item 4)
-	virtual void OnHitPause(float Duration) = 0;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const = 0;
 	virtual class UMyAttributeSet* GetAttributes() = 0;
 	virtual void AddItemToInventory(class UItemDataAsset* NewItem) = 0;

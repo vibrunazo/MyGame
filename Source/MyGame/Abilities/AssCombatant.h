@@ -37,6 +37,8 @@ public:
 	virtual FActiveGameplayEffectHandle OnGetHitByEffect(FGameplayEffectSpecHandle Effect) = 0;
 	// A hit reaction's camera shake at this strength; the game decides what shakes
 	virtual void PlayHitCameraShake(float Strength) = 0;
+	// A landed stun's reaction montage; the game decides which (presentation, like the camera shake)
+	virtual void PlayHitStunMontage() = 0;
 	// The enemy its abilities aim at (lock-on, summons, the AI's queries); nullptr when none. The target is the actor's
 	// own state: MyGame's AI sets it when it aggros
 	virtual AActor* GetTargetEnemy() = 0;

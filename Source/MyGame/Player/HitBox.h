@@ -76,7 +76,7 @@ public:
 	void AddComponentsFromSettings(struct FHitboxSettings Settings); 
 	void AddOneComponentFromBone(FHitboxSettings Settings, FName Bone);
 	// Opens a melee window: Settings' shapes on the character's bones, tested from Start to End of the montage's time
-	void BeginWindow(class AMyCharacter* Char, const class UAnimMontage* Montage, float Start, float End, const TArray<struct FHitboxSettings>& Settings, uint8 InNumHits, float InHitCooldown);
+	void BeginWindow(class ACharacter* Char, const class UAnimMontage* Montage, float Start, float End, const TArray<struct FHitboxSettings>& Settings, uint8 InNumHits, float InHitCooldown);
 	// Tests the window up to the montage's current position (every animation update)
 	void AdvanceWindow();
 	// Tests what's left of the window (it's closing)
@@ -160,7 +160,8 @@ private:
 	// characters this much further than a shape's reach are candidates too (they're tested where they were at the sample)
 	static constexpr float CandidateMargin = 200.f;
 	TArray<FWindowShape> WindowShapes;
-	TWeakObjectPtr<class AMyCharacter> WindowChar;
+	TWeakObjectPtr<class ACharacter> WindowChar;
+	TWeakObjectPtr<class UAssCombatComponent> WindowCombat;
 	TWeakObjectPtr<const class UAnimMontage> WindowMontage;
 	float WindowEnd = 0.f;
 	float NextSample = 0.f;
