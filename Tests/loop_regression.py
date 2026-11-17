@@ -11,11 +11,20 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
   menu          quitting goes to the main menu, and a new run from there loads the level
   input_mode    every level a run plays starts in Game Only input (injected input skips Slate focus, so a level
                 left in the menu's UI Only mode would pass every other check while real keys and pads do nothing)
+  Ass Plan.md, Step 0c item 8 (what Step 4 moves):
+  summon_doored a boss's summon inside a doored room: the summoned enemies join the room, so its doors stay locked
+                when the room's own enemies die and open when the summons die too
+  hud_icons_all every HUD button's icon, the learned book's move included, the same on floor 2 as on floor 1
+  carried_works the book's move, carried to floor 2, starts from its button there
 """
 import json
 
 import mygame
-from mygame import objects, tool, wait_game, wait_loaded, wait_until
+from mygame import floor_z, objects, tool, wait_game, wait_loaded, wait_until
+
+BOSS = "/Game/Blueprints/Chars/Boss1/BP_Boss1.BP_Boss1_C"
+SUMMON = "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C"
+ALL_SLOTS = "0,1,2,3,10,11,12,20,21,22"  # EInput: the buttons and their Super and Ultra versions
 
 BOOK, ITEM = "/Game/Blueprints/Items/DA_LearnTat", "/Game/Blueprints/Items/DA_ItemFireHands"
 results = {}
@@ -55,6 +64,51 @@ def clear_floor(level):
     wait_game(1.0)
 
 
+def summon_doored(state):
+    """A boss summons inside an uncleared doored room (the level suite's doored-room pick): the summons hold its doors."""
+    size = state["tile_size"]
+    door_edges = {(round(d["at"][0] / size[0], 1), round(d["at"][1] / size[1], 1)) for d in state["doors"]}
+
+    def door_count(c):
+        cx, cy = c
+        return sum(e in door_edges for e in ((cx + 0.5, cy), (cx - 0.5, cy), (cx, cy + 0.5), (cx, cy - 0.5)))
+    rooms = sorted((m for m in state["tile_masters"]
+                    if door_count(m["coord"]) and state["enemies"].get(",".join(map(str, m["coord"])), 0) > 0),
+                   key=lambda m: (-door_count(m["coord"]), m["coord"]))
+    if not rooms:
+        return {"room": None}
+    room = rooms[0]["coord"]
+    cx, cy = room[0] * size[0], room[1] * size[1]
+    z = floor_z(cx, cy) + 100.0
+    for a, v in (("MaxHealth", 1000.0), ("Health", 1000.0), ("Defense", 1000.0)):
+        tool("set_player_attribute", attribute=a, value=v)
+    tool("teleport_player", x=cx, y=cy, z=z)
+    wait_game(1.0)
+    in_room = lambda: [c for c in tool("list_characters") if c["team"] == 1 and c.get("health", 0) > 0 and room_of(c["location"], size) == room]
+    own = [c["path"] for c in in_room()]
+    locked = all(not d["open"] for d in tool("level_state")["doors"])
+    for c in own:  # frozen, so the room's fight doesn't run while the summons are counted
+        tool("set_ai_enabled", actor_path=c, enabled=False, show_player=False)
+    boss = tool("spawn_enemy", class_path=BOSS, x=cx + 200.0, y=cy, z=z + 50.0, yaw=180.0)["path"]
+    tool("ai_target", actor_path=boss, set_player=True)
+    tool("activate_ability_class", actor_path=boss, ability_class_path=SUMMON)
+    wait_game(1.0)
+    summons = [c["path"] for c in in_room() if c["path"] not in own and c["path"] != boss]
+    for c in summons:
+        tool("set_ai_enabled", actor_path=c, enabled=False, show_player=False)
+    for c in own:
+        tool("kill_character", actor_path=c)
+    wait_game(2.0)
+    held = all(not d["open"] for d in tool("level_state")["doors"])
+    for c in summons:
+        tool("kill_character", actor_path=c)
+    wait_game(2.0)
+    opened = all(d["open"] for d in tool("level_state")["doors"])
+    tool("destroy_actor", actor_path=boss)  # a boss spawned in no room
+    return {"room": room, "own": len(own), "summoned": len(summons), "locked_on_entry": locked,
+            "held_by_summons": held, "open_after_summons": opened}
+
+
 def player_pos():
     return next(c["location"] for c in tool("list_characters") if c["team"] == 0)
 
@@ -73,6 +127,10 @@ def suite(ctx):
 def run_all():
     results.clear()
     floor1 = wait_loaded()
+    summon = summon_doored(floor1)
+    results["summon"] = summon
+    check("summon_doored", summon["room"] and summon["summoned"] > 0 and summon["locked_on_entry"] and summon["held_by_summons"]
+          and summon["open_after_summons"], summon)
     start = tool("run_state")
     results["start"] = start
     starting_moves = start["abilities"]
@@ -86,6 +144,7 @@ def run_all():
     # each starting move's button shows that move's icon (the HUD sets them from the abilities' UI data)
     icons = tool("hud_ability_icons", slots="0,1,3")
     check("hud_icons", icons == {"0": "punch", "1": "kick", "3": "jump"}, icons)
+    icons_floor1 = tool("hud_ability_icons", slots=ALL_SLOTS)  # every button, the book's move (Super Kick) included
 
     # the HUD's buttons follow the device: keys on keyboard (from the mapping context), pictures on a gamepad
     shown = {dev: tool("hud_hotkeys", device=dev)["buttons"] for dev in ("keyboard", "gamepad")}
@@ -113,6 +172,17 @@ def run_all():
           and abs(floor2_state["player"]["Health"] - 70.0) < 0.5,
           f'items {floor2_state["items"]}, health {floor2_state["player"]["Health"]}, '
           f'moves kept {floor2_state["abilities"] == before["abilities"]}')
+    icons_floor2 = tool("hud_ability_icons", slots=ALL_SLOTS)
+    results["icons"] = {"floor1": icons_floor1, "floor2": icons_floor2}
+    check("hud_icons_all", icons_floor1 == icons_floor2 and icons_floor1.get("11"), {"floor1": icons_floor1, "floor2": icons_floor2})
+    # the carried book's move starts from its button on floor 2 (Super + Kick)
+    tool("run_timeline", spec=json.dumps({"dummy": None, "duration": 1.0, "settle": 0.0, "settle_fixed": True,
+                                          "inputs": [[0.0, "call", "press_input", {"button": "Super", "pressed": True}],
+                                                     [0.1, "call", "press_input", {"button": "Kick", "pressed": True}],
+                                                     [0.16, "call", "press_input", {"button": "Kick", "pressed": False}],
+                                                     [0.4, "call", "press_input", {"button": "Super", "pressed": False}]]}))
+    started = wait_until(lambda: (r := tool("timeline_result"))["done"] and r, timeout=60, every=0.1, what="the carried move")["result"]["abilities"]
+    check("carried_works", "GA_Tat" in started, started)
 
     # death
     player = next(c["path"] for c in tool("list_characters") if c["team"] == 0)

@@ -45,7 +45,7 @@ MyGame knows, and what `guide` doesn't list a command for yet:
   |---|---|---|---|
   | level | `level_regression.py` | seeds 6032, 101 and 2024 build their recorded level; the doored-room flow | `level_seed_<seed>.json` |
   | abilities | `ability_regression.py` | every player move against a frozen dummy, the boss phases, enemy sight, an enemy attack | `abilities_phase3.json` |
-  | loop | `loop_regression.py` | clear a floor, carry over, die, new run, the menu, Game Only input everywhere | none (asserts) |
+  | loop | `loop_regression.py` | clear a floor, carry over, die, new run, the menu, Game Only input everywhere; Step 0c item 8: a boss's summon holds a doored room's doors until it dies, every HUD icon the same after the floor change, the carried book's move starts there | none (asserts) |
   | camera | `camera_regression.py` | every scenario's camera numbers, played inside the engine; the camera stays still with the player in place; each room's wall cutaway | `camera_room.json` |
   | framerate | `framerate.py` | multi-hit moves land the same hits at 1× and 3× (a 3× frame step) | none (compares) |
   | menu | `menu.py` | from the main menu map, with real keys then a gamepad: start a run, Game Only input and a held W (the stick) moves, pause and resume, back to the menu; runs last, in a rendering editor | none (asserts) |
