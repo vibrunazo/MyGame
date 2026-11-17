@@ -21,10 +21,10 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Activate_GroundAttack, "activate.groundattack");
 	UE_DEFINE_GAMEPLAY_TAG(Activate_FlyingAttack, "activate.flyingattack");
 
-	UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, "notify.hit.start");
-	UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, "notify.hit.end");
-	UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, "notify.hit.connect");
-	UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, "notify.projectile.cast");
+	UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, "Ass.Notify.Hit.Start");
+	UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, "Ass.Notify.Hit.End");
+	UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, "Ass.Notify.Hit.Connect");
+	UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, "Ass.Notify.Projectile.Cast");
 
 	UE_DEFINE_GAMEPLAY_TAG(Event_Dash, "event.dash");
 	UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, "GameplayCue.hit.impact");

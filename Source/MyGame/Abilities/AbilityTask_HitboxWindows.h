@@ -1,6 +1,6 @@
 // Owns an attack's hitbox for the whole ability: the montage's ANS_Hitbox notifies open and close hit windows
-// (notify.hit.start / notify.hit.end events). Each window spawns a hitbox on the avatar, shaped by that notify,
-// and destroys it when the window closes or the ability ends. Connected hits (notify.hit.connect) are reported.
+// (Ass.Notify.Hit.Start / Ass.Notify.Hit.End events). Each window spawns a hitbox on the avatar, shaped by that notify,
+// and destroys it when the window closes or the ability ends. Connected hits (Ass.Notify.Hit.Connect) are reported.
 
 #pragma once
 

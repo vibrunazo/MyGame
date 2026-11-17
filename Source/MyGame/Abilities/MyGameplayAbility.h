@@ -56,7 +56,7 @@ public:
 	// if false, abilities can cancel at any time. Which might cause button spam to cancel itself.
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bNeedsHitToCancel = true;
-	// if true, I can also cancel abilities after the hitbox ends with the notify.hit.end tag, regardless if it hits or not
+	// if true, I can also cancel abilities after the hitbox ends with the Ass.Notify.Hit.End tag, regardless if it hits or not
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ability")
 	bool bCanCancelAfterHitboxEnds = false;
 	// if true, at the beginning of this ability, rotate the player towards the direction of controller input

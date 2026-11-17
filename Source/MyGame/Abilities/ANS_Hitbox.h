@@ -10,7 +10,7 @@
 
 /**
  * A Hitbox Notify State. Used by the Anim Montage to set when in the animation the Hitbox is created and destroyed.
- * Sends itself as the notify.hit.start and notify.hit.end events' Optional Object (the animation as Optional Object 2);
+ * Sends itself as the Ass.Notify.Hit.Start and Ass.Notify.Hit.End events' Optional Object (the animation as Optional Object 2);
  * the ability's UAbilityTask_HitboxWindows reads these settings to shape the hitbox it spawns.
  */
 UCLASS()

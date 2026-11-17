@@ -28,7 +28,7 @@ called its own code before (the start of `BeginPlay`, after its ability system k
 
 | What | Where | Clock |
 |---|---|---|
-| A hit window's start and end | `ANS_Hitbox` notify begin and end (the `notify.hit.start` / `notify.hit.end` events to `UAbilityTask_HitboxWindows`); the window's own times come from the notify's place in the montage (`UANS_Hitbox::GetWindow`) | montage position |
+| A hit window's start and end | `ANS_Hitbox` notify begin and end (the `Ass.Notify.Hit.Start` / `Ass.Notify.Hit.End` events to `UAbilityTask_HitboxWindows`); the window's own times come from the notify's place in the montage (`UANS_Hitbox::GetWindow`) | montage position |
 | A window's samples | `AHitBox::SampleWindowUntil`: every 1/60 s of montage position (`WindowStep`) from the window's start, the last one cut to its end; each shape posed from the montage's animation data at that position (`MontageBoneInComponent`), never from the mesh's bones | montage position |
 | A sample's moment | the same sample, placed between the frame's start (`FHitboxPose`, captured in `OnFrameStart`) and now by its montage position: the attacker's and the target's transforms are interpolated to it, and it carries a world time | world time, interpolated |
 | `NumHits` and `HitCooldown` per target | `AHitBox::TryHit`, with the sample's world time | world time |
