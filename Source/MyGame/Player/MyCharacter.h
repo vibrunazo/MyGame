@@ -7,6 +7,7 @@
 #include "../Abilities/MyAttributeSet.h"
 #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
+#include "../Abilities/AssCombatant.h"
 #include "../Abilities/ICastProjectile.h"
 #include "HitBox.h"
 
@@ -29,7 +30,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCastDelegate, class UMyGameplayAbil
 
 
 UCLASS(config=Game)
-class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IGetHit, public ICastProjectile, public IReportDeath
+class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IAssCombatant, public IGetHit, public ICastProjectile, public IReportDeath
 {
 	GENERATED_BODY()
 
@@ -92,9 +93,10 @@ public:
 	void OnPawnSeen(APawn* SeenPawn);
 	TSubclassOf<class UCameraShakeBase> GetCamShake();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	bool HasControl();
+	bool HasControl() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	bool HasMoveControl();
+	bool HasMoveControl() override;
+	void PlayHitCameraShake(float Strength) override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	class UMyGameInstance* GetMyGameInstance();
 	bool HasStunImmune();

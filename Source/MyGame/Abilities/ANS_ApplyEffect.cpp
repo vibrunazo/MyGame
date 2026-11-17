@@ -2,14 +2,14 @@
 
 
 #include "ANS_ApplyEffect.h"
-#include "IGetHit.h"
+#include "AssCombatant.h"
 #include "Components/SkeletalMeshComponent.h"
 #include "AbilitySystemComponent.h"
 
 
 void UANS_ApplyEffect::NotifyBegin(USkeletalMeshComponent * MeshComp, UAnimSequenceBase * Animation, float TotalDuration, const FAnimNotifyEventReference& EventReference)
 {
-    IGetHit* MyChar = MeshComp ? Cast<IGetHit>(MeshComp->GetOwner()) : nullptr;
+    IAssCombatant* MyChar = MeshComp ? Cast<IAssCombatant>(MeshComp->GetOwner()) : nullptr;
     if (!MyChar) return;
     // NotifyEnd removes these; the cap only guarantees they expire if it never comes (death, a skipped section).
     // It's in world time while the montage can be slowed by attack speed and hit pauses, hence the slack.

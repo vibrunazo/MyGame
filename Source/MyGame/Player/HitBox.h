@@ -124,8 +124,8 @@ protected:
 
 	// Hits Other if the limits allow it and a line from From reaches it; Time is when the contact happened
 	void TryHit(AActor* Other, const FVector& From, double Time);
-	void ApplyAllEffects(class IGetHit* Target);
-	void ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target);
+	void ApplyAllEffects(class IAssCombatant* Target);
+	void ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IAssCombatant* Target);
 	TWeakObjectPtr<class UMyGameplayAbility> OwningAbility;
 
 private:

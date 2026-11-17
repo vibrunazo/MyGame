@@ -738,7 +738,7 @@ void AMyCharacter::OnHitReaction(EHitReaction Reaction, const FGameplayEffectSpe
 			Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Y, false), Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Launch_Z, false)));
 		break;
 	case EHitReaction::CameraShake:
-		if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));
+		PlayHitCameraShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));
 		break;
 	}
 }
@@ -1264,6 +1264,11 @@ FTransform AMyCharacter::GetProjectileSpawn()
 	// UE_LOG(LogTemp, Warning, TEXT("Char casting projectile"));
 }
 
+void AMyCharacter::PlayHitCameraShake(float Strength)
+{
+	if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Strength);
+}
+
 bool AMyCharacter::HasControl()
 {
 	FGameplayTag HitStunTag = MyGameplayTags::Status_HitStun;
@@ -1290,7 +1295,7 @@ bool AMyCharacter::HasMoveControl()
 
 void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 {
-	IGetHit* NewChar = Cast<IGetHit>(NewTarget);
+	IAssCombatant* NewChar = Cast<IAssCombatant>(NewTarget);
 	if (!NewChar || !NewChar->IsAlive() || !IsAlive()) return;
 	if (NewTarget->IsPlayerControlled())
 	{

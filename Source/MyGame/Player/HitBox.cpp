@@ -5,7 +5,8 @@
 #include "../MyGameplayTags.h"
 #include "HitboxSettings.h"
 #include "../Abilities/MyGameplayAbility.h"
-#include "../Abilities/IGetHit.h"
+#include "../Abilities/AssCombatant.h"
+#include "AbilitySystemGlobals.h"
 #include "../Dev/TestProbe.h"
 
 #include "Components/SphereComponent.h"
@@ -75,8 +76,8 @@ void AHitBox::HitboxTouched(UPrimitiveComponent* OverlappedComp, AActor* Other, 
 void AHitBox::TryHit(AActor* Other, const FVector& From, double Time)
 {
 	if (!GetWorld() || !Other) return;
-	IGetHit* Target = Cast<IGetHit>(Other);
-	IGetHit* Source = Cast<IGetHit>(GetInstigator());
+	IAssCombatant* Target = Cast<IAssCombatant>(Other);
+	IAssCombatant* Source = Cast<IAssCombatant>(GetInstigator());
 	if (!Target || !Source) return;
 	if (!ensure(GetInstigator() != nullptr)) return;
 	if (HitboxChannel == EHitboxChannel::Projectile && Target->IsProjectileImmune())
@@ -111,7 +112,7 @@ void AHitBox::TryHit(AActor* Other, const FVector& From, double Time)
 	UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());
 	ApplyAllEffects(Target);
 	// sound and sparks: a stun-immune target blocks
-	if (UAbilitySystemComponent* GAS = Target->GetAbilitySystemComponent())
+	if (UAbilitySystemComponent* GAS = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Other))
 	{
 		FGameplayCueParameters Cue;
 		Cue.Location = OutHit.ImpactPoint;
@@ -454,7 +455,7 @@ UBoxComponent* AHitBox::AddHitBoxComponent(FVector BoxExtent)
 	return NewComp;
 }
 
-void AHitBox::ApplyAllEffects(class IGetHit* Target)
+void AHitBox::ApplyAllEffects(class IAssCombatant* Target)
 {
 	if (!Target) return;
 	for (auto &&Effect : EffectsToApply)
@@ -464,7 +465,7 @@ void AHitBox::ApplyAllEffects(class IGetHit* Target)
 	
 }
 
-void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Target)
+void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IAssCombatant* Target)
 {
 	if (!Target || !IsValid(Cast<UObject>(Target))) return;
 	// reactions push the target along the attacker's facing: for a projectile that's the projectile, not its caster

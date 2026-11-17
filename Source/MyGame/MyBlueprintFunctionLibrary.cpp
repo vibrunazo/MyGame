@@ -2,7 +2,7 @@
 
 
 #include "MyBlueprintFunctionLibrary.h"
-#include "Abilities/IGetHit.h"
+#include "AbilitySystemGlobals.h"
 #include "MyGameInstance.h"
 #include "Player/MyCharacter.h"
 #include "AbilitySystemComponent.h"
@@ -98,9 +98,9 @@ int32 UMyBlueprintFunctionLibrary::ResetHitStunCountForTest(AActor* Combatant)
 /// <param name="Container"></param>
 /// <param name="Item"></param>
 /// <returns></returns>
-FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IGetHit* Char, FEffectContainer Container, UItemDataAsset* Item, float MaxDuration)
+FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IAssCombatant* Char, FEffectContainer Container, UItemDataAsset* Item, float MaxDuration)
 {
-    UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();
+    UAbilitySystemComponent* GAS = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Cast<AActor>(Cast<UObject>(Char)));
     if (!ensure(GAS != nullptr)) return FActiveGameplayEffectHandle();
     if (!Container.EffectClass) return FActiveGameplayEffectHandle();
     FGameplayEffectContextHandle Context = GAS->MakeEffectContext();
@@ -136,9 +136,7 @@ FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToC
 
 void UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(AActor* Actor, TArray<FActiveGameplayEffectHandle> ActiveEffects)
 {
-    IGetHit* Char = Cast<IGetHit>(Actor);
-    if (!Char) return;
-    UAbilitySystemComponent* GAS = Char->GetAbilitySystemComponent();
+    UAbilitySystemComponent* GAS = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Actor);
     if (!GAS) return;
     for (auto &&Effect : ActiveEffects)
     {
@@ -165,12 +163,12 @@ UGameplayAbility* UMyBlueprintFunctionLibrary::GetAnimatingAbility(UAbilitySyste
 }
 TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item)
 {
-    IGetHit* Char = Cast<IGetHit>(Actor);
+    IAssCombatant* Char = Cast<IAssCombatant>(Actor);
     if (!Char) return {};
     return ApplyAllEffectContainersToChar(Char, Containers, Item);
 }
 
-TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IGetHit* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item, float MaxDuration)
+TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IAssCombatant* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item, float MaxDuration)
 {
     TArray<FActiveGameplayEffectHandle> result = {};
     for (auto &&Container : Containers)
