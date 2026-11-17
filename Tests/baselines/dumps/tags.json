@@ -513,8 +513,8 @@
  "GameplayCue": {
   "assets": [],
   "children": [
+   "GameplayCue.Ass",
    "GameplayCue.Test",
-   "GameplayCue.hit",
    "GameplayCue.item",
    "GameplayCue.status"
   ],
@@ -524,6 +524,43 @@
   "source": "DefaultGameplayTags.ini",
   "step": null
  },
+ "GameplayCue.Ass": {
+  "assets": [],
+  "children": [
+   "GameplayCue.Ass.Hit"
+  ],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "GameplayCue.Ass.Hit": {
+  "assets": [],
+  "children": [
+   "GameplayCue.Ass.Hit.Impact"
+  ],
+  "code": [],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "GameplayCue.Ass.Hit.Impact": {
+  "assets": [
+   "/Game/FX/Cues/GC_Hit_Impact"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Hit_Impact);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, \"GameplayCue.Ass.Hit.Impact\");",
+   "Source/MyGame/Player/HitBox.cpp: GAS->ExecuteGameplayCue(MyGameplayTags::GameplayCue_Hit_Impact, Cue);"
+  ],
+  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
  "GameplayCue.Test": {
   "assets": [],
   "children": [],
@@ -531,32 +568,6 @@
   "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
   "plugin_name": null,
   "source": "GameplayAbilities",
-  "step": null
- },
- "GameplayCue.hit": {
-  "assets": [],
-  "children": [
-   "GameplayCue.hit.impact"
-  ],
-  "code": [],
-  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
-  "plugin_name": null,
-  "source": "MyGame",
-  "step": null
- },
- "GameplayCue.hit.impact": {
-  "assets": [
-   "/Game/FX/Cues/GC_Hit_Impact"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(GameplayCue_Hit_Impact);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(GameplayCue_Hit_Impact, \"GameplayCue.hit.impact\");",
-   "Source/MyGame/Player/HitBox.cpp: GAS->ExecuteGameplayCue(MyGameplayTags::GameplayCue_Hit_Impact, Cue);"
-  ],
-  "owner": "the plugin's cues sit under GameplayCue.Ass. (3.11)",
-  "plugin_name": null,
-  "source": "MyGame",
   "step": null
  },
  "GameplayCue.item": {
