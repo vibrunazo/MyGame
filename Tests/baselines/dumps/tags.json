@@ -1,4 +1,149 @@
 {
+ "Ass": {
+  "assets": [],
+  "children": [
+   "Ass.Status"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status": {
+  "assets": [],
+  "children": [
+   "Ass.Status.Airborne",
+   "Ass.Status.HitStun",
+   "Ass.Status.ImmuneProjectile",
+   "Ass.Status.NoControl",
+   "Ass.Status.NoMove",
+   "Ass.Status.NoPawnBlock",
+   "Ass.Status.StunImmune"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status.Airborne": {
+  "assets": [
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Airborne);",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: ASC->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, Char->GetMovementComponent()->IsFalling() ? 1 : 0);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, \"Ass.Status.Airborne\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status.HitStun": {
+  "assets": [
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Abilities/GE_HitStun",
+   "/Game/Abilities/GE_StunImmune",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_HitStun);",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: if (ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun) || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)))",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: return !(ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun)",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, \"Ass.Status.HitStun\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status.ImmuneProjectile": {
+  "assets": [
+   "/Game/Abilities/GE_ImmuneToProjectile"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_ImmuneProjectile);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, \"Ass.Status.ImmuneProjectile\");",
+   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status.NoControl": {
+  "assets": [
+   "/Game/Abilities/GE_NoControl"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoControl);",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: if (ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun) || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)))",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, \"Ass.Status.NoControl\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status.NoMove": {
+  "assets": [
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoMove);",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoMove)));",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, \"Ass.Status.NoMove\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status.NoPawnBlock": {
+  "assets": [
+   "/Game/Abilities/GE_NoPawnBlock"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoPawnBlock);",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: InAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAssCombatComponent::PawnBl",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: || (ASC && ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, \"Ass.Status.NoPawnBlock\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Status.StunImmune": {
+  "assets": [
+   "/Game/Abilities/GE_HitStun",
+   "/Game/Abilities/GE_StunImmune"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_StunImmune);",
+   "Source/MyGame/Abilities/AssCombatComponent.cpp: return ASC && ASC->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, \"Ass.Status.StunImmune\");",
+   "Source/MyGame/Player/HitBox.cpp: Cue.RawMagnitude = GAS->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune) ? 1.f : 0.f;"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
  "EnhancedInput": {
   "assets": [],
   "children": [
@@ -1449,34 +1594,12 @@
  "status": {
   "assets": [],
   "children": [
-   "status.airborne",
-   "status.health",
-   "status.hitstun",
-   "status.immune",
-   "status.nocontrol",
-   "status.nomove",
-   "status.nopawnblock",
-   "status.stunimmune"
+   "status.health"
   ],
   "code": [],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.airborne": {
-  "assets": [
-   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Airborne);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: ASC->SetLooseGameplayTagCount(MyGameplayTags::Status_Airborne, Char->GetMovementComponent()->IsFalling() ? 1 : 0);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, \"status.airborne\");"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "MyGame",
   "step": null
  },
  "status.health": {
@@ -1621,119 +1744,6 @@
   "children": [],
   "code": [],
   "owner": "MyGame (3.11)",
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.hitstun": {
-  "assets": [
-   "/Game/Abilities/GA_BaseAttack",
-   "/Game/Abilities/GA_Cast",
-   "/Game/Abilities/GA_Voadora",
-   "/Game/Abilities/GE_HitStun",
-   "/Game/Abilities/GE_StunImmune",
-   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_HitStun);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: if (ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun) || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)))",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: return !(ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun)",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, \"status.hitstun\");"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.immune": {
-  "assets": [],
-  "children": [
-   "status.immune.proj"
-  ],
-  "code": [],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.immune.proj": {
-  "assets": [
-   "/Game/Abilities/GE_ImmuneToProjectile"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_ImmuneProjectile);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, \"status.immune.proj\");",
-   "Source/MyGame/Player/MyCharacter.cpp: FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.nocontrol": {
-  "assets": [
-   "/Game/Abilities/GE_NoControl"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoControl);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: if (ASC && (ASC->HasMatchingGameplayTag(MyGameplayTags::Status_HitStun) || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)))",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoControl)",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, \"status.nocontrol\");"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.nomove": {
-  "assets": [
-   "/Game/Abilities/GA_PunchRun",
-   "/Game/Abilities/GA_Tat",
-   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoMove);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: || ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoMove)));",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, \"status.nomove\");"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.nopawnblock": {
-  "assets": [
-   "/Game/Abilities/GE_NoPawnBlock"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_NoPawnBlock);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: InAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_NoPawnBlock, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UAssCombatComponent::PawnBl",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: || (ASC && ASC->HasMatchingGameplayTag(MyGameplayTags::Status_NoPawnBlock));",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, \"status.nopawnblock\");"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "status.stunimmune": {
-  "assets": [
-   "/Game/Abilities/GE_HitStun",
-   "/Game/Abilities/GE_StunImmune"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_StunImmune);",
-   "Source/MyGame/Abilities/AssCombatComponent.cpp: return ASC && ASC->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, \"status.stunimmune\");",
-   "Source/MyGame/Player/HitBox.cpp: Cue.RawMagnitude = GAS->HasMatchingGameplayTag(MyGameplayTags::Status_StunImmune) ? 1.f : 0.f;"
-  ],
-  "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
   "step": null

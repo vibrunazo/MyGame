@@ -16,7 +16,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -181,7 +181,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -353,7 +353,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -535,7 +535,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -775,7 +775,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -976,7 +976,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -1152,7 +1152,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -1165,7 +1165,7 @@
       "tagName": "combo.weak"
      },
      {
-      "tagName": "status.nomove"
+      "tagName": "Ass.Status.NoMove"
      }
     ]
    },
@@ -1647,7 +1647,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -1657,7 +1657,7 @@
       "tagName": "state.attacking"
      },
      {
-      "tagName": "status.nomove"
+      "tagName": "Ass.Status.NoMove"
      }
     ]
    },
@@ -1839,7 +1839,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -2037,7 +2037,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -2047,7 +2047,7 @@
       "tagName": "state.attacking"
      },
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -2244,7 +2244,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -2779,7 +2779,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -2792,7 +2792,7 @@
       "tagName": "combo.weak"
      },
      {
-      "tagName": "status.nomove"
+      "tagName": "Ass.Status.NoMove"
      }
     ]
    },
@@ -2988,7 +2988,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -3183,7 +3183,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -3378,7 +3378,7 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      }
     ]
    },
@@ -3566,10 +3566,10 @@
    "activationBlockedTags": {
     "gameplayTags": [
      {
-      "tagName": "status.hitstun"
+      "tagName": "Ass.Status.HitStun"
      },
      {
-      "tagName": "status.airborne"
+      "tagName": "Ass.Status.Airborne"
      }
     ]
    },

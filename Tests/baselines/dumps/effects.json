@@ -4567,7 +4567,7 @@
     "ignoreTags": {
      "gameplayTags": [
       {
-       "tagName": "status.stunimmune"
+       "tagName": "Ass.Status.StunImmune"
       }
      ]
     },
@@ -4716,7 +4716,7 @@
       "ignoreTags": {
        "gameplayTags": [
         {
-         "tagName": "status.stunimmune"
+         "tagName": "Ass.Status.StunImmune"
         }
        ]
       },
@@ -4736,7 +4736,7 @@
       "ignoreTags": {
        "gameplayTags": [
         {
-         "tagName": "status.stunimmune"
+         "tagName": "Ass.Status.StunImmune"
         }
        ]
       },
@@ -4774,14 +4774,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "status.hitstun"
+         "tagName": "Ass.Status.HitStun"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "status.hitstun"
+         "tagName": "Ass.Status.HitStun"
         }
        ]
       },
@@ -4886,14 +4886,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "status.hitstun"
+       "tagName": "Ass.Status.HitStun"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "status.hitstun"
+       "tagName": "Ass.Status.HitStun"
       }
      ]
     },
@@ -5001,7 +5001,7 @@
     "ignoreTags": {
      "gameplayTags": [
       {
-       "tagName": "status.stunimmune"
+       "tagName": "Ass.Status.StunImmune"
       }
      ]
     },
@@ -5254,14 +5254,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "status.immune.proj"
+         "tagName": "Ass.Status.ImmuneProjectile"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "status.immune.proj"
+         "tagName": "Ass.Status.ImmuneProjectile"
         }
        ]
       },
@@ -5361,14 +5361,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "status.immune.proj"
+       "tagName": "Ass.Status.ImmuneProjectile"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "status.immune.proj"
+       "tagName": "Ass.Status.ImmuneProjectile"
       }
      ]
     },
@@ -8162,14 +8162,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "status.nocontrol"
+         "tagName": "Ass.Status.NoControl"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "status.nocontrol"
+         "tagName": "Ass.Status.NoControl"
         }
        ]
       },
@@ -8269,14 +8269,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "status.nocontrol"
+       "tagName": "Ass.Status.NoControl"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "status.nocontrol"
+       "tagName": "Ass.Status.NoControl"
       }
      ]
     },
@@ -8633,14 +8633,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "status.nopawnblock"
+         "tagName": "Ass.Status.NoPawnBlock"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "status.nopawnblock"
+         "tagName": "Ass.Status.NoPawnBlock"
         }
        ]
       },
@@ -8740,14 +8740,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "status.nopawnblock"
+       "tagName": "Ass.Status.NoPawnBlock"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "status.nopawnblock"
+       "tagName": "Ass.Status.NoPawnBlock"
       }
      ]
     },
@@ -13293,14 +13293,14 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "status.stunimmune"
+         "tagName": "Ass.Status.StunImmune"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "status.stunimmune"
+         "tagName": "Ass.Status.StunImmune"
         }
        ]
       },
@@ -13316,21 +13316,21 @@
       "added": {
        "gameplayTags": [
         {
-         "tagName": "status.stunimmune"
+         "tagName": "Ass.Status.StunImmune"
         }
        ]
       },
       "combinedTags": {
        "gameplayTags": [
         {
-         "tagName": "status.stunimmune"
+         "tagName": "Ass.Status.StunImmune"
         }
        ]
       },
       "removed": {
        "gameplayTags": [
         {
-         "tagName": "status.hitstun"
+         "tagName": "Ass.Status.HitStun"
         }
        ]
       }
@@ -13432,14 +13432,14 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "status.stunimmune"
+       "tagName": "Ass.Status.StunImmune"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "status.stunimmune"
+       "tagName": "Ass.Status.StunImmune"
       }
      ]
     },
@@ -13451,21 +13451,21 @@
     "added": {
      "gameplayTags": [
       {
-       "tagName": "status.stunimmune"
+       "tagName": "Ass.Status.StunImmune"
       }
      ]
     },
     "combinedTags": {
      "gameplayTags": [
       {
-       "tagName": "status.stunimmune"
+       "tagName": "Ass.Status.StunImmune"
       }
      ]
     },
     "removed": {
      "gameplayTags": [
       {
-       "tagName": "status.hitstun"
+       "tagName": "Ass.Status.HitStun"
       }
      ]
     }
