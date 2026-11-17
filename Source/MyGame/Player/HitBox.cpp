@@ -93,6 +93,9 @@ void AHitBox::TryHit(AActor* Other, const FVector& From, double Time)
 	FCollisionQueryParams Params;
 	Params.AddIgnoredActor(GetOwner());
 	Params.AddIgnoredActor(GetInstigator());
+	// the contact is on the target's capsule, not its mesh's bodies: those follow its bones, which a world that isn't
+	// rendered doesn't always refresh, and on the UE4 mannequin the trace never met one before the capsule
+	if (const ACharacter* TargetChar = Cast<ACharacter>(Other)) Params.AddIgnoredComponent(TargetChar->GetMesh());
 	if (!GetWorld()->LineTraceSingleByChannel(OutHit, From, Other->GetActorLocation(), ECollisionChannel::ECC_Visibility, Params, FCollisionResponseParams()))
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Hittrace failed"));
