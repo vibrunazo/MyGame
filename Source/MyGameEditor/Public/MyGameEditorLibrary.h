@@ -2,11 +2,14 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "GameplayTagContainer.h"
+#include "Templates/SubclassOf.h"
 #include "MyGameEditorLibrary.generated.h"
 
 class USoundCue;
 class USoundWave;
 class UAnimMontage;
+class UGameplayEffect;
 
 /**
  * Editor-only helpers for scripts (Python commandlets, editor utilities) where the engine exposes no scripting API.
@@ -35,5 +38,31 @@ public:
 	/** The objects whose outer is Object (one level), by path: an asset's instanced subobjects that scripts can't list. */
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Dump")
 	static TArray<FString> ListSubobjects(UObject* Object);
+
+	/**
+	 * Starts the strict recorder (UCombatRecorder) in the world of WorldContext, following each actor under its role
+	 * name (Roles and Actors pair up). A recording already running is stopped and dropped.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing", meta = (WorldContext = "WorldContext"))
+	static bool StartCombatRecord(UObject* WorldContext, const TArray<FString>& Roles, const TArray<AActor*>& Actors);
+
+	/**
+	 * Test only (the strict recorder's deliberate breaks): replaces the tags a gameplay effect's Target Tags component
+	 * adds to its target, in memory, and returns the ones it added before. Never saved.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
+	static FGameplayTagContainer SetEffectGrantedTagsForTest(TSubclassOf<UGameplayEffect> Effect, const FGameplayTagContainer& Added);
+
+	/** Test only: a property's value as the editor's text (what copy and paste use), "" when the object has no such property. */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
+	static FString GetPropertyTextForTest(UObject* Object, FName Property);
+
+	/** Test only: sets a property from the editor's text, in memory, on a default or an instance alike. Never saved. */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
+	static bool SetPropertyTextForTest(UObject* Object, FName Property, const FString& Text);
+
+	/** Stops the strict recorder and returns its record as JSON ("" when none ran). */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
+	static FString StopCombatRecord();
 
 };

@@ -1,5 +1,6 @@
 #include "GCN_HitImpact.h"
 #include "../Player/HitBox.h"
+#include "../Dev/TestProbe.h"
 
 #include "Kismet/GameplayStatics.h"
 #include "NiagaraFunctionLibrary.h"
@@ -14,6 +15,8 @@ bool UGCN_HitImpact::OnExecute_Implementation(AActor* MyTarget, const FGameplayC
 	// blocks fall back to the hit sound and sparks when the hitbox has no block ones
 	USoundBase* Sound = bBlocked && Hitbox->BlockSound ? Hitbox->BlockSound : Hitbox->HitSound;
 	UNiagaraSystem* Particles = bBlocked && Hitbox->BlockParticles ? Hitbox->BlockParticles : Hitbox->HitParticles;
+	if (Sound) MYGAME_TEST_PROBE(MyTarget, "sound", nullptr, Sound->GetPathName());
+	if (Particles) MYGAME_TEST_PROBE(MyTarget, "particles", nullptr, Particles->GetPathName());
 	if (Sound) UGameplayStatics::PlaySoundAtLocation(Hitbox, Sound, Hitbox->GetActorLocation());
 	if (Particles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(Hitbox, Particles, Parameters.Location, FRotator(0.f, Parameters.Normal.Rotation().Yaw, 0.f));
 	UE_LOG(LogHitCue, Verbose, TEXT("HitImpactCue on %s blocked=%d"), *GetNameSafe(MyTarget), bBlocked);

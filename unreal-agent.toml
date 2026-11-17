@@ -51,6 +51,19 @@ run = "Tests/dumps.py:suite"         # Step 0c's content dumps (abilities, effec
 timeout = 900
 
 [[suite]]
+name = "strict"
+kind = "pie"
+run = "Tests/strict.py:suite"        # Step 0c's strict recorder: every scenario's frames and events, exact
+timeout = 1800
+
+[[suite]]
+name = "strict-breaks"
+kind = "pie"
+run = "Tests/strict_breaks.py:suite"  # Step 0c: each deliberate break changes its strict recording
+tier = "manual"
+timeout = 1800
+
+[[suite]]
 name = "menu"
 kind = "pie"
 run = "Tests/menu.py:suite"

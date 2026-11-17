@@ -2,6 +2,7 @@
 
 
 #include "Pickup.h"
+#include "../Dev/TestProbe.h"
 #include "PickupMeshActor.h"
 #include "ItemDataAsset.h"
 #include "Components/StaticMeshComponent.h"
@@ -107,6 +108,8 @@ void APickup::OnPickupBeginOverlap(AActor* OverlappingActor, AActor* OtherActor)
 			}
 		}
 	}
+	if (PickupSound) MYGAME_TEST_PROBE(this, "sound", nullptr, PickupSound->GetPathName());
+	if (PickupParticles) MYGAME_TEST_PROBE(this, "particles", nullptr, PickupParticles->GetPathName());
 	if (PickupSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), PickupSound, GetActorLocation());
 	if (PickupParticles) UNiagaraFunctionLibrary::SpawnSystemAttached(PickupParticles, OtherActor->GetRootComponent(), NAME_None, FVector(0.f, 0.f, -80.f), OtherActor->GetActorRotation(), EAttachLocation::SnapToTarget, true);
 	// if (PickupParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), PickupParticles, GetActorLocation(), FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
@@ -125,6 +128,8 @@ void APickup::OnDelayedSpawn()
 		BoxCollision->AddImpulse(FVector(0.f, 0.5, 500.0f), NAME_None, true);
 		FVector SpawnLoc = FVector(GetActorLocation());
 		SpawnLoc.Z -= 20.f;
+		if (SpawnParticles) MYGAME_TEST_PROBE(this, "particles", nullptr, SpawnParticles->GetPathName());
+		if (SpawnSound) MYGAME_TEST_PROBE(this, "sound", nullptr, SpawnSound->GetPathName());
 		if (SpawnParticles) UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), SpawnParticles, SpawnLoc, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None);
 		if (SpawnSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), SpawnSound, GetActorLocation());
 

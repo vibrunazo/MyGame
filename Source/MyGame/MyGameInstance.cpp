@@ -3,6 +3,7 @@
 
 #include "MyGameInstance.h"
 #include "Player/MyCharacter.h"
+#include "Dev/TestProbe.h"
 #include "Props/ItemDataAsset.h"
 #include "Level/RoomCamera.h"
 #include "Level/FloorBuilder.h"
@@ -75,6 +76,7 @@ void UMyGameInstance::DoCamShake(float Intensity)
     if (!CamShakeClass || !PlayerCharRef || !PlayerCharRef->CamPawnRef) return;
     FVector Loc = PlayerCharRef->CamPawnRef->GetCameraLoc();
     Loc.X += (100 - Intensity);
+    MYGAME_TEST_PROBE(PlayerCharRef, "camera_shake", nullptr, CamShakeClass->GetPathName(), FVector::ZeroVector, Intensity);
     UGameplayStatics::PlayWorldCameraShake(GetWorld(), CamShakeClass, Loc, 0.0f, 100.f);
 }
 

@@ -6,6 +6,7 @@ narrow: no arbitrary code or console execution.
 """
 import contextlib
 import json
+import re
 
 import unreal
 
@@ -52,7 +53,10 @@ def _tl_tick(delta_seconds):
         if _tl["pending"] and _tl["pending"][0][0] <= now:
             _, kind, hook, kwargs = (_tl["pending"].pop(0) + [None, None])[:4]
             if kind == "call":
-                getattr(MyGameTools, hook)(**(kwargs or {}))
+                try:
+                    getattr(MyGameTools, hook)(**(kwargs or {}))
+                except Exception as e:  # the scenario didn't do what it says: the result carries it
+                    rec.setdefault("errors", []).append(f"{now:.3f} {hook}: {e}")
         anim = player.get_editor_property("mesh").get_anim_instance()
         montage = anim.get_current_active_montage() if anim else None
         if montage:
@@ -90,11 +94,14 @@ def _tl_tick(delta_seconds):
             _tl["phase"], _tl["settle_from"] = "settle", now
     elif _tl["phase"] == "settle":
         # the outcome is read once the player's abilities have ended (the move is over, however long the frames
-        # delayed it), and a combo window must close with the attack
-        if not player.get_active_abilities_for_test() or now - _tl["settle_from"] >= spec.get("settle", 3.0):
+        # delayed it), and a combo window must close with the attack; a fixed settle waits its full length
+        settled = not spec.get("settle_fixed") and not player.get_active_abilities_for_test()
+        if settled or now - _tl["settle_from"] >= spec.get("settle", 3.0):
             rec["end_player"] = json.loads(MyGameTools.pie_player_state())
             rec["end_dummy"] = json.loads(MyGameTools.character_state(spec["dummy"])) if dummy else None
             rec["lingering"] = sorted(t for t in player.get_tags_for_test() if t.startswith("combo."))
+            if spec.get("record"):
+                rec["record"] = json.loads(unreal.MyGameEditorLibrary.stop_combat_record() or "null")
             _tl["phase"] = "done"
             _tl["result"] = {k: sorted(v) if isinstance(v, set) else v for k, v in rec.items()}
 
@@ -739,8 +746,11 @@ class MyGameTools(unreal.ToolsetDefinition):
             spec: JSON {"dummy": actor path or null, "duration": game seconds, "trace": true for a per-frame trace
                 [t, montage section, dummy health, player-dummy distance,
                 player time dilation, montage position], "watch": [actor paths] recorded every frame unrounded
-                ([t, x, y, z, yaw, montage:section, health]), "settle": max game seconds to wait
-                for the player's abilities to end afterwards, "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
+                ([t, x, y, z, yaw, montage:section, health]), "seed": seed_random's seed, set as the
+                timeline starts (also the current state of the run's shared stream, which loot draws from), "record": {role: actor path} for the strict recorder
+                (MyGameEditor's UCombatRecorder: every frame and event of those characters and what they spawn, from
+                now until the settle ends; its JSON comes back as "record"), "settle": max game seconds to wait
+                for the player's abilities to end afterwards ("settle_fixed": true waits all of it), "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
                 t, calls one of these MyGameTools hooks (press_input, move_input, dash_player, learn_item_abilities,
                 give_item, set_character_attribute, set_player_attribute, refresh_health...).
 
@@ -758,6 +768,20 @@ class MyGameTools(unreal.ToolsetDefinition):
                    rec={"timeline": [], "abilities": set(), "player_tags": set(), "dummy_tags": set(),
                         "player_z": player.get_actor_location().z,
                         "dummy_z": dummy.get_actor_location().z if dummy else 0.0})
+        if sp.get("seed") is not None:
+            MyGameTools.seed_random(int(sp["seed"]))
+            _tl["rec"]["seeded"] = True
+            # the run's shared stream too (loot draws from it): its current state, not the run's seed
+            gi = unreal.GameplayStatics.get_game_instance(world)
+            stream = unreal.MyGameEditorLibrary.get_property_text_for_test(gi, "RandomStream")
+            unreal.MyGameEditorLibrary.set_property_text_for_test(gi, "RandomStream", re.sub(r"(?<!Initial)Seed=-?\d+", f"Seed={int(sp['seed'])}", stream))
+        if sp.get("record"):
+            roles = sorted(sp["record"].items(), key=lambda r: (r[0] != "player", r[0]))  # the player ticks first
+            actors = [_char(path) for _, path in roles]
+            missing = [name for (name, _), a in zip(roles, actors) if not a]
+            if missing:
+                raise RuntimeError(f"no actor for roles {missing}")
+            unreal.MyGameEditorLibrary.start_combat_record(world, [n for n, _ in roles], actors)
         if not _tl["handle"]:
             _tl["handle"] = unreal.register_slate_post_tick_callback(_tl_tick)
         return json.dumps({"started": True})
@@ -1074,6 +1098,142 @@ class MyGameTools(unreal.ToolsetDefinition):
         if frozen:
             MyGameTools.set_ai_enabled(char.get_path_name(), False)
         return json.dumps({"path": char.get_path_name()})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def apply_effect(actor_path: str, effect_class_path: str) -> str:
+        """Applies a gameplay effect to a PIE character from itself, as a test setup (e.g. GE_ImmuneToProjectile).
+
+        Args:
+            actor_path: Full path of a PIE character.
+            effect_class_path: e.g. "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C".
+
+        Returns:
+            JSON {"applied": bool}.
+        """
+        char = unreal.find_object(None, actor_path)
+        cls = unreal.load_class(None, effect_class_path)
+        if not char or not cls:
+            raise RuntimeError("actor or effect class not found")
+        asc = char.get_editor_property("ability_system")
+        asc.apply_gameplay_effect_to_self(cls, 1.0, asc.make_effect_context())
+        return json.dumps({"applied": True})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def learn_ability(ability_class_path: str, input: str) -> str:
+        """Teaches the PIE player one ability on a button slot, as an item would (LearnAbility: what shares the slot and
+        is also an air move, or also a ground move, is replaced).
+
+        Args:
+            ability_class_path: e.g. "/Game/Abilities/GA_Voadora.GA_Voadora_C".
+            input: The slot's EInput name, e.g. "Punch" or "SuperKick".
+
+        Returns:
+            JSON {"learned", "input"}.
+        """
+        cls = unreal.load_class(None, ability_class_path)
+        if not cls:
+            raise RuntimeError(f"no class at {ability_class_path}")
+        ability = unreal.AbilityStruct()
+        ability.set_editor_property("ability_class", cls)
+        ability.set_editor_property("input", getattr(unreal.Input, input.upper()))
+        _player().learn_ability(ability)
+        return json.dumps({"learned": cls.get_name(), "input": input})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def strict_break(which: str, apply: bool, list_only: bool = False) -> str:
+        """The strict recorder's deliberate breaks (mygame_tools.breaks): apply one, in memory, or undo every one applied.
+
+        Args:
+            which: The break's name (ignored when undoing).
+            apply: True to apply it, False to undo all.
+            list_only: Change nothing; list the breaks.
+
+        Returns:
+            JSON {"break", "change"}, {"undone": true}, or {name: [scenario, change]} when listing.
+        """
+        from mygame_tools import breaks
+        if list_only:
+            return json.dumps({n: [b[0], b[1]] for n, b in breaks.BREAKS.items()})
+        if apply:
+            return json.dumps({"break": which, "change": breaks.apply(which)})
+        breaks.undo()
+        return json.dumps({"undone": True})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def remove_effect(actor_path: str, effect_class_path: str) -> str:
+        """Test setup: removes every active instance of a gameplay effect from a PIE character (e.g. a combat buff
+        an earlier scenario left running).
+
+        Args:
+            actor_path: Full path of a PIE character.
+            effect_class_path: e.g. "/Game/Abilities/GE_IsInCombat.GE_IsInCombat_C".
+
+        Returns:
+            JSON {"removed": true}.
+        """
+        char = unreal.find_object(None, actor_path)
+        cls = unreal.load_class(None, effect_class_path)
+        if not char or not cls:
+            raise RuntimeError("actor or effect class not found")
+        char.get_editor_property("ability_system").remove_active_gameplay_effect_by_source_effect(cls, None, -1)
+        return json.dumps({"removed": True})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def reset_stun_count(actor_path: str) -> str:
+        """Test setup: a character's landed stuns counted towards stun immunity go back to none (they never decay).
+
+        Args:
+            actor_path: Full path of a PIE character.
+
+        Returns:
+            JSON {"was": the count before}.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        return json.dumps({"was": unreal.MyBlueprintFunctionLibrary.reset_hit_stun_count_for_test(char)})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def actors_of_class(class_path: str) -> str:
+        """The paths of every PIE actor of a class (e.g. /Script/MyGame.Pickup), sorted.
+
+        Args:
+            class_path: A class path.
+
+        Returns:
+            JSON list of actor paths.
+        """
+        world = _pie_world()
+        if not world:
+            raise RuntimeError("PIE is not running")
+        cls = unreal.load_class(None, class_path)
+        return json.dumps(sorted(a.get_path_name() for a in unreal.GameplayStatics.get_all_actors_of_class(world, cls)))
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def destroy_actor(actor_path: str) -> str:
+        """Removes a PIE actor at once (no death, no drops): a scenario's own spawned enemy when it's done.
+
+        Args:
+            actor_path: Full path of a PIE actor.
+
+        Returns:
+            JSON {"destroyed": bool}.
+        """
+        actor = unreal.find_object(None, actor_path)
+        if not actor:
+            return json.dumps({"destroyed": False})
+        controller = actor.get_controller() if hasattr(actor, "get_controller") else None
+        ok = actor.destroy_actor()
+        if controller and controller != unreal.GameplayStatics.get_player_controller(_pie_world(), 0):
+            controller.destroy_actor()
+        return json.dumps({"destroyed": bool(ok)})
 
     @toolset_registry.tool_call
     @staticmethod

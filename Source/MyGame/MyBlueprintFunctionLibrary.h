@@ -134,6 +134,10 @@ public:
 	// PIE test hook: the AI system's stream's current seed (read without drawing)
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	static int32 GetAIRandomSeedForTest();
+	// PIE test hook: a character's landed stuns counted towards stun immunity (they never decay) go back to none, so a
+	// test scenario starts from none. Returns the count before
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	static int32 ResetHitStunCountForTest(class AMyCharacter* Character);
 #endif
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

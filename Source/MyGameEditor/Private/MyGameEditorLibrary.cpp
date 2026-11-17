@@ -1,4 +1,8 @@
 #include "MyGameEditorLibrary.h"
+#include "CombatRecorder.h"
+#include "GameplayEffect.h"
+#include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
+#include "Engine/Engine.h"
 #include "Animation/AnimMontage.h"
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
@@ -85,4 +89,46 @@ TArray<FString> UMyGameEditorLibrary::ListSubobjects(UObject* Object)
 	}
 	Out.Sort();
 	return Out;
+}
+
+bool UMyGameEditorLibrary::StartCombatRecord(UObject* WorldContext, const TArray<FString>& Roles, const TArray<AActor*>& Actors)
+{
+	UWorld* World = GEngine ? GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull) : nullptr;
+	return UCombatRecorder::Start(World, Roles, Actors);
+}
+
+FString UMyGameEditorLibrary::StopCombatRecord()
+{
+	return UCombatRecorder::Stop();
+}
+
+FGameplayTagContainer UMyGameEditorLibrary::SetEffectGrantedTagsForTest(TSubclassOf<UGameplayEffect> Effect, const FGameplayTagContainer& Added)
+{
+	UGameplayEffect* Default = Effect ? Effect->GetDefaultObject<UGameplayEffect>() : nullptr;
+	UTargetTagsGameplayEffectComponent* Tags = Default ? const_cast<UTargetTagsGameplayEffectComponent*>(Default->FindComponent<UTargetTagsGameplayEffectComponent>()) : nullptr;
+	if (!Tags) return FGameplayTagContainer();
+	FInheritedTagContainer Changes = Tags->GetConfiguredTargetTagChanges();
+	const FGameplayTagContainer Was = Changes.Added;
+	// the effect's cached tags only gain what Added holds and lose what Removed holds
+	Changes.Removed = Was;
+	Changes.Removed.RemoveTags(Added);
+	Changes.Added = Added;
+	Tags->SetAndApplyTargetTagChanges(Changes);
+	return Was;
+}
+
+FString UMyGameEditorLibrary::GetPropertyTextForTest(UObject* Object, FName Property)
+{
+	const FProperty* Prop = Object ? Object->GetClass()->FindPropertyByName(Property) : nullptr;
+	if (!Prop) return FString();
+	FString Text;
+	Prop->ExportTextItem_Direct(Text, Prop->ContainerPtrToValuePtr<void>(Object), nullptr, Object, PPF_None);
+	return Text;
+}
+
+bool UMyGameEditorLibrary::SetPropertyTextForTest(UObject* Object, FName Property, const FString& Text)
+{
+	const FProperty* Prop = Object ? Object->GetClass()->FindPropertyByName(Property) : nullptr;
+	if (!Prop) return false;
+	return Prop->ImportText_Direct(*Text, Prop->ContainerPtrToValuePtr<void>(Object), Object, PPF_None) != nullptr;
 }

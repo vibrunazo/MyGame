@@ -4,6 +4,7 @@
 #include "MyBlueprintFunctionLibrary.h"
 #include "Abilities/IGetHit.h"
 #include "MyGameInstance.h"
+#include "Player/MyCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "Props/ItemDataAsset.h"
 
@@ -50,6 +51,14 @@ FString UMyBlueprintFunctionLibrary::LiftAIBudgetsForTest(UObject* WorldContext)
 int32 UMyBlueprintFunctionLibrary::GetAIRandomSeedForTest()
 {
 	return UAISystem::GetRandomStream().GetCurrentSeed();
+}
+
+int32 UMyBlueprintFunctionLibrary::ResetHitStunCountForTest(AMyCharacter* Character)
+{
+	if (!Character) return 0;
+	const int32 Was = Character->HitStunCount;
+	Character->HitStunCount = 0;
+	return Was;
 }
 #endif
 

@@ -2,6 +2,7 @@
 
 #include "MyCharacter.h"
 #include "../MyGameplayTags.h"
+#include "../Dev/TestProbe.h"
 #include "EnemyCharBase.h"
 #include "MyPlayerController.h"
 #include "MyAIController.h"
@@ -825,6 +826,7 @@ void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectS
 
 void AMyCharacter::StartBackslide(FVector Dir)
 {
+	MYGAME_TEST_PROBE(this, "backslide", nullptr, FString(), KnockBackVector);
 	for (uint8 i = 0; i < 10; i++)
 	{
 		FTimerHandle Handle;
@@ -871,6 +873,7 @@ void AMyCharacter::OnDie()
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
 
+	if (DeathSound) MYGAME_TEST_PROBE(this, "sound", nullptr, DeathSound->GetPathName());
 	if (DeathSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 
 	OnDieDelegate.Broadcast(this);
@@ -1305,6 +1308,7 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 	AFloorBuilder* Builder = URunSubsystem::GetFloorBuilder(this);
 	if (!Builder) return;
 	Builder->AggroTile(NewTarget, GetActorLocation());
+	if (AggroSound) MYGAME_TEST_PROBE(this, "sound", nullptr, AggroSound->GetPathName());
 	if (AggroSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), AggroSound, GetActorLocation());
 }
 

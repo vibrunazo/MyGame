@@ -6,6 +6,7 @@
 #include "HitboxSettings.h"
 #include "../Abilities/MyGameplayAbility.h"
 #include "../Abilities/IGetHit.h"
+#include "../Dev/TestProbe.h"
 
 #include "Components/SphereComponent.h"
 #include "Components/BoxComponent.h"
@@ -81,6 +82,7 @@ void AHitBox::TryHit(AActor* Other, const FVector& From, double Time)
 	if (HitboxChannel == EHitboxChannel::Projectile && Target->IsProjectileImmune())
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Cannot hit target because it's immune to projectiles"));
+		MYGAME_TEST_PROBE(GetInstigator(), "projectile_immune", Other, GetNameSafe(GetOwner() ? GetOwner()->GetClass() : nullptr), From, FMath::RoundToDouble((Time - GetWorld()->GetTimeSeconds()) * 1e6) / 1e6);
 		return;
 	}
 	FEnemyHitState CurEnemyState = ActorsHit.FindOrAdd(Other);
@@ -96,6 +98,8 @@ void AHitBox::TryHit(AActor* Other, const FVector& From, double Time)
 		UE_LOG(LogTemp, Warning, TEXT("Hittrace failed"));
 		return;
 	}
+	MYGAME_TEST_PROBE(GetInstigator(), "hit", Other, GetNameSafe(GetOwner() ? GetOwner()->GetClass() : nullptr),
+		GetInstigator()->GetActorTransform().InverseTransformPosition(From), FMath::RoundToDouble((Time - GetWorld()->GetTimeSeconds()) * 1e6) / 1e6);
 	CurEnemyState.NumHits++;
 	CurEnemyState.LastHitTime = Time;
 	ActorsHit.Emplace(Other, CurEnemyState);
@@ -289,6 +293,7 @@ void AHitBox::SampleWindowAt(float At, float Alpha, bool bInterpolate, double Ti
 			Parent = AnimBoneTransform(Shape, At, BoneInComponent) ? BoneInComponent * MeshToWorld : Mesh->GetBoneTransform(Shape.Bone);
 		}
 		const FTransform World = Shape.Settings.HitboxTransform * Shape.SocketOffset * Parent;
+		MYGAME_TEST_PROBE(Char, "shape", nullptr, FString::FromInt(int32(&Shape - WindowShapes.GetData())), ActorToWorld.InverseTransformPosition(World.GetLocation()), At);
 		const FVector Scale = World.GetScale3D().GetAbs();
 		const float Radius = Shape.Settings.SphereRadius * Scale.GetMin();
 		const FCollisionShape Collision = Shape.Settings.bIsSphere ? FCollisionShape::MakeSphere(Radius) : FCollisionShape::MakeBox(Shape.Settings.BoxExtent * Scale);
@@ -433,6 +438,7 @@ void AHitBox::ApplyOneEffect(FGameplayEffectSpecHandle Effect, class IGetHit* Ta
 {
 	if (!Target || !IsValid(Cast<UObject>(Target))) return;
 	// reactions push the target along the attacker's facing: for a projectile that's the projectile, not its caster
+	MYGAME_TEST_PROBE(GetInstigator(), "attempt", Cast<UObject>(Target), Effect.Data.IsValid() && Effect.Data->Def ? Effect.Data->Def->GetClass()->GetPathName() : FString());
 	if (Effect.Data.IsValid())
 	{
 		FGameplayEffectContextHandle Context = Effect.Data->GetContext();
