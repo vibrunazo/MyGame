@@ -8,7 +8,8 @@
 namespace MyGameplayTags
 {
 	// The plugin's combat reads these through its settings (DefaultGame.ini, UAssCombatSettings): a running attack, its
-	// cancel window, and the ground-only and air-only abilities
+	// cancel window, and the ground-only and air-only abilities. The first two have the plugin's names already (Ass Plan.md
+	// Step 3); MyGame declares them until the plugin does
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_GroundAttack);

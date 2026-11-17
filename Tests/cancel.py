@@ -6,7 +6,7 @@ abilities could start now (CanActivateAbility on each, as a press asks it, start
 ability pressed while it runs is covered). Each frame is labelled with the state that matters:
 
   running / after   A is active, or has ended
-  hit               combo.cancancel is on (a hit confirmed)
+  hit               Ass.Combo.CanCancel is on (a hit confirmed)
   window / ended    A's hit window is open, or has closed (no label before it opens)
   airborne          the character is falling
 
@@ -79,7 +79,7 @@ def states(record, role):
                 first, active = e[5], True
             elif e[2] == "ability" and e[4] in ("ended", "cancelled") and e[5] == first and active:
                 active, ended = False, True
-            elif e[2] == "tag" and e[4] == "combo.cancancel":
+            elif e[2] == "tag" and e[4] == "Ass.Combo.CanCancel":
                 cancancel = e[5]
             elif e[2] == "anim" and "Hitbox" in e[6] and e[4] in ("begin", "end"):
                 window = "window" if e[4] == "begin" else "ended"

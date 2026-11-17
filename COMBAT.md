@@ -37,7 +37,7 @@ called its own code before (the start of `BeginPlay`, after its ability system k
 | Hit pause | `UAssAbility::OnHitConnect` asks for `HitPause` seconds; `OnHitPause` starts it at the hit's sample time (`NoteHitConnect`), `OnFrameStart` turns it into `CustomTimeDilation` frame by frame | world time, felt as actor time |
 | Niagara on the mesh during a pause | `SetHitPauseFX` pauses them while paused | follows the pause |
 | Combo reset | `UpdateCombo`: world time past `LastComboTime + ComboResetDelay`; `LastComboTime` is the frame's world time when a hit connects (not the sample's) | world time |
-| The cancel window (`combo.cancancel`) | set on hit connect and at a window's end, cleared when an ability starts and when its montage ends | events, on montage position |
+| The cancel window (`Ass.Combo.CanCancel`) | set on hit connect and at a window's end, cleared when an ability starts and when its montage ends | events, on montage position |
 | Hit stun | `GE_HitStun`'s duration (`Ass.Data.HitStun`); its reaction plays the GetHit montage, under the victim's dilation | world time |
 | Stun count and immunity | `IncrementHitStunCount` on every landed stun; at `MaxStuns` it applies the component's `StunImmuneEffect` for `StunImmuneCooldown` seconds (`Ass.Data.StunImmune`). The count never decays | world time (the effect) |
 | Knockback | `ApplyKnockBack` sets ten timers at `i * 0.01` s for i = 0..9; the engine sets none at rate 0, so nine fire, each moving the victim 1% of the vector along the attacker's facing (`AddActorWorldOffset`, swept, no gravity) | world time (timers) |

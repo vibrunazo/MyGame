@@ -114,10 +114,10 @@ def _tl_tick(delta_seconds):
             if not rec["timeline"] or rec["timeline"][-1] != key:
                 rec["timeline"].append(key)
         rec["abilities"].update(player.get_active_abilities_for_test())
-        rec["player_tags"].update(t for t in player.get_tags_for_test() if t.startswith(("state.", "status.")) and t != "state.combat")
+        rec["player_tags"].update(t for t in player.get_tags_for_test() if t.startswith(("state.", "status.", "Ass.State.", "Ass.Status.")) and t != "state.combat")
         rec["player_z"] = max(rec["player_z"], player.get_actor_location().z)
         if dummy:
-            rec["dummy_tags"].update(t for t in dummy.get_tags_for_test() if t.startswith(("status.", "state.")))
+            rec["dummy_tags"].update(t for t in dummy.get_tags_for_test() if t.startswith(("status.", "state.", "Ass.Status.", "Ass.State.")))
             rec["dummy_z"] = max(rec["dummy_z"], dummy.get_actor_location().z)
         if spec.get("trace"):
             # one row per frame: game time, montage section, dummy health, player-dummy distance, the player's time
@@ -149,7 +149,7 @@ def _tl_tick(delta_seconds):
         if settled or now - _tl["settle_from"] >= spec.get("settle", 3.0):
             rec["end_player"] = json.loads(MyGameTools.pie_player_state())
             rec["end_dummy"] = json.loads(MyGameTools.character_state(spec["dummy"])) if dummy else None
-            rec["lingering"] = sorted(t for t in player.get_tags_for_test() if t.startswith("combo."))
+            rec["lingering"] = sorted(t for t in player.get_tags_for_test() if t.startswith(("combo.", "Ass.Combo.")))
             if spec.get("seed") is not None:
                 unreal.MyBlueprintFunctionLibrary.seed_every_tick_for_test(world, -1)
             if spec.get("record"):
