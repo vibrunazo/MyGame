@@ -74,7 +74,16 @@ def _tl_tick(delta_seconds):
         _tl_start(world)
     spec, rec = _tl["spec"], _tl["rec"]
     now = unreal.GameplayStatics.get_time_seconds(world) - _tl["t0"]
-    player, dummy = _player(), _char(spec["dummy"]) if spec.get("dummy") else None
+    try:
+        player = _player()
+    except RuntimeError as e:  # the player is gone (a level reload): the timeline ends with the error
+        rec.setdefault("errors", []).append(f"{now:.3f} {e}")
+        if spec.get("record"):
+            rec["record"] = json.loads(unreal.MyGameEditorLibrary.stop_combat_record() or "null")
+        _tl["phase"] = "done"
+        _tl["result"] = {k: sorted(v) if isinstance(v, set) else v for k, v in rec.items()}
+        return
+    dummy = _char(spec["dummy"]) if spec.get("dummy") else None
     if _tl["phase"] == "run":
         if spec.get("canary") and rec.get("seeded"):
             # where the global random is drawn between frames: draw once and reseed with the draw, so two runs part at
@@ -83,6 +92,13 @@ def _tl_tick(delta_seconds):
             v = unreal.MathLibrary.random_integer(1 << 30)
             unreal.MyBlueprintFunctionLibrary.seed_random_for_test(v)  # both streams
             rec.setdefault("canary", []).append([now, v, ai])
+        if spec.get("bounds"):
+            # a box the player is kept inside, like a wall (enemies' knockbacks can carry it out of a room)
+            x0, x1, y0, y1 = spec["bounds"]
+            loc = player.get_actor_location()
+            cx, cy = min(max(loc.x, x0), x1), min(max(loc.y, y0), y1)
+            if (cx, cy) != (loc.x, loc.y):
+                player.set_actor_location(unreal.Vector(cx, cy, loc.z), False, True)
         # at most one input per frame, so two inputs never land as one simultaneous press
         if _tl["pending"] and _tl["pending"][0][0] <= now:
             _, kind, hook, kwargs = (_tl["pending"].pop(0) + [None, None])[:4]
@@ -406,6 +422,21 @@ class MyGameTools(unreal.ToolsetDefinition):
             brain.stop_logic("test dummy")
             controller.stop_movement()  # a move the tree already started keeps going otherwise
         return json.dumps({"actor": char.get_name(), "ai_running": brain.is_running()})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def wake_ai(actor_paths: str) -> str:
+        """Restarts several characters' AI in one call, so they wake on the same tick (set_ai_enabled for each, with
+        the player handed to each as its target).
+
+        Args:
+            actor_paths: JSON list of full PIE character paths, woken in that order.
+
+        Returns:
+            JSON list of set_ai_enabled's results.
+        """
+        paths = json.loads(actor_paths) if isinstance(actor_paths, str) else actor_paths  # a list from a timeline
+        return json.dumps([json.loads(MyGameTools.set_ai_enabled(p, True)) for p in paths])
 
     @toolset_registry.tool_call
     @staticmethod
@@ -795,7 +826,8 @@ class MyGameTools(unreal.ToolsetDefinition):
                 (MyGameEditor's UCombatRecorder: every frame and event of those characters and what they spawn, from
                 now until the settle ends; its JSON comes back as "record"), "query": [roles] whose frames also list the
                 abilities they could start (the cancel matrix), "settle": max game seconds to wait
-                for the player's abilities to end afterwards ("settle_fixed": true waits all of it), "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
+                for the player's abilities to end afterwards ("settle_fixed": true waits all of it), "bounds": [x0, x1, y0, y1] a box the player is
+                kept inside each tick, like a wall, "inputs": [[t, "call", hook, {kwargs}], ...]}: at game time
                 t, calls one of these MyGameTools hooks (press_input, move_input, dash_player, learn_item_abilities,
                 give_item, set_character_attribute, set_player_attribute, refresh_health...).
 

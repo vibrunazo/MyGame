@@ -10,6 +10,15 @@ a real hit from the player that crosses its health marks (75, 50 and 25% of MaxH
   boss_two_marks   one punch takes it from 52 to 22 of 100: across 50% and 25%
 Each records which of its moves started, on which frame, and whether it was stunned.
 
+The token tie (exact): two enemies qualify for the player's attack token on the same tick (both woken by one call, at
+the same distance on either side of the player's back), and who takes it is recorded. Each spot is run under both role
+names, since the recorder makes the roles tick in their names' order: if the winner follows the name, the tie is
+broken by tick order and not by anything in the game.
+
+The stunned holder (exact): enemy a holds the player's token (put on its aggro list), b is beside it and qualifies,
+both woken by one call with the player's back to them; at 0.5 s a is stunned for 1.5 s. Recorded: the token's holders
+as they change (the distinct enemies on the list), each with its frame.
+
 The decision matrix (Plan.md 1.1): each enemy type in each of a fixed set of situations, and what it does in the next
 second, its AI woken with the player as its target (sight is the strict suite's):
   facing   the player faces it, faces away (it is behind the player), or stands side on
@@ -97,23 +106,12 @@ def main_task(snapshot):
 
 def matrix_entry(record, role="enemy"):
     """{"first": [kind, detail, frame], "then": [[kind, detail], ...]} of the enemy's decisions in the second: its
-    abilities started, ended or cancelled, its stuns, and the main tree's tasks it moves to (the bt events sample the
-    active tasks once a frame, so a task shorter than a frame shows in one recording and not another: the background
-    attack subtree's tasks are left to the abilities they start, and repeats of a main task are folded)."""
+    abilities started, ended or cancelled, its stuns, and the main tree's tasks it moves to (decisions())."""
     ds = [d for d in decisions(record, {role}) if d[1] == role and d[2] in ("activated", "ended", "cancelled", "bt", "stun")]
-    first = next((i for i, d in enumerate(ds) if d[2] == "activated" or (d[2] == "bt" and "::" in d[3])), None)
+    first = next((i for i, d in enumerate(ds) if d[2] in ("activated", "bt")), None)
     if first is None:
         return {"first": None, "then": []}
-    then, last_task = [], main_task(ds[first][3]) if ds[first][2] == "bt" else None
-    for d in ds[first + 1:]:
-        if d[2] == "bt":
-            task = main_task(d[3])
-            if task and task != last_task:
-                then.append(["task", task])
-            last_task = task or last_task
-        else:
-            then.append([d[2], d[3]])
-    return {"first": [ds[first][2], ds[first][3], ds[first][0]], "then": then}
+    return {"first": [ds[first][2], ds[first][3], ds[first][0]], "then": [[d[2], d[3]] for d in ds[first + 1:]]}
 
 
 def matrix_difference(a, b):
@@ -130,10 +128,50 @@ def matrix_difference(a, b):
     return None
 
 
+def tie_scenarios():
+    """The token tie at two spots, each under both role names (a ticks before b)."""
+    left, right = (CLOSE + 70, Y - 60), (CLOSE + 70, Y + 60)
+    for spots, name in (((left, right), "a_left"), ((right, left), "a_right")):
+        enemies = [enemy("a", "enemy1", x=spots[0][0], y=spots[0][1], yaw=180.0), enemy("b", "enemy1", x=spots[1][0], y=spots[1][1], yaw=180.0)]
+        yield scenario(f"token_tie_{name}", [at(0.0, "wake_ai", actor_paths=json.dumps(["@a", "@b"]))], 1.0, enemies=enemies,
+                       player_yaw=180.0, player={"Defense": 1000.0}, wait=0.5)
+
+
+def holder_scenarios():
+    enemies = [enemy("a", "enemy1", x=CLOSE + 70, y=Y - 60, yaw=180.0), enemy("b", "enemy1", x=CLOSE + 70, y=Y + 60, yaw=180.0)]
+    stun = at(0.5, "apply_effect", actor_path="@a", effect_class_path=HITSTUN, set_by_caller=json.dumps({"data.hitstun": 1.5}))
+    yield scenario("token_stunned_holder", [at(0.0, "wake_ai", actor_paths=json.dumps(["@a", "@b"])), stun], 3.5, enemies=enemies, player_yaw=180.0,
+                   player={"Defense": 1000.0}, wait=0.5, setup=[["aggro_add", {"actor_path": "@player", "target_path": "@a"}]])
+
+
+def holders(record):
+    """[[frame, [the distinct enemies on the player's aggro list]], ...] as they change."""
+    out = []
+    for e in record["events"]:
+        if e[2] == "token" and e[3] == "player":
+            now = sorted(set(e[4]))
+            if not out or out[-1][1] != now:
+                out.append([e[0], now])
+    return out
+
+
+def holders_difference(a, b):
+    if [x[1] for x in a] != [x[1] for x in b]:
+        return f"holders {a} -> {b}"
+    if any(abs(x[0] - y[0]) > 1 for x, y in zip(a, b)):
+        return f"frames {a} -> {b}"
+    return None
+
+
+def first_holder(record):
+    """Who first holds the player's token, and on which frame."""
+    return next(([e[0], e[4]] for e in record["events"] if e[2] == "token" and e[3] == "player" and e[4]), None)
+
+
 def decisions(record, ai_roles):
     """[(frame, role, kind, detail)] in the record's order (strict.by_role), but those of its last two frames, which a
-    start one frame late can push out of the recording."""
-    out = []
+    start one frame late can push out of the recording; a bt decision is the main tree's task it moves to."""
+    out, task = [], {}
     for e in strict.by_role(record["events"]):
         frame, kind, role = e[0], e[2], e[3]
         if frame > record["frame_count"] - 2:
@@ -141,7 +179,12 @@ def decisions(record, ai_roles):
         if kind == "ability":
             out.append((frame, role, e[4], e[5]))
         elif kind == "bt" and role in ai_roles:
-            out.append((frame, role, "bt", e[4]))
+            # the main tree's task the snapshot shows, repeats folded: a task shorter than a frame shows in one recording
+            # and not another (the attack subtree's tasks are left to the abilities they start)
+            now = main_task(e[4])
+            if now and now != task.get(role):
+                out.append((frame, role, "bt", now))
+            task[role] = now or task.get(role)
         elif kind == "tag" and e[4] == "status.hitstun":
             out.append((frame, role, "stun", e[5]))
         elif kind == "attribute" and e[4] == "Health":
@@ -207,11 +250,17 @@ def suite(ctx):
     ar.PLAYER_PATH[0] = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
     base = strict.base_attributes(player)
     ar.DUMMY[0] = {"path": strict.DUMMY_PATH}
-    result = {"boss": {}, "matrix": {}}
+    result = {"boss": {}, "matrix": {}, "tie": {}, "holder": {}}
     for sc in boss_scenarios():
         record = strict.run(sc, base)
         result["boss"][sc["name"]] = record
         print(f"  {sc['name']}: {json.dumps(summary(record, 'boss'))[:250]}")
+    for sc in tie_scenarios():
+        result["tie"][sc["name"]] = first_holder(strict.run(sc, base))
+        print(f"  {sc['name']}: {result['tie'][sc['name']]}")
+    for sc in holder_scenarios():
+        result["holder"][sc["name"]] = holders(strict.run(sc, base))
+        print(f"  {sc['name']}: {result['holder'][sc['name']]}")
     for sc in matrix_scenarios():
         result["matrix"][sc["name"]] = matrix_entry(strict.run(sc, base))
     (ctx.out / "ai.json").write_text(json.dumps(result, sort_keys=True))
@@ -223,6 +272,14 @@ def suite(ctx):
             where = compare(reference["boss"][name], result["boss"][name], {"boss"}) if name in reference["boss"] and name in result["boss"] else "missing"
             if where:
                 problems.append(f"{name}: {where}")
+        for name in sorted(set(reference.get("holder", {})) | set(result["holder"])):
+            a, b = reference.get("holder", {}).get(name), result["holder"].get(name)
+            where = holders_difference(a, b) if a is not None and b is not None else "missing"
+            if where:
+                problems.append(f"{name}: {where}")
+        for name in sorted(set(reference.get("tie", {})) | set(result["tie"])):
+            if reference.get("tie", {}).get(name) != result["tie"].get(name):
+                problems.append(f"{name}: {reference.get('tie', {}).get(name)} -> {result['tie'].get(name)}")
         for name in sorted(set(reference["matrix"]) | set(result["matrix"])):
             a, b = reference["matrix"].get(name), result["matrix"].get(name)
             where = matrix_difference(a, b) if a and b else "missing"

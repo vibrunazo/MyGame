@@ -11,14 +11,15 @@ RUNS
   SEEDS, SOLO_SECONDS long. Group: the mixed group GROUP (three enemies at once), in each behaviour, for each seed,
   GROUP_SECONDS long. Each run spawns its enemies fresh at the same spots, wakes them with the player as their target,
   and is seeded (run_timeline's seed: every tick reseeded from the seed and the tick's number). The player has health
-  and defense enough never to die, and never attacks.
+  and defense enough never to die, never attacks, and is kept inside BOUNDS, a box
+  well inside the start room, as by a wall: the group's knockbacks carried it out through the room's opening, which
+  ended the play session.
 
 BEHAVIOURS (the player's)
   still     stands facing the enemies' side
   away      stands with its back to them
   walking   walks back and forth across the room, 2 s each way
   circling  walks a square, 1.5 s a side
-  fighting  the group only: faces the enemies and punches every 0.8 s (so that a token holder gets stunned)
 
 MEASURES (per run; then per cell, a cell being type x behaviour, or the group x behaviour)
   first_attack   seconds from waking to the enemy's first ability start (the run's length if none)
@@ -30,8 +31,14 @@ MEASURES (per run; then per cell, a cell being type x behaviour, or the group x 
   retreat        the wizard only: the mean of its distance change over the 0.5 s after the player comes within its
                  aggressive range (positive: it backs away)
   at_once        group only: the mean over frames of how many enemies are in an ability at once
-  token_changes  group only: how many times the player's attack token (its aggro list) changes hands
-  stunned_hold   group only: the mean time a token holder keeps the token while stunned, in seconds
+  token_changes  group only: how many times the player's attack token changes hands: changes of the set of enemies on
+                 its aggro list (the list collects the same holder many times over: the tree's TagTarget task adds it
+                 every time it runs, and the game doesn't check; counting the list's changes counted those adds,
+                 about 90 in 15 s with no change of holder; found before the reference, 2026-11-17)
+
+How long a stunned holder keeps the token is not measured here but exact, in ai_behaviour.py (token_stunned_holder):
+the group's player never attacks, and a player punching every 0.8 s (tried before the reference) hardly reached the
+holder, the kicker keeping its range.
 
 THE TOLERANCE RULE (Step 7 against this reference)
   For each cell and measure, a sample of runs gives a mean m and a standard deviation s over its n runs (a run without
@@ -66,14 +73,13 @@ from strict import scenario, enemy, at, move, tap, Y
 TYPES = ("enemy1", "enemy2", "enemy3", "kicker", "wizard")
 GROUP = ("enemy1", "enemy2", "kicker")
 BEHAVIOURS = ("still", "away", "walking", "circling")
-GROUP_BEHAVIOURS = BEHAVIOURS + ("fighting",)
 REFERENCE_SEEDS = tuple(range(1, 21))
 SEEDS = REFERENCE_SEEDS
 SOLO_SECONDS = 10.0
 GROUP_SECONDS = 15.0
 K = 3.0
 FLOOR = {"first_attack": 0.25, "behind_share": 0.1, "longest_gap": 0.5, "distance": 25.0, "per_minute": 3.0,
-         "retreat": 25.0, "at_once": 0.25, "token_changes": 1.0, "stunned_hold": 0.25}
+         "retreat": 25.0, "at_once": 0.25, "token_changes": 1.0}
 
 ROOT = Path(__file__).resolve().parent.parent
 REFERENCE = ROOT / "Saved" / "AssReference" / "ai_measures.json"
@@ -81,6 +87,7 @@ PLAYER_START = (0.0, Y)
 SOLO_SPOT = [(450.0, Y)]
 GROUP_SPOTS = [(450.0, Y), (400.0, Y + 150.0), (400.0, Y - 150.0)]
 WIZARD_AGGRESSIVE = 550.0
+BOUNDS = [-650.0, 650.0, -950.0, 500.0]
 
 
 def behaviour_inputs(behaviour, seconds):
@@ -88,8 +95,6 @@ def behaviour_inputs(behaviour, seconds):
         return [at(0.0, "set_player_facing", yaw=0.0)]
     if behaviour == "away":
         return [at(0.0, "set_player_facing", yaw=180.0)]
-    if behaviour == "fighting":
-        return [at(0.0, "set_player_facing", yaw=0.0)] + [i for k in range(int(seconds / 0.8)) for i in tap("Punch", 0.4 + 0.8 * k)]
     out, t, k = [], 0.0, 0
     if behaviour == "walking":
         while t < seconds:
@@ -107,14 +112,14 @@ def runs(seeds=SEEDS):
     """(cell, seed, scenario, enemy roles, the first type): solo cells, then the group."""
     cells = [(kind, (kind,), SOLO_SPOT, SOLO_SECONDS) for kind in TYPES] + [("group", GROUP, GROUP_SPOTS, GROUP_SECONDS)]
     for name, kinds, spots, seconds in cells:
-        for behaviour in (GROUP_BEHAVIOURS if name == "group" else BEHAVIOURS):
+        for behaviour in BEHAVIOURS:
             for seed in seeds:
                 roles = ["enemy"] if len(kinds) == 1 else [f"enemy{i}" for i in range(len(kinds))]
                 enemies = [enemy(r, k, x=x, y=y) for r, k, (x, y) in zip(roles, kinds, spots)]
                 inputs = [at(0.0, "set_ai_enabled", actor_path="@" + r, enabled=True) for r in roles] + behaviour_inputs(behaviour, seconds)
                 yield (f"{name}.{behaviour}", seed,
                        scenario(f"{name}.{behaviour}.{seed}", inputs, seconds, enemies=enemies, player_x=PLAYER_START[0],
-                                player_y=PLAYER_START[1], player={"Defense": 1000.0}, wait=0.5, seed=seed),
+                                player_y=PLAYER_START[1], player={"Defense": 1000.0}, wait=0.5, seed=seed, bounds=BOUNDS),
                        roles, kinds[0] if len(kinds) == 1 else "group")
 
 
@@ -147,26 +152,14 @@ def measure(record, roles, kind, seconds):
         for e in record["events"]:
             by_frame.setdefault(e[0], []).append(e)
         active, busy = {r: 0 for r in roles}, []
-        stun, holder, held_since, holds = {r: 0 for r in roles}, (), None, []
         for f in sorted(frames["player"]):
             for e in by_frame.get(f, []):
                 if e[2] == "ability" and e[3] in roles:
                     active[e[3]] += 1 if e[4] == "activated" else -1
-                elif e[2] == "tag" and e[4] == "status.hitstun" and e[3] in roles:
-                    stun[e[3]] = e[5]
-                elif e[2] == "token" and e[3] == "player":
-                    holder = tuple(e[4])
             busy.append(sum(1 for r in roles if active[r] > 0))
-            stunned_holder = any(stun.get(r) for r in holder)
-            if stunned_holder and held_since is None:
-                held_since = f
-            elif not stunned_holder and held_since is not None:
-                holds.append((f - held_since) / 60.0)
-                held_since = None
         out["at_once"] = sum(busy) / len(busy) if busy else None
-        tokens = [tuple(e[4]) for e in record["events"] if e[2] == "token" and e[3] == "player"]
-        out["token_changes"] = sum(1 for a, b in zip(tokens, tokens[1:]) if a != b)
-        out["stunned_hold"] = sum(holds) / len(holds) if holds else None
+        holders = [frozenset(e[4]) for e in record["events"] if e[2] == "token" and e[3] == "player"]
+        out["token_changes"] = sum(1 for a, b in zip(holders, holders[1:]) if a != b)
     return out
 
 
