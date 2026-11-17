@@ -22,13 +22,13 @@
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 27.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -60,13 +60,13 @@
    ],
    "dummy_damage": 45.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 81.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -92,15 +92,15 @@
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
-    "status.airborne",
-    "status.hitstun",
-    "status.nocontrol"
+    "Ass.Status.Airborne",
+    "Ass.Status.HitStun",
+    "Ass.Status.NoControl"
    ],
    "dummy_rise": 45.7,
    "dummy_pushed": 343.3,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -130,15 +130,15 @@
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
-    "status.airborne",
-    "status.hitstun",
-    "status.nocontrol"
+    "Ass.Status.Airborne",
+    "Ass.Status.HitStun",
+    "Ass.Status.NoControl"
    ],
    "dummy_rise": 45.7,
    "dummy_pushed": 343.3,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -163,17 +163,17 @@
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
-    "status.airborne",
-    "status.hitstun",
-    "status.nocontrol"
+    "Ass.Status.Airborne",
+    "Ass.Status.HitStun",
+    "Ass.Status.NoControl"
    ],
    "dummy_rise": 81.6,
    "dummy_pushed": 343.7,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking",
-    "status.airborne",
-    "status.hitstun"
+    "Ass.State.Attacking",
+    "Ass.Status.Airborne",
+    "Ass.Status.HitStun"
    ],
    "player_moved": 0.0,
    "player_rise": 229.5
@@ -198,14 +198,14 @@
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 90.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking",
-    "status.airborne"
+    "Ass.State.Attacking",
+    "Ass.Status.Airborne"
    ],
    "player_moved": 0.0,
    "player_rise": 229.5
@@ -232,8 +232,8 @@
    "dummy_pushed": 0.0,
    "player_mana": 0.0,
    "player_tags": [
-    "status.airborne",
-    "status.nocontrol"
+    "Ass.Status.Airborne",
+    "Ass.Status.NoControl"
    ],
    "player_moved": 227.6,
    "player_rise": -0.0
@@ -285,9 +285,9 @@
    "dummy_pushed": 0.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.running",
-    "status.airborne",
-    "status.nocontrol"
+    "Ass.Status.Airborne",
+    "Ass.Status.NoControl",
+    "state.running"
    ],
    "player_moved": 325.7,
    "player_rise": -0.0
@@ -312,15 +312,15 @@
    ],
    "dummy_damage": 30.0,
    "dummy_tags": [
-    "status.airborne",
-    "status.hitstun",
-    "status.nocontrol"
+    "Ass.Status.Airborne",
+    "Ass.Status.HitStun",
+    "Ass.Status.NoControl"
    ],
    "dummy_rise": 81.6,
    "dummy_pushed": 343.7,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking",
+    "Ass.State.Attacking",
     "state.running"
    ],
    "player_moved": 0.0,
@@ -348,14 +348,14 @@
    ],
    "dummy_damage": 20.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 27.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking",
-    "status.nomove"
+    "Ass.State.Attacking",
+    "Ass.Status.NoMove"
    ],
    "player_moved": 49.9,
    "player_rise": -0.0
@@ -381,15 +381,15 @@
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
-    "status.airborne",
-    "status.hitstun",
-    "status.nocontrol"
+    "Ass.Status.Airborne",
+    "Ass.Status.HitStun",
+    "Ass.Status.NoControl"
    ],
    "dummy_rise": 326.5,
    "dummy_pushed": 288.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -414,16 +414,16 @@
    ],
    "dummy_damage": 48.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 18.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking",
-    "status.immune.proj",
-    "status.nomove",
-    "status.nopawnblock"
+    "Ass.State.Attacking",
+    "Ass.Status.ImmuneProjectile",
+    "Ass.Status.NoMove",
+    "Ass.Status.NoPawnBlock"
    ],
    "player_moved": 201.2,
    "player_rise": -0.0
@@ -450,13 +450,13 @@
    ],
    "dummy_damage": 10.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 9.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -481,13 +481,13 @@
    ],
    "dummy_damage": 20.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 18.0,
    "player_mana": -10.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -513,13 +513,13 @@
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 27.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -545,13 +545,13 @@
    ],
    "dummy_damage": 7.5,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 27.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
@@ -600,13 +600,13 @@
    ],
    "dummy_damage": 60.0,
    "dummy_tags": [
-    "status.hitstun"
+    "Ass.Status.HitStun"
    ],
    "dummy_rise": -0.0,
    "dummy_pushed": 27.0,
    "player_mana": 0.0,
    "player_tags": [
-    "state.attacking"
+    "Ass.State.Attacking"
    ],
    "player_moved": 0.0,
    "player_rise": -0.0
