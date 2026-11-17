@@ -2,14 +2,45 @@
  "Ass": {
   "assets": [],
   "children": [
+   "Ass.Combo",
    "Ass.Data",
    "Ass.Notify",
+   "Ass.State",
    "Ass.Status"
   ],
-  "code": [],
+  "code": [
+   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"Ass.Combo.CanCancel\")",
+   "Config/DefaultGame.ini: AttackingTag=(TagName=\"Ass.State.Attacking\")"
+  ],
   "owner": null,
   "plugin_name": null,
   "source": "AssCore",
+  "step": null
+ },
+ "Ass.Combo": {
+  "assets": [],
+  "children": [
+   "Ass.Combo.CanCancel"
+  ],
+  "code": [
+   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"Ass.Combo.CanCancel\")"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Combo.CanCancel": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"Ass.Combo.CanCancel\");",
+   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"Ass.Combo.CanCancel\")"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
   "step": null
  },
  "Ass.Data": {
@@ -277,6 +308,42 @@
   "owner": null,
   "plugin_name": null,
   "source": "AssCore",
+  "step": null
+ },
+ "Ass.State": {
+  "assets": [],
+  "children": [
+   "Ass.State.Attacking"
+  ],
+  "code": [
+   "Config/DefaultGame.ini: AttackingTag=(TagName=\"Ass.State.Attacking\")"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.State.Attacking": {
+  "assets": [
+   "/Game/Abilities/GA_BaseAttack",
+   "/Game/Abilities/GA_BasicPunches",
+   "/Game/Abilities/GA_Cast",
+   "/Game/Abilities/GA_PunchRun",
+   "/Game/Abilities/GA_Tat",
+   "/Game/Abilities/GA_Voadora",
+   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"Ass.State.Attacking\");",
+   "Config/DefaultGame.ini: AttackingTag=(TagName=\"Ass.State.Attacking\")"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
   "step": null
  },
  "Ass.Status": {
@@ -997,25 +1064,9 @@
  "combo": {
   "assets": [],
   "children": [
-   "combo.cancancel",
    "combo.weak"
   ],
-  "code": [
-   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"combo.cancancel\")"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "combo.cancancel": {
-  "assets": [],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"combo.cancancel\");",
-   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"combo.cancancel\")"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
@@ -1449,37 +1500,11 @@
  "state": {
   "assets": [],
   "children": [
-   "state.attacking",
    "state.combat",
    "state.running",
    "state.walking"
   ],
-  "code": [
-   "Config/DefaultGame.ini: AttackingTag=(TagName=\"state.attacking\")"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "state.attacking": {
-  "assets": [
-   "/Game/Abilities/GA_BaseAttack",
-   "/Game/Abilities/GA_BasicPunches",
-   "/Game/Abilities/GA_Cast",
-   "/Game/Abilities/GA_PunchRun",
-   "/Game/Abilities/GA_Tat",
-   "/Game/Abilities/GA_Voadora",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
-   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"state.attacking\");",
-   "Config/DefaultGame.ini: AttackingTag=(TagName=\"state.attacking\")"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",

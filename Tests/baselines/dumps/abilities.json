@@ -23,7 +23,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -188,7 +188,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -360,10 +360,10 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "combo.weak"
      },
      {
-      "tagName": "combo.weak"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -542,7 +542,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -782,7 +782,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -983,7 +983,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -1159,13 +1159,13 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
-     },
-     {
       "tagName": "combo.weak"
      },
      {
       "tagName": "Ass.Status.NoMove"
+     },
+     {
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -1400,7 +1400,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -1654,10 +1654,10 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.Status.NoMove"
      },
      {
-      "tagName": "Ass.Status.NoMove"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -1846,7 +1846,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -2044,10 +2044,10 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.Status.HitStun"
      },
      {
-      "tagName": "Ass.Status.HitStun"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -2251,10 +2251,10 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "combo.weak"
      },
      {
-      "tagName": "combo.weak"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -2528,7 +2528,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -2695,7 +2695,7 @@
    "tagsIcanCancel": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -2786,13 +2786,13 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
-     },
-     {
       "tagName": "combo.weak"
      },
      {
       "tagName": "Ass.Status.NoMove"
+     },
+     {
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -2995,10 +2995,10 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "combo.weak"
      },
      {
-      "tagName": "combo.weak"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -3190,10 +3190,10 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "combo.weak"
      },
      {
-      "tagName": "combo.weak"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -3385,10 +3385,10 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "combo.weak"
      },
      {
-      "tagName": "combo.weak"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
@@ -3576,7 +3576,7 @@
    "activationOwnedTags": {
     "gameplayTags": [
      {
-      "tagName": "state.attacking"
+      "tagName": "Ass.State.Attacking"
      }
     ]
    },
