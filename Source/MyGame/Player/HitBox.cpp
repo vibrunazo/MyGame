@@ -164,13 +164,9 @@ void AHitBox::BeginWindow(AMyCharacter* Char, const UAnimMontage* Montage, float
 					Shape.SocketOffset = Socket->GetSocketLocalTransform();
 				}
 			}
-			if (Skeleton && Shape.Bone != INDEX_NONE)
+			if (Shape.Bone != INDEX_NONE)
 			{
-				const FReferenceSkeleton& RefSkeleton = Skeleton->GetReferenceSkeleton();
-				for (int32 Index = RefSkeleton.FindBoneIndex(Mesh->GetBoneName(Shape.Bone)); Index != INDEX_NONE; Index = RefSkeleton.GetParentIndex(Index))
-				{
-					Shape.SkeletonChain.Add(Index);
-				}
+				Shape.SkeletonChain = SkeletonChainOf(Skeleton, Mesh->GetBoneName(Shape.Bone));
 			}
 		}
 	}
@@ -220,8 +216,24 @@ void AHitBox::SampleWindowUntil(float Position)
 
 bool AHitBox::AnimBoneTransform(const FWindowShape& Shape, float Position, FTransform& OutComponentSpace) const
 {
-	const UAnimMontage* Montage = WindowMontage.Get();
-	if (!Montage || Shape.SkeletonChain.Num() == 0) return false;
+	return MontageBoneInComponent(WindowMontage.Get(), Shape.SkeletonChain, Position, OutComponentSpace);
+}
+
+TArray<int32> AHitBox::SkeletonChainOf(const USkeleton* Skeleton, FName Bone)
+{
+	TArray<int32> Chain;
+	if (!Skeleton) return Chain;
+	const FReferenceSkeleton& RefSkeleton = Skeleton->GetReferenceSkeleton();
+	for (int32 Index = RefSkeleton.FindBoneIndex(Bone); Index != INDEX_NONE; Index = RefSkeleton.GetParentIndex(Index))
+	{
+		Chain.Add(Index);
+	}
+	return Chain;
+}
+
+bool AHitBox::MontageBoneInComponent(const UAnimMontage* Montage, const TArray<int32>& SkeletonChain, float Position, FTransform& OutComponentSpace)
+{
+	if (!Montage || SkeletonChain.Num() == 0) return false;
 	for (const FSlotAnimationTrack& Slot : Montage->SlotAnimTracks)
 	{
 		const FAnimSegment* Segment = Slot.AnimTrack.GetSegmentAtTime(Position);
@@ -231,7 +243,7 @@ bool AHitBox::AnimBoneTransform(const FWindowShape& Shape, float Position, FTran
 		// the bone's local transforms composed up to the root; with root motion the root stays where it's locked
 		const FAnimExtractContext Context(AnimPosition);
 		OutComponentSpace = FTransform::Identity;
-		for (const int32 Index : Shape.SkeletonChain)
+		for (const int32 Index : SkeletonChain)
 		{
 			FTransform Local;
 			if (Index == 0 && Sequence->bEnableRootMotion)

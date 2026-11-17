@@ -146,6 +146,15 @@ private:
 	// Shape's bone in the montage's animation at Position (component space), if the montage plays animation data
 	bool AnimBoneTransform(const FWindowShape& Shape, float Position, FTransform& OutComponentSpace) const;
 
+public:
+	// a bone and its parents up to the root, as indices of Skeleton's reference skeleton (empty if it has no such bone)
+	static TArray<int32> SkeletonChainOf(const USkeleton* Skeleton, FName Bone);
+	// the bone of SkeletonChain in Montage's animation at Position (component space), as a window samples it: the
+	// sequence's own tracks composed up to the root, with root motion's root where it's locked; false if the montage
+	// plays no animation data there
+	static bool MontageBoneInComponent(const UAnimMontage* Montage, const TArray<int32>& SkeletonChain, float Position, FTransform& OutComponentSpace);
+
+private:
 	// the window's samples are this far apart in animation time (a 60 fps frame)
 	static constexpr float WindowStep = 1.f / 60.f;
 	// characters this much further than a shape's reach are candidates too (they're tested where they were at the sample)

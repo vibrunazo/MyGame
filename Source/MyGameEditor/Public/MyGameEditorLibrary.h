@@ -10,6 +10,11 @@ class USoundCue;
 class USoundWave;
 class UAnimMontage;
 class UGameplayEffect;
+class UAnimationAsset;
+class UAnimSequence;
+class UAnimBlueprint;
+class USkeletalMesh;
+class USkeleton;
 
 /**
  * Editor-only helpers for scripts (Python commandlets, editor utilities) where the engine exposes no scripting API.
@@ -68,5 +73,29 @@ public:
 	/** Stops the strict recorder and returns its record as JSON ("" when none ran). */
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
 	static FString StopCombatRecord();
+
+	/**
+	 * Moves an animation asset to another skeleton in place, so its path, its notifies and everything referring to it
+	 * stay (the move to the UE5 mannequin, Step 0c). A sequence takes its tracks and curves from Retargeted, a copy the
+	 * IK retargeter made of it on the new skeleton; a montage, blend space or pose asset only changes skeleton (its
+	 * sequences are moved themselves). The asset is left dirty, for the caller to save.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Animation")
+	static bool MoveAnimationToSkeleton(UAnimationAsset* Asset, USkeletalMesh* Mesh, UAnimSequence* Retargeted);
+
+	/** Points an animation Blueprint at another skeleton in place, refreshes its nodes and compiles it. */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Animation")
+	static bool MoveAnimBlueprintToSkeleton(UAnimBlueprint* Blueprint, USkeletalMesh* Mesh);
+
+	/**
+	 * Where a hit window samples Bone at montage time Position (the montage's skeleton's component space): the game's
+	 * own sampling (AHitBox::MontageBoneInComponent). Identity and false when the montage plays no animation data there.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Animation")
+	static bool MontageBoneForTest(UAnimMontage* Montage, FName Bone, float Position, FTransform& Transform);
+
+	/** Adds a socket to a skeleton, or sets it when the skeleton has one by that name (a socket's names are read-only to scripts). */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Animation")
+	static bool SetSkeletonSocket(USkeleton* Skeleton, FName Socket, FName Bone, const FTransform& Local);
 
 };

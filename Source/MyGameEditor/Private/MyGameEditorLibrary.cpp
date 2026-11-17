@@ -4,6 +4,16 @@
 #include "GameplayEffectComponents/TargetTagsGameplayEffectComponent.h"
 #include "Engine/Engine.h"
 #include "Animation/AnimMontage.h"
+#include "Animation/AnimSequence.h"
+#include "Animation/AnimBlueprint.h"
+#include "Animation/AnimData/IAnimationDataModel.h"
+#include "Animation/AnimData/IAnimationDataController.h"
+#include "Engine/SkeletalMesh.h"
+#include "Engine/SkeletalMeshSocket.h"
+#include "Animation/Skeleton.h"
+#include "Player/HitBox.h"
+#include "Kismet2/BlueprintEditorUtils.h"
+#include "Kismet2/KismetEditorUtilities.h"
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
@@ -82,7 +92,7 @@ TArray<FString> UMyGameEditorLibrary::ListSubobjects(UObject* Object)
 	TArray<FString> Out;
 	if (!Object) return Out;
 	TArray<UObject*> Inner;
-	GetObjectsWithOuter(Object, Inner, false);
+	GetObjectsWithOuter(Object, Inner, EGetObjectsFlags::None);
 	for (UObject* Obj : Inner)
 	{
 		if (Obj) Out.Add(Obj->GetPathName());
@@ -136,4 +146,112 @@ bool UMyGameEditorLibrary::SetPropertyTextForTest(UObject* Object, FName Propert
 void UMyGameEditorLibrary::QueryCombatRecordRoles(const TArray<FString>& Roles)
 {
 	UCombatRecorder::QueryRoles(Roles);
+}
+
+bool UMyGameEditorLibrary::MoveAnimationToSkeleton(UAnimationAsset* Asset, USkeletalMesh* Mesh, UAnimSequence* Retargeted)
+{
+	USkeleton* Skeleton = Mesh ? Mesh->GetSkeleton() : nullptr;
+	if (!Asset || !Skeleton)
+	{
+		UE_LOG(LogTemp, Error, TEXT("MoveAnimationToSkeleton: need an asset and a mesh with a skeleton"));
+		return false;
+	}
+	UAnimSequence* Sequence = Cast<UAnimSequence>(Asset);
+	if (Sequence && (!Retargeted || Retargeted->GetSkeleton() != Skeleton))
+	{
+		UE_LOG(LogTemp, Error, TEXT("MoveAnimationToSkeleton: %s needs its retargeted copy on %s"), *Asset->GetPathName(), *Skeleton->GetPathName());
+		return false;
+	}
+	Asset->Modify();
+	Asset->SetSkeleton(Skeleton);
+	Asset->SetPreviewMesh(Mesh);
+	if (Sequence)
+	{
+		// what the IK retargeter's batch operation does to its copy, done to the original from the copy's data
+		const IAnimationDataModel* From = Retargeted->GetDataModel();
+		IAnimationDataController& To = Sequence->GetController();
+		constexpr bool bTransact = false;
+		To.OpenBracket(FText::FromString(TEXT("Move to another skeleton")), bTransact);
+		To.RemoveAllCurvesOfType(ERawCurveTrackTypes::RCT_Transform, bTransact);
+		To.RemoveAllBoneTracks(bTransact);
+		To.UpdateWithSkeleton(Skeleton, bTransact);
+		To.SetFrameRate(From->GetFrameRate(), bTransact);
+		To.SetNumberOfFrames(From->GetNumberOfFrames(), bTransact);
+		TArray<FName> Bones;
+		From->GetBoneTrackNames(Bones);
+		bool bOk = true;
+		for (const FName& Bone : Bones)
+		{
+			TArray<FTransform> Keys;
+			From->GetBoneTrackTransforms(Bone, Keys);
+			TArray<FVector> Positions;
+			TArray<FQuat> Rotations;
+			TArray<FVector> Scales;
+			for (const FTransform& Key : Keys)
+			{
+				Positions.Add(Key.GetLocation());
+				Rotations.Add(Key.GetRotation());
+				Scales.Add(Key.GetScale3D());
+			}
+			bOk &= To.AddBoneCurve(Bone, bTransact);
+			bOk &= To.SetBoneTrackKeys(Bone, Positions, Rotations, Scales, bTransact);
+		}
+		To.CloseBracket(bTransact);
+		Sequence->RetargetSource = NAME_None;
+		Sequence->SetRetargetSourceAsset(Mesh);
+		Sequence->UpdateRetargetSourceAssetData();
+		if (!bOk)
+		{
+			UE_LOG(LogTemp, Error, TEXT("MoveAnimationToSkeleton: %s refused a bone track"), *Asset->GetPathName());
+			return false;
+		}
+	}
+	Asset->PostEditChange();
+	Asset->MarkPackageDirty();
+	return true;
+}
+
+bool UMyGameEditorLibrary::MoveAnimBlueprintToSkeleton(UAnimBlueprint* Blueprint, USkeletalMesh* Mesh)
+{
+	USkeleton* Skeleton = Mesh ? Mesh->GetSkeleton() : nullptr;
+	if (!Blueprint || !Skeleton)
+	{
+		return false;
+	}
+	Blueprint->Modify();
+	Blueprint->TargetSkeleton = Skeleton;
+	Blueprint->SetPreviewMesh(Mesh);
+	FBlueprintEditorUtils::RefreshAllNodes(Blueprint);
+	FKismetEditorUtilities::CompileBlueprint(Blueprint, EBlueprintCompileOptions::SkipGarbageCollection);
+	Blueprint->PostEditChange();
+	Blueprint->MarkPackageDirty();
+	return Blueprint->Status != BS_Error;
+}
+
+bool UMyGameEditorLibrary::SetSkeletonSocket(USkeleton* Skeleton, FName Socket, FName Bone, const FTransform& Local)
+{
+	if (!Skeleton || Socket.IsNone() || Skeleton->GetReferenceSkeleton().FindBoneIndex(Bone) == INDEX_NONE)
+	{
+		return false;
+	}
+	Skeleton->Modify();
+	USkeletalMeshSocket* Found = Skeleton->FindSocket(Socket);
+	if (!Found)
+	{
+		Found = NewObject<USkeletalMeshSocket>(Skeleton);
+		Found->SocketName = Socket;
+		Skeleton->Sockets.Add(Found);
+	}
+	Found->BoneName = Bone;
+	Found->RelativeLocation = Local.GetLocation();
+	Found->RelativeRotation = Local.Rotator();
+	Found->RelativeScale = Local.GetScale3D();
+	Skeleton->MarkPackageDirty();
+	return true;
+}
+
+bool UMyGameEditorLibrary::MontageBoneForTest(UAnimMontage* Montage, FName Bone, float Position, FTransform& Transform)
+{
+	Transform = FTransform::Identity;
+	return Montage && AHitBox::MontageBoneInComponent(Montage, AHitBox::SkeletonChainOf(Montage->GetSkeleton(), Bone), Position, Transform);
 }
