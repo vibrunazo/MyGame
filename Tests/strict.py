@@ -5,7 +5,7 @@ the level's), seeds the engine's randoms as its timeline starts, and records eve
 strict recorder: MyGameEditor's UCombatRecorder, whose header (Source/MyGameEditor/Public/CombatRecorder.h) gives the
 record's format. That is every frame's transforms, montage, section and position; every ability activated, ended,
 cancelled or refused; every effect applied with its magnitudes and source, in order; every tag and attribute change;
-every cue, notify and spawn; and the game's own observation points (Source/MyGame/Dev/TestProbe.h: each hit shape's
+every cue, notify and spawn; and the game's own observation points (the plugin's AssTestProbe.h: each hit shape's
 centre at each sample, the hits, the effects tried, projectiles refused, backslides, camera shakes, sounds and
 particles played from C++).
 
@@ -65,7 +65,7 @@ AIR_PUNCH = "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
 PUNCHES = "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
 IMMUNE_TO_PROJECTILES = "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C"
 # what a scenario leaves behind and is removed after it
-CLEANUP = ("/Script/MyGame.MyCharacter", "/Script/MyGame.Pickup", "/Script/MyGame.MyProjectile", "/Script/MyGame.HitBox",
+CLEANUP = ("/Script/MyGame.MyCharacter", "/Script/MyGame.Pickup", "/Script/MyGame.MyProjectile", "/Script/AssCombat.AssHitBox",
            "/Script/MyGame.WidgetActor")
 X, Y = ar.DUMMY_SPOT  # the start room's empty row
 CLOSE = X - 95  # where the player stands to hit the dummy, as in the abilities suite

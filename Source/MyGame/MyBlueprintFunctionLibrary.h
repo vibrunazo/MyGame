@@ -7,7 +7,8 @@
 #include "Abilities/GameplayAbility.h"
 #include "Containers/Map.h"
 #include "GameplayTagContainer.h"
-#include "Abilities/AssCombatant.h"
+#include "AssCombatant.h"
+#include "AssEffectContainer.h"
 #include "Abilities/MyGameplayEffectUIData.h"
 // #include "Props/ItemDataAsset.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
@@ -60,45 +61,6 @@ struct FAbilityStruct
 	}
 
 };
-USTRUCT(BlueprintType)
-struct FMagnitudePair
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	FGameplayTag GameplayTag;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Magnitude = 0.f;
-};
-
-USTRUCT(BlueprintType)
-struct FEffectContainer
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UGameplayEffect> EffectClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TArray<FMagnitudePair> Magnitudes;
-};
-
-
-USTRUCT(BlueprintType)
-struct FConditionalEffect
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// Apply this effect if the condition is true
-	FEffectContainer EffectToApply;
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	// Apply the effect only if have an active effect with this tag
-	FGameplayTag ConditionTag;
-};
-
-
 /**
  * 
  */
@@ -113,13 +75,12 @@ public:
 	UFUNCTION(BlueprintPure, Category = "UI")
 	static FBuffUI GetAbilityUI(TSubclassOf<UGameplayAbility> AbilityClass);
 
-	// UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	// MaxDuration > 0 caps HasDuration effects (including "forever" ones with a negative duration)
-	static FActiveGameplayEffectHandle ApplyEffectContainerToChar(IAssCombatant* Char, FEffectContainer Container, UItemDataAsset* Item = nullptr, float MaxDuration = -1.f);
+	// The plugin's UAssCombatLibrary::ApplyEffectContainer, with an item's cue added in the effect's context first
+	static FActiveGameplayEffectHandle ApplyEffectContainerToChar(IAssCombatant* Char, const FAssEffectContainer& Container, UItemDataAsset* Item = nullptr);
 
 	UFUNCTION(BlueprintCallable, Category="MyLibrary")
-	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr);
-	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToChar(IAssCombatant* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item = nullptr, float MaxDuration = -1.f);
+	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToActor(AActor* Actor, TArray<FAssEffectContainer> Containers, UItemDataAsset* Item = nullptr);
+	static TArray<FActiveGameplayEffectHandle> ApplyAllEffectContainersToChar(IAssCombatant* Char, const TArray<FAssEffectContainer>& Containers, UItemDataAsset* Item = nullptr);
 	UFUNCTION(BlueprintCallable, Category="MyLibrary")
 	static void RemoveEffectsFromActor(AActor* Actor, TArray<FActiveGameplayEffectHandle> ActiveEffects);
 	UFUNCTION(BlueprintCallable, Category = "MyLibrary")

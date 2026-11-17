@@ -2,7 +2,8 @@
 
 #include "MyCharacter.h"
 #include "../MyGameplayTags.h"
-#include "../Dev/TestProbe.h"
+#include "AssTags.h"
+#include "AssTestProbe.h"
 #include "EnemyCharBase.h"
 #include "MyPlayerController.h"
 #include "MyAIController.h"
@@ -14,8 +15,7 @@
 #include "../Props/LearnItemDataAsset.h"
 #include "../Props/Pickup.h"
 #include "../UI/MyHealthBar.h"
-#include "../Abilities/HitReactionEffectComponent.h"
-#include "../Abilities/AssCombatComponent.h"
+#include "AssCombatComponent.h"
 
 //#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -25,7 +25,7 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/RootMotionSource.h"
 #include "Animation/AnimMontage.h"
-#include "../Abilities/MyGameplayAbility.h"
+#include "AssAbility.h"
 #include "GameFramework/Controller.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/WidgetComponent.h"
@@ -732,7 +732,7 @@ void AMyCharacter::OnDie()
 	UAnimInstance* Anim = GetMesh()->GetAnimInstance();
 	UMyAnimInstance* MyAnim = Cast<UMyAnimInstance>(Anim);
 
-	if (DeathSound) MYGAME_TEST_PROBE(this, "sound", nullptr, DeathSound->GetPathName());
+	if (DeathSound) ASS_TEST_PROBE(this, "sound", nullptr, DeathSound->GetPathName());
 	if (DeathSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), DeathSound, GetActorLocation());
 
 	OnDieDelegate.Broadcast(this);
@@ -873,6 +873,26 @@ UPrimitiveComponent* AMyCharacter::GetTargetDetection()
 	return TargetDetection;
 }
 
+UNiagaraSystem* AMyCharacter::GetSlashEffect(EAssSlashKind Kind)
+{
+	return Kind == EAssSlashKind::Kick ? KickSlash : PunchSlash;
+}
+
+bool AMyCharacter::GetStrikeSound(EAssSoundKind Kind, USoundBase*& OutSound)
+{
+	switch (Kind)
+	{
+	case EAssSoundKind::PunchWeak:
+		OutSound = PunchWeakWoosh;
+		return true;
+	case EAssSoundKind::PunchStrong:
+		OutSound = PunchStrongWoosh;
+		return true;
+	default:
+		return false;
+	}
+}
+
 void AMyCharacter::AddToAggroList(AActor* NewActor)
 {
 	if (NewActor)
@@ -987,7 +1007,7 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 	AFloorBuilder* Builder = URunSubsystem::GetFloorBuilder(this);
 	if (!Builder) return;
 	Builder->AggroTile(NewTarget, GetActorLocation());
-	if (AggroSound) MYGAME_TEST_PROBE(this, "sound", nullptr, AggroSound->GetPathName());
+	if (AggroSound) ASS_TEST_PROBE(this, "sound", nullptr, AggroSound->GetPathName());
 	if (AggroSound) UGameplayStatics::PlaySoundAtLocation(GetWorld(), AggroSound, GetActorLocation());
 }
 
@@ -1100,7 +1120,7 @@ bool AMyCharacter::IsWalking()
 /// <returns>True if immune to projectiles, false otherwise.</returns>
 bool AMyCharacter::IsProjectileImmune()
 {
-	FGameplayTag ImmuneTag = MyGameplayTags::Status_ImmuneProjectile;
+	FGameplayTag ImmuneTag = AssTags::Status_ImmuneProjectile;
 	if (AbilitySystem->HasMatchingGameplayTag(ImmuneTag))
 	{
 		return true;

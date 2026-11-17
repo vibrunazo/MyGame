@@ -30,16 +30,31 @@ ROOT = Path(__file__).resolve().parent.parent
 BASE = ROOT / "Tests" / "baselines" / "dumps"
 PARTS = ("abilities", "effects", "actors", "montages", "ai", "graphs", "references")
 TAGS = "GameplayTagsToolset.GameplayTagsToolset"
-# what Step 1 moves out of the character, and what the ability and the hitbox call on it
+# what Step 1 moved out of the character, and what the ability and the hitbox call on it (the last two in the plugin's
+# AssCombat since Step 2)
 STEP1_HEADERS = ("Source/MyGame/Player/MyCharacter.h", "Source/MyGame/Abilities/IGetHit.h",
-                 "Source/MyGame/Abilities/MyGameplayAbility.h", "Source/MyGame/Player/HitBox.h")
+                 "<plugin>/Source/AssCombat/Public/AssAbility.h", "<plugin>/Source/AssCombat/Public/AssHitBox.h")
+
+
+def plugin_root():
+    """The AbilityStrategySystem plugin this project mounts (its pin's folder, from the .uproject)."""
+    project = json.loads((ROOT / "MyGame.uproject").read_text(encoding="utf-8"))
+    for folder in project.get("AdditionalPluginDirectories", []):
+        candidate = (ROOT / folder / "AbilityStrategySystem").resolve()
+        if candidate.is_dir():
+            return candidate
+    raise FileNotFoundError("the .uproject mounts no AbilityStrategySystem")
+
+
+def header_path(header):
+    return plugin_root() / header[len("<plugin>/"):] if header.startswith("<plugin>/") else ROOT / header
 # who keeps a tag family, where Plan.md 3.11 already says
 FAMILY_OWNER = {"activate": "MyGame (3.11)", "buff": "MyGame (3.11)", "status.health": "MyGame (3.11)",
                 "GameplayCue": "the plugin's cues sit under GameplayCue.Ass. (3.11)"}
 
 
 def ufunctions(header):
-    text = (ROOT / header).read_text(encoding="utf-8", errors="replace")
+    text = header_path(header).read_text(encoding="utf-8", errors="replace")
     return sorted(set(re.findall(r"UFUNCTION\([^)]*\)\s*(?:virtual\s+|static\s+|FORCEINLINE\s+)*[\w:<>*&,\s]+?\b(\w+)\s*\(", text)))
 
 

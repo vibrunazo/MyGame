@@ -21,10 +21,10 @@
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
-#include "Player/HitBox.h"
+#include "AssHitBox.h"
 #include "Player/MyProjectile.h"
 #include "Abilities/MyAttributeSet.h"
-#include "Dev/TestProbe.h"
+#include "AssTestProbe.h"
 
 UCombatRecorder* UCombatRecorder::Current = nullptr;
 
@@ -80,7 +80,7 @@ void UCombatRecorder::Begin(UWorld* InWorld)
 	{
 		CueHandle = Cues->OnGameplayCueRouted().AddUObject(this, &UCombatRecorder::OnCue);
 	}
-	ProbeHandle = FTestProbe::OnEvent.AddUObject(this, &UCombatRecorder::OnProbe);
+	ProbeHandle = FAssTestProbe::OnEvent.AddUObject(this, &UCombatRecorder::OnProbe);
 }
 
 double UCombatRecorder::Now() const
@@ -223,7 +223,7 @@ FString UCombatRecorder::Stop()
 	FWorldDelegates::OnWorldPostActorTick.Remove(Self->TickHandle);
 	if (UWorld* W = Self->World.Get()) W->RemoveOnActorSpawnedHandler(Self->SpawnHandle);
 	if (UGameplayCueManager* Cues = UAbilitySystemGlobals::Get().GetGameplayCueManager()) Cues->OnGameplayCueRouted().Remove(Self->CueHandle);
-	FTestProbe::OnEvent.Remove(Self->ProbeHandle);
+	FAssTestProbe::OnEvent.Remove(Self->ProbeHandle);
 	for (const FOrder& Order : Self->Orders)
 	{
 		if (Order.AfterOwner.IsValid() && Order.FirstOwner.IsValid()) Order.After->RemovePrerequisite(Order.FirstOwner.Get(), *Order.First);
@@ -478,7 +478,7 @@ void UCombatRecorder::OnCue(AActor* Target, FGameplayTag Tag, EGameplayCueEvent:
 		Vec(Target->GetActorTransform().InverseTransformPosition(FVector(Parameters.Location)))});
 }
 
-void UCombatRecorder::OnProbe(const FTestProbeEvent& Probe)
+void UCombatRecorder::OnProbe(const FAssTestProbeEvent& Probe)
 {
 	if (Probe.Who && Probe.Who->GetWorld() != World.Get()) return;
 	Event(TEXT("probe"), RoleOf(Probe.Who), {Str(Probe.What.ToString()), Str(RoleOf(Probe.Other)), Str(Probe.Detail), Vec(Probe.Value), Num(Probe.Number)});

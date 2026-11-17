@@ -2,7 +2,7 @@
 
 
 #include "MyPlayerController.h"
-#include "../Abilities/AssCombatComponent.h"
+#include "AssCombatComponent.h"
 #include "../MyGameplayTags.h"
 #include "MyCharacter.h"
 #include "MyDefaultPawn.h"

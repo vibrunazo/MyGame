@@ -11,7 +11,7 @@
 #include "Engine/SkeletalMesh.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Animation/Skeleton.h"
-#include "Player/HitBox.h"
+#include "AssHitBox.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "Kismet2/KismetEditorUtilities.h"
 #include "Dom/JsonObject.h"
@@ -253,5 +253,5 @@ bool UMyGameEditorLibrary::SetSkeletonSocket(USkeleton* Skeleton, FName Socket, 
 bool UMyGameEditorLibrary::MontageBoneForTest(UAnimMontage* Montage, FName Bone, float Position, FTransform& Transform)
 {
 	Transform = FTransform::Identity;
-	return Montage && AHitBox::MontageBoneInComponent(Montage, AHitBox::SkeletonChainOf(Montage->GetSkeleton(), Bone), Position, Transform);
+	return Montage && AAssHitBox::MontageBoneInComponent(Montage, AAssHitBox::SkeletonChainOf(Montage->GetSkeleton(), Bone), Position, Transform);
 }

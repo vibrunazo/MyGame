@@ -113,7 +113,7 @@ def _notifies(anim):
         notify = state or ev.get_editor_property("notify")
         settings = flatten(notify) if notify else None
         # these two write the character's current slash or whoosh into the shared notify before each use
-        # (ANS_PlaySlash.cpp, AN_PlaySoundFromChar.cpp), so the stored value is whatever played last
+        # (the plugin's UAssSlashNotifyState and UAssCharacterSoundNotify), so the stored value is whatever played last
         if settings and settings.get("slashLocation") in ("Punch", "Kick") and "template" in settings:
             settings["template"] = "(set from the character's PunchSlash or KickSlash at NotifyBegin)"
         if settings and settings.get("wooshType") in ("PunchWeak", "PunchStrong") and "sound" in settings:

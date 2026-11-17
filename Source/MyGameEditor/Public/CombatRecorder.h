@@ -12,7 +12,7 @@ class UGameplayAbility;
 struct FGameplayEffectSpec;
 struct FActiveGameplayEffect;
 struct FAbilityEndedData;
-struct FTestProbeEvent;
+struct FAssTestProbeEvent;
 enum class EGameplayCueExecutionOptions : int32;
 
 /**
@@ -45,7 +45,7 @@ enum class EGameplayCueExecutionOptions : int32;
  *           bt        role, its behaviour tree's active tasks (when they change; a stopped tree has none)
  *           spawn     role (the new actor's), class path, owner role, instigator role, location (not a cue's actor,
  *                     which comes from a pool)
- *           probe     role, what, other role, detail, [x, y, z], number (Source/MyGame/Dev/TestProbe.h: a hit shape's
+ *           probe     role, what, other role, detail, [x, y, z], number (the plugin's AssTestProbe.h: a hit shape's
  *                     centre in the attacker's actor space at a sample, a hit, an effect tried, a projectile refused,
  *                     a backslide, a camera shake, a sound or particles played from C++)
  *
@@ -109,7 +109,7 @@ private:
 	void OnEnded(const FAbilityEndedData& Data, int32 Role);
 	void OnFailed(const UGameplayAbility* Ability, const FGameplayTagContainer& Tags, int32 Role);
 	void OnCue(AActor* Target, FGameplayTag Tag, EGameplayCueEvent::Type Type, const FGameplayCueParameters& Parameters, EGameplayCueExecutionOptions Options);
-	void OnProbe(const FTestProbeEvent& Probe);
+	void OnProbe(const FAssTestProbeEvent& Probe);
 
 	TWeakObjectPtr<UWorld> World;
 	double Elapsed = 0.0;

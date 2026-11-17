@@ -89,7 +89,7 @@ public:
 
 	/**
 	 * Where a hit window samples Bone at montage time Position (the montage's skeleton's component space): the game's
-	 * own sampling (AHitBox::MontageBoneInComponent). Identity and false when the montage plays no animation data there.
+	 * own sampling (AAssHitBox::MontageBoneInComponent). Identity and false when the montage plays no animation data there.
 	 */
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Animation")
 	static bool MontageBoneForTest(UAnimMontage* Montage, FName Bone, float Position, FTransform& Transform);

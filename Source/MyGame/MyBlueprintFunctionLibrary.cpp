@@ -3,7 +3,8 @@
 
 #include "MyBlueprintFunctionLibrary.h"
 #include "AbilitySystemGlobals.h"
-#include "Abilities/AssCombatComponent.h"
+#include "AssCombatComponent.h"
+#include "AssCombatLibrary.h"
 #include "MyGameInstance.h"
 #include "UI/AbilityUIDataAsset.h"
 #include "GameMapsSettings.h"
@@ -91,49 +92,21 @@ int32 UMyBlueprintFunctionLibrary::ResetHitStunCountForTest(AActor* Combatant)
 #endif
 
 
-/// <summary>
-/// Used by Items and self apply notify. Abilities have their own version of this
-/// </summary>
-/// <param name="Char"></param>
-/// <param name="Container"></param>
-/// <param name="Item"></param>
-/// <returns></returns>
-FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IAssCombatant* Char, FEffectContainer Container, UItemDataAsset* Item, float MaxDuration)
+// Items' effects: an item with a cue adds it in the effect's context, then the plugin applies the effect
+FActiveGameplayEffectHandle UMyBlueprintFunctionLibrary::ApplyEffectContainerToChar(IAssCombatant* Char, const FAssEffectContainer& Container, UItemDataAsset* Item)
 {
-    UAbilitySystemComponent* GAS = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Cast<AActor>(Cast<UObject>(Char)));
+    AActor* Actor = Cast<AActor>(Cast<UObject>(Char));
+    UAbilitySystemComponent* GAS = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Actor);
     if (!ensure(GAS != nullptr)) return FActiveGameplayEffectHandle();
     if (!Container.EffectClass) return FActiveGameplayEffectHandle();
     FGameplayEffectContextHandle Context = GAS->MakeEffectContext();
-    // FGameplayTag
     if (Item && Item->CueTag.ToString() != "")
     {
         GAS->AddGameplayCue(Item->CueTag, Context);
         UE_LOG(LogTemp, Warning, TEXT("Added %s to Context"), *Item->CueTag.ToString());
     }
-    FGameplayEffectSpecHandle NewHandle = GAS->MakeOutgoingSpec(Container.EffectClass, 0.f, Context);
-    for (auto &&Mag : Container.Magnitudes)
-    {
-        // NewHandle.Data.Get()->dis;
-        NewHandle.Data.Get()->SetSetByCallerMagnitude(Mag.GameplayTag, Mag.Magnitude);
-    }
-    // A negative or zero duration on a HasDuration effect means "forever"; when the caller bounds the effect
-    // (e.g. an anim notify state's length), never let it outlive that bound
-    FGameplayEffectSpec& Spec = *NewHandle.Data.Get();
-    if (MaxDuration > 0.f && Spec.Def->DurationPolicy == EGameplayEffectDurationType::HasDuration)
-    {
-        float Duration = -1.f;
-        Spec.Def->DurationMagnitude.AttemptCalculateMagnitude(Spec, Duration, false, -1.f);
-        if (Duration <= 0.f || Duration > MaxDuration)
-        {
-            Spec.SetDuration(MaxDuration, true);
-        }
-    }
-    return Char->OnGetHitByEffect(NewHandle);
-    
-    // FGameplayEffectSpecHandle NewHandle = MakeOutgoingGameplayEffectSpec(Effect);
-    //    NewHandle.Data.Get()->SetSetByCallerMagnitude(HitStunTag, HitStun);
+    return UAssCombatLibrary::ApplyEffectContainer(Actor, Container, -1.f, Context);
 }
-
 void UMyBlueprintFunctionLibrary::RemoveEffectsFromActor(AActor* Actor, TArray<FActiveGameplayEffectHandle> ActiveEffects)
 {
     UAbilitySystemComponent* GAS = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Actor);
@@ -161,19 +134,19 @@ UGameplayAbility* UMyBlueprintFunctionLibrary::GetAnimatingAbility(UAbilitySyste
     if (!GAS) return nullptr;
     return GAS->GetAnimatingAbility();
 }
-TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(AActor* Actor, TArray<FEffectContainer> Containers, UItemDataAsset* Item)
+TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToActor(AActor* Actor, TArray<FAssEffectContainer> Containers, UItemDataAsset* Item)
 {
     IAssCombatant* Char = Cast<IAssCombatant>(Actor);
     if (!Char) return {};
     return ApplyAllEffectContainersToChar(Char, Containers, Item);
 }
 
-TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IAssCombatant* Char, TArray<FEffectContainer> Containers, UItemDataAsset* Item, float MaxDuration)
+TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectContainersToChar(IAssCombatant* Char, const TArray<FAssEffectContainer>& Containers, UItemDataAsset* Item)
 {
     TArray<FActiveGameplayEffectHandle> result = {};
     for (auto &&Container : Containers)
     {
-        FActiveGameplayEffectHandle NewActiveEffect = ApplyEffectContainerToChar(Char, Container, Item, MaxDuration);
+        FActiveGameplayEffectHandle NewActiveEffect = ApplyEffectContainerToChar(Char, Container, Item);
         result.Add(NewActiveEffect);
     }
     return result;

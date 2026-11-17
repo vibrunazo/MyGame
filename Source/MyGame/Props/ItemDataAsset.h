@@ -22,7 +22,7 @@ public:
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
 	FText Description = FText();
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TArray<FEffectContainer> EffectsToApply;
+	TArray<FAssEffectContainer> EffectsToApply;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category="Item")
 	FGameplayTag CueTag;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item", meta = (tooltip = "If it's not a consumable, it gets added to the GameInstance Inventory. So it gets applied on BeginPlay when respawning/new levels."))

@@ -7,16 +7,14 @@
 #include "../Abilities/MyAttributeSet.h"
 #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
-#include "../Abilities/AssCombatant.h"
-#include "../Abilities/ICastProjectile.h"
-#include "HitBox.h"
+#include "AssCombatant.h"
+#include "AssProjectileSpawner.h"
 
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
 #include "GameplayEffectTypes.h"
 #include "MyCharacter.generated.h"
 
-enum class EHitReaction : uint8;
 
 //DECLARE_DYNAMIC_MULTICAST_SPARSE_DELEGATE_OneParam(FHealthUpdateSignature, AMyCharacter, OnUpdatedHealth, float, NewHealth );
 
@@ -27,7 +25,7 @@ enum class EHitReaction : uint8;
 
 
 UCLASS(config=Game)
-class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IAssCombatant, public IGetHit, public ICastProjectile, public IReportDeath
+class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IAssCombatant, public IGetHit, public IAssProjectileSpawner, public IReportDeath
 {
 	GENERATED_BODY()
 
@@ -145,6 +143,10 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetTargetEnemy(AActor* NewTarget) override;
 	UPrimitiveComponent* GetTargetDetection() override;
+	// PunchSlash and KickSlash
+	UNiagaraSystem* GetSlashEffect(EAssSlashKind Kind) override;
+	// the punches' sounds are PunchWeakWoosh and PunchStrongWoosh; the kicks play their notify's own
+	bool GetStrikeSound(EAssSoundKind Kind, USoundBase*& OutSound) override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddToAggroList(AActor* NewActor);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
