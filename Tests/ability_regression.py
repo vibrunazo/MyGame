@@ -189,8 +189,9 @@ def run_scenarios(names):
 
 
 def suite(ctx):
-    """Every scenario's outcome, the boss's phases, enemy sight and an enemy's attack, compared with the baseline
-    (lines starting with "note" don't count)."""
+    """Every scenario's outcome, enemy sight and an enemy's attack, compared with the baseline (lines starting with
+    "note" don't count). The boss's phases are the ai suite's boss scenarios (Tests/ai_behaviour.py: its AI on, a real
+    hit across the marks); the check that set its health with the AI off was retired (Ass Plan.md, Step 0c item 4)."""
     mygame.use(ctx)
     ctx.reset()
     result = run_all()
@@ -200,7 +201,7 @@ def suite(ctx):
     for line in lines:
         print("  " + line)
     problems = [line for line in lines if not line.startswith("note")]
-    checks = len(expected["scenarios"]) + sum(1 for k in ("boss", "sight", "enemy_attack") if expected.get(k))
+    checks = len(expected["scenarios"]) + sum(1 for k in ("sight", "enemy_attack") if expected.get(k))
     return {"ok": not problems, "checks": checks, "problems": problems,
             "files": {"abilities.json": "Tests/baselines/" + BASELINE.name}}
 
@@ -216,41 +217,11 @@ def run_all():
         r = run_scenario(name, actions, duration, player_path, dummy, bool(start_room))
         print(json.dumps(r))
         results["scenarios"].append(r)
-    results["boss"] = boss_phases()
-    print(json.dumps(results["boss"]))
     results["sight"] = sight_checks(dummy)
     print(json.dumps(results["sight"]))
     results["enemy_attack"] = enemy_attack(dummy)
     print(json.dumps(results["enemy_attack"]))
     return results
-
-
-def boss_phases(seconds=4.0):
-    """Drops the boss (AI frozen, the player as its target) below 75%, 50% and 25% health. Its phase moves are instant
-    abilities, so each phase records their results: summoned characters, the boss's effects and its montages."""
-    boss = next((c for c in tool("list_characters") if "Boss" in c["class"] and c.get("health", 0) > 0), None)
-    if not boss:
-        return {"error": "no boss"}
-    tool("set_ai_enabled", actor_path=boss["path"], enabled=False)
-    tool("ai_target", actor_path=boss["path"], set_player=True)
-    tool("set_character_attribute", actor_path=boss["path"], attribute="MaxHealth", value=1000.0)
-    tool("set_character_attribute", actor_path=boss["path"], attribute="Health", value=1000.0)
-    tool("refresh_health", actor_path=boss["path"])
-    phases = {}
-    for pct in (74, 49, 24):
-        before = len(tool("list_characters"))
-        tool("set_character_attribute", actor_path=boss["path"], attribute="Health", value=pct * 10.0)
-        tool("refresh_health", actor_path=boss["path"])
-        montages, effects, t0 = set(), set(), game_time()
-        while game_time() - t0 < seconds:
-            m = tool("character_state", actor_path=boss["path"])["montage"]
-            if m: montages.add(m)
-            for e in call_tool(GAS, "GetActiveEffects", {"actor": {"refPath": boss["path"]}}):
-                effects.add(str(e.get("effectName", e))[:60] if isinstance(e, dict) else str(e)[:60])
-            time.sleep(0.02)
-        phases[f"below_{pct + 1}"] = {"summoned": len(tool("list_characters")) - before, "montages": sorted(montages), "effects": sorted(effects)}
-        freeze_enemies()  # summons
-    return phases
 
 
 def sight_checks(dummy, seconds=2.0):
@@ -324,8 +295,6 @@ def compare(A, B):
                 lines.append(f"note {name}.{k}: {oa[k]} -> {ob[k]}")
                 continue
             lines.append(f"{name}.{k}: {oa[k]} -> {ob[k]}")
-    if A.get("boss") and B.get("boss") and A["boss"] != B["boss"]:
-        lines.append(f"boss: {A['boss']} -> {B['boss']}")
     if A.get("sight") and B.get("sight") and A["sight"] != B["sight"]:
         lines.append(f"sight: {A['sight']} -> {B['sight']}")
     ea, eb = A.get("enemy_attack"), B.get("enemy_attack")

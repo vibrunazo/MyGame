@@ -614,44 +614,6 @@
    "player_rise": 0.0
   }
  ],
- "boss": {
-  "below_75": {
-   "summoned": 1,
-   "montages": [
-    "SmashBoss_Montage"
-   ],
-   "effects": [
-    "Default__GE_AttackSpeedAddNoStack_C",
-    "Default__GE_SpeedMultiplyNoStack_C",
-    "Default__GE_SpeedMultiply_C",
-    "Default__GE_StunImmune_C"
-   ]
-  },
-  "below_50": {
-   "summoned": 1,
-   "montages": [
-    "SmashBoss_Montage"
-   ],
-   "effects": [
-    "Default__GE_AttackSpeedAddNoStack_C",
-    "Default__GE_SpeedMultiplyNoStack_C",
-    "Default__GE_SpeedMultiply_C",
-    "Default__GE_StunImmune_C"
-   ]
-  },
-  "below_25": {
-   "summoned": 1,
-   "montages": [
-    "SmashBoss_Montage"
-   ],
-   "effects": [
-    "Default__GE_AttackSpeedAddNoStack_C",
-    "Default__GE_SpeedMultiplyNoStack_C",
-    "Default__GE_SpeedMultiply_C",
-    "Default__GE_StunImmune_C"
-   ]
-  }
- },
  "sight": {
   "behind_500": false,
   "front_900": false,
