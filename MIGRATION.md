@@ -244,8 +244,59 @@ InfinityBladeEffects packs (the only pack asset in any montage is one InfinityBl
 "Mixamo" is inferred from the file names, which are Mixamo's own animation names, downloaded to a Downloads folder
 in 2020; nothing in the assets names Mixamo. Mixamo's terms (Adobe) allow its animations royalty free in commercial
 games, but not redistributing the animation files on their own; to read again before anything ships. The three
-Blender ones and the pose sequence: the user's own work, unless the user remembers otherwise. To confirm with the user:
-both readings.
+Blender ones and the pose sequence: the user's own work. The user confirmed both readings on 2026-11-17.
+
+## The move to the UE5 mannequin (Ass Plan.md 3.13, Step 0c; 2026-11-17)
+
+MyGame's characters are on Epic's UE5 mannequin (`/Game/Characters/Mannequins`, `SKM_Manny_Simple` on `SK_Mannequin`,
+copied from the engine's Third Person template without its animations), so abilities can later be imported from a
+shared library on that skeleton with no retarget.
+
+- **In place.** Every asset that played on the UE4 skeleton keeps its path, its notifies and everything referring to
+  it: 29 sequences, 24 montages, 2 blend spaces and both anim Blueprints moved skeleton where they are
+  (`UMyGameEditorLibrary::MoveAnimationToSkeleton`, `MoveAnimBlueprintToSkeleton`). Each sequence took its tracks from
+  a copy the IK retargeter made (`/Game/Characters/Mannequins/Retarget`: `IK_UE4Mannequin`, `IK_Manny`,
+  `RTG_UE4Mannequin_to_Manny`: default ops, chains fuzzy-mapped, then Manny's eight metacarpal chains unmapped (fuzzy
+  mapping gave them the UE4 fingers, which curled every finger twice into a claw) and the retarget poses aligned chain
+  to chain (without it the shoulders, elbows and wrists bent off; the user saw both)). Measured over every sequence,
+  each limb segment's direction is within 2 to 4 degrees of the UE4 one on average (arms), under 1 (legs), the hand
+  about 10 and the collarbone 23 (both also in the two skeletons' reference poses: how they're built, not the motion).
+  Lengths, frame counts, root motion, additive types and curves are unchanged.
+- **Sockets.** The UE4 mesh's nine sockets are on Manny's skeleton, each re-expressed in its Manny bone's frame so it
+  keeps its direction from the bone (`SetSkeletonSocket`).
+- **Characters and their colours.** `BP_Char` and `BP_EnemyBase` use `SKM_Manny_Simple`; every enemy inherits it.
+  Body colour and glow (`AMyCharacter::SetBodyColor`, `SetGlow`: each class's colour, the stun-immune red glow of
+  `GC_StunImmune`) were set on a dynamic instance of material slot 0 only, which was the UE4 mesh's whole body; Manny's
+  body is two slots, and its materials have none of MyGame's parameters. Now `AMyCharacter` keeps one dynamic instance
+  per slot (`BodyMaterials`), and both slots use `/Game/mats/MI_MannyBody_01` and `_02` (Manny's textures and
+  settings) of `M_MannyBody`: Epic's `M_Mannequin` with its paint tint renamed `BodyColor` and MyGame's glow layer
+  (`ML_MannGlow`'s maths and parameters: `GlowAlpha`, `GlowColor`, `SpeedX`, `SpeedY`, `TexAmmount`, `TexPower`,
+  `GlowOpacityPower`) over the painted regions. The 58 characters placed in 24 tile maps had their old slot-0 dynamic
+  instance saved in the map by construction; they're set to the two new instances.
+- **Left on the UE4 skeleton, unreferenced:** the UE4 mesh, its skeleton and physics asset, `PunchRActive_Pose` (the
+  pose asset `PunchRActive_PoseSeq` was made from), `BS_LocoStrafe` (already broken: four of its samples are on
+  `ALS_Mannequin_Skeleton`, which the project lacks) and the template leftover `ThirdPersonCharacter` (a Blueprint with
+  no class). `MI_UE4Man_Body1` and the UE4 mannequin's materials are unreferenced too. Nothing deleted; their removal
+  is the user's call.
+- **Hit windows re-tuned** (1.1's rule: a window outside the tolerance, or whose hit lands a sample early or late, is
+  re-tuned). A window's sphere is placed from the montage's animation data (`AHitBox::MontageBoneInComponent`); on
+  Manny the punches' spheres sat 8.6 to 12.6 cm from the UE4 ones, the kicks' within 5.2. Twelve windows got an offset
+  in their bone's frame, fitted to every sample the UE4 reference recorded (a window naming two bones became one
+  setting per bone, same order, so its shapes keep their numbers): `AirPunch_Montage`, `PunchL_Montage`,
+  `PunchR_Montage`, `PunchRunR_Montage`, `Upper2_Montage`, `Tat_Montage`, the boss's `PunchL_Montage_Boss` and
+  `PunchR_Montage_Boss`, and `PunchL_MontageEnemy1` and `PunchR_MontageEnemy1` in both `EMelee1` and `EMelee2` (the
+  latter shared by Enemy2 and Enemy3). Eleven had a shape over 10 cm; Tat (3.7 cm) was re-tuned because a hit moved a
+  frame (its mesh spins during it, which the fit takes out). Upper2's contact frame is decided by a 1.9 cm margin, so
+  its lower arm was chosen among offsets inside the tolerance by playing its two scenarios in the engine. A window was
+  re-tuned whole, so some shapes already inside were fitted with it: the hands of PunchL (9.2 cm), PunchR (10.0),
+  PunchRunR (8.9), EMelee1's PunchL (8.6) and PunchR (8.9), EMelee2's PunchL (9.4; 7.8 for Enemy3) and PunchR (9.6; 8.3),
+  and EMelee2's lower arms for Enemy3 (9.9, 9.7). The kicks, `kkk` and the smash boxes (on no bone) are unchanged.
+- **A hit's contact is on the target's capsule** (`c683c42`): the trace from the shape to the target now skips the
+  target's mesh, whose bodies follow bones a world that isn't rendered doesn't always refresh (a Tat cue moved 22 cm
+  between two runs on Manny). On the UE4 mannequin the trace never met a mesh body before the capsule.
+- **Against the UE4 reference** (`Saved/AssReference`): strict equals it under the tolerance and repeats exactly
+  (frames' positions exactly equal; worst sphere centre 9.3 cm, hit point 5.7, cue 5.8), the cancel matrix is
+  identical.
 
 ## Starting point
 
