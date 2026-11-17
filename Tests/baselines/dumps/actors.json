@@ -383,6 +383,7 @@
     "g": 0.7553279995918274,
     "r": 0.7604169845581055
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -1011,7 +1012,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.6000000238418579,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -1650,9 +1650,11 @@
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
      {
-      "refPath": "/Game/mats/MI_UE4Man_Body1.MI_UE4Man_Body1"
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
      },
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -1687,14 +1689,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
@@ -2692,6 +2694,7 @@
     "g": 0.5,
     "r": 0.5
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -3318,7 +3321,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.10000000149011612,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -3949,8 +3951,12 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     "None",
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
+     },
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -3985,14 +3991,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
@@ -7119,6 +7125,7 @@
     "g": 0.16113300621509552,
     "r": 0.28125
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -7747,7 +7754,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.10000000149011612,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -8378,8 +8384,12 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     "None",
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
+     },
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -8414,14 +8424,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
@@ -9647,6 +9657,7 @@
     "g": 0.31147301197052,
     "r": 0.21245700120925903
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -10273,7 +10284,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.10000000149011612,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -10911,8 +10921,12 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     "None",
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
+     },
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -10947,14 +10961,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
@@ -11954,6 +11968,7 @@
     "g": 0.5,
     "r": 0.5
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -12580,7 +12595,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.10000000149011612,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -13236,8 +13250,12 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     "None",
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
+     },
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -13272,14 +13290,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
@@ -14279,6 +14297,7 @@
     "g": 0.800000011920929,
     "r": 0.20000000298023224
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -14905,7 +14924,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.10000000149011612,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -15561,8 +15579,12 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     "None",
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
+     },
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -15597,14 +15619,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
@@ -16604,6 +16626,7 @@
     "g": 0.10000000149011612,
     "r": 0.20000000298023224
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -17230,7 +17253,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.10000000149011612,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -17886,8 +17908,12 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     "None",
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
+     },
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -17922,14 +17948,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
@@ -19151,6 +19177,7 @@
     "g": 0.23573100566864014,
     "r": 0.5729169845581055
    },
+   "bodyMaterials": [],
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
@@ -19777,7 +19804,6 @@
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
    "doubleTapDelay": 0.10000000149011612,
-   "dynaMat": "None",
    "externalDataLayerAsset": "None",
    "followCamera": "None",
    "hLODLayer": "None",
@@ -20415,8 +20441,12 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     "None",
-     "None"
+     {
+      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
+     },
+     {
+      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
+     }
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -20451,14 +20481,14 @@
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
     "skeletalMesh": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skeletalMeshAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "skinCacheUsage": [],
     "skinnedAsset": {
-     "refPath": "/Game/Mannequin/Character/Mesh/SK_Mannequin.SK_Mannequin"
+     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
     },
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",

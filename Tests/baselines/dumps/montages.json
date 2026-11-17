@@ -166,9 +166,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 7.77,
+          "y": 0.6,
+          "z": -1.99
          },
          "rotation": {
           "pitch": 0,
@@ -204,7 +204,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/CastForward_Montage": {
    "BlendIn": {
@@ -325,7 +325,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/FlyingKick_Montage": {
    "BlendIn": {
@@ -497,7 +497,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/GetHit_Montage": {
    "BlendIn": {
@@ -603,7 +603,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/Kick1_Montage": {
    "BlendIn": {
@@ -838,7 +838,7 @@
      "start": 0.28245633840560913
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/PunchL_Montage": {
    "BlendIn": {
@@ -1019,7 +1019,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_l",
+         "hand_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0.89,
+          "y": 4.59,
+          "z": 7.13
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_l"
         ],
         "boxExtent": {
@@ -1029,9 +1057,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 3.05,
+          "y": -9.73,
+          "z": 3.05
          },
          "rotation": {
           "pitch": 0,
@@ -1072,7 +1100,7 @@
      "start": 0.15071146190166473
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/PunchR_Montage": {
    "BlendIn": {
@@ -1253,7 +1281,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_r",
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 5.95,
+          "y": -2.11,
+          "z": -6.28
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_r"
         ],
         "boxExtent": {
@@ -1263,9 +1319,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 5.29,
+          "y": 7.76,
+          "z": -3.55
          },
          "rotation": {
           "pitch": 0,
@@ -1306,7 +1362,7 @@
      "start": 0.1666666716337204
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/PunchRunR_Montage": {
    "BlendIn": {
@@ -1517,7 +1573,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_r",
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 1.38,
+          "y": -2.81,
+          "z": -6.94
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_r"
         ],
         "boxExtent": {
@@ -1527,9 +1611,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 0.47,
+          "y": 8.44,
+          "z": -3.93
          },
          "rotation": {
           "pitch": 0,
@@ -1580,7 +1664,7 @@
      "start": 1.3916666507720947
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/SmashPlayer_Montage": {
    "BlendIn": {
@@ -2021,7 +2105,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/Smash_Montage": {
    "BlendIn": {
@@ -2228,7 +2312,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/Tat_Montage": {
    "BlendIn": {
@@ -2556,7 +2640,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "foot_r",
+         "foot_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": -3.37,
+          "y": 0.61,
+          "z": 0.44
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 70
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "thigh_r"
         ],
         "boxExtent": {
@@ -2566,9 +2678,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 0.12,
+          "y": -1.91,
+          "z": 0.33
          },
          "rotation": {
           "pitch": 0,
@@ -2704,7 +2816,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/Upper2_Montage": {
    "BlendIn": {
@@ -2874,7 +2986,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_r",
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": -1.98,
+          "y": -8.01,
+          "z": 4.53
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 60
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_r"
         ],
         "boxExtent": {
@@ -2884,9 +3024,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": -3.37,
+          "y": 1.86,
+          "z": -6.83
          },
          "rotation": {
           "pitch": 0,
@@ -2927,7 +3067,7 @@
      "start": 0.2992290258407593
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Anims/kkk_Montage": {
    "BlendIn": {
@@ -3138,7 +3278,7 @@
      "start": 0.75
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/Boss1/PunchL_Montage_Boss": {
    "BlendIn": {
@@ -3294,7 +3434,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_l",
+         "hand_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0.94,
+          "y": 5.44,
+          "z": 6
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 45
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_l"
         ],
         "boxExtent": {
@@ -3304,9 +3472,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 3.37,
+          "y": -9.86,
+          "z": 3.15
          },
          "rotation": {
           "pitch": 0,
@@ -3342,7 +3510,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/Boss1/PunchR_Montage_Boss": {
    "BlendIn": {
@@ -3498,7 +3666,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_r",
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 2.2,
+          "y": -3.13,
+          "z": -6.37
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 50
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_r"
         ],
         "boxExtent": {
@@ -3508,9 +3704,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 2.18,
+          "y": 8.51,
+          "z": -4.31
          },
          "rotation": {
           "pitch": 0,
@@ -3546,7 +3742,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage": {
    "BlendIn": {
@@ -3987,7 +4183,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EKicker/KickerKick_Montage": {
    "BlendIn": {
@@ -4206,7 +4402,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1": {
    "BlendIn": {
@@ -4351,7 +4547,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_l",
+         "hand_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0.51,
+          "y": 3.41,
+          "z": 6.57
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_l"
         ],
         "boxExtent": {
@@ -4361,9 +4585,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 1.86,
+          "y": -8.68,
+          "z": 2.97
          },
          "rotation": {
           "pitch": 0,
@@ -4399,7 +4623,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1": {
    "BlendIn": {
@@ -4544,7 +4768,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_r",
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": -0.51,
+          "y": -2.97,
+          "z": -6.83
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_r"
         ],
         "boxExtent": {
@@ -4554,9 +4806,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": -0.37,
+          "y": 7.9,
+          "z": -4.51
          },
          "rotation": {
           "pitch": 0,
@@ -4592,7 +4844,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1": {
    "BlendIn": {
@@ -4737,7 +4989,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_l",
+         "hand_l"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": 0.47,
+          "y": 3.53,
+          "z": 6.48
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_l"
         ],
         "boxExtent": {
@@ -4747,9 +5027,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": 1.88,
+          "y": -8.67,
+          "z": 2.98
          },
          "rotation": {
           "pitch": 0,
@@ -4785,7 +5065,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1": {
    "BlendIn": {
@@ -4930,7 +5210,35 @@
        {
         "bIsSphere": true,
         "boneNames": [
-         "hand_r",
+         "hand_r"
+        ],
+        "boxExtent": {
+         "x": 30,
+         "y": 30,
+         "z": 30
+        },
+        "hitboxTransform": {
+         "location": {
+          "x": -0.47,
+          "y": -3.1,
+          "z": -6.77
+         },
+         "rotation": {
+          "pitch": 0,
+          "roll": 0,
+          "yaw": 0
+         },
+         "scale": {
+          "x": 1,
+          "y": 1,
+          "z": 1
+         }
+        },
+        "sphereRadius": 40
+       },
+       {
+        "bIsSphere": true,
+        "boneNames": [
          "lowerarm_r"
         ],
         "boxExtent": {
@@ -4940,9 +5248,9 @@
         },
         "hitboxTransform": {
          "location": {
-          "x": 0,
-          "y": 0,
-          "z": 0
+          "x": -0.37,
+          "y": 7.9,
+          "z": -4.51
          },
          "rotation": {
           "pitch": 0,
@@ -4978,7 +5286,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EMelee3/PunchL_MontageEnemy2": {
    "BlendIn": {
@@ -5171,7 +5479,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EMelee3/PunchR_MontageEnemy2": {
    "BlendIn": {
@@ -5364,7 +5672,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   },
   "/Game/Blueprints/Chars/EWizard/CastForward_Montage1": {
    "BlendIn": {
@@ -5485,7 +5793,7 @@
      "start": 0
     }
    ],
-   "skeleton": "/Game/Mannequin/Character/Mesh/UE4_Mannequin_Skeleton.UE4_Mannequin_Skeleton"
+   "skeleton": "/Game/Characters/Mannequins/Meshes/SK_Mannequin.SK_Mannequin"
   }
  },
  "sequences": {
