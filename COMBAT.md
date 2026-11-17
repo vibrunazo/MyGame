@@ -40,7 +40,7 @@ called its own code before (the start of `BeginPlay`, after its ability system k
 | Stun count and immunity | `IncrementHitStunCount` on every landed stun; at `MaxStuns` it applies the component's `StunImmuneEffect` for `StunImmuneCooldown` seconds (`data.stunimmune`). The count never decays | world time (the effect) |
 | Knockback | `ApplyKnockBack` sets ten timers at `i * 0.01` s for i = 0..9; the engine sets none at rate 0, so nine fire, each moving the victim 1% of the vector along the attacker's facing (`AddActorWorldOffset`, swept, no gravity) | world time (timers) |
 | Launch | `ApplyLaunchBack`: `LaunchCharacter` after a 0.05 s timer, and the component's `NoControlEffect` for 0.5 s (`data.nocontrol`) | world time |
-| Body block | `RefreshPawnCollision` on the tag `status.nopawnblock`, movement mode and death; inside another character it retries every 0.05 s and steps out after 0.3 s | world time (timers) |
+| Body block | `RefreshPawnCollision` on the tag `Ass.Status.NoPawnBlock`, movement mode and death; inside another character it retries every 0.05 s and steps out after 0.3 s | world time (timers) |
 | Airborne tag and the ground/air ability blocks | `OnMovementModeChanged` | movement events |
 | Root-motion speed curves | `ApplyRootSpeedCurve` in `OnFrameStart`: the `RootSpeedX` curve over the montage time this frame plays, as a root motion source for the frame's movement time (`DeltaSeconds * CustomTimeDilation`) | montage position and actor time |
 | The Tatsumaki's spin | `UANS_RotateChar::NotifyTick`, from the montage position | montage position |

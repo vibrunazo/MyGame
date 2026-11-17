@@ -1095,7 +1095,7 @@ bool AMyCharacter::IsWalking()
 }
 
 /// <summary>
-/// Returns if I am immune to projectiles. Checks the Actor for the tag status.immune.proj.
+/// Returns if I am immune to projectiles. Checks the Actor for the tag Ass.Status.ImmuneProjectile.
 /// </summary>
 /// <returns>True if immune to projectiles, false otherwise.</returns>
 bool AMyCharacter::IsProjectileImmune()

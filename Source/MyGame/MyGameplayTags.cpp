@@ -5,13 +5,13 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(State_Attacking, "state.attacking");
 	UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, "combo.cancancel");
 
-	UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, "status.hitstun");
-	UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, "status.stunimmune");
-	UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, "status.nocontrol");
-	UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, "status.nomove");
-	UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, "status.nopawnblock");
-	UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, "status.immune.proj");
-	UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, "status.airborne");
+	UE_DEFINE_GAMEPLAY_TAG(Status_HitStun, "Ass.Status.HitStun");
+	UE_DEFINE_GAMEPLAY_TAG(Status_StunImmune, "Ass.Status.StunImmune");
+	UE_DEFINE_GAMEPLAY_TAG(Status_NoControl, "Ass.Status.NoControl");
+	UE_DEFINE_GAMEPLAY_TAG(Status_NoMove, "Ass.Status.NoMove");
+	UE_DEFINE_GAMEPLAY_TAG(Status_NoPawnBlock, "Ass.Status.NoPawnBlock");
+	UE_DEFINE_GAMEPLAY_TAG(Status_ImmuneProjectile, "Ass.Status.ImmuneProjectile");
+	UE_DEFINE_GAMEPLAY_TAG(Status_Airborne, "Ass.Status.Airborne");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_75, "status.health.75");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_70, "status.health.70");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_50, "status.health.50");

@@ -26,11 +26,11 @@ public:
 	virtual bool IsAlive() = 0;
 	// Its side: a hit never lands between two of one team
 	virtual uint8 GetTeam() = 0;
-	// Projectiles don't hit it (status.immune.proj)
+	// Projectiles don't hit it (Ass.Status.ImmuneProjectile)
 	virtual bool IsProjectileImmune() = 0;
 	// It can act: no hit stun, no lost control, not disabled
 	virtual bool HasControl() = 0;
-	// It can move: as HasControl, and not rooted (status.nomove)
+	// It can move: as HasControl, and not rooted (Ass.Status.NoMove)
 	virtual bool HasMoveControl() = 0;
 	// Applies an effect to it (a hit's payload, an ability's self effects, an item's); the active handle for one with a
 	// duration

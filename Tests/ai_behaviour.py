@@ -51,6 +51,8 @@ from strict import scenario, enemy, tap, at, target_player, X, Y, CLOSE
 
 ROOT = Path(__file__).resolve().parent.parent
 REFERENCE = ROOT / "Saved" / "AssReference" / "ai.json"
+# the stun tag, and its name before Ass Plan.md Step 2 renamed it (the UE4 reference outside git holds that one)
+STUN_TAGS = ("Ass.Status.HitStun", "status.hitstun")
 FROZEN = {"Speed": 0.0}  # its tree still ticks; it can't walk
 
 
@@ -185,7 +187,7 @@ def decisions(record, ai_roles):
             if now and now != task.get(role):
                 out.append((frame, role, "bt", now))
             task[role] = now or task.get(role)
-        elif kind == "tag" and e[4] == "status.hitstun":
+        elif kind == "tag" and e[4] in STUN_TAGS:
             out.append((frame, role, "stun", e[5]))
         elif kind == "attribute" and e[4] == "Health":
             out.append((frame, role, "health", round(e[6], 4)))
@@ -237,7 +239,7 @@ def summary(record, role):
             out["failed"].append([e[0], e[4].split("/")[-1]])
         elif e[2] == "attribute" and e[4] == "Health":
             out["health"].append([e[0], e[5], e[6]])
-        elif e[2] == "tag" and e[4] == "status.hitstun":
+        elif e[2] == "tag" and e[4] in STUN_TAGS:
             out["stunned"].append([e[0], e[5]])
     return out
 

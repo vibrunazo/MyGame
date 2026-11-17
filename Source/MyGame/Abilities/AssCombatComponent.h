@@ -69,7 +69,7 @@ public:
 
 	// No hit stun, no lost control, and not disabled (death)
 	bool HasControl() const;
-	// As HasControl, and not rooted (status.nomove)
+	// As HasControl, and not rooted (Ass.Status.NoMove)
 	bool HasMoveControl() const;
 	bool HasStunImmune() const;
 
@@ -79,7 +79,7 @@ public:
 	void TrackHitWindow(AHitBox* Hitbox) { HitWindows.AddUnique(Hitbox); }
 
 	// The only place that sets the capsule's response to other pawns: ignored while dead, airborne or while an effect
-	// grants status.nopawnblock (moves that pass through enemies); blocked otherwise
+	// grants Ass.Status.NoPawnBlock (moves that pass through enemies); blocked otherwise
 	UFUNCTION()
 	void RefreshPawnCollision();
 

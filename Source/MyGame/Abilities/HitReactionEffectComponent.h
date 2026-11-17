@@ -11,7 +11,7 @@
 UENUM(BlueprintType)
 enum class EHitReaction : uint8
 {
-	// Get-hit montage and the stun counter (towards stun immunity); the effect itself grants status.hitstun
+	// Get-hit montage and the stun counter (towards stun immunity); the effect itself grants Ass.Status.HitStun
 	HitStun,
 	// Slide away along the attacker's facing, by data.knockback
 	Knockback,
