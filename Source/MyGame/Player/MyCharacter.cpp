@@ -123,8 +123,6 @@ void AMyCharacter::SetDefaultProperties()
 	GetMesh()->SetRelativeRotation(FRotator(0.0f, -90.0f, 0.0f));
 	// Hitboxes ride on bones, so bones must update even when the mesh isn't rendered (off-screen enemies, headless tests)
 	GetMesh()->VisibilityBasedAnimTickOption = EVisibilityBasedAnimTickOption::AlwaysTickPoseAndRefreshBones;
-	// DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
-	// if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
 
 	HealthBarComp->SetRelativeLocation(FVector(0.0f, 0.0f, -140.0f));
 	HealthBarComp->SetWidgetSpace(EWidgetSpace::Screen);
@@ -263,8 +261,6 @@ void AMyCharacter::BeginPlay()
 	// 	Team = 1;
 	// }
 		// else Team = 0;
-	//DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
-	//ResetBodyColor();
 	if (IsPlayerControlled() && GetMyGameInstance() && AttributeSetBase)
 	{
 		if (InitialHealth < 0.f) AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
@@ -307,7 +303,11 @@ void AMyCharacter::Tick(float DeltaSeconds)
 void AMyCharacter::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
-	DynaMat = GetMesh()->CreateDynamicMaterialInstance(0);
+	BodyMaterials.Reset();
+	for (int32 Slot = 0; Slot < GetMesh()->GetNumMaterials(); ++Slot)
+	{
+		if (UMaterialInstanceDynamic* Material = GetMesh()->CreateDynamicMaterialInstance(Slot)) BodyMaterials.Add(Material);
+	}
 	ResetBodyColor();
 }
 
@@ -1452,22 +1452,32 @@ void AMyCharacter::CheckWalls()
 
 }
 
+void AMyCharacter::SetBodyMaterialsVector(FName Parameter, const FLinearColor& Value)
+{
+	for (UMaterialInstanceDynamic* Material : BodyMaterials) if (Material) Material->SetVectorParameterValue(Parameter, Value);
+}
+
+void AMyCharacter::SetBodyMaterialsScalar(FName Parameter, float Value)
+{
+	for (UMaterialInstanceDynamic* Material : BodyMaterials) if (Material) Material->SetScalarParameterValue(Parameter, Value);
+}
+
 void AMyCharacter::SetBodyColor(FLinearColor NewColor)
 {
-	// BodyColor = NewColor;
-	if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), NewColor);
+	SetBodyMaterialsVector(FName("BodyColor"), NewColor);
 }
+
 void AMyCharacter::ResetBodyColor()
 {
-	if (DynaMat) DynaMat->SetVectorParameterValue(FName("BodyColor"), BodyColor);
+	SetBodyMaterialsVector(FName("BodyColor"), BodyColor);
 }
 
 void AMyCharacter::SetGlow(float NewGlow)
 {
-	if (DynaMat) DynaMat->SetScalarParameterValue(FName("GlowAlpha"), NewGlow);
+	SetBodyMaterialsScalar(FName("GlowAlpha"), NewGlow);
 }
 
 void AMyCharacter::ResetGlow()
 {
-	if (DynaMat) DynaMat->SetScalarParameterValue(FName("GlowAlpha"), 0.f);
+	SetBodyMaterialsScalar(FName("GlowAlpha"), 0.f);
 }

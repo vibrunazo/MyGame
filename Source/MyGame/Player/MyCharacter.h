@@ -267,8 +267,11 @@ public:
 	float TimeRequiredToRun = 1.1f;
 	float TimeHoldingRun = 0.f;
 	bool bHasControl = true;
+	// one per material slot of the mesh: body colour and glow are set on all of them (the UE5 mannequin's body has two)
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities)
-	class UMaterialInstanceDynamic* DynaMat;
+	TArray<TObjectPtr<class UMaterialInstanceDynamic>> BodyMaterials;
+	void SetBodyMaterialsVector(FName Parameter, const FLinearColor& Value);
+	void SetBodyMaterialsScalar(FName Parameter, float Value);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	FLinearColor BodyColor = FLinearColor(0.5f, 0.5f, 0.5f);
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
