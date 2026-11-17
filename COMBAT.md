@@ -36,10 +36,10 @@ called its own code before (the start of `BeginPlay`, after its ability system k
 | Niagara on the mesh during a pause | `SetHitPauseFX` pauses them while paused | follows the pause |
 | Combo reset | `UpdateCombo`: world time past `LastComboTime + ComboResetDelay`; `LastComboTime` is the frame's world time when a hit connects (not the sample's) | world time |
 | The cancel window (`combo.cancancel`) | set on hit connect and at a window's end, cleared when an ability starts and when its montage ends | events, on montage position |
-| Hit stun | `GE_HitStun`'s duration (`data.hitstun`); its reaction plays the GetHit montage, under the victim's dilation | world time |
-| Stun count and immunity | `IncrementHitStunCount` on every landed stun; at `MaxStuns` it applies the component's `StunImmuneEffect` for `StunImmuneCooldown` seconds (`data.stunimmune`). The count never decays | world time (the effect) |
+| Hit stun | `GE_HitStun`'s duration (`Ass.Data.HitStun`); its reaction plays the GetHit montage, under the victim's dilation | world time |
+| Stun count and immunity | `IncrementHitStunCount` on every landed stun; at `MaxStuns` it applies the component's `StunImmuneEffect` for `StunImmuneCooldown` seconds (`Ass.Data.StunImmune`). The count never decays | world time (the effect) |
 | Knockback | `ApplyKnockBack` sets ten timers at `i * 0.01` s for i = 0..9; the engine sets none at rate 0, so nine fire, each moving the victim 1% of the vector along the attacker's facing (`AddActorWorldOffset`, swept, no gravity) | world time (timers) |
-| Launch | `ApplyLaunchBack`: `LaunchCharacter` after a 0.05 s timer, and the component's `NoControlEffect` for 0.5 s (`data.nocontrol`) | world time |
+| Launch | `ApplyLaunchBack`: `LaunchCharacter` after a 0.05 s timer, and the component's `NoControlEffect` for 0.5 s (`Ass.Data.NoControl`) | world time |
 | Body block | `RefreshPawnCollision` on the tag `Ass.Status.NoPawnBlock`, movement mode and death; inside another character it retries every 0.05 s and steps out after 0.3 s | world time (timers) |
 | Airborne tag and the ground/air ability blocks | `OnMovementModeChanged` | movement events |
 | Root-motion speed curves | `ApplyRootSpeedCurve` in `OnFrameStart`: the `RootSpeedX` curve over the montage time this frame plays, as a root motion source for the frame's movement time (`DeltaSeconds * CustomTimeDilation`) | montage position and actor time |

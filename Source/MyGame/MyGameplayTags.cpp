@@ -35,13 +35,13 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Input_Release_3, "input.release.3");
 
 	UE_DEFINE_GAMEPLAY_TAG(Data_Damage, "data.damage");
-	UE_DEFINE_GAMEPLAY_TAG(Data_HitStun, "data.hitstun");
-	UE_DEFINE_GAMEPLAY_TAG(Data_Knockback, "data.knockback");
-	UE_DEFINE_GAMEPLAY_TAG(Data_CamShake, "data.camshake");
-	UE_DEFINE_GAMEPLAY_TAG(Data_Launch, "data.launch");
-	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_X, "data.launch.x");
-	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Y, "data.launch.y");
-	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Z, "data.launch.z");
-	UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, "data.stunimmune");
-	UE_DEFINE_GAMEPLAY_TAG(Data_NoControl, "data.nocontrol");
+	UE_DEFINE_GAMEPLAY_TAG(Data_HitStun, "Ass.Data.HitStun");
+	UE_DEFINE_GAMEPLAY_TAG(Data_Knockback, "Ass.Data.Knockback");
+	UE_DEFINE_GAMEPLAY_TAG(Data_CamShake, "Ass.Data.CamShake");
+	UE_DEFINE_GAMEPLAY_TAG(Data_Launch, "Ass.Data.Launch");
+	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_X, "Ass.Data.Launch.X");
+	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Y, "Ass.Data.Launch.Y");
+	UE_DEFINE_GAMEPLAY_TAG(Data_Launch_Z, "Ass.Data.Launch.Z");
+	UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, "Ass.Data.StunImmune");
+	UE_DEFINE_GAMEPLAY_TAG(Data_NoControl, "Ass.Data.NoControl");
 }

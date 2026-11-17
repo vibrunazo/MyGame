@@ -36,10 +36,10 @@ public:
 	// The hitbox this character's attacks spawn (its look and sound on hit)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat)
 	TSubclassOf<AHitBox> HitBoxClass;
-	// Applied for StunImmuneCooldown (data.stunimmune) at the MaxStuns-th landed stun
+	// Applied for StunImmuneCooldown (Ass.Data.StunImmune) at the MaxStuns-th landed stun
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat)
 	TSubclassOf<UGameplayEffect> StunImmuneEffect;
-	// Applied for 0.5 s (data.nocontrol) by a launch
+	// Applied for 0.5 s (Ass.Data.NoControl) by a launch
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Combat)
 	TSubclassOf<UGameplayEffect> NoControlEffect;
 

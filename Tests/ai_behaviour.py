@@ -94,7 +94,7 @@ def matrix_scenarios():
                         inputs = []
                         if control == "stunned":
                             inputs.append(at(0.0, "apply_effect", actor_path="@enemy", effect_class_path=HITSTUN,
-                                             set_by_caller=json.dumps({"data.hitstun": 0.6})))
+                                             set_by_caller=json.dumps({"Ass.Data.HitStun": 0.6})))
                         inputs.append(at(0.0, "set_ai_enabled", actor_path="@enemy", enabled=True))
                         yield scenario(f"{kind}.{facing}.{rng}.{token}.{control}", inputs, 1.0, enemies=enemies,
                                        player_x=X - gap, player_yaw=yaw, setup=setup, wait=0.5)
@@ -141,7 +141,7 @@ def tie_scenarios():
 
 def holder_scenarios():
     enemies = [enemy("a", "enemy1", x=CLOSE + 70, y=Y - 60, yaw=180.0), enemy("b", "enemy1", x=CLOSE + 70, y=Y + 60, yaw=180.0)]
-    stun = at(0.5, "apply_effect", actor_path="@a", effect_class_path=HITSTUN, set_by_caller=json.dumps({"data.hitstun": 1.5}))
+    stun = at(0.5, "apply_effect", actor_path="@a", effect_class_path=HITSTUN, set_by_caller=json.dumps({"Ass.Data.HitStun": 1.5}))
     yield scenario("token_stunned_holder", [at(0.0, "wake_ai", actor_paths=json.dumps(["@a", "@b"])), stun], 3.5, enemies=enemies, player_yaw=180.0,
                    player={"Defense": 1000.0}, wait=0.5, setup=[["aggro_add", {"actor_path": "@player", "target_path": "@a"}]])
 
