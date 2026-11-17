@@ -2,7 +2,8 @@
  "/Game/Abilities/GA_AirPunch": [
   "/Game/Abilities/GA_Smash",
   "/Game/Blueprints/Chars/BP_Char",
-  "/Game/Blueprints/Chars/Boss1/GA_BossSmash1"
+  "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_BaseAttack": [
   "/Game/Abilities/GA_AirPunch",
@@ -12,7 +13,8 @@
   "/Game/Abilities/GA_PunchRun",
   "/Game/Abilities/GA_Tat",
   "/Game/Abilities/GA_Upper",
-  "/Game/Abilities/GA_Voadora"
+  "/Game/Abilities/GA_Voadora",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_BasicPunches": [
   "/Game/Blueprints/Chars/BP_Char",
@@ -20,46 +22,55 @@
   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
   "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1",
   "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
-  "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2"
+  "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_Cast": [
   "/Game/Blueprints/Items/DA_LearnFireball",
-  "/Game/Maps/LevelPersistent"
+  "/Game/Maps/LevelPersistent",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_Dash": [
   "/Game/Blueprints/Chars/BP_Char"
  ],
  "/Game/Abilities/GA_Kick": [
-  "/Game/Blueprints/Chars/BP_Char"
+  "/Game/Blueprints/Chars/BP_Char",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_Kkk": [
   "/Game/Blueprints/Items/DA_LearnKkk",
-  "/Game/Maps/LevelPersistent"
+  "/Game/Maps/LevelPersistent",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_PunchRun": [
   "/Game/Blueprints/Items/DA_LearnRunPunch",
-  "/Game/Maps/LevelPersistent"
+  "/Game/Maps/LevelPersistent",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_SelfEffect": [
   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
  ],
  "/Game/Abilities/GA_Smash": [
   "/Game/Blueprints/Items/DA_LearnSmash",
-  "/Game/Maps/LevelPersistent"
+  "/Game/Maps/LevelPersistent",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_Summon": [
   "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
  ],
  "/Game/Abilities/GA_Tat": [
   "/Game/Blueprints/Items/DA_LearnTat",
-  "/Game/Maps/LevelPersistent"
+  "/Game/Maps/LevelPersistent",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_Upper": [
   "/Game/Blueprints/Items/DA_LearnUppercut",
-  "/Game/Maps/LevelPersistent"
+  "/Game/Maps/LevelPersistent",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GA_Voadora": [
-  "/Game/Blueprints/Chars/BP_Char"
+  "/Game/Blueprints/Chars/BP_Char",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Abilities/GE_Attack": [
   "/Game/Blueprints/Items/DA_ItemHorns",
@@ -183,7 +194,6 @@
  ],
  "/Game/Abilities/GE_NoControl": [
   "/Game/Abilities/GA_Dash",
-  "/Game/Blueprints/BP_MyGI",
   "/Game/Blueprints/Chars/BP_Char",
   "/Game/Blueprints/Chars/BP_EnemyBase"
  ],
@@ -235,7 +245,6 @@
   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
  ],
  "/Game/Abilities/GE_StunImmune": [
-  "/Game/Blueprints/BP_MyGI",
   "/Game/Blueprints/Chars/BP_Char",
   "/Game/Blueprints/Chars/BP_EnemyBase",
   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
@@ -282,7 +291,8 @@
   "/Game/Abilities/GA_Kkk"
  ],
  "/Game/Blueprints/Chars/Boss1/GA_BossPunches": [
-  "/Game/Blueprints/Chars/Boss1/BP_Boss1"
+  "/Game/Blueprints/Chars/Boss1/BP_Boss1",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff": [
   "/Game/Blueprints/Chars/Boss1/BP_AIContBoss",
@@ -290,7 +300,8 @@
  ],
  "/Game/Blueprints/Chars/Boss1/GA_BossSmash1": [
   "/Game/Blueprints/Chars/Boss1/BP_AIContBoss",
-  "/Game/Blueprints/Chars/Boss1/BP_Boss1"
+  "/Game/Blueprints/Chars/Boss1/BP_Boss1",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Blueprints/Chars/Boss1/GA_BossSummon1": [
   "/Game/Blueprints/Chars/Boss1/BP_AIContBoss",
@@ -306,7 +317,8 @@
   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1"
  ],
  "/Game/Blueprints/Chars/EKicker/GA_KickerKick": [
-  "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker"
+  "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Blueprints/Chars/EKicker/GE_KickerCooldown": [
   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
@@ -315,7 +327,8 @@
   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
  ],
  "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1": [
-  "/Game/Blueprints/Chars/EMelee1/BP_Enemy1"
+  "/Game/Blueprints/Chars/EMelee1/BP_Enemy1",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1": [
   "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1"
@@ -324,7 +337,8 @@
   "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1"
  ],
  "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1": [
-  "/Game/Blueprints/Chars/EMelee2/BP_Enemy2"
+  "/Game/Blueprints/Chars/EMelee2/BP_Enemy2",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1": [
   "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
@@ -335,7 +349,8 @@
   "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2"
  ],
  "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2": [
-  "/Game/Blueprints/Chars/EMelee3/BP_Enemy3"
+  "/Game/Blueprints/Chars/EMelee3/BP_Enemy3",
+  "/Game/UI/DA_AbilityUI"
  ],
  "/Game/Blueprints/Chars/EMelee3/PunchL_MontageEnemy2": [],
  "/Game/Blueprints/Chars/EMelee3/PunchR_MontageEnemy2": [],
@@ -343,6 +358,7 @@
   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
  ],
  "/Game/Blueprints/Chars/EWizard/GA_Cast1": [
-  "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard"
+  "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard",
+  "/Game/UI/DA_AbilityUI"
  ]
 }
