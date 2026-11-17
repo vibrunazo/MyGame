@@ -3,6 +3,7 @@
   "assets": [],
   "children": [
    "Ass.Data",
+   "Ass.Notify",
    "Ass.Status"
   ],
   "code": [],
@@ -237,6 +238,104 @@
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_StunImmune);",
    "Source/MyGame/Abilities/AssCombatComponent.cpp: Handle.Data.Get()->SetSetByCallerMagnitude(MyGameplayTags::Data_StunImmune, StunImmuneCooldown);",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_StunImmune, \"Ass.Data.StunImmune\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Notify": {
+  "assets": [],
+  "children": [
+   "Ass.Notify.Hit",
+   "Ass.Notify.Projectile"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Notify.Hit": {
+  "assets": [],
+  "children": [
+   "Ass.Notify.Hit.Connect",
+   "Ass.Notify.Hit.End",
+   "Ass.Notify.Hit.Start"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Notify.Hit.Connect": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Connect);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: ConnectHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Connect).AddUObject(this, &UAbilityTask_HitboxWindows",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Connect)) D->Remove(ConnectHandle",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, \"Ass.Notify.Hit.Connect\");",
+   "Source/MyGame/Player/HitBox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Notify.Hit.End": {
+  "assets": [
+   "/Game/Blueprints/Notifies/ANS_HitboxBP"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_End);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: EndHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_End).AddUObject(this, &UAbilityTask_HitboxWindows::Handle",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_End)) D->Remove(EndHandle);",
+   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_End, Payload);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, \"Ass.Notify.Hit.End\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Notify.Hit.Start": {
+  "assets": [],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Start);",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: StartHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Start).AddUObject(this, &UAbilityTask_HitboxWindows::Ha",
+   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Start)) D->Remove(StartHandle);",
+   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_Start, Payload);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, \"Ass.Notify.Hit.Start\");"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Notify.Projectile": {
+  "assets": [],
+  "children": [
+   "Ass.Notify.Projectile.Cast"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
+  "step": null
+ },
+ "Ass.Notify.Projectile.Cast": {
+  "assets": [
+   "/Game/Blueprints/Notifies/ANS_ProjectileCast"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Projectile_Cast);",
+   "Source/MyGame/Abilities/CastAbility.cpp: FGameplayTag CastTag = MyGameplayTags::Notify_Projectile_Cast;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, \"Ass.Notify.Projectile.Cast\");"
   ],
   "owner": null,
   "plugin_name": null,
@@ -1429,102 +1528,6 @@
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_3);",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Input_Release_3, \"input.release.3\");",
    "Source/MyGame/Player/MyPlayerController.cpp: MyGameplayTags::Input_Release_2, MyGameplayTags::Input_Release_3 };"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "notify": {
-  "assets": [],
-  "children": [
-   "notify.hit",
-   "notify.projectile"
-  ],
-  "code": [],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "notify.hit": {
-  "assets": [],
-  "children": [
-   "notify.hit.connect",
-   "notify.hit.end",
-   "notify.hit.start"
-  ],
-  "code": [],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "notify.hit.connect": {
-  "assets": [],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Connect);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: ConnectHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Connect).AddUObject(this, &UAbilityTask_HitboxWindows",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Connect)) D->Remove(ConnectHandle",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Connect, \"notify.hit.connect\");",
-   "Source/MyGame/Player/HitBox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(GetInstigator(), MyGameplayTags::Notify_Hit_Connect, FGameplayEventData());"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "notify.hit.end": {
-  "assets": [
-   "/Game/Blueprints/Notifies/ANS_HitboxBP"
-  ],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_End);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: EndHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_End).AddUObject(this, &UAbilityTask_HitboxWindows::Handle",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_End)) D->Remove(EndHandle);",
-   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_End, Payload);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_End, \"notify.hit.end\");"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "notify.hit.start": {
-  "assets": [],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Hit_Start);",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: StartHandle = AbilitySystemComponent->GenericGameplayEventCallbacks.FindOrAdd(MyGameplayTags::Notify_Hit_Start).AddUObject(this, &UAbilityTask_HitboxWindows::Ha",
-   "Source/MyGame/Abilities/AbilityTask_HitboxWindows.cpp: if (FGameplayEventMulticastDelegate* D = AbilitySystemComponent->GenericGameplayEventCallbacks.Find(MyGameplayTags::Notify_Hit_Start)) D->Remove(StartHandle);",
-   "Source/MyGame/Abilities/ANS_Hitbox.cpp: UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(MeshComp->GetOwner(), MyGameplayTags::Notify_Hit_Start, Payload);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Hit_Start, \"notify.hit.start\");"
-  ],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "notify.projectile": {
-  "assets": [],
-  "children": [
-   "notify.projectile.cast"
-  ],
-  "code": [],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "notify.projectile.cast": {
-  "assets": [],
-  "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Notify_Projectile_Cast);",
-   "Source/MyGame/Abilities/CastAbility.cpp: FGameplayTag CastTag = MyGameplayTags::Notify_Projectile_Cast;",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Notify_Projectile_Cast, \"notify.projectile.cast\");"
   ],
   "owner": null,
   "plugin_name": null,

@@ -766,14 +766,14 @@
  "/Game/Blueprints/Notifies/ANS_HitboxBP": {
   "graphs": {
    "Received_NotifyBegin": "(fn Received_NotifyBegin (MeshComp Animation TotalDuration EventReference))\n",
-   "Received_NotifyEnd": "(fn Received_NotifyEnd (MeshComp Animation EventReference)\n  (Ability|SendGameplayEventToActor (Components|GetOwner MeshComp) \"(TagName=\\\"notify.hit.end\\\")\")\n  (return false))\n"
+   "Received_NotifyEnd": "(fn Received_NotifyEnd (MeshComp Animation EventReference)\n  (Ability|SendGameplayEventToActor (Components|GetOwner MeshComp) \"(TagName=\\\"Ass.Notify.Hit.End\\\")\")\n  (return false))\n"
   },
   "kind": "Blueprint",
   "parent": "/Script/MyGame.ANS_Hitbox"
  },
  "/Game/Blueprints/Notifies/ANS_ProjectileCast": {
   "graphs": {
-   "Received_NotifyBegin": "(fn Received_NotifyBegin (MeshComp Animation TotalDuration EventReference)\n  (Ability|SendGameplayEventToActor (Components|GetOwner MeshComp) \"(TagName=\\\"notify.projectile.cast\\\")\")\n  (return false))\n"
+   "Received_NotifyBegin": "(fn Received_NotifyBegin (MeshComp Animation TotalDuration EventReference)\n  (Ability|SendGameplayEventToActor (Components|GetOwner MeshComp) \"(TagName=\\\"Ass.Notify.Projectile.Cast\\\")\")\n  (return false))\n"
   },
   "kind": "Blueprint",
   "parent": "/Script/Engine.AnimNotifyState"
