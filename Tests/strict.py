@@ -140,9 +140,10 @@ def mechanics():
     yield scenario("kill", tap("Punch", 0.0), 2.5, enemies=[enemy(Health=5.0)])
     yield scenario("kill_launch", learn(0.0, "DA_LearnUppercut") + press("Super", 0.1) + tap("Punch", 0.2) + press("Super", 0.5, False),
                    3.0, enemies=[enemy(Health=5.0)])
-    # two targets in one window, touched in different samples as the hand sweeps left: two touched in the same sample
-    # are hit in the order the physics query returns them, which changes from run to run
+    # two targets in one window, touched in different samples as the hand sweeps left
     yield scenario("two_targets", tap("Punch", 0.0), 2.0, enemies=[enemy(), enemy("dummy2", x=230.0, y=Y - 120)])
+    # two targets touched in the same sample by the kick's first one: hit nearest first
+    yield scenario("two_targets_one_sample", tap("Kick", 0.0), 2.0, enemies=[enemy("dummy", y=Y - 40), enemy("dummy2", y=Y + 40)])
     yield scenario("projectile_immune", learn(0.0, "DA_LearnFireball") + tap("Cast", 0.2), 2.5, player_x=0.0,
                    setup=[["apply_effect", {"actor_path": "@dummy", "effect_class_path": IMMUNE_TO_PROJECTILES}]])
     yield scenario("attack_speed", tap("Punch", 0.0), 2.0, player={"AttackSpeed": 1.5})

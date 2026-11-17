@@ -301,6 +301,21 @@ void AHitBox::SampleWindowAt(float At, float Alpha, bool bInterpolate, double Ti
 		TArray<FOverlapResult> Overlaps;
 		const FCollisionShape Around = Shape.Settings.bIsSphere ? FCollisionShape::MakeSphere(Radius + CandidateMargin) : FCollisionShape::MakeBox(Shape.Settings.BoxExtent * Scale + FVector(CandidateMargin));
 		GetWorld()->OverlapMultiByObjectType(Overlaps, World.GetLocation(), World.GetRotation(), FCollisionObjectQueryParams(ECC_Pawn), Around, Params);
+		// targets touched in the same sample are hit nearest first (then by name): the physics query's own order changes
+		// from run to run
+		const FVector ShapeCentre = World.GetLocation();
+		Overlaps.StableSort([&ShapeCentre](const FOverlapResult& A, const FOverlapResult& B)
+		{
+			const AActor* AA = A.GetActor();
+			const AActor* BA = B.GetActor();
+			if (!AA || !BA) return AA != nullptr;
+			const double DA = FVector::DistSquared(ShapeCentre, AA->GetActorLocation());
+			const double DB = FVector::DistSquared(ShapeCentre, BA->GetActorLocation());
+			if (DA != DB) return DA < DB;
+			const FName NA = AA->GetFName(), NB = BA->GetFName();
+			const int32 Plain = NA.GetPlainNameString().Compare(NB.GetPlainNameString());
+			return Plain != 0 ? Plain < 0 : NA.GetNumber() < NB.GetNumber();
+		});
 		TSet<TWeakObjectPtr<AActor>> Touching;
 		for (const FOverlapResult& Overlap : Overlaps)
 		{
