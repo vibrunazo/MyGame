@@ -763,7 +763,7 @@
   "code": [
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_CamShake);",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_CamShake, \"data.camshake\");",
-   "Source/MyGame/Player/MyCharacter.cpp: if (GetMyGameInstance()) GetMyGameInstance()->DoCamShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));"
+   "Source/MyGame/Player/MyCharacter.cpp: PlayHitCameraShake(Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_CamShake, false));"
   ],
   "owner": null,
   "plugin_name": null,
