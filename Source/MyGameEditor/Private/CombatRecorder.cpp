@@ -371,6 +371,25 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 			Event(TEXT("bt"), Role.Name, {Str(Tasks)});
 			Role.LastTasks = Tasks;
 		}
+		// the attack token: the character's aggro list (a property MyGame keeps on the character)
+		if (const FArrayProperty* List = CastField<FArrayProperty>(Actor->GetClass()->FindPropertyByName(TEXT("AggroList"))))
+		{
+			FScriptArrayHelper Items(List, List->ContainerPtrToValuePtr<void>(Actor));
+			const FObjectPropertyBase* Inner = CastField<FObjectPropertyBase>(List->Inner);
+			TArray<TSharedPtr<FJsonValue>> Holders;
+			FString Key;
+			for (int32 i = 0; Inner && i < Items.Num(); ++i)
+			{
+				const FString Holder = RoleOf(Inner->GetObjectPropertyValue(Items.GetRawPtr(i)));
+				Holders.Add(Str(Holder));
+				Key += Holder + TEXT("|");
+			}
+			if (Key != Role.LastToken)
+			{
+				Event(TEXT("token"), Role.Name, {MakeShared<FJsonValueArray>(Holders)});
+				Role.LastToken = Key;
+			}
+		}
 		TArray<TSharedPtr<FJsonValue>> Row{
 			Num(Frame), Num(T), Num(L.X), Num(L.Y), Num(L.Z), Num(R.Pitch), Num(R.Yaw), Num(R.Roll),
 			Str(Montage), Str(Section), Num(Position), Num(Actor->CustomTimeDilation), Num(Mode)};

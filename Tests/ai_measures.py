@@ -18,6 +18,7 @@ BEHAVIOURS (the player's)
   away      stands with its back to them
   walking   walks back and forth across the room, 2 s each way
   circling  walks a square, 1.5 s a side
+  fighting  the group only: faces the enemies and punches every 0.8 s (so that a token holder gets stunned)
 
 MEASURES (per run; then per cell, a cell being type x behaviour, or the group x behaviour)
   first_attack   seconds from waking to the enemy's first ability start (the run's length if none)
@@ -60,11 +61,12 @@ import mygame
 from mygame import tool
 import ability_regression as ar
 import strict
-from strict import scenario, enemy, at, move, Y
+from strict import scenario, enemy, at, move, tap, Y
 
 TYPES = ("enemy1", "enemy2", "enemy3", "kicker", "wizard")
 GROUP = ("enemy1", "enemy2", "kicker")
 BEHAVIOURS = ("still", "away", "walking", "circling")
+GROUP_BEHAVIOURS = BEHAVIOURS + ("fighting",)
 REFERENCE_SEEDS = tuple(range(1, 21))
 SEEDS = REFERENCE_SEEDS
 SOLO_SECONDS = 10.0
@@ -86,6 +88,8 @@ def behaviour_inputs(behaviour, seconds):
         return [at(0.0, "set_player_facing", yaw=0.0)]
     if behaviour == "away":
         return [at(0.0, "set_player_facing", yaw=180.0)]
+    if behaviour == "fighting":
+        return [at(0.0, "set_player_facing", yaw=0.0)] + [i for k in range(int(seconds / 0.8)) for i in tap("Punch", 0.4 + 0.8 * k)]
     out, t, k = [], 0.0, 0
     if behaviour == "walking":
         while t < seconds:
@@ -103,7 +107,7 @@ def runs(seeds=SEEDS):
     """(cell, seed, scenario, enemy roles, the first type): solo cells, then the group."""
     cells = [(kind, (kind,), SOLO_SPOT, SOLO_SECONDS) for kind in TYPES] + [("group", GROUP, GROUP_SPOTS, GROUP_SECONDS)]
     for name, kinds, spots, seconds in cells:
-        for behaviour in BEHAVIOURS:
+        for behaviour in (GROUP_BEHAVIOURS if name == "group" else BEHAVIOURS):
             for seed in seeds:
                 roles = ["enemy"] if len(kinds) == 1 else [f"enemy{i}" for i in range(len(kinds))]
                 enemies = [enemy(r, k, x=x, y=y) for r, k, (x, y) in zip(roles, kinds, spots)]

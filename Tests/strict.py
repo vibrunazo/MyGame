@@ -72,12 +72,13 @@ def enemy(role="dummy", kind="enemy1", x=X, y=Y, yaw=180.0, **attributes):
     return (role, kind, x, y, yaw, attributes)
 
 
-def scenario(name, inputs, duration, enemies=(enemy(),), player_x=CLOSE, player_y=Y, player_yaw=0.0, player=None, setup=(), wait=2.5):
+def scenario(name, inputs, duration, enemies=(enemy(),), player_x=CLOSE, player_y=Y, player_yaw=0.0, player=None, setup=(), wait=2.5,
+             seed=None):
     """A scenario: inputs on the game clock ([t, "call", hook, kwargs], kwargs may name a role as "@role"), the
     enemies it spawns, where the player stands, the player's attributes on top of the base ones, and hook calls
     [hook, kwargs] made before the timeline; wait is the game time let pass first (2.5 s: past every combo's reset)."""
     return {"name": name, "inputs": inputs, "duration": duration, "enemies": list(enemies), "player": (player_x, player_y, player_yaw),
-            "attributes": player or {}, "setup": list(setup), "wait": wait}
+            "attributes": player or {}, "setup": list(setup), "wait": wait, "seed": SEED if seed is None else seed}
 
 
 at, tap, press, move, double_tap, learn = ar.at, ar.tap, ar.press, ar.move, ar.double_tap, ar.learn
@@ -226,7 +227,7 @@ def run(sc, base, query=None):
         tool(hook, **resolve(kwargs, paths))
     inputs = [[i[0], i[1], i[2], resolve(i[3], paths)] for i in sc["inputs"]]
     tool("run_timeline", spec=json.dumps({"dummy": None, "duration": sc["duration"], "settle": 0.0, "settle_fixed": True,
-                                          "inputs": inputs, "record": paths, "seed": SEED,
+                                          "inputs": inputs, "record": paths, "seed": sc.get("seed", SEED),
                                           **({"query": list(query)} if query else {})}))
     r = wait_until(lambda: (t := tool("timeline_result"))["done"] and t, timeout=180, every=0.1, what=f"the {sc['name']} timeline")
     if r["result"].get("errors"):

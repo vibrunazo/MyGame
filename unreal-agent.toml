@@ -70,6 +70,13 @@ tier = "manual"
 timeout = 1800
 
 [[suite]]
+name = "ai-measures"
+kind = "pie"
+run = "Tests/ai_measures.py:suite"   # Step 0c item 4: the AI measures over seeded runs, held to the rule in its header
+tier = "manual"
+timeout = 7200
+
+[[suite]]
 name = "strict-breaks"
 kind = "pie"
 run = "Tests/strict_breaks.py:suite"  # Step 0c: each deliberate break changes its strict recording
