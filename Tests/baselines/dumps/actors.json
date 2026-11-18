@@ -1017,7 +1017,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
@@ -3356,7 +3356,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
@@ -7820,7 +7820,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
@@ -10384,7 +10384,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
@@ -12724,7 +12724,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
@@ -15082,7 +15082,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
@@ -17440,7 +17440,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
@@ -20023,7 +20023,7 @@
     "bEditableWhenInherited": true,
     "bIsEditorOnly": false,
     "bReplicateUsingRegisteredSubObjectList": false,
-    "bReplicates": false,
+    "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": {
      "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
