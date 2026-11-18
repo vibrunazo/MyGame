@@ -4,8 +4,10 @@ mechanic, among them a dropped class default and a stun applied before the damag
 Each break edits a property's text (UMyGameEditorLibrary's Get/SetPropertyTextForTest, what the editor's copy and paste
 use) in memory in the test editor: on the class default, and for the player's own abilities and the player also on every
 live instance in the play world (an ability granted earlier keeps its own copy; an enemy's is made from the default when
-the scenario spawns it). `undo()` puts every old text back. Nothing is saved. The `strict-breaks` suite
-(Tests/strict_breaks.py) runs each break's scenario before, with and after it.
+the scenario spawns it). Since Ass Plan.md Step 3 the plugin's abilities read their template's definition: a break of
+one edits the template's definition (one object, which every grant reads), whose runtime object is then built again.
+`undo()` puts every old value back. Nothing is saved. The `strict-breaks` suite (Tests/strict_breaks.py) runs each
+break's scenario before, with and after it.
 """
 import re
 
@@ -60,6 +62,55 @@ def _edit_class(class_path, prop, change, instances=False):
     _edit(_targets(class_path, instances), prop, change)
 
 
+def _edit_template(class_path, change):
+    """The definition of the template an ability class names: change(definition) edits a copy, which the template
+    takes (its runtime object is built again on next use)."""
+    template = unreal.get_default_object(unreal.load_class(None, class_path)).get_editor_property("template")
+    # a struct read from an object can be the object's own memory: the change goes into a detached copy, so setting it
+    # is a change the template hears (and builds its runtime object again)
+    old = template.get_editor_property("definition").export_text()
+    new = unreal.AssAbilityDefinition()
+    new.import_text(old)
+    change(new)
+    if new.export_text() == old:
+        raise RuntimeError(f"the break changes nothing in {template.get_path_name()}")
+    _saved.append((template, "@definition", old))
+    template.set_editor_property("definition", new)
+
+
+def _set_in(struct, path, value):
+    """struct.a.b.c = value, through copies (Python structs are values): path "a.b.c"."""
+    head, _, rest = path.partition(".")
+    if not rest:
+        struct.set_editor_property(head, value)
+        return
+    inner = struct.get_editor_property(head)
+    _set_in(inner, rest, value)
+    struct.set_editor_property(head, inner)
+
+
+def _payload(name_path, value):
+    """The first payload's field (e.g. "damage.magnitude")."""
+    def change(definition):
+        payloads = definition.get_editor_property("payloads")
+        first = payloads[0]  # a copy: written back below
+        _set_in(first, name_path, value)
+        payloads[0] = first
+        definition.set_editor_property("payloads", payloads)
+    return change
+
+
+def _step_speeds(value):
+    def change(definition):
+        steps = definition.get_editor_property("steps")
+        for index in range(len(steps)):
+            step = steps[index]  # a copy: written back
+            step.set_editor_property("speed", value)
+            steps[index] = step
+        definition.set_editor_property("steps", steps)
+    return change
+
+
 def _holders(objects, prop):
     """Where a combat setting lives on each of objects: the object itself, or one of its subobjects (a component; the
     combat settings leave AMyCharacter for its combat component in Step 1)."""
@@ -104,17 +155,6 @@ def _join(items):
     return "(" + ",".join(items) + ")"
 
 
-def _set_magnitude(effect, tag, value):
-    """In the effect containers' text: the magnitude of tag on the container of effect (e.g. "GE_Launch_C")."""
-    def change(text):
-        items = _items(text)
-        for i, item in enumerate(items):
-            if f".{effect}" in item:
-                items[i] = re.sub(r'(TagName="' + re.escape(tag) + r'"\),Magnitude=)[-0-9.]+', lambda m: m.group(1) + f"{value:.6f}", item)
-        return _join(items)
-    return change
-
-
 def _without_tag(tag):
     def change(text):
         text = re.sub(r'\(TagName="' + re.escape(tag) + r'"\),?', "", text)
@@ -145,26 +185,27 @@ def _granted_tags(effect_path, tags):
 
 # name: (the scenario of Tests/strict.py it runs, what it changes, the change)
 BREAKS = {
-    "dropped_class_default": ("enemy1_attack", "GA_DamageEnemy1 (EMelee1) HitPause back to the C++ default 0.5",
-                              lambda: _edit_class(GA_ENEMY1, "HitPause", lambda t: "0.500000")),
-    "stun_before_damage": ("enemy1_attack", "GA_DamageEnemy1 (EMelee1) applies GE_HitStun before GE_Damage",
-                           lambda: _edit_class(GA_ENEMY1, "EffectsToApply",
-                                               lambda t: _join(sorted(_items(t), key=lambda i: ".GE_HitStun_C" not in i)))),
+    "dropped_class_default": ("enemy1_attack", "GA_DamageEnemy1 (EMelee1)'s template: HitPause back to the C++ default 0.5",
+                              lambda: _edit_template(GA_ENEMY1, lambda d: _set_in(d, "feel.hit_pause", 0.5))),
+    # Step 3: a payload's parts apply in the plugin's fixed order, so "the stun before the damage" can't be authored;
+    # the stun's own time takes its place
+    "stun_time": ("enemy1_attack", "GA_DamageEnemy1 (EMelee1)'s template: the stun 0.35 s -> 0.6 s",
+                  lambda: _edit_template(GA_ENEMY1, _payload("stun.time", 0.6))),
     "nth_stun": ("nth_stun", "the player's MaxStuns 3 -> 4", lambda: _edit_combat_setting(BP_CHAR, "MaxStuns", lambda t: "4", True)),
     "stun_immune_target": ("stun_immune_boss", "GA_BossSelfDebuff no longer applies GE_StunImmune",
                            lambda: _edit_class(GA_DEBUFF, "EffectsToApply",
                                                lambda t: _join([i for i in _items(t) if ".GE_StunImmune_C" not in i]))),
-    "kill": ("kill", "GA_BasicPunches' damage 15 -> 4 (the dummy, at 5 health, survives)",
-             lambda: _edit_class(GA_PUNCHES, "EffectsToApply", _set_magnitude("GE_Damage_C", "data.damage", -4.0), True)),
-    "kill_launch": ("kill_launch", "GA_Upper's launch: Ass.Data.Launch.Z 800 -> 700",
-                    lambda: _edit_class(GA_UPPER, "EffectsToApply", _set_magnitude("GE_Launch_C", "Ass.Data.Launch.Z", 700.0), True)),
+    "kill": ("kill", "GA_BasicPunches' template: damage 15 -> 4 (the dummy, at 5 health, survives)",
+             lambda: _edit_template(GA_PUNCHES, _payload("damage.magnitude", 4.0))),
+    "kill_launch": ("kill_launch", "GA_Upper's template: the launch's Z 800 -> 700",
+                    lambda: _edit_template(GA_UPPER, _payload("launch.velocity.z", 700.0))),
     "two_targets": ("two_targets", "PunchR_Montage's hit sphere radius 45 -> 40", lambda: _hitbox_radius("/Game/Anims/PunchR_Montage", 40.0)),
     "projectile_immune": ("projectile_immune", "GE_ImmuneToProjectile grants no tag",
                           lambda: _granted_tags(GE_IMMUNE_PROJ, unreal.GameplayTagContainer())),
-    "attack_speed": ("attack_speed", "GA_BasicPunches' MontagesSpeed 1 -> 1.05",
-                     lambda: _edit_class(GA_PUNCHES, "MontagesSpeed", lambda t: "1.050000", True)),
-    "held_release": ("held_release", "GA_BasicPunches cancels without a landed hit",
-                     lambda: _edit_class(GA_PUNCHES, "bNeedsHitToCancel", lambda t: "False", True)),
+    "attack_speed": ("attack_speed", "GA_BasicPunches' template: every step's speed 1 -> 1.05",
+                     lambda: _edit_template(GA_PUNCHES, _step_speeds(1.05))),
+    "held_release": ("held_release", "GA_BasicPunches' template cancels without a landed hit",
+                     lambda: _edit_template(GA_PUNCHES, lambda d: _set_in(d, "cancel.needs_hit_to_cancel", False))),
     "air_ground_learn": ("air_ground_learn", "GA_Voadora loses activate.flyingattack (it counts as a ground move)",
                          lambda: _edit_class(GA_VOADORA, "AbilityTags", _without_tag("activate.flyingattack"))),
     "graph_ability": ("dash", "GA_Dash's DashDistance 1100 -> 1000",
@@ -177,7 +218,7 @@ def apply(name):
     """Applies a break; returns its description and what it edited (object, property, new text)."""
     first = len(_saved)
     BREAKS[name][2]()
-    edited = [f"{o.get_path_name()}.{p} = {_lib.get_property_text_for_test(o, p)[:160] if p != '@granted' else '(tags)'}" for o, p, _ in _saved[first:]]
+    edited = [f"{o.get_path_name()}.{p} = {_lib.get_property_text_for_test(o, p)[:160] if not p.startswith('@') else '(' + p[1:] + ')'}" for o, p, _ in _saved[first:]]
     return BREAKS[name][1] + " [" + "; ".join(edited) + "]"
 
 
@@ -186,5 +227,9 @@ def undo():
         obj, prop, old = _saved.pop()
         if prop == "@granted":
             _lib.set_effect_granted_tags_for_test(obj, old)
+        elif prop == "@definition":
+            definition = unreal.AssAbilityDefinition()
+            definition.import_text(old)
+            obj.set_editor_property("definition", definition)
         elif not _set_text(obj, prop, old):
             raise RuntimeError(f"couldn't restore {obj.get_path_name()}.{prop}")

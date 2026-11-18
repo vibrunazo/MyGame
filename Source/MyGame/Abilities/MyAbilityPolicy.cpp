@@ -34,7 +34,7 @@ float UMyAbilityPolicy::GetAbilityPlayRate(const UGameplayAbility& Ability, cons
 	const UMyAttributeSet* Attributes = Me ? Me->GetAttributes() : nullptr;
 	if (!Attributes) return 1.0f;
 	const UAssAbility* AssAbility = Cast<UAssAbility>(&Ability);
-	return Attributes->GetAttackSpeed() * (AssAbility ? AssAbility->MontagesSpeed : 1.0f);
+	return Attributes->GetAttackSpeed() * (AssAbility ? AssAbility->GetStepSpeed() : 1.0f);
 }
 
 void UMyAbilityPolicy::PrepareHit(FAssPreparedHit& Hit, const UGameplayAbility& Ability) const
