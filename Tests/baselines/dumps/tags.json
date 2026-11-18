@@ -318,6 +318,7 @@
    "/Game/Abilities/AT_Abilities_BaseAttack",
    "/Game/Abilities/AT_Abilities_BasicPunches",
    "/Game/Abilities/AT_Abilities_Cast",
+   "/Game/Abilities/AT_Abilities_Dash",
    "/Game/Abilities/AT_Abilities_Kick",
    "/Game/Abilities/AT_Abilities_Kkk",
    "/Game/Abilities/AT_Abilities_PunchRun",
@@ -332,7 +333,9 @@
    "/Game/Abilities/GA_Tat",
    "/Game/Abilities/GA_Voadora",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1",
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
    "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
    "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
@@ -1003,7 +1006,7 @@
   "code": [
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Activate_FlyingAttack);",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Activate_FlyingAttack, \"activate.flyingattack\");",
-   "Source/MyGame/Player/MyCharacter.cpp: return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);",
+   "Source/MyGame/Player/MyCharacter.cpp: return Loaded && Loaded->Definition.Tags.Identity.HasTagExact(MyGameplayTags::Activate_FlyingAttack);",
    "Config/DefaultGame.ini: AirAbilityTag=(TagName=\"activate.flyingattack\")"
   ],
   "owner": "MyGame (3.11)",
@@ -1624,12 +1627,29 @@
  "status": {
   "assets": [],
   "children": [
+   "status.buffedrange",
    "status.health"
   ],
   "code": [],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "status.buffedrange": {
+  "assets": [
+   "/Game/Abilities/GE_SpeedMultiplyNoStack"
+  ],
+  "children": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_BuffedRange);",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_BuffedRange, \"status.buffedrange\", \"While on, the AI attacks from its buffed range\");",
+   "Source/MyGame/Player/MyAIController.cpp: BuffedRangeHandle = PawnAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_BuffedRange, EGameplayTagEventType::NewOrRemoved)",
+   "Source/MyGame/Player/MyAIController.cpp: PawnAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_BuffedRange, EGameplayTagEventType::NewOrRemoved).Remove(BuffedRangeHandle);"
+  ],
+  "owner": null,
+  "plugin_name": null,
+  "source": "MyGame",
   "step": null
  },
  "status.health": {

@@ -6,6 +6,7 @@
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
    "aggressiveRange": 200,
    "attackRange": 140,
+   "attackRangeKey": "AttackRange",
    "autoReceiveInput": "Disabled",
    "bAllowStrafe": false,
    "bAllowTickBeforeBeginPlay": false,
@@ -44,6 +45,7 @@
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
+   "buffedAttackRange": 900,
    "chaseRange": 40,
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "customTimeDilation": 1,
@@ -217,6 +219,7 @@
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
+   "unbuffedAttackRange": 220,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault"
   },
   "parent": "/Script/MyGame.MyAIController"
@@ -229,34 +232,39 @@
    },
    "abilities": [
     {
-     "abilityClass": {
-      "refPath": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Abilities/AT_Abilities_BasicPunches.AT_Abilities_BasicPunches"
+     }
     },
     {
-     "abilityClass": {
-      "refPath": "/Game/Abilities/GA_Voadora.GA_Voadora_C"
-     },
-     "input": "Kick"
+     "level": 1,
+     "slotKey": 1,
+     "template": {
+      "refPath": "/Game/Abilities/AT_Abilities_Voadora.AT_Abilities_Voadora"
+     }
     },
     {
-     "abilityClass": {
-      "refPath": "/Game/Abilities/GA_Dash.GA_Dash_C"
-     },
-     "input": "None"
+     "level": 1,
+     "slotKey": -1,
+     "template": {
+      "refPath": "/Game/Abilities/AT_Abilities_Dash.AT_Abilities_Dash"
+     }
     },
     {
-     "abilityClass": {
-      "refPath": "/Game/Abilities/GA_Kick.GA_Kick_C"
-     },
-     "input": "Kick"
+     "level": 1,
+     "slotKey": 1,
+     "template": {
+      "refPath": "/Game/Abilities/AT_Abilities_Kick.AT_Abilities_Kick"
+     }
     },
     {
-     "abilityClass": {
-      "refPath": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Abilities/AT_Abilities_AirPunch.AT_Abilities_AirPunch"
+     }
     }
    ],
    "abilitySystem": {
@@ -6755,6 +6763,7 @@
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
    "aggressiveRange": 2000,
    "attackRange": 220,
+   "attackRangeKey": "AttackRange",
    "autoReceiveInput": "Disabled",
    "bAllowStrafe": false,
    "bAllowTickBeforeBeginPlay": false,
@@ -6793,6 +6802,7 @@
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
+   "buffedAttackRange": 900,
    "chaseRange": 10,
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "customTimeDilation": 1,
@@ -6801,52 +6811,52 @@
    "defaultUpdateOverlapsMethodDuringLevelStreaming": "OnlyUpdateMovable",
    "eventResponses": [
     {
-     "abilities": [
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff.GA_BossSelfDebuff_C"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSmash1.GA_BossSmash1_C"
-      }
-     ],
      "event": {
       "tagName": "status.health.75"
-     }
+     },
+     "templates": [
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
+      },
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
+      },
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
+      }
+     ]
     },
     {
-     "abilities": [
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff.GA_BossSelfDebuff_C"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSmash1.GA_BossSmash1_C"
-      }
-     ],
      "event": {
       "tagName": "status.health.50"
-     }
+     },
+     "templates": [
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
+      },
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
+      },
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
+      }
+     ]
     },
     {
-     "abilities": [
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff.GA_BossSelfDebuff_C"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSmash1.GA_BossSmash1_C"
-      }
-     ],
      "event": {
       "tagName": "status.health.25"
-     }
+     },
+     "templates": [
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
+      },
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
+      },
+      {
+       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
+      }
+     ]
     }
    ],
    "externalDataLayerAsset": "None",
@@ -7015,6 +7025,7 @@
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
+   "unbuffedAttackRange": 220,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault"
   },
   "parent": "/Script/MyGame.MyAIController"
@@ -7027,28 +7038,32 @@
    },
    "abilities": [
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossPunches.GA_BossPunches_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches.AT_Boss1_BossPunches"
+     }
     },
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C"
-     },
-     "input": "None"
+     "level": 1,
+     "slotKey": -1,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
+     }
     },
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff.GA_BossSelfDebuff_C"
-     },
-     "input": "None"
+     "level": 1,
+     "slotKey": -1,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
+     }
     },
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/GA_BossSmash1.GA_BossSmash1_C"
-     },
-     "input": "None"
+     "level": 1,
+     "slotKey": -1,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
+     }
     }
    ],
    "abilitySystem": {
@@ -9383,6 +9398,7 @@
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
    "aggressiveRange": 300,
    "attackRange": 230,
+   "attackRangeKey": "AttackRange",
    "autoReceiveInput": "Disabled",
    "bAllowStrafe": false,
    "bAllowTickBeforeBeginPlay": false,
@@ -9421,6 +9437,7 @@
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
+   "buffedAttackRange": 900,
    "chaseRange": 220,
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "customTimeDilation": 1,
@@ -9594,6 +9611,7 @@
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
+   "unbuffedAttackRange": 220,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault"
   },
   "parent": "/Script/MyGame.MyAIController"
@@ -9606,10 +9624,11 @@
    },
    "abilities": [
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/EKicker/GA_KickerKick.GA_KickerKick_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick.AT_EKicker_KickerKick"
+     }
     }
    ],
    "abilitySystem": {
@@ -11944,10 +11963,11 @@
    },
    "abilities": [
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1.GA_DamageEnemy1_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1.AT_EMelee1_DamageEnemy1"
+     }
     }
    ],
    "abilitySystem": {
@@ -14300,10 +14320,11 @@
    },
    "abilities": [
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1.GA_DamageEnemy1_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1.AT_EMelee2_DamageEnemy1"
+     }
     }
    ],
    "abilitySystem": {
@@ -16656,10 +16677,11 @@
    },
    "abilities": [
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2.GA_DamageEnemy2_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2.AT_EMelee3_DamageEnemy2"
+     }
     }
    ],
    "abilitySystem": {
@@ -19011,6 +19033,7 @@
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
    "aggressiveRange": 550,
    "attackRange": 550,
+   "attackRangeKey": "AttackRange",
    "autoReceiveInput": "Disabled",
    "bAllowStrafe": false,
    "bAllowTickBeforeBeginPlay": false,
@@ -19049,6 +19072,7 @@
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
+   "buffedAttackRange": 900,
    "chaseRange": 500,
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "customTimeDilation": 1,
@@ -19222,6 +19246,7 @@
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
+   "unbuffedAttackRange": 220,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault"
   },
   "parent": "/Script/MyGame.MyAIController"
@@ -19234,10 +19259,11 @@
    },
    "abilities": [
     {
-     "abilityClass": {
-      "refPath": "/Game/Blueprints/Chars/EWizard/GA_Cast1.GA_Cast1_C"
-     },
-     "input": "Punch"
+     "level": 1,
+     "slotKey": 0,
+     "template": {
+      "refPath": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1.AT_EWizard_Cast1"
+     }
     }
    ],
    "abilitySystem": {

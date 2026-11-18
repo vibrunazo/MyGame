@@ -1,423 +1,423 @@
 {
  "air_kick_hit": {
-  "ability": "/Game/Abilities/GA_Voadora",
+  "ability": "/Game/Abilities/AT_Abilities_Voadora",
   "states": [
    [
     "running+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "air_kick_miss": {
-  "ability": "/Game/Abilities/GA_Voadora",
+  "ability": "/Game/Abilities/AT_Abilities_Voadora",
   "states": [
    [
     "running+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "air_punch_hit": {
-  "ability": "/Game/Abilities/GA_AirPunch",
+  "ability": "/Game/Abilities/AT_Abilities_AirPunch",
   "states": [
    [
     "running+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "air_punch_miss": {
-  "ability": "/Game/Abilities/GA_AirPunch",
+  "ability": "/Game/Abilities/AT_Abilities_AirPunch",
   "states": [
    [
     "running+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window+airborne",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "boss_debuff_hit": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
   "states": [
    [
     "after",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "boss_debuff_miss": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
   "states": [
    [
     "after",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "boss_punches_hit": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
   "states": [
    [
     "running",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "boss_punches_miss": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
   "states": [
    [
     "running",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "boss_smash_hit": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
   "states": [
    [
     "running",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "boss_smash_miss": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
   "states": [
    [
     "running",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "boss_summon_hit": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossSummon1",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1",
   "states": [
    [
     "after",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "boss_summon_miss": {
-  "ability": "/Game/Blueprints/Chars/Boss1/GA_BossSummon1",
+  "ability": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1",
   "states": [
    [
     "after",
     [
-     "/Game/Blueprints/Chars/Boss1/GA_BossPunches",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
-     "/Game/Blueprints/Chars/Boss1/GA_BossSummon1"
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+     "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
     ]
    ]
   ]
  },
  "cast_hit": {
-  "ability": "/Game/Abilities/GA_Cast",
+  "ability": "/Game/Abilities/AT_Abilities_Cast",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "cast_miss": {
-  "ability": "/Game/Abilities/GA_Cast",
+  "ability": "/Game/Abilities/AT_Abilities_Cast",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "dash_hit": {
-  "ability": "/Game/Abilities/GA_Dash",
+  "ability": "/Game/Abilities/AT_Abilities_Dash",
   "states": [
    [
     "running+airborne",
     [
-     "/Game/Abilities/GA_AirPunch",
-     "/Game/Abilities/GA_Voadora"
+     "/Game/Abilities/AT_Abilities_AirPunch",
+     "/Game/Abilities/AT_Abilities_Voadora"
     ]
    ],
    [
     "running",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ],
    [
     "after",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "dash_miss": {
-  "ability": "/Game/Abilities/GA_Dash",
+  "ability": "/Game/Abilities/AT_Abilities_Dash",
   "states": [
    [
     "running+airborne",
     [
-     "/Game/Abilities/GA_AirPunch",
-     "/Game/Abilities/GA_Voadora"
+     "/Game/Abilities/AT_Abilities_AirPunch",
+     "/Game/Abilities/AT_Abilities_Voadora"
     ]
    ],
    [
     "running",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ],
    [
     "after",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "enemy1_hit": {
-  "ability": "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1",
+  "ability": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
   "states": [
    [
     "running",
@@ -430,25 +430,25 @@
    [
     "running+hit+window",
     [
-     "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1"
     ]
    ]
   ]
  },
  "enemy1_miss": {
-  "ability": "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1",
+  "ability": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
   "states": [
    [
     "running",
@@ -465,13 +465,13 @@
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1"
     ]
    ]
   ]
  },
  "enemy2_hit": {
-  "ability": "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
+  "ability": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
   "states": [
    [
     "running",
@@ -484,25 +484,25 @@
    [
     "running+hit+window",
     [
-     "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1"
     ]
    ]
   ]
  },
  "enemy2_miss": {
-  "ability": "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1",
+  "ability": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
   "states": [
    [
     "running",
@@ -519,13 +519,13 @@
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1"
+     "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1"
     ]
    ]
   ]
  },
  "enemy3_hit": {
-  "ability": "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
+  "ability": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
   "states": [
    [
     "running",
@@ -538,25 +538,25 @@
    [
     "running+hit+window",
     [
-     "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2"
+     "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2"
+     "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2"
+     "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2"
     ]
    ]
   ]
  },
  "enemy3_miss": {
-  "ability": "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
+  "ability": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
   "states": [
    [
     "running",
@@ -573,75 +573,75 @@
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2"
+     "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2"
     ]
    ]
   ]
  },
  "kick_hit": {
-  "ability": "/Game/Abilities/GA_Kick",
+  "ability": "/Game/Abilities/AT_Abilities_Kick",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "kick_miss": {
-  "ability": "/Game/Abilities/GA_Kick",
+  "ability": "/Game/Abilities/AT_Abilities_Kick",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "kicker_hit": {
-  "ability": "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+  "ability": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
   "states": [
    [
     "running",
@@ -662,13 +662,13 @@
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+     "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick"
     ]
    ]
   ]
  },
  "kicker_miss": {
-  "ability": "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
+  "ability": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
   "states": [
    [
     "running",
@@ -689,415 +689,415 @@
    [
     "after+ended",
     [
-     "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+     "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick"
     ]
    ]
   ]
  },
  "punch_hit": {
-  "ability": "/Game/Abilities/GA_BasicPunches",
+  "ability": "/Game/Abilities/AT_Abilities_BasicPunches",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "punch_miss": {
-  "ability": "/Game/Abilities/GA_BasicPunches",
+  "ability": "/Game/Abilities/AT_Abilities_BasicPunches",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ]
   ]
  },
  "super_kkk_hit": {
-  "ability": "/Game/Abilities/GA_Kkk",
+  "ability": "/Game/Abilities/AT_Abilities_Kkk",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Kkk",
-     "/Game/Abilities/GA_Upper"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Kkk",
+     "/Game/Abilities/AT_Abilities_Upper"
     ]
    ]
   ]
  },
  "super_kkk_miss": {
-  "ability": "/Game/Abilities/GA_Kkk",
+  "ability": "/Game/Abilities/AT_Abilities_Kkk",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Kkk",
-     "/Game/Abilities/GA_Upper"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Kkk",
+     "/Game/Abilities/AT_Abilities_Upper"
     ]
    ]
   ]
  },
  "super_runpunch_hit": {
-  "ability": "/Game/Abilities/GA_PunchRun",
+  "ability": "/Game/Abilities/AT_Abilities_PunchRun",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick"
     ]
    ],
    [
     "after",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_PunchRun"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_PunchRun"
     ]
    ]
   ]
  },
  "super_runpunch_miss": {
-  "ability": "/Game/Abilities/GA_PunchRun",
+  "ability": "/Game/Abilities/AT_Abilities_PunchRun",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_PunchRun"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_PunchRun"
     ]
    ]
   ]
  },
  "super_smash_hit": {
-  "ability": "/Game/Abilities/GA_Smash",
+  "ability": "/Game/Abilities/AT_Abilities_Smash",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Smash"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Smash"
     ]
    ]
   ]
  },
  "super_smash_miss": {
-  "ability": "/Game/Abilities/GA_Smash",
+  "ability": "/Game/Abilities/AT_Abilities_Smash",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Smash"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Smash"
     ]
    ]
   ]
  },
  "super_tat_hit": {
-  "ability": "/Game/Abilities/GA_Tat",
+  "ability": "/Game/Abilities/AT_Abilities_Tat",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Tat",
-     "/Game/Abilities/GA_Upper"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Tat",
+     "/Game/Abilities/AT_Abilities_Upper"
     ]
    ]
   ]
  },
  "super_tat_miss": {
-  "ability": "/Game/Abilities/GA_Tat",
+  "ability": "/Game/Abilities/AT_Abilities_Tat",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Tat",
-     "/Game/Abilities/GA_Upper"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Tat",
+     "/Game/Abilities/AT_Abilities_Upper"
     ]
    ]
   ]
  },
  "super_uppercut_hit": {
-  "ability": "/Game/Abilities/GA_Upper",
+  "ability": "/Game/Abilities/AT_Abilities_Upper",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+hit+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Upper"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Upper"
     ]
    ]
   ]
  },
  "super_uppercut_miss": {
-  "ability": "/Game/Abilities/GA_Upper",
+  "ability": "/Game/Abilities/AT_Abilities_Upper",
   "states": [
    [
     "running",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+window",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "running+ended",
     [
-     "/Game/Abilities/GA_Dash"
+     "/Game/Abilities/AT_Abilities_Dash"
     ]
    ],
    [
     "after+ended",
     [
-     "/Game/Abilities/GA_BasicPunches",
-     "/Game/Abilities/GA_Cast",
-     "/Game/Abilities/GA_Dash",
-     "/Game/Abilities/GA_Kick",
-     "/Game/Abilities/GA_Upper"
+     "/Game/Abilities/AT_Abilities_BasicPunches",
+     "/Game/Abilities/AT_Abilities_Cast",
+     "/Game/Abilities/AT_Abilities_Dash",
+     "/Game/Abilities/AT_Abilities_Kick",
+     "/Game/Abilities/AT_Abilities_Upper"
     ]
    ]
   ]
  },
  "wizard_hit": {
-  "ability": "/Game/Blueprints/Chars/EWizard/GA_Cast1",
+  "ability": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1",
   "states": [
    [
     "running",
@@ -1106,13 +1106,13 @@
    [
     "after",
     [
-     "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+     "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1"
     ]
    ]
   ]
  },
  "wizard_miss": {
-  "ability": "/Game/Blueprints/Chars/EWizard/GA_Cast1",
+  "ability": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1",
   "states": [
    [
     "running",
@@ -1121,7 +1121,7 @@
    [
     "after",
     [
-     "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+     "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1"
     ]
    ]
   ]

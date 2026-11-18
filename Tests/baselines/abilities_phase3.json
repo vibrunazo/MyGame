@@ -18,7 +18,7 @@
     "PunchR_Montage:ComboStart"
    ],
    "abilities": [
-    "GA_BasicPunches"
+    "AT_Abilities_BasicPunches"
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
@@ -56,7 +56,7 @@
     "PunchL_Montage:ComboStart"
    ],
    "abilities": [
-    "GA_BasicPunches"
+    "AT_Abilities_BasicPunches"
    ],
    "dummy_damage": 45.0,
    "dummy_tags": [
@@ -88,7 +88,7 @@
     "Kick1_Montage:ComboStart"
    ],
    "abilities": [
-    "GA_Kick"
+    "AT_Abilities_Kick"
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
@@ -126,7 +126,7 @@
     "Kick1_Montage:ComboStart"
    ],
    "abilities": [
-    "GA_Kick"
+    "AT_Abilities_Kick"
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
@@ -159,7 +159,7 @@
     "FlyingKick_Montage:Default"
    ],
    "abilities": [
-    "GA_Voadora"
+    "AT_Abilities_Voadora"
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
@@ -194,7 +194,7 @@
     "AirPunch_Montage:Default"
    ],
    "abilities": [
-    "GA_AirPunch"
+    "AT_Abilities_AirPunch"
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
@@ -224,7 +224,7 @@
    ],
    "timeline": [],
    "abilities": [
-    "GA_Dash"
+    "AT_Abilities_Dash"
    ],
    "dummy_damage": 0.0,
    "dummy_tags": [],
@@ -277,7 +277,7 @@
    ],
    "timeline": [],
    "abilities": [
-    "GA_Dash"
+    "AT_Abilities_Dash"
    ],
    "dummy_damage": 0.0,
    "dummy_tags": [],
@@ -308,7 +308,7 @@
     "SmashPlayer_Montage:Default"
    ],
    "abilities": [
-    "GA_Smash"
+    "AT_Abilities_Smash"
    ],
    "dummy_damage": 30.0,
    "dummy_tags": [
@@ -344,7 +344,7 @@
     "PunchRunR_Montage:Recovery"
    ],
    "abilities": [
-    "GA_PunchRun"
+    "AT_Abilities_PunchRun"
    ],
    "dummy_damage": 20.0,
    "dummy_tags": [
@@ -377,7 +377,7 @@
     "Upper2_Montage:combostart"
    ],
    "abilities": [
-    "GA_Upper"
+    "AT_Abilities_Upper"
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
@@ -410,7 +410,7 @@
     "Tat_Montage:Default"
    ],
    "abilities": [
-    "GA_Tat"
+    "AT_Abilities_Tat"
    ],
    "dummy_damage": 48.0,
    "dummy_tags": [
@@ -446,7 +446,7 @@
     "kkk_Montage:Recovery"
    ],
    "abilities": [
-    "GA_Kkk"
+    "AT_Abilities_Kkk"
    ],
    "dummy_damage": 10.0,
    "dummy_tags": [
@@ -477,7 +477,7 @@
     "CastForward_Montage:Default"
    ],
    "abilities": [
-    "GA_Cast"
+    "AT_Abilities_Cast"
    ],
    "dummy_damage": 20.0,
    "dummy_tags": [
@@ -509,7 +509,7 @@
     "PunchR_Montage:ComboStart"
    ],
    "abilities": [
-    "GA_BasicPunches"
+    "AT_Abilities_BasicPunches"
    ],
    "dummy_damage": 15.0,
    "dummy_tags": [
@@ -541,7 +541,7 @@
     "PunchR_Montage:ComboStart"
    ],
    "abilities": [
-    "GA_BasicPunches"
+    "AT_Abilities_BasicPunches"
    ],
    "dummy_damage": 7.5,
    "dummy_tags": [
@@ -596,7 +596,7 @@
     "PunchR_Montage:ComboStart"
    ],
    "abilities": [
-    "GA_BasicPunches"
+    "AT_Abilities_BasicPunches"
    ],
    "dummy_damage": 60.0,
    "dummy_tags": [

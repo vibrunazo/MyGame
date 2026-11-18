@@ -12625,6 +12625,29 @@
       }
      },
      "subobject": "AssetTagsGameplayEffectComponent"
+    },
+    {
+     "editorFriendlyName": "Target Tags (Granted to Actor)",
+     "inheritableGrantedTagsContainer": {
+      "added": {
+       "gameplayTags": [
+        {
+         "tagName": "status.buffedrange"
+        }
+       ]
+      },
+      "combinedTags": {
+       "gameplayTags": [
+        {
+         "tagName": "status.buffedrange"
+        }
+       ]
+      },
+      "removed": {
+       "gameplayTags": []
+      }
+     },
+     "subobject": "TargetTagsGameplayEffectComponent"
     }
    ],
    "gameplayCues": [
@@ -12727,10 +12750,18 @@
    },
    "inheritableOwnedTagsContainer": {
     "added": {
-     "gameplayTags": []
+     "gameplayTags": [
+      {
+       "tagName": "status.buffedrange"
+      }
+     ]
     },
     "combinedTags": {
-     "gameplayTags": []
+     "gameplayTags": [
+      {
+       "tagName": "status.buffedrange"
+      }
+     ]
     },
     "removed": {
      "gameplayTags": []

@@ -14,6 +14,7 @@
  "AssHitBox.HitboxTouched": [],
  "AssHitBox.OnOwnerDestroyed": [],
  "MyCharacter.ActivateAbilityByInput": [],
+ "MyCharacter.ActivateTemplateForTest": [],
  "MyCharacter.AddDurationToHealthBar": [],
  "MyCharacter.AddItemToInventory": [],
  "MyCharacter.AddToAggroList": [
@@ -36,7 +37,6 @@
   "/Game/Blueprints/AI/EQC_BehindPlayer :: ProvideSingleLocation",
   "/Game/Blueprints/AI/EQC_PlayerContext :: ProvideSingleActor"
  ],
- "MyCharacter.GiveAbility": [],
  "MyCharacter.HasControl": [
   "/Game/Blueprints/AI/BTDecorator_HasControl :: PerformConditionCheckAI"
  ],
