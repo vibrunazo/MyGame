@@ -56,9 +56,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_AirPunch.AT_Abilities_AirPunch"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -113,9 +110,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_BaseAttack.AT_Abilities_BaseAttack"
    }
   },
   "parent": "/Script/AssCombat.AssAbility"
@@ -180,9 +174,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_BasicPunches.AT_Abilities_BasicPunches"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -246,9 +237,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_Cast.AT_Abilities_Cast"
    },
    "validTargets": []
   },
@@ -374,9 +362,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_Kick.AT_Abilities_Kick"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -438,9 +423,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_Kkk.AT_Abilities_Kkk"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -508,9 +490,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_PunchRun.AT_Abilities_PunchRun"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -615,9 +594,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_Smash.AT_Abilities_Smash"
    }
   },
   "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
@@ -735,9 +711,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_Tat.AT_Abilities_Tat"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -799,9 +772,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_Upper.AT_Abilities_Upper"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -863,9 +833,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Abilities/AT_Abilities_Voadora.AT_Abilities_Voadora"
    }
   },
   "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
@@ -930,9 +897,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches.AT_Boss1_BossPunches"
    }
   },
   "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
@@ -1093,9 +1057,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
    }
   },
   "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
@@ -1218,9 +1179,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick.AT_EKicker_KickerKick"
    }
   },
   "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
@@ -1285,9 +1243,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1.AT_EMelee1_DamageEnemy1"
    }
   },
   "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
@@ -1352,9 +1307,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1.AT_EMelee2_DamageEnemy1"
    }
   },
   "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
@@ -1419,9 +1371,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2.AT_EMelee3_DamageEnemy2"
    }
   },
   "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
@@ -1479,9 +1428,6 @@
    },
    "targetRequiredTags": {
     "gameplayTags": []
-   },
-   "template": {
-    "refPath": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1.AT_EWizard_Cast1"
    }
   },
   "parent": "/Script/AssCombat.AssCastAbility"
