@@ -191,7 +191,6 @@
  },
  "Ass.Data.NoControl": {
   "assets": [
-   "/Game/Abilities/GA_Dash",
    "/Game/Abilities/GE_NoControl"
   ],
   "children": [],
@@ -213,8 +212,7 @@
  "Ass.Data.StunImmune": {
   "assets": [
    "/Game/Abilities/GE_StunImmune",
-   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
   ],
   "children": [],
   "code": [],
@@ -326,23 +324,15 @@
    "/Game/Abilities/AT_Abilities_Tat",
    "/Game/Abilities/AT_Abilities_Upper",
    "/Game/Abilities/AT_Abilities_Voadora",
-   "/Game/Abilities/GA_BaseAttack",
-   "/Game/Abilities/GA_BasicPunches",
-   "/Game/Abilities/GA_Cast",
-   "/Game/Abilities/GA_PunchRun",
-   "/Game/Abilities/GA_Tat",
-   "/Game/Abilities/GA_Voadora",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1",
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
-   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
    "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
-   "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1",
-   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+   "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1"
   ],
   "children": [],
   "code": [],
@@ -371,8 +361,7 @@
  },
  "Ass.Status.Airborne": {
   "assets": [
-   "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1",
-   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+   "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1"
   ],
   "children": [],
   "code": [],
@@ -393,9 +382,6 @@
    "/Game/Abilities/AT_Abilities_Tat",
    "/Game/Abilities/AT_Abilities_Upper",
    "/Game/Abilities/AT_Abilities_Voadora",
-   "/Game/Abilities/GA_BaseAttack",
-   "/Game/Abilities/GA_Cast",
-   "/Game/Abilities/GA_Voadora",
    "/Game/Abilities/GE_HitStun",
    "/Game/Abilities/GE_StunImmune",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
@@ -403,8 +389,7 @@
    "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
-   "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1",
-   "/Game/Blueprints/Chars/EWizard/GA_Cast1"
+   "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1"
   ],
   "children": [],
   "code": [],
@@ -439,10 +424,7 @@
   "assets": [
    "/Game/Abilities/AT_Abilities_PunchRun",
    "/Game/Abilities/AT_Abilities_Tat",
-   "/Game/Abilities/GA_PunchRun",
-   "/Game/Abilities/GA_Tat",
-   "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
-   "/Game/Blueprints/Chars/EKicker/GA_KickerKick"
+   "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick"
   ],
   "children": [],
   "code": [],
@@ -963,8 +945,7 @@
  },
  "activate": {
   "assets": [
-   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1"
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1"
   ],
   "children": [
    "activate.cast",
@@ -985,8 +966,7 @@
  },
  "activate.cast": {
   "assets": [
-   "/Game/Abilities/AT_Abilities_Cast",
-   "/Game/Abilities/GA_Cast"
+   "/Game/Abilities/AT_Abilities_Cast"
   ],
   "children": [],
   "code": [],
@@ -998,9 +978,7 @@
  "activate.flyingattack": {
   "assets": [
    "/Game/Abilities/AT_Abilities_AirPunch",
-   "/Game/Abilities/AT_Abilities_Voadora",
-   "/Game/Abilities/GA_AirPunch",
-   "/Game/Abilities/GA_Voadora"
+   "/Game/Abilities/AT_Abilities_Voadora"
   ],
   "children": [],
   "code": [
@@ -1024,14 +1002,6 @@
    "/Game/Abilities/AT_Abilities_Smash",
    "/Game/Abilities/AT_Abilities_Tat",
    "/Game/Abilities/AT_Abilities_Upper",
-   "/Game/Abilities/GA_BasicPunches",
-   "/Game/Abilities/GA_Cast",
-   "/Game/Abilities/GA_Kick",
-   "/Game/Abilities/GA_Kkk",
-   "/Game/Abilities/GA_PunchRun",
-   "/Game/Abilities/GA_Smash",
-   "/Game/Abilities/GA_Tat",
-   "/Game/Abilities/GA_Upper",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
    "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
@@ -1053,10 +1023,7 @@
   "assets": [
    "/Game/Abilities/AT_Abilities_Kick",
    "/Game/Abilities/AT_Abilities_Kkk",
-   "/Game/Abilities/AT_Abilities_Tat",
-   "/Game/Abilities/GA_Kick",
-   "/Game/Abilities/GA_Kkk",
-   "/Game/Abilities/GA_Tat"
+   "/Game/Abilities/AT_Abilities_Tat"
   ],
   "children": [],
   "code": [],
@@ -1067,8 +1034,7 @@
  },
  "activate.move": {
   "assets": [
-   "/Game/Abilities/AT_Abilities_Dash",
-   "/Game/Abilities/GA_Dash"
+   "/Game/Abilities/AT_Abilities_Dash"
   ],
   "children": [],
   "code": [],
@@ -1084,15 +1050,9 @@
    "/Game/Abilities/AT_Abilities_PunchRun",
    "/Game/Abilities/AT_Abilities_Smash",
    "/Game/Abilities/AT_Abilities_Upper",
-   "/Game/Abilities/GA_AirPunch",
-   "/Game/Abilities/GA_BasicPunches",
-   "/Game/Abilities/GA_PunchRun",
-   "/Game/Abilities/GA_Smash",
-   "/Game/Abilities/GA_Upper",
    "/Game/Abilities/GE_FirePunch",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSmash1",
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
    "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
@@ -1163,11 +1123,8 @@
    "/Game/Abilities/AT_Abilities_Smash",
    "/Game/Abilities/AT_Abilities_Tat",
    "/Game/Abilities/AT_Abilities_Upper",
-   "/Game/Abilities/GA_BasicPunches",
-   "/Game/Abilities/GA_PunchRun",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
-   "/Game/Blueprints/Chars/EKicker/GA_KickerKick",
    "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2"
@@ -1239,8 +1196,7 @@
   "assets": [
    "/Game/Abilities/GE_AttackSpeedAdd",
    "/Game/Abilities/GE_AttackSpeedAddNoStack",
-   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
   ],
   "children": [
    "data.attackspeed.duration"
@@ -1255,8 +1211,7 @@
   "assets": [
    "/Game/Abilities/GE_AttackSpeedAdd",
    "/Game/Abilities/GE_AttackSpeedAddNoStack",
-   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff"
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
   ],
   "children": [],
   "code": [],
@@ -1415,7 +1370,6 @@
    "/Game/Anims/kkk_Montage",
    "/Game/Blueprints/Chars/BP_Char",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
    "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
    "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1",
    "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1",
@@ -1454,7 +1408,6 @@
    "/Game/Anims/kkk_Montage",
    "/Game/Blueprints/Chars/BP_Char",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
-   "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff",
    "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
    "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1",
    "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1",
@@ -1485,8 +1438,7 @@
  },
  "event.dash": {
   "assets": [
-   "/Game/Abilities/AT_Abilities_Dash",
-   "/Game/Abilities/GA_Dash"
+   "/Game/Abilities/AT_Abilities_Dash"
   ],
   "children": [],
   "code": [

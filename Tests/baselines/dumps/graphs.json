@@ -9,107 +9,6 @@
   "kind": "Blueprint",
   "parent": "/Script/MyGame.DamageExec"
  },
- "/Game/Abilities/GA_AirPunch": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
- "/Game/Abilities/GA_BaseAttack": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AssCombat.AssAbility"
- },
- "/Game/Abilities/GA_BasicPunches": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
- "/Game/Abilities/GA_Cast": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AssCombat.AssCastAbility"
- },
- "/Game/Abilities/GA_Dash": {
-  "graphs": {
-   "Gameplay Ability Graph": "(event Ability|EventActivateAbility\n  (Ability|CommitAbility)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Ability|GetAvatarActorFromActorInfo))\n    (:then\n      (bind _returnvalue (Ability|GameplayEffect|AssignTagSetByCallerMagnitude (GameplayEffects|MakeOutgoingSpec (Class|MyCharacter|GetAbilitySystem _asmy_character) \"/Game/Abilities/GE_NoControl.GE_NoControl_C\") \"(TagName=\\\"Ass.Data.NoControl\\\")\" 0.500000))\n      (GameplayEffects|ApplyGameplayEffectSpecToSelf (Class|MyCharacter|GetAbilitySystem _asmy_character) _returnvalue)\n      (Character|LaunchCharacter _asmy_character (Math|Vector|vector*float (Math|Vector|GetForwardVector (Pawn|GetControlRotation (Pawn|GetController _asmy_character))) (Variables|Default|GetDashDistance)) true)\n      (Ability|Tasks|WaitDelay (Variables|Default|GetCooldown)\n        (:OnFinish\n          (Ability|EndAbility))))\n    (:CastFailed\n      (Ability|EndAbility))))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "GameplayAbilityBlueprint",
-  "parent": "/Script/GameplayAbilities.GameplayAbility"
- },
- "/Game/Abilities/GA_Kick": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
- "/Game/Abilities/GA_Kkk": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
- "/Game/Abilities/GA_PunchRun": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
- "/Game/Abilities/GA_SelfEffect": {
-  "graphs": {
-   "Gameplay Ability Graph": "(event Custom|EffectOver)\n\n(event Ability|EventActivateAbility\n  (Ability|CommitAbility)\n  (bind _returnvalue (MyLibrary|ApplyAllEffectContainersToActor (Ability|GetAvatarActorFromActorInfo) (Variables|Default|GetEffectstoApply)))\n  (Ability|EndAbility)\n  (bind _returnvalue_1 (Ability|GameplayEffect|GetActiveGameplayEffectTotalDuration (Utilities|Array|Get(aref) _returnvalue)))\n  (Utilities|Time|SetTimerbyEvent (AddEvent|Custom|EffectOver) _returnvalue_1))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "GameplayAbilityBlueprint",
-  "parent": "/Script/GameplayAbilities.GameplayAbility"
- },
- "/Game/Abilities/GA_Smash": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
- },
- "/Game/Abilities/GA_Summon": {
-  "graphs": {
-   "Gameplay Ability Graph": "(event Ability|EventActivateAbility\n  (bind _targetcharref (Variables|Default|GetTargetCharRef))\n  (bind _returnvalue (Transformation|GetDistanceTo (Utilities|Array|ForEachLoop (Collision|BoxOverlapActors (Class|MyFuncLib|GetRoomCenter) (Class|BoxCollision|GetBoxExtent) (Utilities|Array|MakeArray \"ObjectTypeQuery1\") \"/Script/MyGame.Spawner\")) _targetcharref))\n  (bind _bestspawner (Variables|Default|GetBestSpawner))\n  (Ability|CommitAbility)\n  (Class|BPPickupMeshActorBook|InitialSetup)\n  (bind _outactors (Collision|BoxOverlapActors (Class|MyFuncLib|GetRoomCenter) (Class|BoxCollision|GetBoxExtent) (Utilities|Array|MakeArray \"ObjectTypeQuery1\") \"/Script/MyGame.Spawner\"))\n  (for _array_element _outactors\n    (if (> _returnvalue (Variables|Default|GetBestDistance))\n      (Variables|Default|SetBestDistance _returnvalue)\n      (bind _asbp_spawner (Utilities|Casting|CastToBP_Spawner _array_element))\n      (Variables|Default|SetBestSpawner _asbp_spawner)))\n  (Utilities|IsValid _bestspawner\n    (:\"Is Valid\"\n      (Spawner|SpawnActors _bestspawner)\n      (Ability|EndAbility))\n    (:\"Is Not Valid\")))\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n",
-   "GetBoxExtent": "(fn GetBoxExtent ()\n  (return (Math|Vector|vector/float (Class|TileTemplate|GetRoomSize) 2.000000) (Math|Vector|vector/float (Class|TileTemplate|GetRoomSize) 2.000000) (Math|Vector|vector/float (Class|TileTemplate|GetRoomSize) 2.000000)))\n",
-   "GetRoomCenter": "(fn GetRoomCenter ()\n  (return (Class|MyFuncLib|GetRoomCenter (Transformation|GetActorLocation (Ability|GetAvatarActorFromActorInfo)))))\n",
-   "InitialSetup": "(fn InitialSetup ()\n  (Variables|Default|SetBestDistance 0.0)\n  (Variables|Default|SetBestSpawner 0)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Ability|GetAvatarActorFromActorInfo)))\n  (bind _output_get (Variables|Default|SetCharRef _asmy_character))\n  (Variables|Default|SetTargetCharRef (Abilities|GetTargetEnemy _output_get)))\n"
-  },
-  "kind": "GameplayAbilityBlueprint",
-  "parent": "/Script/GameplayAbilities.GameplayAbility"
- },
- "/Game/Abilities/GA_Tat": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
- "/Game/Abilities/GA_Upper": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
- "/Game/Abilities/GA_Voadora": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BaseAttack.GA_BaseAttack_C"
- },
  "/Game/Abilities/GE_Attack": {
   "graphs": {},
   "kind": "Blueprint",
@@ -507,34 +406,6 @@
   "kind": "Blueprint",
   "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
  },
- "/Game/Blueprints/Chars/Boss1/GA_BossPunches": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
- },
- "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (bind _buffedrange (Variables|Default|GetBuffedRange))\n  (Ability|Parent:ActivateAbility)\n  (bind _asmy_aicontroller (Utilities|Casting|CastToMyAIController (AI|GetAIController (Ability|GetAvatarActorFromActorInfo))))\n  (Class|MyAIController|SetAttackRange _buffedrange _asmy_aicontroller)\n  (AI|Components|Blackboard|SetValueAsFloat (AI|GetBlackboard _asmy_aicontroller) (Variables|Default|GetAttackRangeKey) _buffedrange))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n\n(event EventEffectOver\n  (bind _unbuffedrange (Variables|Default|GetUnbuffedRange))\n  (bind _asmy_aicontroller (Utilities|Casting|CastToMyAIController (AI|GetAIController (Ability|GetAvatarActorFromActorInfo))))\n  (Class|MyAIController|SetAttackRange _unbuffedrange _asmy_aicontroller)\n  (AI|Components|Blackboard|SetValueAsFloat (AI|GetBlackboard _asmy_aicontroller) (Variables|Default|GetAttackRangeKey) _unbuffedrange))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_SelfEffect.GA_SelfEffect_C"
- },
- "/Game/Blueprints/Chars/Boss1/GA_BossSmash1": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
- },
- "/Game/Blueprints/Chars/Boss1/GA_BossSummon1": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_Summon.GA_Summon_C"
- },
  "/Game/Blueprints/Chars/EKicker/BP_AIContKicker": {
   "graphs": {
    "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
@@ -551,13 +422,6 @@
   "kind": "Blueprint",
   "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
  },
- "/Game/Blueprints/Chars/EKicker/GA_KickerKick": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
- },
  "/Game/Blueprints/Chars/EKicker/GE_KickerCooldown": {
   "graphs": {},
   "kind": "Blueprint",
@@ -571,13 +435,6 @@
   "kind": "Blueprint",
   "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
  },
- "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
- },
  "/Game/Blueprints/Chars/EMelee2/BP_Enemy2": {
   "graphs": {
    "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
@@ -586,13 +443,6 @@
   "kind": "Blueprint",
   "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
  },
- "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
- },
  "/Game/Blueprints/Chars/EMelee3/BP_Enemy3": {
   "graphs": {
    "EventGraph": "(event EventBeginPlay\n  (|Parent:BeginPlay))\n\n(event Collision|EventActorBeginOverlap (OtherActor)\n  (Collision|Parent:ActorBeginOverlap OtherActor))\n\n(event EventTick (DeltaSeconds)\n  (|Parent:Tick DeltaSeconds))\n",
@@ -600,13 +450,6 @@
   },
   "kind": "Blueprint",
   "parent": "/Game/Blueprints/Chars/EMelee1/BP_Enemy1.BP_Enemy1_C"
- },
- "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility\n  (Ability|Parent:ActivateAbility))\n\n(event Ability|EventOnEndAbility (bWasCancelled)\n  (Ability|Parent:OnEndAbility bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
  },
  "/Game/Blueprints/Chars/EWizard/BP_AIContWizard": {
   "graphs": {
@@ -623,13 +466,6 @@
   },
   "kind": "Blueprint",
   "parent": "/Game/Blueprints/Chars/BP_EnemyBase.BP_EnemyBase_C"
- },
- "/Game/Blueprints/Chars/EWizard/GA_Cast1": {
-  "graphs": {
-   "EventGraph": "(event Ability|EventActivateAbility)\n\n(event Ability|EventOnEndAbility (bWasCancelled))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AssCombat.AssCastAbility"
  },
  "/Game/Blueprints/ChildActorTest": {
   "graphs": {

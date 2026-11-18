@@ -33,7 +33,6 @@
  ],
  "MyCharacter.GetTagsForTest": [],
  "MyCharacter.GetTargetEnemy": [
-  "/Game/Abilities/GA_Summon :: InitialSetup",
   "/Game/Blueprints/AI/EQC_BehindPlayer :: ProvideSingleLocation",
   "/Game/Blueprints/AI/EQC_PlayerContext :: ProvideSingleActor"
  ],
