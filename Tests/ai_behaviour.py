@@ -73,7 +73,7 @@ def boss_scenarios():
 # each enemy type: its class and its controller's ranges (attack, aggressive; the dumps' actors.json)
 TYPES = {"enemy1": (140, 200), "enemy2": (140, 200), "enemy3": (140, 200), "kicker": (230, 300), "wizard": (550, 550)}
 FACING = {"toward": 0.0, "away": 180.0, "side": 90.0}
-HITSTUN = "/Game/Abilities/GE_HitStun.GE_HitStun_C"
+HITSTUN = "/Script/AssCombat.AssHitStunEffect"  # the plugin's stun (Ass Plan.md Step 4, item 5)
 
 
 def matrix_scenarios():

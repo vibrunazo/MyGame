@@ -1174,7 +1174,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         Args:
             actor_path: Full path of a PIE character.
             effect_class_path: e.g. "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C".
-            set_by_caller: JSON {tag: magnitude} (e.g. {"Ass.Data.HitStun": 0.6} for GE_HitStun's duration).
+            set_by_caller: JSON {tag: magnitude} (e.g. {"Ass.Data.HitStun": 0.6} for the stun's duration).
 
         Returns:
             JSON {"applied": bool}.
