@@ -873,14 +873,6 @@
   "kind": "AnimBlueprint",
   "parent": "/Script/Engine.AnimInstance"
  },
- "/Game/ThirdPersonCPP/Blueprints/ThirdPersonCharacter": {
-  "graphs": {
-   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
-   "UserConstructionScript": "(fn ConstructionScript ())\n"
-  },
-  "kind": "Blueprint",
-  "parent": "None"
- },
  "/Game/UI/BP_MenuController": {
   "graphs": {
    "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
