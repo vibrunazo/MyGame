@@ -288,7 +288,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
@@ -2626,7 +2626,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
@@ -7080,7 +7080,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
@@ -9641,7 +9641,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
@@ -11979,7 +11979,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
@@ -14335,7 +14335,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
@@ -16691,7 +16691,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
@@ -19269,7 +19269,7 @@
      "tickGroup": "TG_DuringPhysics",
      "tickInterval": 0
     },
-    "subobject": "AbilitySystemComponent"
+    "subobject": "AssAbilitySystemComponent"
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",

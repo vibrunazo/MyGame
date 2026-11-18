@@ -1,6 +1,7 @@
 {
  "AssAbility.BPOnAbilityActivated": [],
  "AssAbility.GetAbilityTags": [],
+ "AssAbility.OnActionEvent": [],
  "AssAbility.OnDeactivateEvent": [],
  "AssAbility.OnHitConnect": [],
  "AssAbility.OnHitEnd": [],
@@ -9,6 +10,7 @@
  "AssAbility.OnMontageCancelled": [],
  "AssAbility.OnMontageCompleted": [],
  "AssAbility.OnMontageInterrupted": [],
+ "AssAbility.OnTimedStepEnd": [],
  "AssHitBox.HitboxTouched": [],
  "AssHitBox.OnOwnerDestroyed": [],
  "MyCharacter.ActivateAbilityByInput": [],
