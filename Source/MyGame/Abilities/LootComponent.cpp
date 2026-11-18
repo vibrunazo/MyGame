@@ -29,13 +29,13 @@ ULootComponent::ULootComponent()
 /// <param name="FirstList">The first list of abilities to compare</param>
 /// <param name="SecondList">The second list of abilities to compare</param>
 /// <returns>True if any ability of the first list has the same slot as any ability of the second list</returns>
-bool ULootComponent::DoAnyAbilitySlotOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList)
+bool ULootComponent::DoAnyAbilitySlotOverlap(const TArray<FAssAbilityGrant>& FirstList, const TArray<FAssAbilityGrant>& SecondList)
 {
 	for (auto&& FirstAbility : FirstList)
 	{
 		for (auto&& SecondAbility : SecondList)
 		{
-			if (FirstAbility.Input == SecondAbility.Input) return true;
+			if (FirstAbility.SlotKey == SecondAbility.SlotKey) return true;
 		}
 	}
 	return false;
@@ -49,15 +49,15 @@ bool ULootComponent::DoAnyAbilitySlotOverlap(TArray<struct FAbilityStruct> First
 /// <param name="FirstList">The first list of abilities to compare</param>
 /// <param name="SecondList">The second list of abilities to compare</param>
 /// <returns>0 if no overlap is found. 1 if any ability from one list shares the same Slot as any ability from the second. 2 if any ability from one list is identical to any ability in the other list.</returns>
-uint8 ULootComponent::DoAnyAbilityOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList)
+uint8 ULootComponent::DoAnyAbilityOverlap(const TArray<FAssAbilityGrant>& FirstList, const TArray<FAssAbilityGrant>& SecondList)
 {
 	uint8 result = 0;
 	for (auto&& FirstAbility : FirstList)
 	{
 		for (auto&& SecondAbility : SecondList)
 		{
-			if (FirstAbility.AbilityClass == SecondAbility.AbilityClass) return 2;
-			if (FirstAbility.Input == SecondAbility.Input) result = 1;
+			if (FirstAbility.Template == SecondAbility.Template) return 2;
+			if (FirstAbility.SlotKey == SecondAbility.SlotKey) result = 1;
 		}
 	}
 	return result;

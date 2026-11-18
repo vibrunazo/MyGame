@@ -172,10 +172,10 @@ void AMyPlayerController::ShowHUD()
 void AMyPlayerController::RefreshHUDAbilities(AMyCharacter* Char)
 {
     if (!Char || !HUDWidgetRef) return;
-    for (const FAbilityStruct& Ability : Char->Abilities)
+    for (const FAssAbilityGrant& Ability : Char->Abilities)
     {
         // no slot (dash), or an air move sharing its slot with the ground move the button shows
-        if (Ability.Input == EInput::None || AMyCharacter::IsAirAbility(Ability.AbilityClass)) continue;
+        if (Ability.SlotKey == FAssAbilityGrant::NoSlot || AMyCharacter::IsAirAbility(Ability.Template)) continue;
         UpdateHUDAbility(Ability, true);
     }
 }
@@ -256,12 +256,13 @@ void AMyPlayerController::ShowAbilityCooldown(uint8 Index, float Cooldown)
     if (HUDWidgetRef) HUDWidgetRef->BPUpdateCooldown(Index, Cooldown);
 }
 
-void AMyPlayerController::UpdateHUDAbility(FAbilityStruct Ability, bool NewState)
+void AMyPlayerController::UpdateHUDAbility(FAssAbilityGrant Ability, bool NewState)
 {
     if (HUDWidgetRef)
     {
-        HUDWidgetRef->BPSetupAbility(Ability);
-        HUDWidgetRef->BPUpdateActionSlot(Ability.Input, NewState);
+        const EInput Input = UMyBlueprintFunctionLibrary::GetGrantInput(Ability);
+        HUDWidgetRef->BPSetupAbility((uint8)Input, UMyBlueprintFunctionLibrary::GetGrantUI(Ability));
+        HUDWidgetRef->BPUpdateActionSlot(Input, NewState);
     }
 }
 

@@ -9,6 +9,7 @@
 #include "GameplayTagContainer.h"
 #include "AssCombatant.h"
 #include "AssEffectContainer.h"
+#include "AssAbilityTemplate.h"
 #include "Abilities/MyGameplayEffectUIData.h"
 // #include "Props/ItemDataAsset.h"
 #include "MyBlueprintFunctionLibrary.generated.h"
@@ -35,32 +36,10 @@ enum class EInput : uint8
 	None = 200
 };
 
-// An ability granted on a button slot. Whether it works on the ground or in the air is the ability's own
-// tags (activate.groundattack / activate.flyingattack, blocked by AMyCharacter while airborne / grounded)
-USTRUCT(BlueprintType)
-struct FAbilityStruct
-{
-	GENERATED_BODY()
-
-	int32 ID = 0;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	TSubclassOf<class UGameplayAbility> AbilityClass;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EInput Input = EInput::Punch;
-
-	friend bool operator==(const FAbilityStruct& first, const FAbilityStruct& second)
-	{
-		return first.AbilityClass == second.AbilityClass
-			&& first.Input == second.Input;
-	}
-	friend uint32 GetTypeHash(const FAbilityStruct& Other)
-	{
-		return GetTypeHash(Other.ID);
-	}
-
-};
+// MyGame's abilities are grants of the plugin's templates (FAssAbilityGrant, Ass Plan.md Step 4): a grant's slot key is
+// EInput's number, and None is FAssAbilityGrant::NoSlot. Whether a move works on the ground or in the air is its
+// definition's identity tags (activate.groundattack / activate.flyingattack, blocked by AMyCharacter while airborne /
+// grounded).
 /**
  * 
  */
@@ -70,10 +49,20 @@ class MYGAME_API UMyBlueprintFunctionLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	// An ability's UI (name, description, color, icon) for the HUD's buttons and the ability books; empty when it has
-	// none. The only reader of the game's ability UI table (UAbilityUIDataAsset on the game instance class)
+	// An ability's UI for the HUD's buttons and the ability books, from its template's presentation: its name and
+	// description, white, and its icon texture as a 64 x 64 brush (what DA_AbilityUI held for every entry); empty with
+	// no template, and a default brush with no icon
 	UFUNCTION(BlueprintPure, Category = "UI")
-	static FBuffUI GetAbilityUI(TSubclassOf<UGameplayAbility> AbilityClass);
+	static FBuffUI GetAbilityUI(const UAssAbilityTemplate* Template);
+	UFUNCTION(BlueprintPure, Category = "UI")
+	static FBuffUI GetGrantUI(const FAssAbilityGrant& Grant);
+	// A grant's template, loaded; nullptr with none
+	UFUNCTION(BlueprintPure, Category = "Abilities")
+	static UAssAbilityTemplate* GetGrantTemplate(const FAssAbilityGrant& Grant);
+	// A grant's slot key as the input it's on (NoSlot is None), and back
+	UFUNCTION(BlueprintPure, Category = "Abilities")
+	static EInput GetGrantInput(const FAssAbilityGrant& Grant);
+	static int32 SlotKeyOf(EInput Input) { return Input == EInput::None ? FAssAbilityGrant::NoSlot : (int32)Input; }
 
 	// The plugin's UAssCombatLibrary::ApplyEffectContainer, with an item's cue added in the effect's context first
 	static FActiveGameplayEffectHandle ApplyEffectContainerToChar(IAssCombatant* Char, const FAssEffectContainer& Container, UItemDataAsset* Item = nullptr);

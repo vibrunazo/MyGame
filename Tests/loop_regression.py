@@ -23,7 +23,7 @@ import mygame
 from mygame import floor_z, objects, tool, wait_game, wait_loaded, wait_until
 
 BOSS = "/Game/Blueprints/Chars/Boss1/BP_Boss1.BP_Boss1_C"
-SUMMON = "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C"
+SUMMON = "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
 ALL_SLOTS = "0,1,2,3,10,11,12,20,21,22"  # EInput: the buttons and their Super and Ultra versions
 
 BOOK, ITEM = "/Game/Blueprints/Items/DA_LearnTat", "/Game/Blueprints/Items/DA_ItemFireHands"
@@ -91,7 +91,7 @@ def summon_doored(state):
         tool("set_ai_enabled", actor_path=c, enabled=False, show_player=False)
     boss = tool("spawn_enemy", class_path=BOSS, x=cx + 200.0, y=cy, z=z + 50.0, yaw=180.0)["path"]
     tool("ai_target", actor_path=boss, set_player=True)
-    tool("activate_ability_class", actor_path=boss, ability_class_path=SUMMON)
+    tool("activate_ability_template", actor_path=boss, template_path=SUMMON)
     wait_game(1.0)
     summons = [c["path"] for c in in_room() if c["path"] not in own and c["path"] != boss]
     for c in summons:
@@ -182,7 +182,7 @@ def run_all():
                                                      [0.16, "call", "press_input", {"button": "Kick", "pressed": False}],
                                                      [0.4, "call", "press_input", {"button": "Super", "pressed": False}]]}))
     started = wait_until(lambda: (r := tool("timeline_result"))["done"] and r, timeout=60, every=0.1, what="the carried move")["result"]["abilities"]
-    check("carried_works", "GA_Tat" in started, started)
+    check("carried_works", "AT_Abilities_Tat" in started, started)
 
     # death
     player = next(c["path"] for c in tool("list_characters") if c["team"] == 0)

@@ -44,15 +44,12 @@ public:
 	void StoreCharStats();
 	void SetCharRef(class AMyCharacter* NewRef);
 	TArray<FString> GetItemsICannotGetMoreOf();
-	TArray<struct FAbilityStruct> GetPlayerAbiliies();
+	TArray<FAssAbilityGrant> GetPlayerAbiliies();
 	void TeleportPlayer(FVector NewLocation);
 	void DoCamShake(float Intensity);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = MyGI)
 	TSubclassOf<class UCameraShakeBase> CamShakeClass;
-	// Each ability's UI, for the HUD and the ability books: read through UMyBlueprintFunctionLibrary::GetAbilityUI
-	UPROPERTY(EditDefaultsOnly, Category = MyGI)
-	TObjectPtr<class UAbilityUIDataAsset> AbilityUI;
 	// The effects MyGame's ability policy (UMyAbilityPolicy) applies for a hit's typed parts, read through the game
 	// instance class's defaults. Held here so they cook: a template's typed parts name no class (Ass Plan.md Step 3)
 	UPROPERTY(EditDefaultsOnly, Category = "MyGI|Hit")
@@ -77,7 +74,7 @@ public:
 	float Mana = 100.f;
 	// The player's moves, learned books included; empty until the first floor is cleared
 	UPROPERTY(VisibleInstanceOnly, Category = MyGI)
-	TArray<struct FAbilityStruct> CarriedAbilities;
+	TArray<FAssAbilityGrant> CarriedAbilities;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	TArray<class UItemDataAsset*> Inventory;
 	UPROPERTY(VisibleDefaultsOnly, BlueprintReadWrite)

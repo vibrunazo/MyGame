@@ -3,6 +3,9 @@
 
 #include "MyAIController.h"
 #include "MyCharacter.h"
+#include "../MyGameplayTags.h"
+#include "AssAbilitySystemComponent.h"
+#include "BehaviorTree/BlackboardComponent.h"
 
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -55,6 +58,22 @@ void AMyAIController::OnPossess(APawn* InPawn)
 		PawnEventHandle = PawnAbilitySystem->AddGameplayEventTagContainerDelegate(RespondedEvents,
 			FGameplayEventTagMulticastDelegate::FDelegate::CreateUObject(this, &AMyAIController::OnPawnGameplayEvent));
 	}
+	if (PawnAbilitySystem.IsValid())
+	{
+		BuffedRangeHandle = PawnAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_BuffedRange, EGameplayTagEventType::NewOrRemoved)
+			.AddUObject(this, &AMyAIController::OnBuffedRangeChanged);
+	}
+}
+
+void AMyAIController::OnBuffedRangeChanged(const FGameplayTag Tag, int32 Count)
+{
+	SetAttackRangeEverywhere(Count > 0 ? BuffedAttackRange : UnbuffedAttackRange);
+}
+
+void AMyAIController::SetAttackRangeEverywhere(float Range)
+{
+	AttackRange = Range;
+	if (UBlackboardComponent* BB = GetBlackboardComponent()) BB->SetValueAsFloat(AttackRangeKey, Range);
 }
 
 void AMyAIController::OnUnPossess()
@@ -63,20 +82,28 @@ void AMyAIController::OnUnPossess()
 	{
 		PawnAbilitySystem->RemoveGameplayEventTagContainerDelegate(RespondedEvents, PawnEventHandle);
 	}
+	if (PawnAbilitySystem.IsValid() && BuffedRangeHandle.IsValid())
+	{
+		PawnAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_BuffedRange, EGameplayTagEventType::NewOrRemoved).Remove(BuffedRangeHandle);
+	}
 	PawnEventHandle.Reset();
+	BuffedRangeHandle.Reset();
 	PawnAbilitySystem.Reset();
 	Super::OnUnPossess();
 }
 
 void AMyAIController::OnPawnGameplayEvent(FGameplayTag Event, const FGameplayEventData* Payload)
 {
-	if (!PawnAbilitySystem.IsValid()) return;
+	UAssAbilitySystemComponent* ASC = Cast<UAssAbilitySystemComponent>(PawnAbilitySystem.Get());
+	const AMyCharacter* Me = GetPawn<AMyCharacter>();
+	if (!ASC || !Me) return;
 	for (const FAIEventResponse& Response : EventResponses)
 	{
 		if (!Response.Event.MatchesTagExact(Event)) continue;
-		for (const TSubclassOf<UGameplayAbility>& Ability : Response.Abilities)
+		for (const TSoftObjectPtr<UAssAbilityTemplate>& Template : Response.Templates)
 		{
-			if (Ability) PawnAbilitySystem->TryActivateAbilityByClass(Ability);
+			const FGameplayAbilitySpecHandle Grant = Me->FindGrant(Template);
+			if (Grant.IsValid()) ASC->TryActivateGrant(Grant);
 		}
 	}
 }

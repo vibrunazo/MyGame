@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "ItemDataAsset.h"
+#include "AssAbilityTemplate.h"
 #include "LearnItemDataAsset.generated.h"
 
 /**
@@ -16,6 +17,6 @@ class MYGAME_API ULearnItemDataAsset : public UItemDataAsset
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Item")
-	TArray<struct FAbilityStruct> AbilitiesToLearn;
+	TArray<FAssAbilityGrant> AbilitiesToLearn;
 	
 };

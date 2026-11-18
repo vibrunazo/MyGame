@@ -182,6 +182,12 @@ def _pie_world():
     return unreal.get_editor_subsystem(unreal.UnrealEditorSubsystem).get_game_world()
 
 
+def _template_name(grant):
+    """A grant's template's asset name (AT_Abilities_Kick), or None."""
+    template = grant.get_editor_property("template")
+    return template.get_name() if template else None
+
+
 def _player():
     world = _pie_world()
     if not world:
@@ -300,15 +306,13 @@ class MyGameTools(unreal.ToolsetDefinition):
             item_asset_path: A LearnItemDataAsset.
 
         Returns:
-            JSON list of the abilities learned (class and input slot).
+            JSON list of the abilities learned (template and slot key).
         """
         char = _player()
         item = unreal.load_asset(item_asset_path)
         abilities = list(item.get_editor_property("abilities_to_learn"))
         char.learn_abilities(abilities)
-        return json.dumps([{"ability": a.get_editor_property("ability_class").get_name(),
-                            "input": str(a.get_editor_property("input"))}
-                           for a in abilities])
+        return json.dumps([{"ability": _template_name(a), "slot": a.get_editor_property("slot_key")} for a in abilities])
 
     @toolset_registry.tool_call
     @staticmethod
@@ -571,21 +575,21 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def activate_ability_class(actor_path: str, ability_class_path: str) -> str:
-        """Tries to activate one of a character's granted abilities by class (as an AI or trigger would).
+    def activate_ability_template(actor_path: str, template_path: str) -> str:
+        """Tries to start a character's grant of a template (as an AI or a trigger would).
 
         Args:
             actor_path: Full path of a PIE character.
-            ability_class_path: e.g. "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C".
+            template_path: e.g. "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1".
 
         Returns:
             JSON {"activated": bool}.
         """
         char = unreal.find_object(None, actor_path)
-        cls = unreal.load_class(None, ability_class_path)
-        if not char or not cls:
-            raise RuntimeError("actor or ability class not found")
-        return json.dumps({"activated": char.get_editor_property("ability_system").try_activate_ability_by_class(cls, True)})
+        template = unreal.load_asset(template_path)
+        if not char or not template:
+            raise RuntimeError("actor or template not found")
+        return json.dumps({"activated": char.activate_template_for_test(template)})
 
     @toolset_registry.tool_call
     @staticmethod
@@ -668,8 +672,8 @@ class MyGameTools(unreal.ToolsetDefinition):
                  "items": sorted(i.get_name() for i in prop("inventory") or [] if i), "abilities": None, "player": None}
         pawn = unreal.GameplayStatics.get_player_pawn(world, 0)
         if pawn and hasattr(pawn, "learn_abilities"):  # a MyCharacter, not the spectator pawn shown after the level ends
-            state["abilities"] = sorted(f'{a.get_editor_property("ability_class").get_name()}@{a.get_editor_property("input")}'
-                                        for a in pawn.get_editor_property("abilities") if a.get_editor_property("ability_class"))
+            state["abilities"] = sorted(f'{_template_name(a)}@{a.get_editor_property("slot_key")}'
+                                        for a in pawn.get_editor_property("abilities") if _template_name(a))
             attrs = pawn.get_editor_property("attribute_set_base")
             state["player"] = {n: attrs.get_editor_property(n.lower()).get_editor_property("current_value") for n in ("Health", "MaxHealth", "Mana")}
         pc = unreal.GameplayStatics.get_player_controller(world, 0)
@@ -1206,25 +1210,25 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def learn_ability(ability_class_path: str, input: str) -> str:
+    def learn_ability(template_path: str, input: str) -> str:
         """Teaches the PIE player one ability on a button slot, as an item would (LearnAbility: what shares the slot and
         is also an air move, or also a ground move, is replaced).
 
         Args:
-            ability_class_path: e.g. "/Game/Abilities/GA_Voadora.GA_Voadora_C".
-            input: The slot's EInput name, e.g. "Punch" or "SuperKick".
+            template_path: e.g. "/Game/Abilities/AT_Abilities_Voadora".
+            input: The slot's EInput name, e.g. "Punch" or "SuperKick" (its number is the grant's slot key).
 
         Returns:
             JSON {"learned", "input"}.
         """
-        cls = unreal.load_class(None, ability_class_path)
-        if not cls:
-            raise RuntimeError(f"no class at {ability_class_path}")
-        ability = unreal.AbilityStruct()
-        ability.set_editor_property("ability_class", cls)
-        ability.set_editor_property("input", getattr(unreal.Input, input.upper()))
+        template = unreal.load_asset(template_path)
+        if not template:
+            raise RuntimeError(f"no template at {template_path}")
+        ability = unreal.AssAbilityGrant()
+        ability.set_editor_property("template", template)
+        ability.set_editor_property("slot_key", int(getattr(unreal.Input, re.sub(r"(?<!^)(?=[A-Z])", "_", input).upper()).value))
         _player().learn_ability(ability)
-        return json.dumps({"learned": cls.get_name(), "input": input})
+        return json.dumps({"learned": template.get_name(), "input": input})
 
     @toolset_registry.tool_call
     @staticmethod

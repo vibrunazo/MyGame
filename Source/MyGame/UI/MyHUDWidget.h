@@ -28,7 +28,8 @@ public:
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
 	void BPUpdateActionSlot(EInput Index, bool NewState);
 	UFUNCTION(BlueprintCallable, BlueprintImplementableEvent, Category = "My HUD")
-	void BPSetupAbility(FAbilityStruct NewAbility);
+	// The button of this slot shows this ability's UI (its icon)
+	void BPSetupAbility(uint8 Index, const FBuffUI& UI);
 	UFUNCTION(BlueprintCallable, Category = "My HUD")
 	float GetHealth();
 	UFUNCTION(BlueprintCallable, Category = "My HUD")

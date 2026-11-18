@@ -46,25 +46,31 @@ public:
 	void PossessedBy(AController* NewController) override;
 
 	virtual void SetDefaultProperties();
+	// Gives a grant unless its template is granted already (one grant per template, as one spec per class before)
+	void GiveGrant(const FAssAbilityGrant& Grant);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	void GiveAbility(TSubclassOf<class UGameplayAbility> Ability);
+	void LearnAbility(FAssAbilityGrant Ability);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	void LearnAbility(struct FAbilityStruct Ability);
+	void LearnAbilities(TArray<FAssAbilityGrant> NewAbilities);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
-	void LearnAbilities(TArray<struct FAbilityStruct> NewAbilities);
-	UFUNCTION(BlueprintCallable, Category = Abilities)
-	void FindAndRemoveOverlappingAbilities(struct FAbilityStruct Ability);
-	// Air moves carry activate.flyingattack (and are blocked on the ground); everything else is a ground move
-	static bool IsAirAbility(TSubclassOf<class UGameplayAbility> AbilityClass);
+	void FindAndRemoveOverlappingAbilities(FAssAbilityGrant Ability);
+	// Air moves carry activate.flyingattack in their definition's identity (and are blocked on the ground); everything
+	// else is a ground move
+	static bool IsAirAbility(const TSoftObjectPtr<UAssAbilityTemplate>& Template);
+	// The grant of this template on this character's component, or an invalid handle
+	FGameplayAbilitySpecHandle FindGrant(const TSoftObjectPtr<UAssAbilityTemplate>& Template) const;
 #if WITH_EDITOR
 	// PIE test hook: sets an attribute's base value through the ability system (modifiers and damage see it)
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	void SetAttributeBaseForTest(FGameplayAttribute Attribute, float Value);
-	// PIE test hooks: the character's gameplay tags, and the abilities active right now (class names)
+	// PIE test hooks: the character's gameplay tags, and the abilities active right now (their templates' names)
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	TArray<FString> GetTagsForTest() const;
 	UFUNCTION(BlueprintCallable, Category = "Testing")
 	TArray<FString> GetActiveAbilitiesForTest() const;
+	// PIE test hook: starts this character's grant of a template, as an AI or a trigger would
+	UFUNCTION(BlueprintCallable, Category = "Testing")
+	bool ActivateTemplateForTest(UAssAbilityTemplate* Template);
 #endif
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void SetAbilityKeyDown(uint8 Index, bool IsKeyDown);
@@ -179,7 +185,7 @@ public:
 	// UPROPERTY(BlueprintReadOnly, Category = Abilities)
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
-	TArray<struct FAbilityStruct> Abilities;
+	TArray<FAssAbilityGrant> Abilities;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TArray<FLootDrop> LootTable;
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

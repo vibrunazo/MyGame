@@ -46,23 +46,23 @@ CHARS = {
     "wizard": "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard.BP_EnemyWizard_C",
     "boss": "/Game/Blueprints/Chars/Boss1/BP_Boss1.BP_Boss1_C",
 }
-ABILITY = {
-    "enemy1": "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1.GA_DamageEnemy1_C",
-    "enemy2": "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1.GA_DamageEnemy1_C",
-    "enemy3": "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2.GA_DamageEnemy2_C",
-    "kicker": "/Game/Blueprints/Chars/EKicker/GA_KickerKick.GA_KickerKick_C",
-    "wizard": "/Game/Blueprints/Chars/EWizard/GA_Cast1.GA_Cast1_C",
-    "boss_punches": "/Game/Blueprints/Chars/Boss1/GA_BossPunches.GA_BossPunches_C",
-    "boss_smash": "/Game/Blueprints/Chars/Boss1/GA_BossSmash1.GA_BossSmash1_C",
-    "boss_summon": "/Game/Blueprints/Chars/Boss1/GA_BossSummon1.GA_BossSummon1_C",
-    "boss_debuff": "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff.GA_BossSelfDebuff_C",
+ABILITY = {  # the templates the enemies' grants run (Ass Plan.md Step 4)
+    "enemy1": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
+    "enemy2": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
+    "enemy3": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
+    "kicker": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
+    "wizard": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1",
+    "boss_punches": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+    "boss_smash": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+    "boss_summon": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1",
+    "boss_debuff": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
 }
 # timed effects a scenario can leave on the player; the next one starts without them (their end would fall at a time the
 # wall clock between scenarios decides)
 LEFTOVERS = ("/Game/Abilities/GE_IsInCombat.GE_IsInCombat_C", "/Game/Abilities/GE_StunImmune.GE_StunImmune_C")
-VOADORA = "/Game/Abilities/GA_Voadora.GA_Voadora_C"
-AIR_PUNCH = "/Game/Abilities/GA_AirPunch.GA_AirPunch_C"
-PUNCHES = "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
+VOADORA = "/Game/Abilities/AT_Abilities_Voadora"
+AIR_PUNCH = "/Game/Abilities/AT_Abilities_AirPunch"
+PUNCHES = "/Game/Abilities/AT_Abilities_BasicPunches"
 IMMUNE_TO_PROJECTILES = "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C"
 # what a scenario leaves behind and is removed after it
 CLEANUP = ("/Script/MyGame.MyCharacter", "/Script/MyGame.Pickup", "/Script/MyGame.MyProjectile", "/Script/AssCombat.AssHitBox",
@@ -90,7 +90,7 @@ at, tap, press, move, double_tap, learn = ar.at, ar.tap, ar.press, ar.move, ar.d
 
 
 def activate(t, role, ability):
-    return [at(t, "activate_ability_class", actor_path="@" + role, ability_class_path=ABILITY[ability])]
+    return [at(t, "activate_ability_template", actor_path="@" + role, template_path=ABILITY[ability])]
 
 
 def target_player(role):
@@ -156,9 +156,9 @@ def mechanics():
     yield scenario("held_release", press("Punch", 0.0) + press("Punch", 0.7, False), 2.5)
     # an air move learned on the punch slot replaces the air punch and keeps the ground punch; at the end both punches
     # are learned again (the kick slot keeps Voadora), so the slot is whole even if the learning went wrong
-    yield scenario("air_ground_learn", [at(0.0, "learn_ability", ability_class_path=VOADORA, input="Punch")] + tap("Jump", 0.2, 0.2)
-                   + tap("Punch", 0.45) + tap("Punch", 2.0) + [at(3.6, "learn_ability", ability_class_path=AIR_PUNCH, input="Punch"),
-                                                       at(3.65, "learn_ability", ability_class_path=PUNCHES, input="Punch")], 4.0)
+    yield scenario("air_ground_learn", [at(0.0, "learn_ability", template_path=VOADORA, input="Punch")] + tap("Jump", 0.2, 0.2)
+                   + tap("Punch", 0.45) + tap("Punch", 2.0) + [at(3.6, "learn_ability", template_path=AIR_PUNCH, input="Punch"),
+                                                       at(3.65, "learn_ability", template_path=PUNCHES, input="Punch")], 4.0)
     yield scenario("off_axis", tap("Punch", 0.0), 2.0, enemies=[enemy(x=CLOSE + 65, y=Y + 65, yaw=225.0)])
 
 
@@ -270,12 +270,13 @@ def run(sc, base, query=None):
 
 
 def granted():
-    """Every ability a character Blueprint or an item grants (the dumps' actors and references)."""
+    """Every template a character Blueprint or an item grants (the dumps' actors and references)."""
     actors = json.loads((DUMPS / "actors.json").read_text())
     refs = json.loads((DUMPS / "references.json").read_text())
-    out = {g["abilityClass"]["refPath"].split(".")[0] for a in actors.values() for g in a.get("defaults", {}).get("abilities") or []
-           if g.get("abilityClass")}
-    out |= {ga for ga, users in refs.items() if ga.split("/")[-1].startswith("GA_") and any("/Items/" in u for u in users)}
+    path = lambda v: (v if isinstance(v, str) else v.get("refPath", "")).split(".")[0]
+    out = {path(g["template"]) for a in actors.values() for g in a.get("defaults", {}).get("abilities") or []
+           if g.get("template") and path(g["template"]) != "None"}
+    out |= {t for t, users in refs.items() if t.split("/")[-1].startswith("AT_") and any("/Items/" in u for u in users)}
     return sorted(out)
 
 

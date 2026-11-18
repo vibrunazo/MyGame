@@ -22,6 +22,8 @@
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
 #include "AssHitBox.h"
+#include "AssAbility.h"
+#include "AssAbilityTemplate.h"
 #include "Player/MyProjectile.h"
 #include "Abilities/MyAttributeSet.h"
 #include "AssTestProbe.h"
@@ -42,6 +44,15 @@ namespace
 	}
 
 	FString ObjectId(const UObject* Object) { return Object ? ClassId(Object->GetClass()) : FString(); }
+
+	// An ability by its grant's template, as an asset's package path (/Game/Abilities/AT_Abilities_Kick); an ability given
+	// by class, or the engine's, by its class (Ass Plan.md Step 4)
+	FString AbilityId(const UGameplayAbility* Ability)
+	{
+		const UAssAbility* Plugin = Cast<UAssAbility>(Ability);
+		const UAssAbilityTemplate* Template = Plugin && Plugin->UsesDefinitionTags() ? Plugin->GetTemplate() : nullptr;
+		return Template ? Template->GetOutermost()->GetName() : ObjectId(Ability);
+	}
 }
 
 bool UCombatRecorder::Start(UWorld* World, const TArray<FString>& RoleNames, const TArray<AActor*>& Actors)
@@ -400,7 +411,7 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 			for (const FGameplayAbilitySpec& Spec : ASC->GetActivatableAbilities())
 			{
 				const UGameplayAbility* Ability = Spec.GetPrimaryInstance() ? Spec.GetPrimaryInstance() : Spec.Ability.Get();
-				if (Ability && Ability->CanActivateAbility(Spec.Handle, ASC->AbilityActorInfo.Get())) Can.AddUnique(ObjectId(Ability));
+				if (Ability && Ability->CanActivateAbility(Spec.Handle, ASC->AbilityActorInfo.Get())) Can.AddUnique(AbilityId(Ability));
 			}
 			Can.Sort();
 			TArray<TSharedPtr<FJsonValue>> Ids;
@@ -435,7 +446,7 @@ void UCombatRecorder::OnEffect(UAbilitySystemComponent* Source, const FGameplayE
 	const FGameplayEffectContextHandle& Context = Spec.GetEffectContext();
 	Event(bPeriodic ? TEXT("periodic") : TEXT("effect"), Roles[Role].Name, {
 		Str(ObjectId(Spec.Def)), Str(RoleOf(Context.GetInstigator())), Str(RoleOf(Context.GetEffectCauser())),
-		Str(ObjectId(Context.GetAbility())), Num(Spec.GetLevel()), Num(Spec.GetDuration()), Num(Spec.GetPeriod()),
+		Str(AbilityId(Context.GetAbilityInstance_NotReplicated() ? Context.GetAbilityInstance_NotReplicated() : Context.GetAbility())), Num(Spec.GetLevel()), Num(Spec.GetDuration()), Num(Spec.GetPeriod()),
 		MakeShared<FJsonValueArray>(Mags), Num(Spec.GetStackCount())});
 }
 
@@ -456,19 +467,19 @@ void UCombatRecorder::OnAttribute(const FOnAttributeChangeData& Data, int32 Role
 
 void UCombatRecorder::OnActivated(UGameplayAbility* Ability, int32 Role)
 {
-	Event(TEXT("ability"), Roles[Role].Name, {Str(TEXT("activated")), Str(ObjectId(Ability))});
+	Event(TEXT("ability"), Roles[Role].Name, {Str(TEXT("activated")), Str(AbilityId(Ability))});
 }
 
 void UCombatRecorder::OnEnded(const FAbilityEndedData& Data, int32 Role)
 {
-	Event(TEXT("ability"), Roles[Role].Name, {Str(Data.bWasCancelled ? TEXT("cancelled") : TEXT("ended")), Str(ObjectId(Data.AbilityThatEnded))});
+	Event(TEXT("ability"), Roles[Role].Name, {Str(Data.bWasCancelled ? TEXT("cancelled") : TEXT("ended")), Str(AbilityId(Data.AbilityThatEnded))});
 }
 
 void UCombatRecorder::OnFailed(const UGameplayAbility* Ability, const FGameplayTagContainer& Tags, int32 Role)
 {
 	TArray<TSharedPtr<FJsonValue>> Why;
 	for (const FGameplayTag& Tag : Tags) Why.Add(Str(Tag.ToString()));
-	Event(TEXT("failed"), Roles[Role].Name, {Str(ObjectId(Ability)), MakeShared<FJsonValueArray>(Why)});
+	Event(TEXT("failed"), Roles[Role].Name, {Str(AbilityId(Ability)), MakeShared<FJsonValueArray>(Why)});
 }
 
 void UCombatRecorder::OnCue(AActor* Target, FGameplayTag Tag, EGameplayCueEvent::Type Type, const FGameplayCueParameters& Parameters, EGameplayCueExecutionOptions Options)

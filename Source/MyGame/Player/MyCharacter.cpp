@@ -236,9 +236,9 @@ void AMyCharacter::BeginPlay()
 	{
 		Abilities = GetMyGameInstance()->CarriedAbilities;
 	}
-	for (auto &&Ability : Abilities)
+	for (const FAssAbilityGrant& Grant : Abilities)
 	{
-		GiveAbility(Ability.AbilityClass);
+		GiveGrant(Grant);
 	}
 	if (AMyPlayerController* MyCont = GetController<AMyPlayerController>()) MyCont->RefreshHUDAbilities(this);
 	if (!ensure(AttributeSetBase != nullptr)) return;
@@ -379,13 +379,24 @@ void AMyCharacter::FellOutOfWorld(const UDamageType& dmgType)
 }
 
 
-void AMyCharacter::GiveAbility(TSubclassOf<class UGameplayAbility> Ability)
+void AMyCharacter::GiveGrant(const FAssAbilityGrant& Grant)
 {
-	// the same class can be learned again (another item with it); one spec is enough
-	if (HasAuthority() && Ability && !AbilitySystem->FindAbilitySpecFromClass(Ability))
+	// the same template can be learned again (another item with it); one grant is enough
+	if (HasAuthority() && !Grant.Template.IsNull() && !FindGrant(Grant.Template).IsValid())
 	{
-		AbilitySystem->GiveAbility(FGameplayAbilitySpec(Ability.GetDefaultObject(), 1, 0));
+		AbilitySystem->GiveGrant(Grant);
 	}
+}
+
+FGameplayAbilitySpecHandle AMyCharacter::FindGrant(const TSoftObjectPtr<UAssAbilityTemplate>& Template) const
+{
+	if (!AbilitySystem || Template.IsNull()) return FGameplayAbilitySpecHandle();
+	for (const FGameplayAbilitySpec& Spec : AbilitySystem->GetActivatableAbilities())
+	{
+		const UAssAbilityTemplate* Granted = UAssAbilitySystemComponent::GetGrantTemplate(Spec);
+		if (Granted && FSoftObjectPath(Granted) == Template.ToSoftObjectPath()) return Spec.Handle;
+	}
+	return FGameplayAbilitySpecHandle();
 }
 
 void AMyCharacter::PossessedBy(AController* NewController)
@@ -400,24 +411,24 @@ void AMyCharacter::PossessedBy(AController* NewController)
 	}
 }
 
-void AMyCharacter::LearnAbility(FAbilityStruct Ability)
+void AMyCharacter::LearnAbility(FAssAbilityGrant Ability)
 {
-	if (!Ability.AbilityClass)
+	if (Ability.Template.IsNull())
 	{
-		UE_LOG(LogTemp, Error, TEXT("trying to learn ability but no ability class found on struct"));
+		UE_LOG(LogTemp, Error, TEXT("trying to learn ability but the grant has no template"));
 		return;
 	}
 	FindAndRemoveOverlappingAbilities(Ability);
-	UE_LOG(LogTemp, Warning, TEXT("Learning Ability: %s"), *Ability.AbilityClass->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("Learning Ability: %s"), *Ability.Template.GetAssetName());
 	Abilities.Add(Ability);
-	GiveAbility(Ability.AbilityClass);
+	GiveGrant(Ability);
 	AMyPlayerController* MyCont = GetController<AMyPlayerController>();
 	if (!MyCont) return;
 	MyCont->UpdateHUDAbility(Ability, true);
 		//UMyHUDWidget* HUDWidgetRef
 }
 
-void AMyCharacter::LearnAbilities(TArray<struct FAbilityStruct> NewAbilities)
+void AMyCharacter::LearnAbilities(TArray<FAssAbilityGrant> NewAbilities)
 {
 	for (auto&& Ability : NewAbilities)
 	{
@@ -431,28 +442,27 @@ void AMyCharacter::LearnAbilities(TArray<struct FAbilityStruct> NewAbilities)
 /// Then removes the abilities found from the Abilities Array.
 /// </summary>
 /// <param name="AbilityToCompare">The given ability to compare its inputs to all learned abilities</param>
-void AMyCharacter::FindAndRemoveOverlappingAbilities(FAbilityStruct AbilityToCompare)
+void AMyCharacter::FindAndRemoveOverlappingAbilities(FAssAbilityGrant AbilityToCompare)
 {
-	TArray<FAbilityStruct> AbilitiesToRemove;
-	for (auto&& LearnedAbility : Abilities)
+	auto Same = [](const FAssAbilityGrant& A, const FAssAbilityGrant& B) { return A.Template == B.Template && A.SlotKey == B.SlotKey; };
+	TArray<FAssAbilityGrant> AbilitiesToRemove;
+	for (const FAssAbilityGrant& LearnedAbility : Abilities)
 	{
 		// same slot, and both air moves or both ground moves (an air punch doesn't replace the ground punch)
-		if (LearnedAbility.Input == AbilityToCompare.Input && IsAirAbility(LearnedAbility.AbilityClass) == IsAirAbility(AbilityToCompare.AbilityClass))
+		if (LearnedAbility.SlotKey == AbilityToCompare.SlotKey && IsAirAbility(LearnedAbility.Template) == IsAirAbility(AbilityToCompare.Template))
 		{
 			AbilitiesToRemove.Add(LearnedAbility);
 		}
 	}
-	for (auto&& OldAbility : AbilitiesToRemove)
+	for (const FAssAbilityGrant& OldAbility : AbilitiesToRemove)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Removing Overlapping Ability: %s"), *OldAbility.AbilityClass->GetName());
-		Abilities.Remove(OldAbility);
-		// the replaced ability must leave the ASC too, unless it's being re-learned or another slot uses the same class
-		const bool bStillUsed = OldAbility.AbilityClass == AbilityToCompare.AbilityClass
-			|| Abilities.ContainsByPredicate([&](const FAbilityStruct& A) { return A.AbilityClass == OldAbility.AbilityClass; });
-		if (FGameplayAbilitySpec* Spec = bStillUsed ? nullptr : AbilitySystem->FindAbilitySpecFromClass(OldAbility.AbilityClass))
-		{
-			AbilitySystem->ClearAbility(Spec->Handle);
-		}
+		UE_LOG(LogTemp, Warning, TEXT("Removing Overlapping Ability: %s"), *OldAbility.Template.GetAssetName());
+		Abilities.RemoveAll([&](const FAssAbilityGrant& A) { return Same(A, OldAbility); });
+		// the replaced ability must leave the ASC too, unless it's being re-learned or another slot uses the same template
+		const bool bStillUsed = OldAbility.Template == AbilityToCompare.Template
+			|| Abilities.ContainsByPredicate([&](const FAssAbilityGrant& A) { return A.Template == OldAbility.Template; });
+		const FGameplayAbilitySpecHandle Handle = bStillUsed ? FGameplayAbilitySpecHandle() : FindGrant(OldAbility.Template);
+		if (Handle.IsValid()) AbilitySystem->ClearGrant(Handle);
 	}
 }
 
@@ -473,21 +483,29 @@ TArray<FString> AMyCharacter::GetTagsForTest() const
 	return Out;
 }
 
+bool AMyCharacter::ActivateTemplateForTest(UAssAbilityTemplate* Template)
+{
+	const FGameplayAbilitySpecHandle Grant = FindGrant(Template);
+	return AbilitySystem && Grant.IsValid() && AbilitySystem->TryActivateGrant(Grant);
+}
+
 TArray<FString> AMyCharacter::GetActiveAbilitiesForTest() const
 {
 	TArray<FString> Out;
 	if (!AbilitySystem) return Out;
 	for (const FGameplayAbilitySpec& Spec : AbilitySystem->GetActivatableAbilities())
 	{
-		if (Spec.IsActive() && Spec.Ability) Out.Add(Spec.Ability->GetClass()->GetName().LeftChop(Spec.Ability->GetClass()->GetName().EndsWith(TEXT("_C")) ? 2 : 0));
+		const UAssAbilityTemplate* Template = UAssAbilitySystemComponent::GetGrantTemplate(Spec);
+		if (Spec.IsActive() && Template) Out.Add(Template->GetName());
 	}
 	return Out;
 }
 #endif
 
-bool AMyCharacter::IsAirAbility(TSubclassOf<UGameplayAbility> AbilityClass)
+bool AMyCharacter::IsAirAbility(const TSoftObjectPtr<UAssAbilityTemplate>& Template)
 {
-	return AbilityClass && AbilityClass.GetDefaultObject()->GetAssetTags().HasTagExact(MyGameplayTags::Activate_FlyingAttack);
+	const UAssAbilityTemplate* Loaded = Template.LoadSynchronous();
+	return Loaded && Loaded->Definition.Tags.Identity.HasTagExact(MyGameplayTags::Activate_FlyingAttack);
 }
 
 bool AMyCharacter::GetAbilityKeyDown(uint8 Index)
@@ -510,14 +528,18 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	InputsToCheck.Add(Index);
 	if (MyCont && MyCont->GetSuperMod()) InputsToCheck.Add(Index + 10);
 	if (MyCont && MyCont->GetUltraMod()) InputsToCheck.Add(Index + 20);
-	TArray<FAbilityStruct> AbilitiesThatCanActivate;
+	TArray<FAssAbilityGrant> AbilitiesThatCanActivate;
 	// first add all abilities that can activate from this input (ie punch) to a list
-	for (auto &&Ability : Abilities)
+	for (const FAssAbilityGrant& Ability : Abilities)
 	{
 		// ground moves are blocked while airborne and air moves on the ground (OnMovementModeChanged), plus each
-		// ability's own activation tags: the fallback below only considers moves that could start right now
-		const UGameplayAbility* AbilityCDO = Ability.AbilityClass ? Ability.AbilityClass.GetDefaultObject() : nullptr;
-		if (InputsToCheck.Contains((uint8)Ability.Input) && AbilityCDO && AbilityCDO->DoesAbilitySatisfyTagRequirements(*AbilitySystem))
+		// definition's own tags (its identity not blocked, its required and blocked tags): the fallback below only
+		// considers moves whose tags allow them right now, as the class's tag requirements did
+		const UAssAbilityTemplate* Template = Ability.Template.LoadSynchronous();
+		if (Ability.SlotKey < 0 || Ability.SlotKey > MAX_uint8 || !InputsToCheck.Contains((uint8)Ability.SlotKey) || !Template) continue;
+		const FAssAbilityTags& GrantTags = Template->Definition.Tags;
+		if (!AbilitySystem->AreAbilityTagsBlocked(GrantTags.Identity) && AbilitySystem->HasAllMatchingGameplayTags(GrantTags.Required)
+			&& !AbilitySystem->HasAnyMatchingGameplayTags(GrantTags.Blocked))
 		{
 			AbilitiesThatCanActivate.Add(Ability);
 		}
@@ -525,18 +547,18 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 	// then, activate only the highest priority ability with that button
 	// ie. if pressing super mod + punch, will activate only the super punch, not regular punch
 	if (AbilitiesThatCanActivate.Num() == 0) return;
-	uint8 BestAbilityScore = 0;
-	FAbilityStruct BestAbility;
-	for (auto&& Ability : AbilitiesThatCanActivate)
+	int32 BestAbilityScore = 0;
+	FAssAbilityGrant BestAbility;
+	for (const FAssAbilityGrant& Ability : AbilitiesThatCanActivate)
 	{
-		if ((uint8)Ability.Input >= BestAbilityScore)
+		if (Ability.SlotKey >= BestAbilityScore)
 		{
 			BestAbility = Ability;
-			BestAbilityScore = (uint8)Ability.Input;
+			BestAbilityScore = Ability.SlotKey;
 		}
 	}
-	bool Success = AbilitySystem->TryActivateAbilityByClass(BestAbility.AbilityClass, true);
-	if (MyCont) MyCont->UpdateHUDAbilityKey(BestAbility.Input, true);
+	AbilitySystem->TryActivateGrant(FindGrant(BestAbility.Template));
+	if (MyCont) MyCont->UpdateHUDAbilityKey(UMyBlueprintFunctionLibrary::GetGrantInput(BestAbility), true);
 
 }
 

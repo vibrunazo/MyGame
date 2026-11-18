@@ -17,6 +17,8 @@ namespace MyGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_50);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_30);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_Health_25);
+	// While on, the AI attacks from AMyAIController::BuffedAttackRange (the boss's self debuff grants it)
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Status_BuffedRange);
 
 	// Sent to a character to make it dash; GA_Dash triggers on it
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Event_Dash);

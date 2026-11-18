@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "AssAbilityTemplate.h"
 #include "LootComponent.generated.h"
 
 
@@ -37,8 +38,8 @@ public:
 	TArray<FLootDrop> LootTable;
 
 private:
-	bool DoAnyAbilitySlotOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList);
-	uint8 DoAnyAbilityOverlap(TArray<struct FAbilityStruct> FirstList, TArray<struct FAbilityStruct> SecondList);
+	bool DoAnyAbilitySlotOverlap(const TArray<FAssAbilityGrant>& FirstList, const TArray<FAssAbilityGrant>& SecondList);
+	uint8 DoAnyAbilityOverlap(const TArray<FAssAbilityGrant>& FirstList, const TArray<FAssAbilityGrant>& SecondList);
 	static class UItemDataAsset* PickWeighted(const TArray<FLootDrop>& Candidates, FRandomStream& Stream);
 
 protected:

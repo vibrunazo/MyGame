@@ -224,17 +224,17 @@ def graphs():
 
 
 def references():
-    """Who refers to each ability, effect and montage (the asset registry's referencers): every asset that holds an
-    ability class, every user of an effect, every holder of a montage."""
+    """Who refers to each ability, template, effect and montage (the asset registry's referencers): every asset that
+    holds an ability class or grants a template, every user of an effect, every holder of a montage."""
     ar = unreal.AssetRegistryHelpers.get_asset_registry()
     a = _assets()
     opts = unreal.AssetRegistryDependencyOptions(include_soft_package_references=True, include_hard_package_references=True,
                                                  include_searchable_names=False, include_soft_management_references=False,
                                                  include_hard_management_references=False)
     out = {}
-    for p in a.get("Blueprint", []) + a.get("GameplayAbilityBlueprint", []) + a.get("AnimMontage", []):
+    for p in a.get("Blueprint", []) + a.get("GameplayAbilityBlueprint", []) + a.get("AnimMontage", []) + a.get("AssAbilityTemplate", []):
         name = p.split("/")[-1]
-        if name.startswith(("GA_", "GE_")) or p in a.get("AnimMontage", []):
+        if name.startswith(("GA_", "GE_", "AT_")) or p in a.get("AnimMontage", []):
             out[p] = sorted(str(r) for r in (ar.get_referencers(p, opts) or []))
     return out
 

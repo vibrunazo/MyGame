@@ -4,8 +4,9 @@ mechanic, among them a dropped class default and a stun applied before the damag
 Each break edits a property's text (UMyGameEditorLibrary's Get/SetPropertyTextForTest, what the editor's copy and paste
 use) in memory in the test editor: on the class default, and for the player's own abilities and the player also on every
 live instance in the play world (an ability granted earlier keeps its own copy; an enemy's is made from the default when
-the scenario spawns it). Since Ass Plan.md Step 3 the plugin's abilities read their template's definition: a break of
-one edits the template's definition (one object, which every grant reads), whose runtime object is then built again.
+the scenario spawns it). Since Ass Plan.md Step 3 the plugin's abilities read their template's definition, and since
+Step 4 every ability is a grant of a template: a break of one edits the template's definition (one object, which every
+grant reads), whose runtime object is then built again.
 `undo()` puts every old value back. Nothing is saved. The `strict-breaks` suite (Tests/strict_breaks.py) runs each
 break's scenario before, with and after it.
 """
@@ -16,12 +17,12 @@ import unreal
 _saved = []  # (object, property, old text) or (effect class, "@granted", old tags), newest last
 _lib = unreal.MyGameEditorLibrary
 
-GA_ENEMY1 = "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1.GA_DamageEnemy1_C"
-GA_DEBUFF = "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff.GA_BossSelfDebuff_C"
-GA_UPPER = "/Game/Abilities/GA_Upper.GA_Upper_C"
-GA_PUNCHES = "/Game/Abilities/GA_BasicPunches.GA_BasicPunches_C"
-GA_VOADORA = "/Game/Abilities/GA_Voadora.GA_Voadora_C"
-GA_DASH = "/Game/Abilities/GA_Dash.GA_Dash_C"
+AT_ENEMY1 = "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1"
+AT_DEBUFF = "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
+AT_UPPER = "/Game/Abilities/AT_Abilities_Upper"
+AT_PUNCHES = "/Game/Abilities/AT_Abilities_BasicPunches"
+AT_VOADORA = "/Game/Abilities/AT_Abilities_Voadora"
+AT_DASH = "/Game/Abilities/AT_Abilities_Dash"
 BP_CHAR = "/Game/Blueprints/Chars/BP_Char.BP_Char_C"
 GE_IMMUNE_PROJ = "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C"
 
@@ -62,10 +63,10 @@ def _edit_class(class_path, prop, change, instances=False):
     _edit(_targets(class_path, instances), prop, change)
 
 
-def _edit_template(class_path, change):
-    """The definition of the template an ability class names: change(definition) edits a copy, which the template
-    takes (its runtime object is built again on next use)."""
-    template = unreal.get_default_object(unreal.load_class(None, class_path)).get_editor_property("template")
+def _edit_template(template_path, change):
+    """A template's definition: change(definition) edits a copy, which the template takes (its runtime object is built
+    again on next use)."""
+    template = unreal.load_asset(template_path)
     # a struct read from an object can be the object's own memory: the change goes into a detached copy, set back on the
     # template, which then drops its runtime object (ResetRuntime) so the next use builds it from the edited definition
     old = template.get_editor_property("definition").export_text()
@@ -163,6 +164,35 @@ def _without_tag(tag):
     return change
 
 
+def _without_self_effect(effect_class_path):
+    def change(definition):
+        effects = [s for s in definition.get_editor_property("self_effects")
+                   if s.get_editor_property("effect").get_editor_property("effect_class").get_path_name() != effect_class_path]
+        definition.set_editor_property("self_effects", effects)
+    return change
+
+
+def _without_identity_tag(tag):
+    def change(definition):
+        tags = definition.get_editor_property("tags")
+        identity = tags.get_editor_property("identity")
+        identity.import_text(_without_tag(tag)(identity.export_text()))
+        tags.set_editor_property("identity", identity)
+        definition.set_editor_property("tags", tags)
+    return change
+
+
+def _dash_speed(speed):
+    def change(definition):
+        dashes = list(definition.get_editor_property("dashes"))
+        dash = dashes[0]  # an element read from an array is a copy: edit it, then put it back
+        velocity = dash.get_editor_property("launch_velocity")
+        dash.set_editor_property("launch_velocity", unreal.Vector(speed, velocity.y, velocity.z))
+        dashes[0] = dash
+        definition.set_editor_property("dashes", dashes)
+    return change
+
+
 def _hitbox_radius(montage_path, radius):
     # the montage's notifies are its subobjects (its notify list is protected from scripts); a montage can also hold
     # leftover notify objects no track uses
@@ -186,31 +216,30 @@ def _granted_tags(effect_path, tags):
 
 # name: (the scenario of Tests/strict.py it runs, what it changes, the change)
 BREAKS = {
-    "dropped_class_default": ("enemy1_attack", "GA_DamageEnemy1 (EMelee1)'s template: HitPause back to the C++ default 0.5",
-                              lambda: _edit_template(GA_ENEMY1, lambda d: _set_in(d, "feel.hit_pause", 0.5))),
+    "dropped_class_default": ("enemy1_attack", "AT_EMelee1_DamageEnemy1: HitPause back to the C++ default 0.5",
+                              lambda: _edit_template(AT_ENEMY1, lambda d: _set_in(d, "feel.hit_pause", 0.5))),
     # Step 3: a payload's parts apply in the plugin's fixed order, so "the stun before the damage" can't be authored;
     # the stun's own time takes its place
-    "stun_time": ("enemy1_attack", "GA_DamageEnemy1 (EMelee1)'s template: the stun 0.35 s -> 0.6 s",
-                  lambda: _edit_template(GA_ENEMY1, _payload("stun.time", 0.6))),
+    "stun_time": ("enemy1_attack", "AT_EMelee1_DamageEnemy1: the stun 0.35 s -> 0.6 s",
+                  lambda: _edit_template(AT_ENEMY1, _payload("stun.time", 0.6))),
     "nth_stun": ("nth_stun", "the player's MaxStuns 3 -> 4", lambda: _edit_combat_setting(BP_CHAR, "MaxStuns", lambda t: "4", True)),
-    "stun_immune_target": ("stun_immune_boss", "GA_BossSelfDebuff no longer applies GE_StunImmune",
-                           lambda: _edit_class(GA_DEBUFF, "EffectsToApply",
-                                               lambda t: _join([i for i in _items(t) if ".GE_StunImmune_C" not in i]))),
-    "kill": ("kill", "GA_BasicPunches' template: damage 15 -> 4 (the dummy, at 5 health, survives)",
-             lambda: _edit_template(GA_PUNCHES, _payload("damage.magnitude", 4.0))),
-    "kill_launch": ("kill_launch", "GA_Upper's template: the launch's Z 800 -> 700",
-                    lambda: _edit_template(GA_UPPER, _payload("launch.velocity.z", 700.0))),
+    "stun_immune_target": ("stun_immune_boss", "AT_Boss1_BossSelfDebuff no longer applies GE_StunImmune",
+                           lambda: _edit_template(AT_DEBUFF, _without_self_effect("/Game/Abilities/GE_StunImmune.GE_StunImmune_C"))),
+    "kill": ("kill", "AT_Abilities_BasicPunches: damage 15 -> 4 (the dummy, at 5 health, survives)",
+             lambda: _edit_template(AT_PUNCHES, _payload("damage.magnitude", 4.0))),
+    "kill_launch": ("kill_launch", "AT_Abilities_Upper: the launch's Z 800 -> 700",
+                    lambda: _edit_template(AT_UPPER, _payload("launch.velocity.z", 700.0))),
     "two_targets": ("two_targets", "PunchR_Montage's hit sphere radius 45 -> 40", lambda: _hitbox_radius("/Game/Anims/PunchR_Montage", 40.0)),
     "projectile_immune": ("projectile_immune", "GE_ImmuneToProjectile grants no tag",
                           lambda: _granted_tags(GE_IMMUNE_PROJ, unreal.GameplayTagContainer())),
-    "attack_speed": ("attack_speed", "GA_BasicPunches' template: every step's speed 1 -> 1.05",
-                     lambda: _edit_template(GA_PUNCHES, _step_speeds(1.05))),
-    "held_release": ("held_release", "GA_BasicPunches' template cancels without a landed hit",
-                     lambda: _edit_template(GA_PUNCHES, lambda d: _set_in(d, "cancel.needs_hit_to_cancel", False))),
-    "air_ground_learn": ("air_ground_learn", "GA_Voadora loses activate.flyingattack (it counts as a ground move)",
-                         lambda: _edit_class(GA_VOADORA, "AbilityTags", _without_tag("activate.flyingattack"))),
-    "graph_ability": ("dash", "GA_Dash's DashDistance 1100 -> 1000",
-                      lambda: _edit_class(GA_DASH, "DashDistance", lambda t: "1000.000000", True)),
+    "attack_speed": ("attack_speed", "AT_Abilities_BasicPunches: every step's speed 1 -> 1.05",
+                     lambda: _edit_template(AT_PUNCHES, _step_speeds(1.05))),
+    "held_release": ("held_release", "AT_Abilities_BasicPunches cancels without a landed hit",
+                     lambda: _edit_template(AT_PUNCHES, lambda d: _set_in(d, "cancel.needs_hit_to_cancel", False))),
+    "air_ground_learn": ("air_ground_learn", "AT_Abilities_Voadora loses activate.flyingattack (it counts as a ground move)",
+                         lambda: _edit_template(AT_VOADORA, _without_identity_tag("activate.flyingattack"))),
+    "graph_ability": ("dash", "AT_Abilities_Dash's launch 1100 -> 1000",
+                      lambda: _edit_template(AT_DASH, _dash_speed(1000.0))),
     "off_axis": ("off_axis", "PunchR_Montage's hit spheres 45 -> 20 (they miss a target off the axis)", lambda: _hitbox_radius("/Game/Anims/PunchR_Montage", 20.0)),
 }
 

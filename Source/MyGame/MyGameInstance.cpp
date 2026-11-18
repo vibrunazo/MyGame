@@ -58,9 +58,9 @@ TArray<FString> UMyGameInstance::GetItemsICannotGetMoreOf()
     return result;
 }
 
-TArray<struct FAbilityStruct> UMyGameInstance::GetPlayerAbiliies()
+TArray<FAssAbilityGrant> UMyGameInstance::GetPlayerAbiliies()
 {
-    TArray<struct FAbilityStruct> result = TArray<struct FAbilityStruct>();
+    TArray<FAssAbilityGrant> result;
     if (!PlayerCharRef) return result;
     return PlayerCharRef->Abilities;
 }

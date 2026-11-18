@@ -29,11 +29,6 @@ def active_tags(path):
     return call_tool(GAS, "GetActiveTags", {"actor": {"refPath": path}})
 
 
-def active_abilities(path):
-    granted = call_tool(GAS, "GetGrantedAbilities", {"actor": {"refPath": path}})
-    return sorted(a["abilityName"].removesuffix("_C") for a in granted if a["bIsActive"])
-
-
 # Everything happens in the start room: empty, walled, and the y = -300 row has no books. Next to a random
 # enemy the player could end up outside the room grid (the game then reloads the level) or walk off an edge.
 DUMMY_SPOT = (300.0, -300.0)

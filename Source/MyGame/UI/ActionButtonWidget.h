@@ -21,6 +21,10 @@ public:
 	// The ability slot this button shows: the Blueprint's ButtonInput, which each button on the action bar sets
 	EInput GetSlot() const;
 
+	// Shows an ability's UI on this button: its icon brush on the Icon image
+	UFUNCTION(BlueprintCallable, Category = "Action Button")
+	void SetupAbilityUI(const FBuffUI& UI);
+
 protected:
 	virtual void NativeConstruct() override;
 

@@ -10,6 +10,7 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_50, "status.health.50");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_30, "status.health.30");
 	UE_DEFINE_GAMEPLAY_TAG(Status_Health_25, "status.health.25");
+	UE_DEFINE_GAMEPLAY_TAG_COMMENT(Status_BuffedRange, "status.buffedrange", "While on, the AI attacks from its buffed range");
 
 	UE_DEFINE_GAMEPLAY_TAG(Event_Dash, "event.dash");
 

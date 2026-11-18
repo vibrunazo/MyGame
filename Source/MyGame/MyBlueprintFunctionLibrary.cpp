@@ -6,8 +6,7 @@
 #include "AssCombatComponent.h"
 #include "AssCombatLibrary.h"
 #include "MyGameInstance.h"
-#include "UI/AbilityUIDataAsset.h"
-#include "GameMapsSettings.h"
+#include "Engine/Texture2D.h"
 #include "Player/MyCharacter.h"
 #include "AbilitySystemComponent.h"
 #include "Props/ItemDataAsset.h"
@@ -153,11 +152,32 @@ TArray<FActiveGameplayEffectHandle> UMyBlueprintFunctionLibrary::ApplyAllEffectC
 }
 /** Returns const pointer to the actual active gamepay effect structure */
 //const FActiveGameplayEffect* GetActiveGameplayEffect(const FActiveGameplayEffectHandle Handle) const;
-FBuffUI UMyBlueprintFunctionLibrary::GetAbilityUI(TSubclassOf<UGameplayAbility> AbilityClass)
+FBuffUI UMyBlueprintFunctionLibrary::GetAbilityUI(const UAssAbilityTemplate* Template)
 {
-	// from the game instance class's defaults, so it answers in the editor too (a book's construction script)
-	const UClass* GameInstanceClass = GetDefault<UGameMapsSettings>()->GameInstanceClass.TryLoadClass<UMyGameInstance>();
-	const UMyGameInstance* GameInstance = GameInstanceClass ? GameInstanceClass->GetDefaultObject<UMyGameInstance>() : nullptr;
-	const FBuffUI* Found = GameInstance && GameInstance->AbilityUI && AbilityClass ? GameInstance->AbilityUI->Abilities.Find(AbilityClass) : nullptr;
-	return Found ? *Found : FBuffUI();
+	FBuffUI UI;
+	if (!Template) return UI;
+	const FAssPresentation& Presentation = Template->Definition.Presentation;
+	UI.Name = Presentation.DisplayName.IsEmpty() ? NAME_None : FName(*Presentation.DisplayName.ToString());
+	UI.Description = Presentation.Description.IsEmpty() ? NAME_None : FName(*Presentation.Description.ToString());
+	if (UTexture2D* Icon = Presentation.Icon.LoadSynchronous())
+	{
+		UI.Icon.SetResourceObject(Icon);
+		UI.Icon.ImageSize = FVector2D(64.f, 64.f);
+	}
+	return UI;
+}
+
+FBuffUI UMyBlueprintFunctionLibrary::GetGrantUI(const FAssAbilityGrant& Grant)
+{
+	return GetAbilityUI(GetGrantTemplate(Grant));
+}
+
+UAssAbilityTemplate* UMyBlueprintFunctionLibrary::GetGrantTemplate(const FAssAbilityGrant& Grant)
+{
+	return Grant.Template.LoadSynchronous();
+}
+
+EInput UMyBlueprintFunctionLibrary::GetGrantInput(const FAssAbilityGrant& Grant)
+{
+	return Grant.SlotKey == FAssAbilityGrant::NoSlot ? EInput::None : (EInput)Grant.SlotKey;
 }

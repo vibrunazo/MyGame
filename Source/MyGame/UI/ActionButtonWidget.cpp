@@ -1,6 +1,7 @@
 #include "ActionButtonWidget.h"
 #include "../Player/MyPlayerController.h"
 
+#include "Components/Image.h"
 #include "Components/TextBlock.h"
 #include "Components/WidgetSwitcher.h"
 #include "UObject/EnumProperty.h"
@@ -26,6 +27,11 @@ void UActionButtonWidget::ShowInputDevice(bool bGamepad)
 		CommandTextWidget->SetVisibility(ESlateVisibility::HitTestInvisible);
 	}
 	if (HotkeySwitcher) HotkeySwitcher->SetActiveWidgetIndex(bShowKeys ? 1 : 0);
+}
+
+void UActionButtonWidget::SetupAbilityUI(const FBuffUI& UI)
+{
+	if (UImage* Icon = Cast<UImage>(GetWidgetFromName(TEXT("Icon")))) Icon->SetBrush(UI.Icon);
 }
 
 EInput UActionButtonWidget::GetSlot() const
