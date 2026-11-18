@@ -51,6 +51,28 @@ from strict import scenario, enemy, tap, at, target_player, X, Y, CLOSE
 
 ROOT = Path(__file__).resolve().parent.parent
 REFERENCE = ROOT / "Saved" / "AssReference" / "ai.json"
+# The UE4 reference names the abilities by their old classes; since Ass Plan.md Step 4 they are templates (a UE4
+# recording can't be re-recorded, so the names are mapped when it is read)
+REFERENCE_NAMES = {
+    "/Game/Abilities/GA_BasicPunches": "/Game/Abilities/AT_Abilities_BasicPunches",
+    "/Game/Blueprints/Chars/Boss1/GA_BossPunches": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
+    "/Game/Blueprints/Chars/Boss1/GA_BossSelfDebuff": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
+    "/Game/Blueprints/Chars/Boss1/GA_BossSmash1": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+    "/Game/Blueprints/Chars/Boss1/GA_BossSummon1": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1",
+    "/Game/Blueprints/Chars/EKicker/GA_KickerKick": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
+    "/Game/Blueprints/Chars/EMelee1/GA_DamageEnemy1": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
+    "/Game/Blueprints/Chars/EMelee2/GA_DamageEnemy1": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
+    "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
+    "/Game/Blueprints/Chars/EWizard/GA_Cast1": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1",
+}
+
+
+def read_reference():
+    """The UE4 reference, its ability names as today's templates."""
+    text = REFERENCE.read_text()
+    for old, new in REFERENCE_NAMES.items():
+        text = text.replace(f'"{old}"', f'"{new}"').replace(f'"{old}.', f'"{new}.')
+    return json.loads(text)
 # the stun tag, and its name before Ass Plan.md Step 2 renamed it (the UE4 reference outside git holds that one)
 STUN_TAGS = ("Ass.Status.HitStun", "status.hitstun")
 FROZEN = {"Speed": 0.0}  # its tree still ticks; it can't walk
@@ -269,7 +291,7 @@ def suite(ctx):
     (ctx.out / "matrix.json").write_text(json.dumps(result["matrix"], indent=1, sort_keys=True))
     problems = []
     if REFERENCE.exists():
-        reference = json.loads(REFERENCE.read_text())
+        reference = read_reference()
         for name in sorted(set(reference["boss"]) | set(result["boss"])):
             where = compare(reference["boss"][name], result["boss"][name], {"boss"}) if name in reference["boss"] and name in result["boss"] else "missing"
             if where:
