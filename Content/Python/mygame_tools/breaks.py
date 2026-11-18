@@ -66,8 +66,8 @@ def _edit_template(class_path, change):
     """The definition of the template an ability class names: change(definition) edits a copy, which the template
     takes (its runtime object is built again on next use)."""
     template = unreal.get_default_object(unreal.load_class(None, class_path)).get_editor_property("template")
-    # a struct read from an object can be the object's own memory: the change goes into a detached copy, so setting it
-    # is a change the template hears (and builds its runtime object again)
+    # a struct read from an object can be the object's own memory: the change goes into a detached copy, set back on the
+    # template, which then drops its runtime object (ResetRuntime) so the next use builds it from the edited definition
     old = template.get_editor_property("definition").export_text()
     new = unreal.AssAbilityDefinition()
     new.import_text(old)
@@ -76,6 +76,7 @@ def _edit_template(class_path, change):
         raise RuntimeError(f"the break changes nothing in {template.get_path_name()}")
     _saved.append((template, "@definition", old))
     template.set_editor_property("definition", new)
+    template.reset_runtime()
 
 
 def _set_in(struct, path, value):
@@ -231,5 +232,6 @@ def undo():
             definition = unreal.AssAbilityDefinition()
             definition.import_text(old)
             obj.set_editor_property("definition", definition)
+            obj.reset_runtime()
         elif not _set_text(obj, prop, old):
             raise RuntimeError(f"couldn't restore {obj.get_path_name()}.{prop}")
