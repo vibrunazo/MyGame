@@ -147,6 +147,8 @@ public:
 	UNiagaraSystem* GetSlashEffect(EAssSlashKind Kind) override;
 	// the punches' sounds are PunchWeakWoosh and PunchStrongWoosh; the kicks play their notify's own
 	bool GetStrikeSound(EAssSoundKind Kind, USoundBase*& OutSound) override;
+	// GA_Summon's graph: the spawner in this tile's box farthest from the target spawns; none with no target or spawner
+	bool Summon(const struct FAssSummon& Summon) override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddToAggroList(AActor* NewActor);
 	UFUNCTION(BlueprintCallable, Category = Abilities)
@@ -168,7 +170,7 @@ public:
 
 	UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
-	class UAbilitySystemComponent* AbilitySystem;
+	class UAssAbilitySystemComponent* AbilitySystem;
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Abilities, meta = (AllowPrivateAccess = "true"))
 	class ULootComponent* LootComponent;
 	// The combat mechanics (UAssCombatComponent; COMBAT.md)

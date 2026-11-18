@@ -16,6 +16,10 @@
 #include "../Props/Pickup.h"
 #include "../UI/MyHealthBar.h"
 #include "AssCombatComponent.h"
+#include "AssAbilitySystemComponent.h"
+#include "../Level/TileTemplate.h"
+#include "../Props/Spawner.h"
+#include "Kismet/KismetSystemLibrary.h"
 
 //#include "Camera/CameraComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -106,7 +110,7 @@ AMyCharacter::AMyCharacter()
 	
 
 	// Our ability system component.
-	AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("AbilitySystem"));
+	AbilitySystem = CreateDefaultSubobject<UAssAbilitySystemComponent>(TEXT("AbilitySystem"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 	Combat = CreateDefaultSubobject<UAssCombatComponent>(TEXT("Combat"));
@@ -876,6 +880,33 @@ UPrimitiveComponent* AMyCharacter::GetTargetDetection()
 UNiagaraSystem* AMyCharacter::GetSlashEffect(EAssSlashKind Kind)
 {
 	return Kind == EAssSlashKind::Kick ? KickSlash : PunchSlash;
+}
+
+bool AMyCharacter::Summon(const FAssSummon& /*Summon*/)
+{
+	// GA_Summon's graph, in its order: the spawners (WorldStatic) overlapping the box of this tile, the one farthest from
+	// the target strictly beyond 0 (so none with no target), then its SpawnActors (which counts the summon on its tile)
+	AFloorBuilder* Builder = URunSubsystem::GetFloorBuilder(this);
+	const FVector Center = Builder ? Builder->GetTileCenter(GetActorLocation()) : FVector::ZeroVector;
+	const FVector Extent = GetDefault<UTileTemplate>()->RoomSize / 2.f;
+	TArray<AActor*> Found;
+	UKismetSystemLibrary::BoxOverlapActors(this, Center, Extent, { UEngineTypes::ConvertToObjectType(ECC_WorldStatic) },
+		ASpawner::StaticClass(), {}, Found);
+	AActor* Target = GetTargetEnemy();
+	float BestDistance = 0.f;
+	ASpawner* Best = nullptr;
+	for (AActor* Actor : Found)
+	{
+		const float Distance = Target ? Actor->GetDistanceTo(Target) : 0.f;
+		if (Distance > BestDistance)
+		{
+			BestDistance = Distance;
+			Best = Cast<ASpawner>(Actor);
+		}
+	}
+	if (!Best) return false;
+	Best->SpawnActors();
+	return true;
 }
 
 bool AMyCharacter::GetStrikeSound(EAssSoundKind Kind, USoundBase*& OutSound)
