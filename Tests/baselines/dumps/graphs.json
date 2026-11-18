@@ -49,11 +49,6 @@
   "kind": "Blueprint",
   "parent": "/Script/GameplayAbilities.GameplayEffect"
  },
- "/Game/Abilities/GE_HitStun": {
-  "graphs": {},
-  "kind": "Blueprint",
-  "parent": "/Script/GameplayAbilities.GameplayEffect"
- },
  "/Game/Abilities/GE_ImmuneToProjectile": {
   "graphs": {},
   "kind": "Blueprint",
@@ -64,32 +59,12 @@
   "kind": "Blueprint",
   "parent": "/Script/GameplayAbilities.GameplayEffect"
  },
- "/Game/Abilities/GE_Knockback": {
-  "graphs": {},
-  "kind": "Blueprint",
-  "parent": "/Script/GameplayAbilities.GameplayEffect"
- },
- "/Game/Abilities/GE_Launch": {
-  "graphs": {},
-  "kind": "Blueprint",
-  "parent": "/Script/GameplayAbilities.GameplayEffect"
- },
  "/Game/Abilities/GE_ManaAdd": {
   "graphs": {},
   "kind": "Blueprint",
   "parent": "/Script/GameplayAbilities.GameplayEffect"
  },
  "/Game/Abilities/GE_ManaCost": {
-  "graphs": {},
-  "kind": "Blueprint",
-  "parent": "/Script/GameplayAbilities.GameplayEffect"
- },
- "/Game/Abilities/GE_NoControl": {
-  "graphs": {},
-  "kind": "Blueprint",
-  "parent": "/Script/GameplayAbilities.GameplayEffect"
- },
- "/Game/Abilities/GE_NoPawnBlock": {
   "graphs": {},
   "kind": "Blueprint",
   "parent": "/Script/GameplayAbilities.GameplayEffect"

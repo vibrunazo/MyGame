@@ -2,7 +2,6 @@
  "/Game/Abilities/AT_Abilities_AirPunch": [
   "/Game/Blueprints/Chars/BP_Char"
  ],
- "/Game/Abilities/AT_Abilities_BaseAttack": [],
  "/Game/Abilities/AT_Abilities_BasicPunches": [
   "/Game/Blueprints/Chars/BP_Char"
  ],
@@ -49,7 +48,6 @@
  ],
  "/Game/Abilities/GE_CamShake": [
   "/Game/Abilities/AT_Abilities_AirPunch",
-  "/Game/Abilities/AT_Abilities_BaseAttack",
   "/Game/Abilities/AT_Abilities_BasicPunches",
   "/Game/Abilities/AT_Abilities_Cast",
   "/Game/Abilities/AT_Abilities_Kick",
@@ -78,7 +76,6 @@
  ],
  "/Game/Abilities/GE_FireDot": [
   "/Game/Abilities/AT_Abilities_AirPunch",
-  "/Game/Abilities/AT_Abilities_BaseAttack",
   "/Game/Abilities/AT_Abilities_BasicPunches",
   "/Game/Abilities/AT_Abilities_Kick",
   "/Game/Abilities/AT_Abilities_Kkk",
@@ -98,15 +95,12 @@
  "/Game/Abilities/GE_FirePunch": [
   "/Game/Blueprints/Items/DA_ItemFireHands"
  ],
- "/Game/Abilities/GE_HitStun": [],
  "/Game/Abilities/GE_ImmuneToProjectile": [
   "/Game/Anims/Tat_Montage"
  ],
  "/Game/Abilities/GE_IsInCombat": [
   "/Game/Blueprints/Chars/BP_Char"
  ],
- "/Game/Abilities/GE_Knockback": [],
- "/Game/Abilities/GE_Launch": [],
  "/Game/Abilities/GE_ManaAdd": [
   "/Game/Blueprints/Items/DA_ItemMana",
   "/Game/Blueprints/Items/DA_ItemMana2"
@@ -114,8 +108,6 @@
  "/Game/Abilities/GE_ManaCost": [
   "/Game/Abilities/AT_Abilities_Cast"
  ],
- "/Game/Abilities/GE_NoControl": [],
- "/Game/Abilities/GE_NoPawnBlock": [],
  "/Game/Abilities/GE_RotLock": [
   "/Game/Abilities/AT_Abilities_Cast",
   "/Game/Abilities/AT_Abilities_Tat"

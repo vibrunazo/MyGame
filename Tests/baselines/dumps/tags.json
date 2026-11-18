@@ -86,7 +86,6 @@
  "Ass.Data.CamShake": {
   "assets": [
    "/Game/Abilities/AT_Abilities_AirPunch",
-   "/Game/Abilities/AT_Abilities_BaseAttack",
    "/Game/Abilities/AT_Abilities_BasicPunches",
    "/Game/Abilities/AT_Abilities_Cast",
    "/Game/Abilities/AT_Abilities_Kick",
@@ -125,7 +124,6 @@
  },
  "Ass.Data.HitStun": {
   "assets": [
-   "/Game/Abilities/GE_HitStun",
    "/Game/Abilities/GE_StunImmune"
   ],
   "children": [],
@@ -137,7 +135,6 @@
  },
  "Ass.Data.Knockback": {
   "assets": [
-   "/Game/Abilities/GE_Knockback",
    "/Game/Blueprints/Chars/EKicker/KickerKick_Montage"
   ],
   "children": [],
@@ -148,9 +145,7 @@
   "step": null
  },
  "Ass.Data.Launch": {
-  "assets": [
-   "/Game/Abilities/GE_Launch"
-  ],
+  "assets": [],
   "children": [
    "Ass.Data.Launch.X",
    "Ass.Data.Launch.Y",
@@ -190,9 +185,7 @@
   "step": null
  },
  "Ass.Data.NoControl": {
-  "assets": [
-   "/Game/Abilities/GE_NoControl"
-  ],
+  "assets": [],
   "children": [],
   "code": [],
   "owner": null,
@@ -315,7 +308,6 @@
  "Ass.State.Attacking": {
   "assets": [
    "/Game/Abilities/AT_Abilities_AirPunch",
-   "/Game/Abilities/AT_Abilities_BaseAttack",
    "/Game/Abilities/AT_Abilities_BasicPunches",
    "/Game/Abilities/AT_Abilities_Cast",
    "/Game/Abilities/AT_Abilities_Dash",
@@ -375,7 +367,6 @@
  "Ass.Status.HitStun": {
   "assets": [
    "/Game/Abilities/AT_Abilities_AirPunch",
-   "/Game/Abilities/AT_Abilities_BaseAttack",
    "/Game/Abilities/AT_Abilities_BasicPunches",
    "/Game/Abilities/AT_Abilities_Cast",
    "/Game/Abilities/AT_Abilities_Kick",
@@ -384,7 +375,6 @@
    "/Game/Abilities/AT_Abilities_Tat",
    "/Game/Abilities/AT_Abilities_Upper",
    "/Game/Abilities/AT_Abilities_Voadora",
-   "/Game/Abilities/GE_HitStun",
    "/Game/Abilities/GE_StunImmune",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
@@ -412,9 +402,7 @@
   "step": null
  },
  "Ass.Status.NoControl": {
-  "assets": [
-   "/Game/Abilities/GE_NoControl"
-  ],
+  "assets": [],
   "children": [],
   "code": [],
   "owner": null,
@@ -436,9 +424,7 @@
   "step": null
  },
  "Ass.Status.NoPawnBlock": {
-  "assets": [
-   "/Game/Abilities/GE_NoPawnBlock"
-  ],
+  "assets": [],
   "children": [],
   "code": [],
   "owner": null,
@@ -448,7 +434,6 @@
  },
  "Ass.Status.StunImmune": {
   "assets": [
-   "/Game/Abilities/GE_HitStun",
    "/Game/Abilities/GE_StunImmune"
   ],
   "children": [],
@@ -1081,7 +1066,6 @@
  "buff.firetouch": {
   "assets": [
    "/Game/Abilities/AT_Abilities_AirPunch",
-   "/Game/Abilities/AT_Abilities_BaseAttack",
    "/Game/Abilities/AT_Abilities_BasicPunches",
    "/Game/Abilities/AT_Abilities_Kick",
    "/Game/Abilities/AT_Abilities_Kkk",
@@ -1117,7 +1101,6 @@
  },
  "combo.weak": {
   "assets": [
-   "/Game/Abilities/AT_Abilities_BaseAttack",
    "/Game/Abilities/AT_Abilities_BasicPunches",
    "/Game/Abilities/AT_Abilities_Kick",
    "/Game/Abilities/AT_Abilities_Kkk",
@@ -1171,7 +1154,6 @@
    "data.mana",
    "data.noapply",
    "data.nohit",
-   "data.nopawnblock",
    "data.rotspeed",
    "data.speed"
   ],
@@ -1303,17 +1285,6 @@
  "data.nohit": {
   "assets": [
    "/Game/Abilities/GE_FireDot"
-  ],
-  "children": [],
-  "code": [],
-  "owner": null,
-  "plugin_name": null,
-  "source": "DefaultGameplayTags.ini",
-  "step": null
- },
- "data.nopawnblock": {
-  "assets": [
-   "/Game/Abilities/GE_NoPawnBlock"
   ],
   "children": [],
   "code": [],
