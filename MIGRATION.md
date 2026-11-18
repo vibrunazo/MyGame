@@ -21,7 +21,7 @@ Found and fixed along the way, beyond the original plan:
 - **Cascade → Niagara (done):** `NS_Impact_Player_Weak_small` replaces `P_Impact_Player_Weak_small` in `GetHit_Montage`. The converter output had an unbound sub-UV flipbook playing per DeltaTime; it now uses Direct Index with the original's ease-out frame curve, and side-by-side captures match. Nothing references the Cascade asset anymore. Deleting it, and then disabling the `Cascade` and `CascadeToNiagaraConverter` plugins, is your call.
 - **Fire sounds (done):** the three fire cues, which had been silent, now play new Stable Audio sounds. `Fire01Loop_Cue` is an EQ'd seamless loop, `Fire01Once_Cue` picks one of 2 ignites at random, and `FireWhoosh_Cue` picks one of 3 whooshes at random. Sources, processing steps and manifests are in `SourceArt/sfx/fire`. License: Stability AI Community, free under $1M annual revenue (register with Stability before shipping). The cues are rebuilt by `UMyGameAudioEditorLibrary::RebuildSoundCueFromWaves` in the editor-only `MyGameEditor` module.
 - **`IconFire`/`IconDefense`:** GE UI data can no longer be a Blueprint class (it's a GE component now). The data survived inside `GE_FireDot`/`GE_StunImmune`. Swap those for native `MyGameplayEffectUIData` components; deleting the two Blueprints afterwards is your call.
-- **No mass resave.** Assets that load with problems would lose data: `LevelTest01` (placed enemies fail to load), 4 AdvancedLocomotion animations (bone bindings) and `ThirdPersonCharacter`. Assets get saved as they're edited instead.
+- **No mass resave.** Assets that load with problems would lose data: `LevelTest01` (placed enemies fail to load; deleted 2026-11-18), 4 AdvancedLocomotion animations (bone bindings) and `ThirdPersonCharacter`. Assets get saved as they're edited instead.
 - **Fire sounds already silent:** `Fire01Loop_Cue`, `Fire01Once_Cue` and `FireWhoosh_Cue` reference StarterContent audio, which `.gitignore` excludes.
 - **Rendering:** room maps bring several directional lights that compete for forward shading. There's no baked lighting (`*_BuiltData` is git-ignored), and the navmesh is generated at runtime (`RuntimeGeneration=Dynamic`).
 - **Darker, greyer scene than the 2020 video (fixed):** `SkyLight_1` is now intensity 13 with tint (0.75, 0.83, 1.0), picked against the video. `LightSource2` (the main light) has `ForwardShadingPriority` 1, and `LightSource3` (fill) is no longer an atmosphere sun light, which clears the "multiple directional lights competing" warning. Baked lighting stays out of git: each machine rebakes, and the look doesn't depend on it.
@@ -278,9 +278,10 @@ shared library on that skeleton with no retarget.
   `ALS_Mannequin_Skeleton`, which the project lacks) and the template leftover `ThirdPersonCharacter` (a Blueprint with
   no class). `MI_UE4Man_Body1` and the UE4 mannequin's materials are unreferenced too. **Deleted 2026-11-18 with the
   user's OK**, after an asset-registry check found no referencer outside the set: `BS_LocoStrafe`, `PunchRActive_Pose`,
-  `ThirdPersonCharacter`, `MI_UE4Man_Body1` and its parent `M_UE4Man_Body1`. **Kept, still referenced:** the UE4 mesh
-  `SK_Mannequin`, so its skeleton, physics asset, materials and textures too (the retargeting assets
-  `IK_UE4Mannequin` and `RTG_UE4Mannequin_to_Manny` name it; `LevelTest01` names some of its materials and textures);
+  `ThirdPersonCharacter`, `MI_UE4Man_Body1` and its parent `M_UE4Man_Body1`. Then, the same day, also with the user's
+  OK: the retargeting assets `IK_UE4Mannequin` and `RTG_UE4Mannequin_to_Manny`, the UE4 mesh `SK_Mannequin` with its
+  skeleton, physics asset, materials and textures (all of `/Game/Mannequin/Character`), and `LevelTest01`, the UE4 test
+  map that still named some of those materials (nothing referenced it). **Kept, still referenced:**
   `/Game/Mannequin/Animations` and `BS_LocoStrafe1`, which are on Manny now and used by `ABP_CharAnim`.
 - **Hit windows re-tuned** (1.1's rule: a window outside the tolerance, or whose hit lands a sample early or late, is
   re-tuned). A window's sphere is placed from the montage's animation data (`AHitBox::MontageBoneInComponent`); on
