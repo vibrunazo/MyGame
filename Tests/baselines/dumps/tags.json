@@ -2,16 +2,44 @@
  "Ass": {
   "assets": [],
   "children": [
+   "Ass.Anim",
    "Ass.Combo",
    "Ass.Data",
    "Ass.Notify",
    "Ass.State",
    "Ass.Status"
   ],
-  "code": [
-   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"Ass.Combo.CanCancel\")",
-   "Config/DefaultGame.ini: AttackingTag=(TagName=\"Ass.State.Attacking\")"
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Anim": {
+  "assets": [],
+  "children": [
+   "Ass.Anim.Hit",
+   "Ass.Anim.Start"
   ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Anim.Hit": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Anim.Start": {
+  "assets": [],
+  "children": [],
+  "code": [],
   "owner": null,
   "plugin_name": null,
   "source": "AssCore",
@@ -22,35 +50,31 @@
   "children": [
    "Ass.Combo.CanCancel"
   ],
-  "code": [
-   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"Ass.Combo.CanCancel\")"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Combo.CanCancel": {
   "assets": [],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Combo_CanCancel);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, \"Ass.Combo.CanCancel\");",
-   "Config/DefaultGame.ini: CancelWindowTag=(TagName=\"Ass.Combo.CanCancel\")"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Data": {
   "assets": [],
   "children": [
    "Ass.Data.CamShake",
+   "Ass.Data.Cooldown",
    "Ass.Data.HitStun",
    "Ass.Data.Knockback",
    "Ass.Data.Launch",
    "Ass.Data.NoControl",
+   "Ass.Data.NoPawnBlock",
    "Ass.Data.StunImmune"
   ],
   "code": [],
@@ -82,6 +106,15 @@
    "/Game/Blueprints/Chars/EMelee3/GA_DamageEnemy2",
    "/Game/Blueprints/Chars/EWizard/GA_Cast1"
   ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.Cooldown": {
+  "assets": [],
   "children": [],
   "code": [],
   "owner": null,
@@ -222,6 +255,15 @@
   "source": "AssCore",
   "step": null
  },
+ "Ass.Data.NoPawnBlock": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
  "Ass.Data.StunImmune": {
   "assets": [
    "/Game/Abilities/GE_StunImmune",
@@ -315,12 +357,10 @@
   "children": [
    "Ass.State.Attacking"
   ],
-  "code": [
-   "Config/DefaultGame.ini: AttackingTag=(TagName=\"Ass.State.Attacking\")"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.State.Attacking": {
@@ -336,14 +376,10 @@
    "/Game/Blueprints/Chars/EWizard/GA_Cast1"
   ],
   "children": [],
-  "code": [
-   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(State_Attacking);",
-   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(State_Attacking, \"Ass.State.Attacking\");",
-   "Config/DefaultGame.ini: AttackingTag=(TagName=\"Ass.State.Attacking\")"
-  ],
+  "code": [],
   "owner": null,
   "plugin_name": null,
-  "source": "MyGame",
+  "source": "AssCore",
   "step": null
  },
  "Ass.Status": {
@@ -355,7 +391,8 @@
    "Ass.Status.NoControl",
    "Ass.Status.NoMove",
    "Ass.Status.NoPawnBlock",
-   "Ass.Status.StunImmune"
+   "Ass.Status.StunImmune",
+   "Ass.Status.Unpushable"
   ],
   "code": [],
   "owner": null,
@@ -441,6 +478,15 @@
    "/Game/Abilities/GE_HitStun",
    "/Game/Abilities/GE_StunImmune"
   ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Status.Unpushable": {
+  "assets": [],
   "children": [],
   "code": [],
   "owner": null,
@@ -1201,6 +1247,7 @@
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);",
    "Source/MyGame/Abilities/DamageExec.cpp: // FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
    "Source/MyGame/Abilities/DamageExec.cpp: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
+   "Source/MyGame/Abilities/MyAbilityPolicy.cpp: if (Part.Spec.IsValid()) Part.Spec.Data->SetSetByCallerMagnitude(MyGameplayTags::Data_Damage, -Payload.Damage.Magnitude);",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Damage, \"data.damage\");"
   ],
   "owner": null,
