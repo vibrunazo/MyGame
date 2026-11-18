@@ -68,6 +68,7 @@ IMMUNE_TO_PROJECTILES = "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjec
 CLEANUP = ("/Script/MyGame.MyCharacter", "/Script/MyGame.Pickup", "/Script/MyGame.MyProjectile", "/Script/AssCombat.AssHitBox",
            "/Script/MyGame.WidgetActor")
 X, Y = ar.DUMMY_SPOT  # the start room's empty row
+BOSS_TILE = (1400.0, 7500.0)  # an empty spot in seed 6032's boss tile (centre 1400, 8000), its floor at the start room's height
 CLOSE = X - 95  # where the player stands to hit the dummy, as in the abilities suite
 
 
@@ -127,7 +128,6 @@ def enemy_attacks():
                    player=hurt, setup=[target_player("enemy")])
     for ability, inputs, duration in (("boss_punches", activate(0.0, "boss", "boss_punches") + again(3.0, "boss", "boss_punches"), 6.5),
                                       ("boss_smash", activate(0.0, "boss", "boss_smash"), 9.0),
-                                      ("boss_summon", activate(0.0, "boss", "boss_summon"), 2.0),
                                       ("boss_debuff", activate(0.0, "boss", "boss_debuff"), 2.0)):
         yield scenario(ability, inputs, duration, enemies=[enemy("boss", "boss", x=X + 30)], player=hurt, setup=[target_player("boss")])
 
@@ -183,12 +183,34 @@ def ai_on():
 AI_ON = {"sight_behind_500", "sight_front_900", "sight_front_500", "enemy_ai_attack"}
 
 
+def added():
+    """Scenarios added after the AI's: the AI carries state from one scenario to the next (an enemy_ai_attack tag moved a
+    frame when one was added before it), so new ones go here, after every scenario recorded before them."""
+    # the kick turns off the kicker's body blocking for a while, so it passes through an enemy standing between it and
+    # the player (here a frozen enemy1 at x=200, the kicker starting at 300, the player at 40)
+    yield scenario("kicker_through", activate(0.0, "enemy", "kicker"), 2.5,
+                   enemies=[enemy("enemy", "kicker"), enemy("blocker", "enemy1", x=X - 100)], player_x=X - 260,
+                   player={"Defense": 1.0}, setup=[target_player("enemy")])
+    yield from boss_room()
+
+
+def boss_room():
+    """The boss's summon where its spawners are: the boss's tile on seed 6032 (the start tile has none, so there the
+    summon ends without spawning). It spawns through the spawner farthest from the player, BP_SpawnerRight; the
+    floor's own boss stands frozen in the room. Runs after the start room's scenarios, so the trip changes none of them."""
+    yield scenario("boss_summon", activate(0.0, "boss", "boss_summon"), 2.0,
+                   enemies=[enemy("boss", "boss", x=BOSS_TILE[0], y=BOSS_TILE[1] + 100, yaw=-90.0)],
+                   player_x=BOSS_TILE[0], player_y=BOSS_TILE[1] - 100, player_yaw=90.0, player={"Defense": 1.0},
+                   setup=[target_player("boss")])
+
+
 def scenarios():
     ar.DUMMY[0] = {"path": DUMMY_PATH}
     yield from player_moves()
     yield from enemy_attacks()
     yield from mechanics()
     yield from ai_on()
+    yield from added()
     yield scenario("fire_hands_punch", [at(0.0, "give_item", item_asset_path=ar.ITEMS + "DA_ItemFireHands")] + tap("Punch", 0.2), 6.0)
 
 
