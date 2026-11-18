@@ -53,6 +53,16 @@ public:
 	// Each ability's UI, for the HUD and the ability books: read through UMyBlueprintFunctionLibrary::GetAbilityUI
 	UPROPERTY(EditDefaultsOnly, Category = MyGI)
 	TObjectPtr<class UAbilityUIDataAsset> AbilityUI;
+	// The effects MyGame's ability policy (UMyAbilityPolicy) applies for a hit's typed parts, read through the game
+	// instance class's defaults. Held here so they cook: a template's typed parts name no class (Ass Plan.md Step 3)
+	UPROPERTY(EditDefaultsOnly, Category = "MyGI|Hit")
+	TSubclassOf<class UGameplayEffect> HitDamageEffect;
+	UPROPERTY(EditDefaultsOnly, Category = "MyGI|Hit")
+	TSubclassOf<class UGameplayEffect> HitStunEffect;
+	UPROPERTY(EditDefaultsOnly, Category = "MyGI|Hit")
+	TSubclassOf<class UGameplayEffect> HitKnockbackEffect;
+	UPROPERTY(EditDefaultsOnly, Category = "MyGI|Hit")
+	TSubclassOf<class UGameplayEffect> HitLaunchEffect;
 
 	// The generated level a run plays on, and the main menu
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = MyGI)

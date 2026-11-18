@@ -2,8 +2,6 @@
 
 namespace MyGameplayTags
 {
-	UE_DEFINE_GAMEPLAY_TAG(State_Attacking, "Ass.State.Attacking");
-	UE_DEFINE_GAMEPLAY_TAG(Combo_CanCancel, "Ass.Combo.CanCancel");
 	UE_DEFINE_GAMEPLAY_TAG(Activate_GroundAttack, "activate.groundattack");
 	UE_DEFINE_GAMEPLAY_TAG(Activate_FlyingAttack, "activate.flyingattack");
 
