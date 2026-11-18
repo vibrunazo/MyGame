@@ -50,7 +50,7 @@ namespace
 	FString AbilityId(const UGameplayAbility* Ability)
 	{
 		const UAssAbility* Plugin = Cast<UAssAbility>(Ability);
-		const UAssAbilityTemplate* Template = Plugin && Plugin->UsesDefinitionTags() ? Plugin->GetTemplate() : nullptr;
+		const UAssAbilityTemplate* Template = Plugin ? Plugin->GetTemplate() : nullptr;
 		return Template ? Template->GetOutermost()->GetName() : ObjectId(Ability);
 	}
 }
