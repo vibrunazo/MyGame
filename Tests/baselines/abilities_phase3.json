@@ -615,7 +615,8 @@
  "sight": {
   "behind_500": false,
   "front_900": false,
-  "front_500": true
+  "front_500": true,
+  "fireball_behind_800": true
  },
  "enemy_attack": {
   "enemy_montages": [
