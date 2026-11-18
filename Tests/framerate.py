@@ -7,8 +7,11 @@ the run's back afterwards.
   (3x speed): a slow PC or a hitch must not change them.
 - Every scenario of the abilities suite has the same whole outcome (`ability_regression.outcome`: montages, abilities,
   hit, launched, pushed, mana, jumped, moved, tags, damage, lingering) at 1/60 s, at 1/30 s, and on a seeded uneven step
-  (1/60 s with a 1/20 s frame every 7, seed 7). Tolerances: none beyond the outcome's own (its distances are thresholds,
-  its damage exact except the multi-hit holds, its tags exact, a brief tag missing between samples only a note).
+  (1/60 s with a 1/20 s frame every 7, seed 7). Tolerances: the outcome's own (its distances are thresholds, its damage
+  exact except the multi-hit holds, its tags exact, a brief tag missing between samples only a note).
+- Their distances (the dummy pushed and risen, the player moved and risen) within 5% of 1/60's, or 2 units, as the 1/30
+  spike measured (2026-11-16). One measured exception: the double-tap dash moves the player 5.1% less at 1/30 (325.7 to
+  309.2, the same before Step 8), its flicks sampled on coarser frames; it is allowed 6%.
 """
 import json
 
@@ -23,6 +26,22 @@ SPEEDS = (1.0, 3.0)
 # (name, PushFixedStep arguments)
 STEPS = (("1/60", {"fps": 60}), ("1/30", {"fps": 30}),
          ("uneven", {"fps": 60, "longFrameEvery": 7, "longFrameSeconds": 0.05, "seed": 7}))
+DISTANCES = ("dummy_pushed", "dummy_rise", "player_moved", "player_rise")
+SHARE, FLOOR = 0.05, 2.0
+EXCEPTIONS = {("1/30", "dash_double_tap", "player_moved"): 0.06}
+
+
+def distance_problems(step, reference, run):
+    """Distances of run's scenarios further than the tolerance from reference's."""
+    ref = {x["scenario"]: x for x in reference["scenarios"]}
+    out = []
+    for x in run["scenarios"]:
+        for key in DISTANCES:
+            a, b = ref[x["scenario"]][key], x[key]
+            share = EXCEPTIONS.get((step, x["scenario"], key), SHARE)
+            if abs(b - a) > max(share * abs(a), FLOOR):
+                out.append(f"{step}: {x['scenario']}.{key} {a} at 1/60, {b}")
+    return out
 
 
 def all_scenarios():
@@ -65,5 +84,9 @@ def suite(ctx):
         for line in lines:
             print(f"  {name}: {line}")
         problems += [f"{name}: {line}" for line in lines if not line.startswith("note")]
-    checks = len(MOVES) + len(reference["scenarios"]) * (len(STEPS) - 1)
+        far = distance_problems(name, reference, outcomes[name])
+        for line in far:
+            print(f"  {line}")
+        problems += far
+    checks = len(MOVES) + 2 * len(reference["scenarios"]) * (len(STEPS) - 1)
     return {"ok": not problems, "checks": checks, "problems": problems, "files": {"framerate.json": None}}
