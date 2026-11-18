@@ -98,22 +98,15 @@
  "/Game/Abilities/GE_FirePunch": [
   "/Game/Blueprints/Items/DA_ItemFireHands"
  ],
- "/Game/Abilities/GE_HitStun": [
-  "/Game/Blueprints/BP_MyGI"
- ],
+ "/Game/Abilities/GE_HitStun": [],
  "/Game/Abilities/GE_ImmuneToProjectile": [
   "/Game/Anims/Tat_Montage"
  ],
  "/Game/Abilities/GE_IsInCombat": [
   "/Game/Blueprints/Chars/BP_Char"
  ],
- "/Game/Abilities/GE_Knockback": [
-  "/Game/Blueprints/BP_MyGI",
-  "/Game/Blueprints/Chars/EKicker/KickerKick_Montage"
- ],
- "/Game/Abilities/GE_Launch": [
-  "/Game/Blueprints/BP_MyGI"
- ],
+ "/Game/Abilities/GE_Knockback": [],
+ "/Game/Abilities/GE_Launch": [],
  "/Game/Abilities/GE_ManaAdd": [
   "/Game/Blueprints/Items/DA_ItemMana",
   "/Game/Blueprints/Items/DA_ItemMana2"
@@ -121,14 +114,8 @@
  "/Game/Abilities/GE_ManaCost": [
   "/Game/Abilities/AT_Abilities_Cast"
  ],
- "/Game/Abilities/GE_NoControl": [
-  "/Game/Blueprints/Chars/BP_Char",
-  "/Game/Blueprints/Chars/BP_EnemyBase"
- ],
- "/Game/Abilities/GE_NoPawnBlock": [
-  "/Game/Anims/Tat_Montage",
-  "/Game/Blueprints/Chars/EKicker/KickerKick_Montage"
- ],
+ "/Game/Abilities/GE_NoControl": [],
+ "/Game/Abilities/GE_NoPawnBlock": [],
  "/Game/Abilities/GE_RotLock": [
   "/Game/Abilities/AT_Abilities_Cast",
   "/Game/Abilities/AT_Abilities_Tat"

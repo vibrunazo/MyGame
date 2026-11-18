@@ -1024,7 +1024,7 @@
     },
     "maxStuns": 3,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -3362,7 +3362,7 @@
     },
     "maxStuns": 0,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -7825,7 +7825,7 @@
     },
     "maxStuns": 0,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -10388,7 +10388,7 @@
     },
     "maxStuns": 0,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -12727,7 +12727,7 @@
     },
     "maxStuns": 0,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -15084,7 +15084,7 @@
     },
     "maxStuns": 0,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -17441,7 +17441,7 @@
     },
     "maxStuns": 0,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -20023,7 +20023,7 @@
     },
     "maxStuns": 0,
     "noControlEffect": {
-     "refPath": "/Game/Abilities/GE_NoControl.GE_NoControl_C"
+     "refPath": "/Script/AssCombat.AssNoControlEffect"
     },
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",

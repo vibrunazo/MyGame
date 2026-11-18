@@ -2552,12 +2552,12 @@
       "effectsToApply": [
        {
         "effectClass": {
-         "refPath": "/Game/Abilities/GE_NoPawnBlock.GE_NoPawnBlock_C"
+         "refPath": "/Script/AssCombat.AssNoPawnBlockEffect"
         },
         "magnitudes": [
          {
           "gameplayTag": {
-           "tagName": "data.nopawnblock"
+           "tagName": "Ass.Data.NoPawnBlock"
           },
           "magnitude": -1
          }
@@ -4380,7 +4380,7 @@
       "effectsToApply": [
        {
         "effectClass": {
-         "refPath": "/Game/Abilities/GE_Knockback.GE_Knockback_C"
+         "refPath": "/Script/AssCombat.AssKnockbackEffect"
         },
         "magnitudes": [
          {
@@ -4393,7 +4393,7 @@
        },
        {
         "effectClass": {
-         "refPath": "/Game/Abilities/GE_NoPawnBlock.GE_NoPawnBlock_C"
+         "refPath": "/Script/AssCombat.AssNoPawnBlockEffect"
         },
         "magnitudes": []
        }
