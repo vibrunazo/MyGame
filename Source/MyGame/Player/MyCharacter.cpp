@@ -733,10 +733,15 @@ void AMyCharacter::OnDie()
 	}
 	UWorld* World = GetWorld();
 	// FTimerManager TM = FTimerManager::FTimerManager;
-	FTimerHandle Handle;
-	FTimerHandle Handle2;
-	GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 5.0f, false);
-	GetWorldTimerManager().SetTimer(Handle2, this, &AMyCharacter::OnDelayedLaunch2, .05f, false);
+	// the body's launch and the delayed death are the authority's (Ass Step8.md 4.5), kept as world timers: one fires
+	// once world time is past death + its delay, the rule the plugin's hit launch follows
+	if (HasAuthority())
+	{
+		FTimerHandle Handle;
+		FTimerHandle Handle2;
+		GetWorldTimerManager().SetTimer(Handle, this, &AMyCharacter::OnDelayedDeath, 5.0f, false);
+		GetWorldTimerManager().SetTimer(Handle2, this, &AMyCharacter::OnDelayedLaunch2, .05f, false);
+	}
 	Combat->SetControlEnabled(false);
 	DisableInput(nullptr);
 	if (HealthBarComp) HealthBarComp->SetVisibility(false);
