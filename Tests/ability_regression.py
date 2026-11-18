@@ -238,7 +238,32 @@ def sight_checks(dummy, seconds=2.0):
         tool("set_ai_enabled", actor_path=dummy["path"], enabled=False)
         tool("ai_target", actor_path=dummy["path"], clear=True)
         results[name] = bool(seen)
+    results["fireball_behind_800"] = aggro_on_hit(dummy, seconds)
     return results
+
+
+def aggro_on_hit(dummy, seconds):
+    """Hit out of its sight (behind it, 800 away) by the player's fireball: does taking damage aggro it on the player?
+    The projectile is the hit's effect causer, so this checks the damage reaches the enemy as the player's."""
+    reset(None, dummy)
+    x, y = DUMMY_SPOT
+    tool("teleport_actor", actor_path=dummy["path"], x=x, y=y, z=stand_z(), yaw=0.0)
+    tool("teleport_player", x=x - 800.0, y=y, z=stand_z())
+    tool("set_player_facing", yaw=0.0)
+    tool("learn_item_abilities", item_asset_path=ITEMS + "DA_LearnFireball")
+    tool("ai_target", actor_path=dummy["path"], clear=True)
+    wait_game(0.3)
+    tool("set_ai_enabled", actor_path=dummy["path"], enabled=True, show_player=False)
+    tool("press_input", button="Cast", pressed=True)
+    wait_game(0.06)
+    tool("press_input", button="Cast", pressed=False)
+    t0, seen = game_time(), None
+    while game_time() - t0 < seconds + 1.0 and not seen:
+        seen = tool("ai_target", actor_path=dummy["path"])["target"]
+        time.sleep(0.02)
+    tool("set_ai_enabled", actor_path=dummy["path"], enabled=False)
+    tool("ai_target", actor_path=dummy["path"], clear=True)
+    return bool(seen)
 
 
 def enemy_attack(dummy, seconds=6.0):

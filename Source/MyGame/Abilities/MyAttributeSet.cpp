@@ -64,13 +64,10 @@ void UMyAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallback
                 SourceController = Pawn->GetController();
             }
         }
-
-        // Set the causer actor based on context if it's set
-        if (Context.GetEffectCauser())
-        {
-            SourceActor = Context.GetEffectCauser();
-        }
     }
+    // The source is who attacked, not what touched: the hit path makes a projectile the effect causer (pushes follow
+    // its facing), and the damaged would then aggro on the projectile. The causer only when no attacker is known
+    if (!SourceActor) SourceActor = Context.GetEffectCauser();
 
 
 	if (Data.Target.AbilityActorInfo.IsValid() && Data.Target.AbilityActorInfo->AvatarActor.IsValid())

@@ -36,7 +36,7 @@ void AEnemyCharBase::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffec
 
     APawn* SeenPawn = Cast<APawn>(SourceActor);
     if (!SeenPawn) return;
-    SetAggroTarget(SeenPawn);
+    if (bAggroWhenHit) SetAggroTarget(SeenPawn);
     SetOutline();
     // UE_LOG(LogTemp, Warning, TEXT("Enemy damaged"));
 }
