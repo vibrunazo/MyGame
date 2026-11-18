@@ -276,8 +276,12 @@ shared library on that skeleton with no retarget.
 - **Left on the UE4 skeleton, unreferenced:** the UE4 mesh, its skeleton and physics asset, `PunchRActive_Pose` (the
   pose asset `PunchRActive_PoseSeq` was made from), `BS_LocoStrafe` (already broken: four of its samples are on
   `ALS_Mannequin_Skeleton`, which the project lacks) and the template leftover `ThirdPersonCharacter` (a Blueprint with
-  no class). `MI_UE4Man_Body1` and the UE4 mannequin's materials are unreferenced too. Nothing deleted; their removal
-  is the user's call.
+  no class). `MI_UE4Man_Body1` and the UE4 mannequin's materials are unreferenced too. **Deleted 2026-11-18 with the
+  user's OK**, after an asset-registry check found no referencer outside the set: `BS_LocoStrafe`, `PunchRActive_Pose`,
+  `ThirdPersonCharacter`, `MI_UE4Man_Body1` and its parent `M_UE4Man_Body1`. **Kept, still referenced:** the UE4 mesh
+  `SK_Mannequin`, so its skeleton, physics asset, materials and textures too (the retargeting assets
+  `IK_UE4Mannequin` and `RTG_UE4Mannequin_to_Manny` name it; `LevelTest01` names some of its materials and textures);
+  `/Game/Mannequin/Animations` and `BS_LocoStrafe1`, which are on Manny now and used by `ABP_CharAnim`.
 - **Hit windows re-tuned** (1.1's rule: a window outside the tolerance, or whose hit lands a sample early or late, is
   re-tuned). A window's sphere is placed from the montage's animation data (`AHitBox::MontageBoneInComponent`); on
   Manny the punches' spheres sat 8.6 to 12.6 cm from the UE4 ones, the kicks' within 5.2. Twelve windows got an offset
