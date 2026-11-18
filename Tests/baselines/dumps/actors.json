@@ -1030,11 +1030,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 2,
@@ -3369,11 +3369,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
@@ -7833,11 +7833,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
@@ -10397,11 +10397,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
@@ -12737,11 +12737,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
@@ -15095,11 +15095,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
@@ -17453,11 +17453,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
@@ -20036,11 +20036,11 @@
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
      "bAllowTickOnDedicatedServer": true,
-     "bCanEverTick": false,
+     "bCanEverTick": true,
      "bStartWithTickEnabled": true,
      "bTickEvenWhenPaused": false,
      "endTickGroup": "TG_PrePhysics",
-     "tickGroup": "TG_DuringPhysics",
+     "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
