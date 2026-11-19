@@ -119,6 +119,17 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
 	static bool StartTokenShadowForTest(ACharacter* Player);
 
+	/**
+	 * Test setup for enemies on patterns (Ass Step 7): Pawn takes Target's attack token (its UAssTokenArbiterComponent),
+	 * as the tests' aggro_add puts an enemy on the aggro list. False when refused or Target has no arbiter.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
+	static bool RequestTokenForTest(AActor* Target, AActor* Pawn);
+
+	/** Test setup: Target's arbiter holds no token (every character in the world lets go), as clear_aggro_list empties the list. */
+	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
+	static bool ClearTokensForTest(AActor* Target);
+
 	/** Stops the shadow, removes its arbiter, and returns JSON {"questions", "additions", "added", "mismatches", "removed_holder"}: the answers that differ only because a holder was removed without dying (the list keeps it until garbage collection, the arbiter lets it go) are apart. */
 	UFUNCTION(BlueprintCallable, Category = "MyGame|Testing")
 	static FString StopTokenShadowForTest();

@@ -9,6 +9,7 @@
 #include "../Abilities/IGetHit.h"
 #include "AssCombatant.h"
 #include "AssProjectileSpawner.h"
+#include "AssAbilitySlots.h"
 
 #include "GameFramework/Character.h"
 #include "AbilitySystemInterface.h"
@@ -25,7 +26,7 @@
 
 
 UCLASS(config=Game)
-class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IAssCombatant, public IGetHit, public IAssProjectileSpawner, public IReportDeath
+class AMyCharacter : public ACharacter, public IAbilitySystemInterface, public IAssCombatant, public IGetHit, public IAssProjectileSpawner, public IReportDeath, public IAssAbilitySlots
 {
 	GENERATED_BODY()
 
@@ -155,6 +156,16 @@ public:
 	bool GetStrikeSound(EAssSoundKind Kind, USoundBase*& OutSound) override;
 	// GA_Summon's graph: the spawner in this tile's box farthest from the target spawns; none with no target or spawner
 	bool Summon(const struct FAssSummon& Summon) override;
+	// IAssAbilitySlots, for the plugin's pattern driver (Ass Step 7): a slot is an input number. Holding it is the key held
+	// down, which Tick fires again whenever it can start (as the tree's Attack task held it); the rest is the combat
+	// component's, over the same grants
+	EAssSlotStart StartSlot(int32 Slot) override;
+	void HoldSlot(int32 Slot) override { SetAbilityKeyDown(static_cast<uint8>(Slot), true); }
+	void ReleaseSlot(int32 Slot) override { SetAbilityKeyDown(static_cast<uint8>(Slot), false); }
+	bool IsSlotHeld(int32 Slot) const override { return IsAbilityKeyDown.IsValidIndex(Slot) && IsAbilityKeyDown[Slot]; }
+	void CancelSlot(int32 Slot, EAssAbilityEnd Reason) override;
+	FAssSlotState GetSlotState(int32 Slot) const override;
+	FAssOnSlotEnded& OnSlotEnded() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddToAggroList(AActor* NewActor);
 	UFUNCTION(BlueprintCallable, Category = Abilities)

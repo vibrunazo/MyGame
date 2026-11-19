@@ -3,6 +3,7 @@
 
 #include "MyPlayerController.h"
 #include "AssCombatComponent.h"
+#include "AssTokenArbiterComponent.h"
 #include "../MyGameplayTags.h"
 #include "MyCharacter.h"
 #include "MyDefaultPawn.h"
@@ -22,6 +23,17 @@
 #include "../UI/ActionButtonWidget.h"
 #include "Framework/Application/SlateApplication.h"
 #include "UObject/UObjectIterator.h"
+
+void AMyPlayerController::OnPossess(APawn* InPawn)
+{
+	Super::OnPossess(InPawn);
+	if (!InPawn || InPawn->FindComponentByClass<UAssTokenArbiterComponent>()) return;
+	UAssTokenArbiterComponent* Tokens = NewObject<UAssTokenArbiterComponent>(InPawn, TEXT("AttackTokens"));
+	Tokens->Capacity = 1;
+	// The tree's aggro list kept its holder until it died (Ass Step6.md fact 7)
+	Tokens->bKeepUntilDeath = true;
+	Tokens->RegisterComponent();
+}
 
 void AMyPlayerController::BeginPlay()
 {

@@ -520,6 +520,27 @@ void AMyCharacter::SetAbilityKeyDown(uint8 Index, bool IsKeyDown)
 	IsAbilityKeyDown[Index] = IsKeyDown;
 }
 
+EAssSlotStart AMyCharacter::StartSlot(int32 Slot)
+{
+	return Combat ? Combat->StartSlot(Slot) : EAssSlotStart::Empty;
+}
+
+void AMyCharacter::CancelSlot(int32 Slot, EAssAbilityEnd Reason)
+{
+	if (Combat) Combat->CancelSlot(Slot, Reason);
+}
+
+FAssSlotState AMyCharacter::GetSlotState(int32 Slot) const
+{
+	return Combat ? Combat->GetSlotState(Slot) : FAssSlotState();
+}
+
+FAssOnSlotEnded& AMyCharacter::OnSlotEnded()
+{
+	static FAssOnSlotEnded None;
+	return Combat ? Combat->OnSlotEnded() : None;
+}
+
 void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 {
 	if (!HasControl() || !AbilitySystem) return;

@@ -21,6 +21,7 @@
 #include "EnvironmentQuery/EnvQueryManager.h"
 #include "EnvironmentQuery/EnvQueryOption.h"
 #include "GameFramework/Character.h"
+#include "EngineUtils.h"
 #include "Player/MyCharacter.h"
 #include "Kismet2/BlueprintEditorUtils.h"
 #include "Kismet2/KismetEditorUtilities.h"
@@ -385,6 +386,25 @@ FString UMyGameEditorLibrary::CompareSpotSearchForTest(APawn* Querier, ACharacte
 	FString Text;
 	FJsonSerializer::Serialize(Out, TJsonWriterFactory<TCHAR, TCondensedJsonPrintPolicy<TCHAR>>::Create(&Text));
 	return Text;
+}
+
+bool UMyGameEditorLibrary::RequestTokenForTest(AActor* Target, AActor* Pawn)
+{
+	UAssTokenArbiterComponent* Arbiter = Target ? Target->FindComponentByClass<UAssTokenArbiterComponent>() : nullptr;
+	return Arbiter && Pawn && Arbiter->Request(Pawn);
+}
+
+bool UMyGameEditorLibrary::ClearTokensForTest(AActor* Target)
+{
+	// The player's arbiter (the first: the world check's shadow comes later): every character in the world lets go, as a
+	// stopped pattern does
+	UAssTokenArbiterComponent* Arbiter = Target ? Target->FindComponentByClass<UAssTokenArbiterComponent>() : nullptr;
+	if (!Arbiter) return false;
+	for (TActorIterator<ACharacter> It(Target->GetWorld()); It; ++It)
+	{
+		Arbiter->Release(*It, EAssTokenRelease::Stopped);
+	}
+	return true;
 }
 
 bool UMyGameEditorLibrary::StartTokenShadowForTest(ACharacter* Player)

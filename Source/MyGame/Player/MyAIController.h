@@ -73,12 +73,31 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "My AI Controller|Pattern")
 	TObjectPtr<class UAssMoverComponent> PatternMover;
 
+	UFUNCTION(BlueprintPure, Category = "My AI Controller|Pattern")
 	bool UsesPattern() const { return bUsePattern && Pattern != nullptr; }
 	/** The pattern's target (the tree's TargetChar), or none. */
 	class ACharacter* GetPatternTarget() const;
 	void SetPatternTarget(AActor* Target);
 	/** One step of the pattern, from the world's stepper. */
 	void StepPattern();
+
+	/**
+	 * Stops the pattern (movement too), or starts it again from scratch with its salt, as the tests stop and restart a
+	 * tree (a frozen dummy, an enemy woken). The target stays, as the tree's blackboard keeps it.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
+	void SetPatternRunning(bool bRunning);
+
+	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
+	bool IsPatternRunning() const;
+
+	/**
+	 * Puts this enemy on Asset's pattern now (none: back on the tree), as Use pattern would have at possession: the tree
+	 * stops, the pattern registers with the stepper and starts, keeping the tree's target. For tests, before the switch
+	 * is on for every enemy.
+	 */
+	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
+	void UsePatternNow(class UMyPatternAsset* Asset);
 
 	// The tree doesn't start for an enemy on a pattern (the controllers' Blueprints start it on BeginPlay)
 	bool RunBehaviorTree(class UBehaviorTree* BTAsset) override;
@@ -99,4 +118,6 @@ private:
 	FGameplayTagContainer RespondedEvents;
 	FDelegateHandle PawnEventHandle;
 	FDelegateHandle BuffedRangeHandle;
+	/** The pattern's salt, given by the stepper at possession. */
+	int32 PatternSalt = 0;
 };

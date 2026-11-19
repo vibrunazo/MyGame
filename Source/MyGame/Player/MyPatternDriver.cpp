@@ -46,6 +46,20 @@ void UMyPatternDriver::SetPace(ACharacter* Self, float Multiplier)
 	if (AMyCharacter* Char = Mine(Self)) Char->SetWalking(Multiplier < 1.f);
 }
 
+void UMyPatternDriver::Announce(const FAssPatternEvent& Event, ACharacter* Self)
+{
+	// A command begun (not one skipped or failed: those carry a reason); a combo or a phase cut ends what it was doing
+	if (Event.Kind == EAssPatternEventKind::Command && Event.Reason == EAssPatternReason::None)
+	{
+		LastCommand = Event.Index;
+		LastCommandFrame = GFrameCounter;
+	}
+	else if (Event.Kind == EAssPatternEventKind::Combo && Event.Reason != EAssPatternReason::None)
+	{
+		LastCommand = -1;
+	}
+}
+
 void UMyPatternDriver::SetFacing(EAssFacing Facing)
 {
 	AAIController* Controller = GetController();

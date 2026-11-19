@@ -18,6 +18,10 @@
 #include "GameFramework/Controller.h"
 #include "AIController.h"
 #include "BehaviorTree/BehaviorTreeComponent.h"
+#include "AssTokenArbiterComponent.h"
+#include "Player/MyAIController.h"
+#include "Player/MyPatternAsset.h"
+#include "Player/MyPatternDriver.h"
 #include "Dom/JsonObject.h"
 #include "Serialization/JsonSerializer.h"
 #include "Serialization/JsonWriter.h"
@@ -376,7 +380,21 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 		if (Char && Char->GetCharacterMovement()) Mode = Char->GetCharacterMovement()->MovementMode;
 		const AAIController* AI = Char ? Cast<AAIController>(Char->GetController()) : nullptr;
 		const UBehaviorTreeComponent* Tree = AI ? Cast<UBehaviorTreeComponent>(AI->GetBrainComponent()) : nullptr;
-		const FString Tasks = Tree && Tree->IsRunning() ? Tree->DescribeActiveTasks() : FString();
+		FString Tasks = Tree && Tree->IsRunning() ? Tree->DescribeActiveTasks() : FString();
+		// An enemy on a pattern (Ass Step 7, Q6): the tree task its running command stands for, named as the tree's
+		const AMyAIController* Patterned = Cast<AMyAIController>(AI);
+		if (Patterned && Patterned->UsesPattern() && Patterned->PatternDriver)
+		{
+			Tasks.Reset();
+			const UMyPatternDriver* Driver = Patterned->PatternDriver;
+			if (const FString* Name = Patterned->Pattern->TreeTaskNames.Find(Driver->GetLastCommand()); Name && Driver->IsRunning())
+			{
+				// "A>B": A in the frame the command began, B after
+				FString First, Then;
+				const bool bTwo = Name->Split(TEXT(">"), &First, &Then);
+				Tasks = TEXT("BT_AIBase::") + (bTwo && GFrameCounter != Driver->GetLastCommandFrame() ? Then : bTwo ? First : *Name);
+			}
+		}
 		if (Tasks != Role.LastTasks)
 		{
 			Event(TEXT("bt"), Role.Name, {Str(Tasks)});
@@ -394,6 +412,21 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 				const FString Holder = RoleOf(Inner->GetObjectPropertyValue(Items.GetRawPtr(i)));
 				Holders.Add(Str(Holder));
 				Key += Holder + TEXT("|");
+			}
+			// With the list empty, the token arbiter's holders among the recorded characters (enemies on patterns, Ass Step 7)
+			if (Items.Num() == 0)
+			{
+				if (UAssTokenArbiterComponent* Arbiter = Actor->FindComponentByClass<UAssTokenArbiterComponent>())
+				{
+					for (const FRole& Other : Roles)
+					{
+						if (Other.Actor.IsValid() && Other.Actor.Get() != Actor && Arbiter->Holds(Other.Actor.Get()))
+						{
+							Holders.Add(Str(Other.Name));
+							Key += Other.Name + TEXT("|");
+						}
+					}
+				}
 			}
 			if (Key != Role.LastToken)
 			{

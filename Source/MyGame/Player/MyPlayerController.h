@@ -143,6 +143,8 @@ private:
 
 protected:
 	void BeginPlay() override;
+	// The player's character gets the attack tokens enemies on patterns take (Ass Step 7): one, kept until death
+	void OnPossess(APawn* InPawn) override;
 	virtual void SetupInputComponent() override;
 	// Every key, button and stick reaches the controller here first: the last one pressed says which device is in use
 	virtual bool InputKey(const FInputKeyEventArgs& Params) override;

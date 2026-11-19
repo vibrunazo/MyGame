@@ -19,7 +19,12 @@ public:
 	/** The target the pattern fights, or none before the enemy aggroes. */
 	ACharacter* GetPatternTarget() const { return GetTarget(); }
 
+	/** The command the pattern last began (its index in the definition's commands), or -1, and the frame it began in. */
+	int32 GetLastCommand() const { return LastCommand; }
+	uint64 GetLastCommandFrame() const { return LastCommandFrame; }
+
 protected:
+	void Announce(const FAssPatternEvent& Event, ACharacter* Self) override;
 	float GetHealthFraction(const ACharacter* Character) const override;
 	bool IsStaggered(const ACharacter* Character) const override { return false; }
 	bool CanAct(const ACharacter* Character) const override;
@@ -27,4 +32,8 @@ protected:
 	bool IsFightOn() const override;
 	void SetPace(ACharacter* Self, float Multiplier) override;
 	void SetFacing(EAssFacing Facing) override;
+
+private:
+	int32 LastCommand = -1;
+	uint64 LastCommandFrame = 0;
 };

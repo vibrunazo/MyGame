@@ -76,6 +76,20 @@ tier = "manual"
 timeout = 1800
 
 [[suite]]
+name = "ai-pattern"
+kind = "pie"
+run = "Tests/ai_behaviour.py:pattern_suite"  # Ass Step 7: the enemy types on patterns so far, against the same reference
+tier = "manual"
+timeout = 1800
+
+[[suite]]
+name = "ai-measures-pattern"
+kind = "pie"
+run = "Tests/ai_measures.py:pattern_suite"  # Ass Step 7: the measures of the types on patterns so far, under the rule
+tier = "manual"
+timeout = 3600
+
+[[suite]]
 name = "ai-measures"
 kind = "pie"
 run = "Tests/ai_measures.py:suite"   # Step 0c item 4: the AI measures over seeded runs, held to the rule in its header

@@ -10,6 +10,7 @@
 #include "../MyGameplayTags.h"
 #include "AssAbilitySystemComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "BrainComponent.h"
 
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -97,9 +98,46 @@ void AMyAIController::OnPossess(APawn* InPawn)
 	// On a pattern: it starts now, with no target (the boss's marks settle before it sees anyone), stepped in spawn order
 	if (UsesPattern() && PatternDriver)
 	{
-		const int32 Salt = AMyPatternStepper::Register(this);
-		PatternDriver->StartPattern(Pattern->Definition, Salt);
+		PatternSalt = AMyPatternStepper::Register(this);
+		PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
 	}
+}
+
+void AMyAIController::SetPatternRunning(bool bRunning)
+{
+	if (!UsesPattern() || !PatternDriver) return;
+	ACharacter* Target = PatternDriver->GetPatternTarget();
+	PatternDriver->StopPattern();
+	StopMovement();
+	if (!bRunning) return;
+	PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
+	PatternDriver->SetTarget(Target);
+}
+
+void AMyAIController::UsePatternNow(UMyPatternAsset* Asset)
+{
+	if (!Asset)
+	{
+		if (PatternDriver) PatternDriver->StopPattern();
+		bUsePattern = false;
+		Pattern = nullptr;
+		return;
+	}
+	// The tree's target carries over
+	UBlackboardComponent* BB = GetBlackboardComponent();
+	AActor* Target = BB ? Cast<AActor>(BB->GetValueAsObject(TEXT("TargetChar"))) : nullptr;
+	if (UBrainComponent* Brain = GetBrainComponent()) Brain->StopLogic(TEXT("pattern"));
+	StopMovement();
+	bUsePattern = true;
+	Pattern = Asset;
+	PatternSalt = AMyPatternStepper::Register(this);
+	PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
+	if (Target) SetPatternTarget(Target);
+}
+
+bool AMyAIController::IsPatternRunning() const
+{
+	return PatternDriver && PatternDriver->IsRunning();
 }
 
 void AMyAIController::OnBuffedRangeChanged(const FGameplayTag Tag, int32 Count)

@@ -17,6 +17,8 @@ _ATTRIBUTES = ("Health", "MaxHealth", "Mana", "MaxMana", "Attack", "Defense", "S
 
 # set_game_speed: the time dilation tests want, re-applied whenever the game resets it to 1 (after a floor loads)
 _speed = {"value": 1.0, "handle": None}
+# use_patterns: AI controller class path -> pattern asset path, for the enemies spawn_enemy spawns (Ass Step 7)
+_patterns = {}
 
 
 def _speed_tick(delta_seconds):
@@ -420,6 +422,14 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
         controller = char.get_controller()
+        if controller and isinstance(controller, unreal.MyAIController) and controller.uses_pattern():
+            # an enemy on a pattern (Ass Step 7): its pattern stops, or starts again from scratch, as the tree would
+            _set_senses(char, controller, enabled)
+            controller.set_pattern_running(enabled)
+            if enabled and show_player:
+                with contextlib.suppress(Exception):
+                    char.on_pawn_seen(_player())
+            return json.dumps({"actor": char.get_name(), "ai_running": controller.is_pattern_running()})
         brain = controller.get_editor_property("brain_component") if controller else None
         if not brain:
             raise RuntimeError(f"{actor_path} has no AI brain")
@@ -1172,6 +1182,11 @@ class MyGameTools(unreal.ToolsetDefinition):
                                                                    unreal.Rotator(roll=0.0, pitch=0.0, yaw=yaw), True)
         if not char:
             raise RuntimeError(f"couldn't spawn {class_path} at ({x}, {y}, {z})")
+        # an enemy whose controller class use_patterns put on a pattern (Ass Step 7)
+        controller = char.get_controller()
+        pattern = _patterns.get(controller.get_class().get_path_name()) if controller else None
+        if pattern:
+            controller.use_pattern_now(unreal.load_asset(pattern))
         if frozen:
             MyGameTools.set_ai_enabled(char.get_path_name(), False)
         return json.dumps({"path": char.get_path_name()})
@@ -1216,7 +1231,32 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char or not enemy:
             raise RuntimeError("actor not found")
         char.add_to_aggro_list(enemy)
+        # and the token arbiter enemies on patterns read (Ass Step 7), when the character has one
+        unreal.MyGameEditorLibrary.request_token_for_test(char, enemy)
         return json.dumps({"added": True})
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def use_patterns(patterns: str) -> str:
+        """Test setup (Ass Step 7): enemies spawn_enemy spawns from now on whose AI controller is of one of these
+        classes go on its pattern (AMyAIController::UsePatternNow), or stay on the tree. A Blueprint class's defaults
+        edited in memory don't reach new instances (only its precomputed changed properties are copied), so the switch
+        is made on each enemy as it spawns.
+
+        Args:
+            patterns: JSON {controller class path: pattern asset path, or "" for the tree}.
+
+        Returns:
+            JSON {controller class path: pattern asset path}, every class on a pattern now.
+        """
+        for cls_path, pattern in json.loads(patterns).items():
+            if not pattern:
+                _patterns.pop(cls_path, None)
+            elif not unreal.load_asset(pattern):
+                raise RuntimeError(f"no pattern at {pattern}")
+            else:
+                _patterns[cls_path] = pattern
+        return json.dumps(_patterns)
 
     @toolset_registry.tool_call
     @staticmethod
@@ -1336,6 +1376,8 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
         char.clear_aggro_list()
+        # and the token arbiter enemies on patterns read (Ass Step 7), when the character has one
+        unreal.MyGameEditorLibrary.clear_tokens_for_test(char)
         return json.dumps({"cleared": True})
 
     @toolset_registry.tool_call

@@ -189,6 +189,48 @@ def within(a_stats, b_stats):
     return problems
 
 
+def pattern_suite(ctx):
+    """Step 7, the port under the rule of the header: the solo cells of the enemy types on patterns so far
+    (ai_behaviour.PATTERNS) on seeds 1-10; a cell that fails runs 20 more seeds (11-30) and fails only if all its runs
+    are still outside the rule against all the reference's. The group waits for every type in it to be on its pattern."""
+    import ai_behaviour as ab
+    mygame.use(ctx)
+    ctx.reset()
+    tool("use_patterns", patterns=json.dumps(ab.PATTERNS))
+    try:
+        player = tool("pie_player_state")
+        ar.PLAYER_PATH[0] = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
+        base = strict.base_attributes(player)
+        reference = json.loads(REFERENCE.read_text())
+        per_run = {}
+
+        def run_seeds(seeds, cells=None):
+            for cell, seed, sc, roles, kind in runs(seeds):
+                if kind in ab.PATTERN_KINDS and (cells is None or cell in cells):
+                    per_run.setdefault(cell, {})[seed] = measure(strict.run(sc, base), roles, kind, sc["duration"])
+
+        run_seeds(range(1, 11))
+        stats = {cell: cell_stats(list(v.values())) for cell, v in per_run.items()}
+        failing = {p.split(".")[0] + "." + p.split(".")[1] for p in within(reference, stats) if ":" in p}
+        failing = {c for c in failing if c in per_run}
+        if failing:
+            print(f"  seeds 1-10 outside the rule in {sorted(failing)}: 20 more seeds there")
+            run_seeds(range(11, 31), failing)
+            stats = {cell: cell_stats(list(v.values())) for cell, v in per_run.items()}
+        (ctx.out / "ai_measures.json").write_text(json.dumps(stats, indent=1, sort_keys=True))
+        (ctx.out / "ai_runs.json").write_text(json.dumps(per_run, sort_keys=True))
+        for cell, s in sorted(stats.items()):
+            ref = reference.get(cell, {})
+            print(f"  {cell}: " + ", ".join(f"{m} {v[0]:.2f}±{v[1]:.2f} (tree {ref[m][0]:.2f}±{ref[m][1]:.2f})"
+                                          for m, v in sorted(s.items()) if m in ref))
+        problems = within({c: reference[c] for c in stats}, stats)
+        for p in problems:
+            print("  " + p)
+        return {"ok": not problems, "checks": len(stats), "problems": problems, "files": {}}
+    finally:
+        tool("use_patterns", patterns=json.dumps({cls: "" for cls in ab.PATTERNS}))
+
+
 def suite(ctx):
     """Every run and its measures; the A/A self-test (seeds 1-10 against 11-20); the rule against the UE4 reference
     when there is one."""

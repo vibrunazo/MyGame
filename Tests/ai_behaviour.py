@@ -268,14 +268,38 @@ def summary(record, role):
 
 def suite(ctx):
     """The boss scenarios and the decision matrix, each compared with the UE4 reference on its terms when there is one."""
+    return _run(ctx, lambda kind: True, boss=True)
+
+
+# Ass Step 7: the enemy types on patterns so far, by their controller class (every base enemy runs BP_AIController)
+PATTERNS = {"/Game/Blueprints/AI/BP_AIController.BP_AIController_C": "/Game/Blueprints/AI/Patterns/PA_Melee"}
+PATTERN_KINDS = ("enemy1", "enemy2", "enemy3")
+
+
+def pattern_suite(ctx):
+    """Step 7: the enemy types on patterns so far (PATTERNS), compared with the UE4 reference on the same terms as the
+    tree: their matrix rows and the token scenarios (whose enemies are base enemies)."""
     mygame.use(ctx)
     ctx.reset()
+    tool("use_patterns", patterns=json.dumps(PATTERNS))
+    try:
+        return _run(ctx, lambda kind: kind in PATTERN_KINDS, boss=False, reset=False)
+    finally:
+        tool("use_patterns", patterns=json.dumps({cls: "" for cls in PATTERNS}))
+
+
+def _run(ctx, kinds, boss, reset=True):
+    """The scenarios (the boss's if boss, the token ones, the matrix rows of the kinds kinds() takes), compared with the
+    UE4 reference on its terms when there is one."""
+    mygame.use(ctx)
+    if reset:
+        ctx.reset()
     player = tool("pie_player_state")
     ar.PLAYER_PATH[0] = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
     base = strict.base_attributes(player)
     ar.DUMMY[0] = {"path": strict.DUMMY_PATH}
     result = {"boss": {}, "matrix": {}, "tie": {}, "holder": {}}
-    for sc in boss_scenarios():
+    for sc in boss_scenarios() if boss else ():
         record = strict.run(sc, base)
         result["boss"][sc["name"]] = record
         print(f"  {sc['name']}: {json.dumps(summary(record, 'boss'))[:250]}")
@@ -286,12 +310,16 @@ def suite(ctx):
         result["holder"][sc["name"]] = holders(strict.run(sc, base))
         print(f"  {sc['name']}: {result['holder'][sc['name']]}")
     for sc in matrix_scenarios():
-        result["matrix"][sc["name"]] = matrix_entry(strict.run(sc, base))
+        if kinds(sc["name"].split(".")[0]):
+            result["matrix"][sc["name"]] = matrix_entry(strict.run(sc, base))
     (ctx.out / "ai.json").write_text(json.dumps(result, sort_keys=True))
     (ctx.out / "matrix.json").write_text(json.dumps(result["matrix"], indent=1, sort_keys=True))
     problems = []
     if REFERENCE.exists():
         reference = read_reference()
+        if not boss:
+            reference["boss"] = {}
+        reference["matrix"] = {k: v for k, v in reference["matrix"].items() if kinds(k.split(".")[0])}
         for name in sorted(set(reference["boss"]) | set(result["boss"])):
             where = compare(reference["boss"][name], result["boss"][name], {"boss"}) if name in reference["boss"] and name in result["boss"] else "missing"
             if where:
