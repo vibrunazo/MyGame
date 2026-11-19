@@ -60,7 +60,7 @@ void AMyAIController::SetPatternTarget(AActor* Target)
 
 void AMyAIController::StepPattern()
 {
-	if (UsesPattern() && PatternDriver) PatternDriver->TickPattern();
+	if (UsesPattern() && PatternDriver && !bPatternFrozen) PatternDriver->TickPattern();
 }
 
 void AMyAIController::BeginPlay()
@@ -106,12 +106,17 @@ void AMyAIController::OnPossess(APawn* InPawn)
 void AMyAIController::SetPatternRunning(bool bRunning)
 {
 	if (!UsesPattern() || !PatternDriver) return;
-	ACharacter* Target = PatternDriver->GetPatternTarget();
-	PatternDriver->StopPattern();
-	StopMovement();
-	if (!bRunning) return;
-	PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
-	PatternDriver->SetTarget(Target);
+	if (!bRunning)
+	{
+		// Frozen as the tree's brain is stopped: it steps no more and stops moving, but keeps its state, and its health
+		// marks still settle (the tree's event responses were the controller's, not the brain's)
+		bPatternFrozen = true;
+		StopMovement();
+		return;
+	}
+	if (!PatternDriver->IsRunning()) PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
+	bPatternFrozen = false;
+	PatternWokeFrame = GFrameCounter;
 }
 
 void AMyAIController::UsePatternNow(UMyPatternAsset* Asset)
@@ -132,12 +137,14 @@ void AMyAIController::UsePatternNow(UMyPatternAsset* Asset)
 	Pattern = Asset;
 	PatternSalt = AMyPatternStepper::Register(this);
 	PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
+	bPatternFrozen = false;
+	PatternWokeFrame = GFrameCounter;
 	if (Target) SetPatternTarget(Target);
 }
 
 bool AMyAIController::IsPatternRunning() const
 {
-	return PatternDriver && PatternDriver->IsRunning();
+	return PatternDriver && PatternDriver->IsRunning() && !bPatternFrozen;
 }
 
 void AMyAIController::OnBuffedRangeChanged(const FGameplayTag Tag, int32 Count)

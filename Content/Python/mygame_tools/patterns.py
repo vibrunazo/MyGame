@@ -48,6 +48,12 @@ KINDS = {
     "PA_Kicker": (230.0, 220.0, 300.0),  # BP_AIContKicker
     "PA_Wizard": (550.0, 500.0, 550.0),  # BP_AIContWizard
 }
+# BP_AIContBoss: attack, chase, aggressive, and its attack range while buffed (status.buffedrange)
+BOSS_RANGES = (220.0, 10.0, 2000.0, 900.0)
+BUFFED = "status.buffedrange"
+# its moves at each mark, in the order its EventResponses tried them, and the slots give_boss_slots puts them on
+BOSS_MOVES = ("AT_Boss1_BossSummon1", "AT_Boss1_BossSelfDebuff", "AT_Boss1_BossSmash1")
+BOSS_MOVE_SLOTS = (30, 31, 32)
 
 
 def _text(value):
@@ -106,9 +112,19 @@ class _Builder:
                           Seed=0, bCentreDistances=True, bCapZeroTimeFollowUpsOnly=True, bDrawsCarryOn=True))
 
 
-def melee(attack, chase, aggressive):
-    """BT_AIBase with one controller's ranges (attack, chase, aggressive: the base enemies', the kicker's, the wizard's)."""
-    b = _Builder()
+def melee(attack, chase, aggressive, buffed=None, b=None):
+    """BT_AIBase with one controller's ranges (attack, chase, aggressive: the base enemies', the kicker's, the wizard's,
+    the boss's). buffed: the attack range while the pawn has status.buffedrange (the boss's self effect; its controller
+    sets AttackRange so), attack being the range without it."""
+    b = b or _Builder()
+    # the attack range: one condition, or one with the buff and one without
+    ranges = [(attack, None)] if buffed is None else [(attack, False), (buffed, True)]
+
+    def in_attack(**more):
+        return [_trigger(MaxRange=r, **_buff(on), **more) for r, on in ranges]
+
+    def out_of_attack(**more):
+        return [_trigger(MinRange=r, **_buff(on), **more) for r, on in ranges]
     walk = b.command("MoveToSpot", SPOT_MOVE, Duration=LONG, Speed=0.5, bFocusTarget=True, **SPOT)
     # the query, then the Walk and FocusPlayer tasks: three frames before the move
     query = b.command("Wait", QUERY, Duration=3.0 * FRAME, bFocusTarget=True)
@@ -141,7 +157,7 @@ def melee(attack, chase, aggressive):
     # the attack wait is in the aggressive branch, which only the passive branch's decorators abort (the tactic Passive,
     # index 1); the root's wait after it, outside the selector, nothing aborts
     beat_after_chase = b.combo("Attack beat after a chase", [attack_beat], bShielded=True, ShieldExceptions=[PASSIVE],
-                               Conditions=[_trigger(MaxRange=attack)], **closed)
+                               Conditions=in_attack(), **closed)
     spot = b.combo("To a spot", [lead_passive, query, walk, wait_spot], FollowUps=[root], **closed)
     # the chase ends when the path following says it reached the player (the tree's Move To succeeding), then the root's
     # wait, or the attack wait's beat first in the attack range
@@ -174,10 +190,10 @@ def melee(attack, chase, aggressive):
     aggressive_combos = [chase_on, reach, enter_reach, pass_after_root]
     # Inside the attack range, coming from Start or Passive: the attack branch's pass chases first, and its attack
     # task (the hold) comes a frame after its move, as Attack takes over (BT_AttackOrStop runs beside the move)
-    engage = b.tactic("Engage", aggressive_combos, Conditions=[_trigger(MaxRange=attack, **after)], FromTactics=[0, 1],
+    engage = b.tactic("Engage", aggressive_combos, Conditions=in_attack(**after), FromTactics=[0, 1],
                       bTakesToken=True, bTakesOverAtOnce=True, bKeepsComboOnTakeOver=True, bPauseRestarts=True)
     attack_t = b.tactic("Attack", aggressive_combos,
-                        Conditions=[_trigger(MaxRange=attack, MinSecondsInTactic=HOLD_AFTER, **after)],
+                        Conditions=in_attack(MinSecondsInTactic=HOLD_AFTER, **after),
                         bHoldSlot=True, HoldSlot=0, bTakesToken=True, bTakesOverAtOnce=True, bKeepsComboOnTakeOver=True,
                         bPauseRestarts=True)
     # the aggressive branch outside the attack range: inside the aggressive range, beyond 900, or behind the player
@@ -185,21 +201,62 @@ def melee(attack, chase, aggressive):
     behind = _trigger(MinRange=aggressive, MaxRange=TOO_FAR, MinAngleRelativeToTargetFacing=60.0,
                       MaxAngleRelativeToTargetFacing=180.0, bEitherSide=True, Token="HeldOrFree", **after)
     approach = b.tactic("Approach", aggressive_combos,
-                        Conditions=[_trigger(MinRange=attack, MaxRange=aggressive, **after), _trigger(MinRange=TOO_FAR, **after),
-                                    behind],
+                        Conditions=out_of_attack(MaxRange=aggressive, **after) + [_trigger(MinRange=TOO_FAR, **after), behind],
                         bTakesToken=True, bTakesOverAtOnce=True, bKeepsComboOnTakeOver=True, bPauseRestarts=True)
     # their order is the takeover's priority: Engage before Attack, so only Approach hands over to Attack at once
-    b.phase("Fight", [starting, passive, engage, attack_t, approach])
+    b.tactics_in_order = [starting, passive, engage, attack_t, approach]
+    b.phase("Fight", b.tactics_in_order)
     assert (starting, passive) == (0, 1)
     return b
+
+
+def _buff(on):
+    """A condition's part on the pawn's status.buffedrange: none, held, or not held."""
+    if on is None:
+        return {}
+    tag = dict(Owner="Self", Tag=dict(TagName=_Name(BUFFED)), MinCount=1 if on else 0, MaxCount=-1 if on else 0)
+    return dict(Tags=[tag])
+
+
+def boss():
+    """BT_AIBase with BP_AIContBoss's ranges, and its moves at 75, 50 and 25% health (its EventResponses): each mark a
+    phase whose entry starts the summon, the self effect and the smash together, in the hit that crossed it (settled on
+    the trigger), each tried once, the running combo going on (Ass Docs/Step6.md fact 8)."""
+    b = melee(*BOSS_RANGES[:3], buffed=BOSS_RANGES[3])
+    once = dict(OnBlocked="Skip", OnInterrupted="Skip", **{"bReactionsMayCut": False})
+    moves = b.combo("Mark", [b.command("UseAbility", Index=slot, bFocusTarget=False) for slot in BOSS_MOVE_SLOTS], **once)
+    previous = 0
+    for mark in (0.75, 0.5, 0.25):
+        previous = b.phase(f"Below{round(mark * 100)}", b.tactics_in_order, Conditions=[_trigger(MaxHealthPercent=mark)],
+                           FromPhases=[previous], EntryCombo=moves, bInterruptAbility=False, bEntryStartsTogether=True,
+                           bSettleOnTrigger=True, bEntryKeepsCombo=True)
+    return b
+
+
+def give_boss_slots():
+    """BP_Boss1's three moves on slots of their own (BOSS_MOVE_SLOTS, past the input keys), so a pattern can start them:
+    its controller tried them by template, and they had none (-1). Saves BP_Boss1."""
+    cls = unreal.load_class(None, "/Game/Blueprints/Chars/Boss1/BP_Boss1.BP_Boss1_C")
+    cdo = unreal.get_default_object(cls)
+    # the array's structs come as copies: changed ones go into a new list, which replaces it
+    changed = []
+    for grant in cdo.get_editor_property("abilities"):
+        name = str(grant.get_editor_property("template"))  # a soft reference: its path
+        for move, slot in zip(BOSS_MOVES, BOSS_MOVE_SLOTS):
+            if move in name:
+                grant.set_editor_property("slot_key", slot)
+        changed.append(grant)
+    cdo.set_editor_property("abilities", changed)
+    unreal.EditorAssetLibrary.save_asset("/Game/Blueprints/Chars/Boss1/BP_Boss1", only_if_is_dirty=False)
+    return [(str(g.get_editor_property("template")), g.get_editor_property("slot_key")) for g in cdo.get_editor_property("abilities")]
 
 
 def build():
     """Writes every pattern asset; returns their paths."""
     tools = unreal.AssetToolsHelpers.get_asset_tools()
     out = []
-    for name, ranges in KINDS.items():
-        b = melee(*ranges)
+    for name, make in [(n, (lambda r=r: melee(*r))) for n, r in KINDS.items()] + [("PA_Boss", boss)]:
+        b = make()
         path = f"{FOLDER}/{name}"
         asset = (unreal.load_asset(path) if unreal.EditorAssetLibrary.does_asset_exist(path)
                  else tools.create_asset(name, FOLDER, unreal.MyPatternAsset, None))

@@ -387,7 +387,12 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 		{
 			Tasks.Reset();
 			const UMyPatternDriver* Driver = Patterned->PatternDriver;
-			if (const FString* Name = Patterned->Pattern->TreeTaskNames.Find(Driver->GetLastCommand()); Name && Driver->IsRunning())
+			if (Patterned->IsPatternRunning() && !Driver->GetPatternTarget())
+			{
+				// No target: the tree's first branch (SetRange, then StopAttack, then its FinishWithResult, a frame each)
+				if (GFrameCounter >= Patterned->GetPatternWokeFrame() + 2) Tasks = TEXT("BT_AIBase::FinishWithResult[6]");
+			}
+			else if (const FString* Name = Patterned->Pattern->TreeTaskNames.Find(Driver->GetLastCommand()); Name && Driver->IsRunning())
 			{
 				// "A>B": A in the frame the command began, B after
 				FString First, Then;

@@ -82,11 +82,15 @@ public:
 	void StepPattern();
 
 	/**
-	 * Stops the pattern (movement too), or starts it again from scratch with its salt, as the tests stop and restart a
-	 * tree (a frozen dummy, an enemy woken). The target stays, as the tree's blackboard keeps it.
+	 * Freezes the pattern or wakes it, as the tests stop and restart a tree's brain (a frozen dummy, an enemy woken):
+	 * frozen, it steps no more and stops moving, but keeps its state and its target, and its health marks still settle
+	 * (the tree's event responses were the controller's); woken, it steps on (started first, if it never was).
 	 */
 	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
 	void SetPatternRunning(bool bRunning);
+
+	/** The frame the pattern last woke (started, or unfrozen): the recorder times the tree's first tasks from it. */
+	uint64 GetPatternWokeFrame() const { return PatternWokeFrame; }
 
 	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
 	bool IsPatternRunning() const;
@@ -120,4 +124,7 @@ private:
 	FDelegateHandle BuffedRangeHandle;
 	/** The pattern's salt, given by the stepper at possession. */
 	int32 PatternSalt = 0;
+	/** Frozen by the tests (SetPatternRunning), and when it last woke. */
+	bool bPatternFrozen = false;
+	uint64 PatternWokeFrame = 0;
 };
