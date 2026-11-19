@@ -64,6 +64,10 @@ def _expand(v, owner_path, depth):
             sub = unreal.find_object(None, ref)
             if sub:
                 return {"subobject": sub.get_class().get_name(), **flatten(sub, depth + 1)}
+        # a reference reads as {"refPath": path} or as the bare path, depending on whether its target is loaded at the
+        # time: the bare path either way, so a dump doesn't depend on what an earlier part or suite loaded
+        if isinstance(ref, str):
+            return ref
         return {k: _expand(x, owner_path, depth) for k, x in v.items()}
     if isinstance(v, list):
         return [_expand(x, owner_path, depth) for x in v]
@@ -135,9 +139,10 @@ def montages():
         m = _load(p)
         tracks = json.loads(TL.get_object_properties(m, ["SlotAnimTracks", "BlendIn", "BlendOut", "BlendOutTriggerTime",
                                                          "bEnableAutoBlendOut", "RateScale", "SequenceLength"]))
+        tracks = _expand(tracks, m.get_path_name(), 4)
         for t in tracks["SlotAnimTracks"]:
             for s in t["animTrack"]["animSegments"]:
-                ref = s["animReference"]["refPath"] if isinstance(s.get("animReference"), dict) else None
+                ref = s.get("animReference")
                 if ref:
                     seqs.setdefault(ref.split(".")[0], None)
         out[p] = {"skeleton": m.get_editor_property("skeleton").get_path_name(),
