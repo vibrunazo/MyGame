@@ -115,9 +115,7 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": false,
     "componentTags": [],
-    "dominantSense": {
-     "refPath": "/Script/AIModule.AISense_Sight"
-    },
+    "dominantSense": "/Script/AIModule.AISense_Sight",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "onPerceptionUpdated": "()",
@@ -134,9 +132,7 @@
      "tickInterval": 0
     },
     "sensesConfig": [
-     {
-      "refPath": "/Game/Blueprints/AI/BP_AIController.Default__BP_AIController_C:SightConfig"
-     }
+     "/Game/Blueprints/AI/BP_AIController.Default__BP_AIController_C:SightConfig"
     ],
     "subobject": "AIPerceptionComponent"
    },
@@ -213,9 +209,7 @@
     "subobject": "SceneComponent"
    },
    "runtimeGrid": "None",
-   "sightConfig": {
-    "refPath": "/Script/MyGame.Default__MyAIController:SightConfig"
-   },
+   "sightConfig": "/Script/MyGame.Default__MyAIController:SightConfig",
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
@@ -227,44 +221,32 @@
  "/Game/Blueprints/Chars/BP_Char": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Script/AIModule.AIController"
-   },
+   "aIControllerClass": "/Script/AIModule.AIController",
    "abilities": [
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Abilities/AT_Abilities_BasicPunches.AT_Abilities_BasicPunches"
-     }
+     "template": "/Game/Abilities/AT_Abilities_BasicPunches.AT_Abilities_BasicPunches"
     },
     {
      "level": 1,
      "slotKey": 1,
-     "template": {
-      "refPath": "/Game/Abilities/AT_Abilities_Voadora.AT_Abilities_Voadora"
-     }
+     "template": "/Game/Abilities/AT_Abilities_Voadora.AT_Abilities_Voadora"
     },
     {
      "level": 1,
      "slotKey": -1,
-     "template": {
-      "refPath": "/Game/Abilities/AT_Abilities_Dash.AT_Abilities_Dash"
-     }
+     "template": "/Game/Abilities/AT_Abilities_Dash.AT_Abilities_Dash"
     },
     {
      "level": 1,
      "slotKey": 1,
-     "template": {
-      "refPath": "/Game/Abilities/AT_Abilities_Kick.AT_Abilities_Kick"
-     }
+     "template": "/Game/Abilities/AT_Abilities_Kick.AT_Abilities_Kick"
     },
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Abilities/AT_Abilities_AirPunch.AT_Abilities_AirPunch"
-     }
+     "template": "/Game/Abilities/AT_Abilities_AirPunch.AT_Abilities_AirPunch"
     }
    ],
    "abilitySystem": {
@@ -395,9 +377,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -925,9 +905,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -989,12 +967,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/BP_Char.Default__BP_Char_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/BP_Char.Default__BP_Char_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/BP_Char.Default__BP_Char_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/BP_Char.Default__BP_Char_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -1019,13 +993,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 3,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -1038,18 +1008,14 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 2,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
    "dataLayerAssets": [],
-   "deathSound": {
-    "refPath": "/Game/HumanVocalizations/HumanMaleC/Cues/voice_male_c_death_09_Cue1.voice_male_c_death_09_Cue1"
-   },
+   "deathSound": "/Game/HumanVocalizations/HumanMaleC/Cues/voice_male_c_death_09_Cue1.voice_male_c_death_09_Cue1",
    "defaultUpdateOverlapsMethodDuringLevelStreaming": "OnlyUpdateMovable",
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
@@ -1357,9 +1323,7 @@
     "widgetClass": "None",
     "windowVisibility": "SelfHitTestInvisible"
    },
-   "inCombatBuff": {
-    "refPath": "/Game/Abilities/GE_IsInCombat.GE_IsInCombat_C"
-   },
+   "inCombatBuff": "/Game/Abilities/GE_IsInCombat.GE_IsInCombat_C",
    "initial loc": {
     "x": 0,
     "y": 0,
@@ -1375,9 +1339,7 @@
    "jumpKeyHoldTime": 0,
    "jumpMaxCount": 1,
    "jumpMaxHoldTime": 0,
-   "kickSlash": {
-    "refPath": "/Game/FX/FX_Trail.FX_Trail"
-   },
+   "kickSlash": "/Game/FX/FX_Trail.FX_Trail",
    "landedDelegate": "()",
    "lastHitBy": "None",
    "layers": [],
@@ -1408,9 +1370,7 @@
    "maxHealth": 100,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -1687,12 +1647,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -1726,16 +1682,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -1791,15 +1741,9 @@
     "tickInterval": 0
    },
    "proxyJumpForceStartedTime": 0,
-   "punchSlash": {
-    "refPath": "/Game/FX/FX_Trail.FX_Trail"
-   },
-   "punchStrongWoosh": {
-    "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-   },
-   "punchWeakWoosh": {
-    "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-   },
+   "punchSlash": "/Game/FX/FX_Trail.FX_Trail",
+   "punchStrongWoosh": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
+   "punchWeakWoosh": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
    "receiveControllerChangedDelegate": "()",
    "receiveRestartedDelegate": "()",
    "remoteRole": "ROLE_SimulatedProxy",
@@ -1810,9 +1754,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -2053,9 +1995,7 @@
     "virtualTextureRenderPassType": "Exclusive"
    },
    "runAccel": 3000,
-   "runBuff": {
-    "refPath": "/Game/Abilities/GE_Running.GE_Running_C"
-   },
+   "runBuff": "/Game/Abilities/GE_Running.GE_Running_C",
    "runRotationRate": {
     "pitch": 0,
     "roll": 0,
@@ -2311,9 +2251,7 @@
    "spriteScale": 1,
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -2565,9 +2503,7 @@
    "test": 0,
    "testab": "None",
    "testeffect": {
-    "effectClass": {
-     "refPath": "/Game/Abilities/GE_SpeedAdd.GE_SpeedAdd_C"
-    },
+    "effectClass": "/Game/Abilities/GE_SpeedAdd.GE_SpeedAdd_C",
     "magnitudes": [
      {
       "gameplayTag": {
@@ -2587,9 +2523,7 @@
    "timeRequiredToRun": 0,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault",
    "walkAccel": 9000,
-   "walkBuff": {
-    "refPath": "/Game/Abilities/GE_Walking.GE_Walking_C"
-   },
+   "walkBuff": "/Game/Abilities/GE_Walking.GE_Walking_C",
    "walkRotationRate": {
     "pitch": 0,
     "roll": 0,
@@ -2601,9 +2535,7 @@
  "/Game/Blueprints/Chars/BP_EnemyBase": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C"
-   },
+   "aIControllerClass": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C",
    "abilities": [],
    "abilitySystem": {
     "activatableAbilities": {
@@ -2734,9 +2666,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -3264,9 +3194,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -3328,12 +3256,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/BP_EnemyBase.Default__BP_EnemyBase_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/BP_EnemyBase.Default__BP_EnemyBase_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/BP_EnemyBase.Default__BP_EnemyBase_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/BP_EnemyBase.Default__BP_EnemyBase_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -3358,13 +3282,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 0,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -3377,9 +3297,7 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
@@ -3691,9 +3609,7 @@
     "virtualTextureLodBias": 0,
     "virtualTextureMinCoverage": 0,
     "virtualTextureRenderPassType": "Exclusive",
-    "widgetClass": {
-     "refPath": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C"
-    },
+    "widgetClass": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C",
     "windowVisibility": "SelfHitTestInvisible"
    },
    "inCombatBuff": "None",
@@ -3738,9 +3654,7 @@
    "maxHealth": 100,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -4017,12 +3931,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -4056,16 +3966,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -4135,9 +4039,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -4634,9 +4536,7 @@
    "spriteScale": 1,
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -4911,9 +4811,7 @@
    "timeRequiredToRun": 1.100000023841858,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault",
    "walkAccel": 9000,
-   "walkBuff": {
-    "refPath": "/Game/Abilities/GE_Walking.GE_Walking_C"
-   },
+   "walkBuff": "/Game/Abilities/GE_Walking.GE_Walking_C",
    "walkRotationRate": {
     "pitch": 0,
     "roll": 0,
@@ -5120,9 +5018,7 @@
  "/Game/Blueprints/Chars/BP_Projectile": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Script/AIModule.AIController"
-   },
+   "aIControllerClass": "/Script/AIModule.AIController",
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
    "autoPossessAI": "PlacedInWorld",
@@ -5427,9 +5323,7 @@
     "overriddenMeshPaintTextureCoordinateIndex": 0,
     "overriddenMeshPaintTextureResolution": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_FireBall.MI_FireBall"
-     }
+     "/Game/mats/MI_FireBall.MI_FireBall"
     ],
     "physicsVolumeChangedDelegate": "()",
     "primaryComponentTick": {
@@ -5460,9 +5354,7 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "staticMesh": {
-     "refPath": "/Engine/EngineMeshes/Sphere.Sphere"
-    },
+    "staticMesh": "/Engine/EngineMeshes/Sphere.Sphere",
     "streamingDistanceMultiplier": 1,
     "subobject": "StaticMeshComponent",
     "translucencySortDistanceOffset": 0,
@@ -5875,9 +5767,7 @@
     "overriddenMeshPaintTextureCoordinateIndex": 0,
     "overriddenMeshPaintTextureResolution": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_FireBall.MI_FireBall"
-     }
+     "/Game/mats/MI_FireBall.MI_FireBall"
     ],
     "physicsVolumeChangedDelegate": "()",
     "primaryComponentTick": {
@@ -5908,9 +5798,7 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "staticMesh": {
-     "refPath": "/Engine/EngineMeshes/Sphere.Sphere"
-    },
+    "staticMesh": "/Engine/EngineMeshes/Sphere.Sphere",
     "streamingDistanceMultiplier": 1,
     "subobject": "StaticMeshComponent",
     "translucencySortDistanceOffset": 0,
@@ -5938,9 +5826,7 @@
  "/Game/Blueprints/Chars/BP_Projectile1": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Script/AIModule.AIController"
-   },
+   "aIControllerClass": "/Script/AIModule.AIController",
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
    "autoPossessAI": "PlacedInWorld",
@@ -6245,9 +6131,7 @@
     "overriddenMeshPaintTextureCoordinateIndex": 0,
     "overriddenMeshPaintTextureResolution": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_FireBall.MI_FireBall"
-     }
+     "/Game/mats/MI_FireBall.MI_FireBall"
     ],
     "physicsVolumeChangedDelegate": "()",
     "primaryComponentTick": {
@@ -6278,9 +6162,7 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "staticMesh": {
-     "refPath": "/Engine/EngineMeshes/Sphere.Sphere"
-    },
+    "staticMesh": "/Engine/EngineMeshes/Sphere.Sphere",
     "streamingDistanceMultiplier": 1,
     "subobject": "StaticMeshComponent",
     "translucencySortDistanceOffset": 0,
@@ -6693,9 +6575,7 @@
     "overriddenMeshPaintTextureCoordinateIndex": 0,
     "overriddenMeshPaintTextureResolution": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_FireBall.MI_FireBall"
-     }
+     "/Game/mats/MI_FireBall.MI_FireBall"
     ],
     "physicsVolumeChangedDelegate": "()",
     "primaryComponentTick": {
@@ -6726,9 +6606,7 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "staticMesh": {
-     "refPath": "/Engine/EngineMeshes/Sphere.Sphere"
-    },
+    "staticMesh": "/Engine/EngineMeshes/Sphere.Sphere",
     "streamingDistanceMultiplier": 1,
     "subobject": "StaticMeshComponent",
     "translucencySortDistanceOffset": 0,
@@ -6812,15 +6690,9 @@
       "tagName": "status.health.75"
      },
      "templates": [
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
-      }
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1",
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff",
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
      ]
     },
     {
@@ -6828,15 +6700,9 @@
       "tagName": "status.health.50"
      },
      "templates": [
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
-      }
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1",
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff",
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
      ]
     },
     {
@@ -6844,15 +6710,9 @@
       "tagName": "status.health.25"
      },
      "templates": [
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
-      },
-      {
-       "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
-      }
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1",
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff",
+      "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
      ]
     }
    ],
@@ -6918,9 +6778,7 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": false,
     "componentTags": [],
-    "dominantSense": {
-     "refPath": "/Script/AIModule.AISense_Sight"
-    },
+    "dominantSense": "/Script/AIModule.AISense_Sight",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "onPerceptionUpdated": "()",
@@ -6937,9 +6795,7 @@
      "tickInterval": 0
     },
     "sensesConfig": [
-     {
-      "refPath": "/Game/Blueprints/Chars/Boss1/BP_AIContBoss.Default__BP_AIContBoss_C:SightConfig"
-     }
+     "/Game/Blueprints/Chars/Boss1/BP_AIContBoss.Default__BP_AIContBoss_C:SightConfig"
     ],
     "subobject": "AIPerceptionComponent"
    },
@@ -7016,9 +6872,7 @@
     "subobject": "SceneComponent"
    },
    "runtimeGrid": "None",
-   "sightConfig": {
-    "refPath": "/Script/MyGame.Default__MyAIController:SightConfig"
-   },
+   "sightConfig": "/Script/MyGame.Default__MyAIController:SightConfig",
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
@@ -7030,37 +6884,27 @@
  "/Game/Blueprints/Chars/Boss1/BP_Boss1": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Game/Blueprints/Chars/Boss1/BP_AIContBoss.BP_AIContBoss_C"
-   },
+   "aIControllerClass": "/Game/Blueprints/Chars/Boss1/BP_AIContBoss.BP_AIContBoss_C",
    "abilities": [
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches.AT_Boss1_BossPunches"
-     }
+     "template": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches.AT_Boss1_BossPunches"
     },
     {
      "level": 1,
      "slotKey": -1,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
-     }
+     "template": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
     },
     {
      "level": 1,
      "slotKey": -1,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
-     }
+     "template": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
     },
     {
      "level": 1,
      "slotKey": -1,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
-     }
+     "template": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
     }
    ],
    "abilitySystem": {
@@ -7096,9 +6940,7 @@
    },
    "actorGuid": "00000000-0000-0000-0000-000000000000",
    "actorInstanceGuid": "00000000-0000-0000-0000-000000000000",
-   "aggroSound": {
-    "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue"
-   },
+   "aggroSound": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue",
    "attack": 1,
    "attributeSetBase": {
     "attack": {
@@ -7194,9 +7036,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -7724,9 +7564,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -7788,12 +7626,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/Boss1/BP_Boss1.Default__BP_Boss1_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/Boss1/BP_Boss1.Default__BP_Boss1_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/Boss1/BP_Boss1.Default__BP_Boss1_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/Boss1/BP_Boss1.Default__BP_Boss1_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -7818,13 +7652,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 0,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -7837,18 +7667,14 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
    "crouchedEyeHeight": 32,
    "customTimeDilation": 1,
    "dataLayerAssets": [],
-   "deathSound": {
-    "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_death_02_Cue.voice_male_d_death_02_Cue"
-   },
+   "deathSound": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_death_02_Cue.voice_male_d_death_02_Cue",
    "defaultUpdateOverlapsMethodDuringLevelStreaming": "OnlyUpdateMovable",
    "defense": 1,
    "doubleTapAxisDepth": 0.6000000238418579,
@@ -8153,9 +7979,7 @@
     "virtualTextureLodBias": 0,
     "virtualTextureMinCoverage": 0,
     "virtualTextureRenderPassType": "Exclusive",
-    "widgetClass": {
-     "refPath": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C"
-    },
+    "widgetClass": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C",
     "windowVisibility": "SelfHitTestInvisible"
    },
    "inCombatBuff": "None",
@@ -8200,9 +8024,7 @@
    "maxHealth": 400,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -8479,12 +8301,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -8518,16 +8336,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -8597,9 +8409,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -9098,9 +8908,7 @@
    "staticMesh": "None",
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -9505,9 +9313,7 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": false,
     "componentTags": [],
-    "dominantSense": {
-     "refPath": "/Script/AIModule.AISense_Sight"
-    },
+    "dominantSense": "/Script/AIModule.AISense_Sight",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "onPerceptionUpdated": "()",
@@ -9524,9 +9330,7 @@
      "tickInterval": 0
     },
     "sensesConfig": [
-     {
-      "refPath": "/Game/Blueprints/Chars/EKicker/BP_AIContKicker.Default__BP_AIContKicker_C:SightConfig"
-     }
+     "/Game/Blueprints/Chars/EKicker/BP_AIContKicker.Default__BP_AIContKicker_C:SightConfig"
     ],
     "subobject": "AIPerceptionComponent"
    },
@@ -9603,9 +9407,7 @@
     "subobject": "SceneComponent"
    },
    "runtimeGrid": "None",
-   "sightConfig": {
-    "refPath": "/Script/MyGame.Default__MyAIController:SightConfig"
-   },
+   "sightConfig": "/Script/MyGame.Default__MyAIController:SightConfig",
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
@@ -9617,16 +9419,12 @@
  "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Game/Blueprints/Chars/EKicker/BP_AIContKicker.BP_AIContKicker_C"
-   },
+   "aIControllerClass": "/Game/Blueprints/Chars/EKicker/BP_AIContKicker.BP_AIContKicker_C",
    "abilities": [
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick.AT_EKicker_KickerKick"
-     }
+     "template": "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick.AT_EKicker_KickerKick"
     }
    ],
    "abilitySystem": {
@@ -9758,9 +9556,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -10288,9 +10084,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -10352,12 +10146,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker.Default__BP_EnemyKicker_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker.Default__BP_EnemyKicker_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker.Default__BP_EnemyKicker_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/EKicker/BP_EnemyKicker.Default__BP_EnemyKicker_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -10382,13 +10172,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 0,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -10401,9 +10187,7 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
@@ -10715,9 +10499,7 @@
     "virtualTextureLodBias": 0,
     "virtualTextureMinCoverage": 0,
     "virtualTextureRenderPassType": "Exclusive",
-    "widgetClass": {
-     "refPath": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C"
-    },
+    "widgetClass": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C",
     "windowVisibility": "SelfHitTestInvisible"
    },
    "inCombatBuff": "None",
@@ -10748,9 +10530,7 @@
     "lootTable": [
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      }
     ],
     "onComponentActivated": "()",
@@ -10769,9 +10549,7 @@
    "maxHealth": 80,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -11048,12 +10826,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -11087,16 +10861,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -11166,9 +10934,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -11666,9 +11432,7 @@
    "staticMesh_0": "None",
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -11943,9 +11707,7 @@
    "timeRequiredToRun": 1.100000023841858,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault",
    "walkAccel": 9000,
-   "walkBuff": {
-    "refPath": "/Game/Abilities/GE_Walking.GE_Walking_C"
-   },
+   "walkBuff": "/Game/Abilities/GE_Walking.GE_Walking_C",
    "walkRotationRate": {
     "pitch": 0,
     "roll": 0,
@@ -11957,16 +11719,12 @@
  "/Game/Blueprints/Chars/EMelee1/BP_Enemy1": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C"
-   },
+   "aIControllerClass": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C",
    "abilities": [
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1.AT_EMelee1_DamageEnemy1"
-     }
+     "template": "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1.AT_EMelee1_DamageEnemy1"
     }
    ],
    "abilitySystem": {
@@ -12098,9 +11856,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -12628,9 +12384,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -12692,12 +12446,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/EMelee1/BP_Enemy1.Default__BP_Enemy1_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/EMelee1/BP_Enemy1.Default__BP_Enemy1_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/EMelee1/BP_Enemy1.Default__BP_Enemy1_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/EMelee1/BP_Enemy1.Default__BP_Enemy1_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -12722,13 +12472,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 0,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -12741,9 +12487,7 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
@@ -13055,9 +12799,7 @@
     "virtualTextureLodBias": 0,
     "virtualTextureMinCoverage": 0,
     "virtualTextureRenderPassType": "Exclusive",
-    "widgetClass": {
-     "refPath": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C"
-    },
+    "widgetClass": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C",
     "windowVisibility": "SelfHitTestInvisible"
    },
    "inCombatBuff": "None",
@@ -13088,27 +12830,19 @@
     "lootTable": [
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemMana.DA_ItemMana"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemMana.DA_ItemMana"
      }
     ],
     "onComponentActivated": "()",
@@ -13127,9 +12861,7 @@
    "maxHealth": 100,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -13406,12 +13138,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -13445,16 +13173,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -13524,9 +13246,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -14024,9 +13744,7 @@
    "staticMesh": "None",
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -14301,9 +14019,7 @@
    "timeRequiredToRun": 1.100000023841858,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault",
    "walkAccel": 9000,
-   "walkBuff": {
-    "refPath": "/Game/Abilities/GE_Walking.GE_Walking_C"
-   },
+   "walkBuff": "/Game/Abilities/GE_Walking.GE_Walking_C",
    "walkRotationRate": {
     "pitch": 0,
     "roll": 0,
@@ -14315,16 +14031,12 @@
  "/Game/Blueprints/Chars/EMelee2/BP_Enemy2": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C"
-   },
+   "aIControllerClass": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C",
    "abilities": [
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1.AT_EMelee2_DamageEnemy1"
-     }
+     "template": "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1.AT_EMelee2_DamageEnemy1"
     }
    ],
    "abilitySystem": {
@@ -14456,9 +14168,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -14986,9 +14696,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -15050,12 +14758,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/EMelee2/BP_Enemy2.Default__BP_Enemy2_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/EMelee2/BP_Enemy2.Default__BP_Enemy2_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/EMelee2/BP_Enemy2.Default__BP_Enemy2_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/EMelee2/BP_Enemy2.Default__BP_Enemy2_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -15080,13 +14784,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 0,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -15099,9 +14799,7 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
@@ -15413,9 +15111,7 @@
     "virtualTextureLodBias": 0,
     "virtualTextureMinCoverage": 0,
     "virtualTextureRenderPassType": "Exclusive",
-    "widgetClass": {
-     "refPath": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C"
-    },
+    "widgetClass": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C",
     "windowVisibility": "SelfHitTestInvisible"
    },
    "inCombatBuff": "None",
@@ -15446,27 +15142,19 @@
     "lootTable": [
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemMana.DA_ItemMana"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemMana.DA_ItemMana"
      }
     ],
     "onComponentActivated": "()",
@@ -15485,9 +15173,7 @@
    "maxHealth": 120,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -15764,12 +15450,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -15803,16 +15485,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -15882,9 +15558,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -16382,9 +16056,7 @@
    "staticMesh": "None",
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -16659,9 +16331,7 @@
    "timeRequiredToRun": 1.100000023841858,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault",
    "walkAccel": 9000,
-   "walkBuff": {
-    "refPath": "/Game/Abilities/GE_Walking.GE_Walking_C"
-   },
+   "walkBuff": "/Game/Abilities/GE_Walking.GE_Walking_C",
    "walkRotationRate": {
     "pitch": 0,
     "roll": 0,
@@ -16673,16 +16343,12 @@
  "/Game/Blueprints/Chars/EMelee3/BP_Enemy3": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C"
-   },
+   "aIControllerClass": "/Game/Blueprints/AI/BP_AIController.BP_AIController_C",
    "abilities": [
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2.AT_EMelee3_DamageEnemy2"
-     }
+     "template": "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2.AT_EMelee3_DamageEnemy2"
     }
    ],
    "abilitySystem": {
@@ -16814,9 +16480,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -17344,9 +17008,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -17408,12 +17070,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/EMelee3/BP_Enemy3.Default__BP_Enemy3_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/EMelee3/BP_Enemy3.Default__BP_Enemy3_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/EMelee3/BP_Enemy3.Default__BP_Enemy3_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/EMelee3/BP_Enemy3.Default__BP_Enemy3_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -17438,13 +17096,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 0,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -17457,9 +17111,7 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
@@ -17771,9 +17423,7 @@
     "virtualTextureLodBias": 0,
     "virtualTextureMinCoverage": 0,
     "virtualTextureRenderPassType": "Exclusive",
-    "widgetClass": {
-     "refPath": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C"
-    },
+    "widgetClass": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C",
     "windowVisibility": "SelfHitTestInvisible"
    },
    "inCombatBuff": "None",
@@ -17804,27 +17454,19 @@
     "lootTable": [
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemHeart.DA_ItemHeart"
      },
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemMana.DA_ItemMana"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemMana.DA_ItemMana"
      }
     ],
     "onComponentActivated": "()",
@@ -17843,9 +17485,7 @@
    "maxHealth": 70,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -18122,12 +17762,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -18161,16 +17797,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -18240,9 +17870,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -18740,9 +18368,7 @@
    "staticMesh": "None",
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -19017,9 +18643,7 @@
    "timeRequiredToRun": 1.100000023841858,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault",
    "walkAccel": 9000,
-   "walkBuff": {
-    "refPath": "/Game/Abilities/GE_Walking.GE_Walking_C"
-   },
+   "walkBuff": "/Game/Abilities/GE_Walking.GE_Walking_C",
    "walkRotationRate": {
     "pitch": 0,
     "roll": 0,
@@ -19144,9 +18768,7 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": false,
     "componentTags": [],
-    "dominantSense": {
-     "refPath": "/Script/AIModule.AISense_Sight"
-    },
+    "dominantSense": "/Script/AIModule.AISense_Sight",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "onPerceptionUpdated": "()",
@@ -19163,9 +18785,7 @@
      "tickInterval": 0
     },
     "sensesConfig": [
-     {
-      "refPath": "/Game/Blueprints/Chars/EWizard/BP_AIContWizard.Default__BP_AIContWizard_C:SightConfig"
-     }
+     "/Game/Blueprints/Chars/EWizard/BP_AIContWizard.Default__BP_AIContWizard_C:SightConfig"
     ],
     "subobject": "AIPerceptionComponent"
    },
@@ -19242,9 +18862,7 @@
     "subobject": "SceneComponent"
    },
    "runtimeGrid": "None",
-   "sightConfig": {
-    "refPath": "/Script/MyGame.Default__MyAIController:SightConfig"
-   },
+   "sightConfig": "/Script/MyGame.Default__MyAIController:SightConfig",
    "spawnCollisionHandlingMethod": "AlwaysSpawn",
    "spriteScale": 1,
    "tags": [],
@@ -19256,16 +18874,12 @@
  "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard": {
   "asset_class": "Blueprint",
   "defaults": {
-   "aIControllerClass": {
-    "refPath": "/Game/Blueprints/Chars/EWizard/BP_AIContWizard.BP_AIContWizard_C"
-   },
+   "aIControllerClass": "/Game/Blueprints/Chars/EWizard/BP_AIContWizard.BP_AIContWizard_C",
    "abilities": [
     {
      "level": 1,
      "slotKey": 0,
-     "template": {
-      "refPath": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1.AT_EWizard_Cast1"
-     }
+     "template": "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1.AT_EWizard_Cast1"
     }
    ],
    "abilitySystem": {
@@ -19397,9 +19011,7 @@
    "camPawnRef": "None",
    "cameraBoom": "None",
    "capsuleComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -19927,9 +19539,7 @@
      "bCanSwim": true,
      "bCanWalk": true,
      "navWalkingSearchHeightScale": 0.5,
-     "preferredNavData": {
-      "refPath": ""
-     }
+     "preferredNavData": ""
     },
     "navMeshProjectionHeightScaleDown": 1,
     "navMeshProjectionHeightScaleUp": 0.6700000166893005,
@@ -19991,12 +19601,8 @@
     "stayBasedInAirHeight": 1000,
     "subobject": "CharacterMovementComponent",
     "touchForceFactor": 1,
-    "updatedComponent": {
-     "refPath": "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard.Default__BP_EnemyWizard_C:CollisionCylinder"
-    },
-    "updatedPrimitive": {
-     "refPath": "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard.Default__BP_EnemyWizard_C:CollisionCylinder"
-    },
+    "updatedComponent": "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard.Default__BP_EnemyWizard_C:CollisionCylinder",
+    "updatedPrimitive": "/Game/Blueprints/Chars/EWizard/BP_EnemyWizard.Default__BP_EnemyWizard_C:CollisionCylinder",
     "velocity": {
      "x": 0,
      "y": 0,
@@ -20021,13 +19627,9 @@
     "bReplicateUsingRegisteredSubObjectList": false,
     "bReplicates": true,
     "componentTags": [],
-    "hitBoxClass": {
-     "refPath": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C"
-    },
+    "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
     "maxStuns": 0,
-    "noControlEffect": {
-     "refPath": "/Script/AssCombat.AssNoControlEffect"
-    },
+    "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
     "primaryComponentTick": {
@@ -20040,9 +19642,7 @@
      "tickInterval": 0
     },
     "stunImmuneCooldown": 5,
-    "stunImmuneEffect": {
-     "refPath": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C"
-    },
+    "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
    },
    "contentBundleGuid": "00000000-0000-0000-0000-000000000000",
@@ -20354,9 +19954,7 @@
     "virtualTextureLodBias": 0,
     "virtualTextureMinCoverage": 0,
     "virtualTextureRenderPassType": "Exclusive",
-    "widgetClass": {
-     "refPath": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C"
-    },
+    "widgetClass": "/Game/UI/WBP_Healthbar.WBP_Healthbar_C",
     "windowVisibility": "SelfHitTestInvisible"
    },
    "inCombatBuff": "None",
@@ -20387,9 +19985,7 @@
     "lootTable": [
      {
       "dropRate": 0,
-      "item": {
-       "refPath": "/Game/Blueprints/Items/DA_ItemMana2.DA_ItemMana2"
-      }
+      "item": "/Game/Blueprints/Items/DA_ItemMana2.DA_ItemMana2"
      }
     ],
     "onComponentActivated": "()",
@@ -20408,9 +20004,7 @@
    "maxHealth": 60,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
-    "animClass": {
-     "refPath": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C"
-    },
+    "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
     "animationData": {
      "animToPlay": "None",
      "bSavedLooping": true,
@@ -20687,12 +20281,8 @@
     "overlayMaterial": "None",
     "overlayMaterialMaxDrawDistance": 0,
     "overrideMaterials": [
-     {
-      "refPath": "/Game/mats/MI_MannyBody_01.MI_MannyBody_01"
-     },
-     {
-      "refPath": "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
-     }
+     "/Game/mats/MI_MannyBody_01.MI_MannyBody_01",
+     "/Game/mats/MI_MannyBody_02.MI_MannyBody_02"
     ],
     "physicsAssetOverride": "None",
     "physicsTransformUpdateMode": "SimulationUpatesComponentTransform",
@@ -20726,16 +20316,10 @@
     },
     "runtimeVirtualTextures": [],
     "shadowCacheInvalidationBehavior": "Auto",
-    "skeletalMesh": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
-    "skeletalMeshAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skeletalMesh": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
+    "skeletalMeshAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "skinCacheUsage": [],
-    "skinnedAsset": {
-     "refPath": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple"
-    },
+    "skinnedAsset": "/Game/Characters/Mannequins/Meshes/SKM_Manny_Simple.SKM_Manny_Simple",
     "streamingDistanceMultiplier": 1,
     "subobject": "SkeletalMeshComponent",
     "teleportDistanceThreshold": 300,
@@ -20805,9 +20389,7 @@
    },
    "role": "ROLE_Authority",
    "rootComponent": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -21305,9 +20887,7 @@
    "staticMesh": "None",
    "tags": [],
    "targetDetection": {
-    "areaClassOverride": {
-     "refPath": "/Script/NavigationSystem.NavArea_Obstacle"
-    },
+    "areaClassOverride": "/Script/NavigationSystem.NavArea_Obstacle",
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
     "bAbsoluteLocation": false,
@@ -21582,9 +21162,7 @@
    "timeRequiredToRun": 1.100000023841858,
    "updateOverlapsMethodDuringLevelStreaming": "UseConfigDefault",
    "walkAccel": 9000,
-   "walkBuff": {
-    "refPath": "/Game/Abilities/GE_Walking.GE_Walking_C"
-   },
+   "walkBuff": "/Game/Abilities/GE_Walking.GE_Walking_C",
    "walkRotationRate": {
     "pitch": 0,
     "roll": 0,

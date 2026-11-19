@@ -20,9 +20,7 @@
        {
         "animEndTime": 0.75,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -31,9 +29,7 @@
        {
         "animEndTime": 1.6666666269302368,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.75,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -209,9 +205,7 @@
        {
         "animEndTime": 1.600000023841858,
         "animPlayRate": 6,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -220,9 +214,7 @@
        {
         "animEndTime": 2,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 1.600000023841858,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -231,9 +223,7 @@
        {
         "animEndTime": 2.5999999046325684,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 2,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -242,9 +232,7 @@
        {
         "animEndTime": 3.366666555404663,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 2.5999999046325684,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -275,9 +263,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.22124473750591278,
@@ -330,9 +316,7 @@
        {
         "animEndTime": 0.33000001311302185,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/FlyingKick.FlyingKick"
-        },
+        "animReference": "/Game/Anims/FlyingKick.FlyingKick",
         "animStartTime": 0.10000000149011612,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -341,9 +325,7 @@
        {
         "animEndTime": 0.3700000047683716,
         "animPlayRate": 0.029999999329447746,
-        "animReference": {
-         "refPath": "/Game/Anims/FlyingKick.FlyingKick"
-        },
+        "animReference": "/Game/Anims/FlyingKick.FlyingKick",
         "animStartTime": 0.33000001311302185,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -464,9 +446,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1,
       "wooshType": "KickStrong"
      },
@@ -503,9 +483,7 @@
        {
         "animEndTime": 0.20000000298023224,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/GetHit.GetHit"
-        },
+        "animReference": "/Game/Anims/GetHit.GetHit",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -514,9 +492,7 @@
        {
         "animEndTime": 0.30000001192092896,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/GetHit.GetHit"
-        },
+        "animReference": "/Game/Anims/GetHit.GetHit",
         "animStartTime": 0.20000000298023224,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -525,9 +501,7 @@
        {
         "animEndTime": 0.9666666388511658,
         "animPlayRate": 1.2000000476837158,
-        "animReference": {
-         "refPath": "/Game/Anims/GetHit.GetHit"
-        },
+        "animReference": "/Game/Anims/GetHit.GetHit",
         "animStartTime": 0.30000001192092896,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -572,9 +546,7 @@
        "z": 0.5
       },
       "socketName": "None",
-      "template": {
-       "refPath": "/Game/InfinityBladeEffects/Effects/FX_Mobile/Impacts/NS_Impact_Player_Weak_small.NS_Impact_Player_Weak_small"
-      }
+      "template": "/Game/InfinityBladeEffects/Effects/FX_Mobile/Impacts/NS_Impact_Player_Weak_small.NS_Impact_Player_Weak_small"
      },
      "start": 0.00048293120926246047,
      "track": 1
@@ -609,9 +581,7 @@
        {
         "animEndTime": 0.3700000047683716,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Kick1.Kick1"
-        },
+        "animReference": "/Game/Anims/Kick1.Kick1",
         "animStartTime": 0.10000000149011612,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -620,9 +590,7 @@
        {
         "animEndTime": 0.4000000059604645,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Kick1.Kick1"
-        },
+        "animReference": "/Game/Anims/Kick1.Kick1",
         "animStartTime": 0.3700000047683716,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -631,9 +599,7 @@
        {
         "animEndTime": 0.6000000238418579,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/Kick1.Kick1"
-        },
+        "animReference": "/Game/Anims/Kick1.Kick1",
         "animStartTime": 0.4000000059604645,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -642,9 +608,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Kick1.Kick1"
-        },
+        "animReference": "/Game/Anims/Kick1.Kick1",
         "animStartTime": 0.6000000238418579,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -732,9 +696,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1,
       "wooshType": "KickWeak"
      },
@@ -827,9 +789,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -838,9 +798,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -849,9 +807,7 @@
        {
         "animEndTime": 1.100000023841858,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -860,9 +816,7 @@
        {
         "animEndTime": 1.3666666746139526,
         "animPlayRate": 0.699999988079071,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 1.100000023841858,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1072,9 +1026,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1083,9 +1035,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1094,9 +1044,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1105,9 +1053,7 @@
        {
         "animEndTime": 1.5333329439163208,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 1.2000000476837158,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1317,9 +1263,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1328,9 +1272,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1339,9 +1281,7 @@
        {
         "animEndTime": 0.03333299979567528,
         "animPlayRate": 0.03333299979567528,
-        "animReference": {
-         "refPath": "/Game/Anims/PunchRActive_PoseSeq.PunchRActive_PoseSeq"
-        },
+        "animReference": "/Game/Anims/PunchRActive_PoseSeq.PunchRActive_PoseSeq",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1350,9 +1290,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1361,9 +1299,7 @@
        {
         "animEndTime": 1.5333329439163208,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 1.2000000476837158,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1602,9 +1538,7 @@
        {
         "animEndTime": 0.30000001192092896,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1613,9 +1547,7 @@
        {
         "animEndTime": 0.44999998807907104,
         "animPlayRate": 0.20000000298023224,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.30000001192092896,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1624,9 +1556,7 @@
        {
         "animEndTime": 0.75,
         "animPlayRate": 1.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.44999998807907104,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1635,9 +1565,7 @@
        {
         "animEndTime": 1.6666666269302368,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.75,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -1683,9 +1611,7 @@
        "z": 1
       },
       "socketName": "hand_r",
-      "template": {
-       "refPath": "/Game/FX/FX_BossCharge.FX_BossCharge"
-      }
+      "template": "/Game/FX/FX_BossCharge.FX_BossCharge"
      },
      "start": 9.999999747378752e-05,
      "track": 1
@@ -1726,9 +1652,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue"
-      },
+      "sound": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue",
       "volumeMultiplier": 1
      },
      "start": 9.999999747378752e-05,
@@ -1750,9 +1674,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_attack_groan_03_Cue.voice_male_d_attack_groan_03_Cue"
-      },
+      "sound": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_attack_groan_03_Cue.voice_male_d_attack_groan_03_Cue",
       "volumeMultiplier": 1.5
      },
      "start": 1.2443715333938599,
@@ -1789,9 +1711,7 @@
        "z": 1
       },
       "socketName": "hand_r",
-      "template": {
-       "refPath": "/Game/FX/FX_Trail.FX_Trail"
-      }
+      "template": "/Game/FX/FX_Trail.FX_Trail"
      },
      "start": 1.3499999046325684,
      "track": 2
@@ -1812,9 +1732,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-      },
+      "sound": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
       "volumeMultiplier": 1
      },
      "start": 1.3499999046325684,
@@ -1836,9 +1754,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/punch01verylowpitch_Cue1.punch01verylowpitch_Cue1"
-      },
+      "sound": "/Game/Audio/punch01verylowpitch_Cue1.punch01verylowpitch_Cue1",
       "volumeMultiplier": 1
      },
      "start": 1.522567868232727,
@@ -1874,9 +1790,7 @@
        "z": 1
       },
       "socketName": "None",
-      "template": {
-       "refPath": "/Game/FX/FX_GroundImpact1.FX_GroundImpact1"
-      }
+      "template": "/Game/FX/FX_GroundImpact1.FX_GroundImpact1"
      },
      "start": 1.541753888130188,
      "track": 1
@@ -2002,9 +1916,7 @@
        {
         "animEndTime": 0.75,
         "animPlayRate": 1.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2013,9 +1925,7 @@
        {
         "animEndTime": 1.6666666269302368,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.75,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2083,9 +1993,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.3781587779521942,
@@ -2172,9 +2080,7 @@
        {
         "animEndTime": 0.4000000059604645,
         "animPlayRate": 4,
-        "animReference": {
-         "refPath": "/Game/Anims/Tat.Tat"
-        },
+        "animReference": "/Game/Anims/Tat.Tat",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2183,9 +2089,7 @@
        {
         "animEndTime": 0.44999998807907104,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Tat.Tat"
-        },
+        "animReference": "/Game/Anims/Tat.Tat",
         "animStartTime": 0.4000000059604645,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2194,9 +2098,7 @@
        {
         "animEndTime": 0.75,
         "animPlayRate": 4,
-        "animReference": {
-         "refPath": "/Game/Anims/Tat.Tat"
-        },
+        "animReference": "/Game/Anims/Tat.Tat",
         "animStartTime": 0.44999998807907104,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2205,9 +2107,7 @@
        {
         "animEndTime": 1,
         "animPlayRate": 0.20000000298023224,
-        "animReference": {
-         "refPath": "/Game/Anims/Tat.Tat"
-        },
+        "animReference": "/Game/Anims/Tat.Tat",
         "animStartTime": 0.75,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2216,9 +2116,7 @@
        {
         "animEndTime": 1.5,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/Tat.Tat"
-        },
+        "animReference": "/Game/Anims/Tat.Tat",
         "animStartTime": 1,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2227,9 +2125,7 @@
        {
         "animEndTime": 1.9583333730697632,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/Tat.Tat"
-        },
+        "animReference": "/Game/Anims/Tat.Tat",
         "animStartTime": 1.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2379,9 +2275,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-      },
+      "sound": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
       "volumeMultiplier": 1,
       "wooshType": "KickWeak"
      },
@@ -2521,9 +2415,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1,
       "wooshType": "KickWeak"
      },
@@ -2546,9 +2438,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-      },
+      "sound": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
       "volumeMultiplier": 1,
       "wooshType": "KickWeak"
      },
@@ -2571,9 +2461,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1,
       "wooshType": "KickWeak"
      },
@@ -2596,9 +2484,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-      },
+      "sound": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
       "volumeMultiplier": 1,
       "wooshType": "KickWeak"
      },
@@ -2635,9 +2521,7 @@
        {
         "animEndTime": 0.4000000059604645,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Upper2.Upper2"
-        },
+        "animReference": "/Game/Anims/Upper2.Upper2",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2646,9 +2530,7 @@
        {
         "animEndTime": 0.75,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/Upper2.Upper2"
-        },
+        "animReference": "/Game/Anims/Upper2.Upper2",
         "animStartTime": 0.4000000059604645,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2657,9 +2539,7 @@
        {
         "animEndTime": 1.5666667222976685,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Upper2.Upper2"
-        },
+        "animReference": "/Game/Anims/Upper2.Upper2",
         "animStartTime": 0.75,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2869,9 +2749,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/kkk.kkk"
-        },
+        "animReference": "/Game/Anims/kkk.kkk",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2880,9 +2758,7 @@
        {
         "animEndTime": 1,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/kkk.kkk"
-        },
+        "animReference": "/Game/Anims/kkk.kkk",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2891,9 +2767,7 @@
        {
         "animEndTime": 1.6666666269302368,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/kkk.kkk"
-        },
+        "animReference": "/Game/Anims/kkk.kkk",
         "animStartTime": 1,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -2944,9 +2818,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1,
       "wooshType": "KickWeak"
      },
@@ -3044,9 +2916,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3055,9 +2925,7 @@
        {
         "animEndTime": 0.8999999761581421,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3066,9 +2934,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.8999999761581421,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3077,9 +2943,7 @@
        {
         "animEndTime": 1.100000023841858,
         "animPlayRate": 0.8999999761581421,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3088,9 +2952,7 @@
        {
         "animEndTime": 1.3666666746139526,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 1.100000023841858,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3136,9 +2998,7 @@
        "z": 1
       },
       "socketName": "hand_lTrail",
-      "template": {
-       "refPath": "/Game/FX/FX_TrailRed.FX_TrailRed"
-      }
+      "template": "/Game/FX/FX_TrailRed.FX_TrailRed"
      },
      "start": 0.19425077736377716,
      "track": 3
@@ -3159,9 +3019,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-      },
+      "sound": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
       "volumeMultiplier": 1
      },
      "start": 0.2569078803062439,
@@ -3277,9 +3135,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 2,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3288,9 +3144,7 @@
        {
         "animEndTime": 0.8999999761581421,
         "animPlayRate": 4,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3299,9 +3153,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 0.699999988079071,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.8999999761581421,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3310,9 +3162,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3321,9 +3171,7 @@
        {
         "animEndTime": 1.5333329439163208,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 1.2000000476837158,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3369,9 +3217,7 @@
        "z": 1
       },
       "socketName": "hand_rTrail",
-      "template": {
-       "refPath": "/Game/FX/FX_TrailRed.FX_TrailRed"
-      }
+      "template": "/Game/FX/FX_TrailRed.FX_TrailRed"
      },
      "start": 0.3077227771282196,
      "track": 3
@@ -3392,9 +3238,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-      },
+      "sound": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
       "volumeMultiplier": 1
      },
      "start": 0.3334561884403229,
@@ -3510,9 +3354,7 @@
        {
         "animEndTime": 0.30000001192092896,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3521,9 +3363,7 @@
        {
         "animEndTime": 0.44999998807907104,
         "animPlayRate": 0.20000000298023224,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.30000001192092896,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3532,9 +3372,7 @@
        {
         "animEndTime": 0.75,
         "animPlayRate": 1.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.44999998807907104,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3543,9 +3381,7 @@
        {
         "animEndTime": 1.6666666269302368,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Smash.Smash"
-        },
+        "animReference": "/Game/Anims/Smash.Smash",
         "animStartTime": 0.75,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3591,9 +3427,7 @@
        "z": 1
       },
       "socketName": "hand_r",
-      "template": {
-       "refPath": "/Game/FX/FX_BossCharge.FX_BossCharge"
-      }
+      "template": "/Game/FX/FX_BossCharge.FX_BossCharge"
      },
      "start": -9.999999747378752e-05,
      "track": 1
@@ -3634,9 +3468,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue"
-      },
+      "sound": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue",
       "volumeMultiplier": 1
      },
      "start": 9.999999747378752e-05,
@@ -3658,9 +3490,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_attack_groan_03_Cue.voice_male_d_attack_groan_03_Cue"
-      },
+      "sound": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_attack_groan_03_Cue.voice_male_d_attack_groan_03_Cue",
       "volumeMultiplier": 1.5
      },
      "start": 1.2443715333938599,
@@ -3697,9 +3527,7 @@
        "z": 1
       },
       "socketName": "hand_r",
-      "template": {
-       "refPath": "/Game/FX/FX_Trail.FX_Trail"
-      }
+      "template": "/Game/FX/FX_Trail.FX_Trail"
      },
      "start": 1.3499999046325684,
      "track": 2
@@ -3720,9 +3548,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1"
-      },
+      "sound": "/Game/Audio/WhooshHeavy_Cue1.WhooshHeavy_Cue1",
       "volumeMultiplier": 1
      },
      "start": 1.3499999046325684,
@@ -3744,9 +3570,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/punch01verylowpitch_Cue1.punch01verylowpitch_Cue1"
-      },
+      "sound": "/Game/Audio/punch01verylowpitch_Cue1.punch01verylowpitch_Cue1",
       "volumeMultiplier": 1
      },
      "start": 1.522567868232727,
@@ -3782,9 +3606,7 @@
        "z": 1
       },
       "socketName": "None",
-      "template": {
-       "refPath": "/Game/FX/FX_GroundImpact1.FX_GroundImpact1"
-      }
+      "template": "/Game/FX/FX_GroundImpact1.FX_GroundImpact1"
      },
      "start": 1.541753888130188,
      "track": 1
@@ -3910,9 +3732,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Kick1.Kick1"
-        },
+        "animReference": "/Game/Anims/Kick1.Kick1",
         "animStartTime": 0.20000000298023224,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3921,9 +3741,7 @@
        {
         "animEndTime": 0.6000000238418579,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Kick1.Kick1"
-        },
+        "animReference": "/Game/Anims/Kick1.Kick1",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3932,9 +3750,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Kick1.Kick1"
-        },
+        "animReference": "/Game/Anims/Kick1.Kick1",
         "animStartTime": 0.6000000238418579,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -3965,9 +3781,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.1996515840291977,
@@ -4004,9 +3818,7 @@
        "z": 1
       },
       "socketName": "foot_r",
-      "template": {
-       "refPath": "/Game/FX/FX_Trail.FX_Trail"
-      }
+      "template": "/Game/FX/FX_Trail.FX_Trail"
      },
      "start": 0.22462479770183563,
      "track": 3
@@ -4112,9 +3924,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4123,9 +3933,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4134,9 +3942,7 @@
        {
         "animEndTime": 1.100000023841858,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4145,9 +3951,7 @@
        {
         "animEndTime": 1.3666666746139526,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 1.100000023841858,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4198,9 +4002,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.7420913577079773,
@@ -4316,9 +4118,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4327,9 +4127,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 1.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4338,9 +4136,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4349,9 +4145,7 @@
        {
         "animEndTime": 1.5333329439163208,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 1.2000000476837158,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4402,9 +4196,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.7028560042381287,
@@ -4520,9 +4312,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4531,9 +4321,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4542,9 +4330,7 @@
        {
         "animEndTime": 1.100000023841858,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4553,9 +4339,7 @@
        {
         "animEndTime": 1.3666666746139526,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 1.100000023841858,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4606,9 +4390,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.7420913577079773,
@@ -4724,9 +4506,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4735,9 +4515,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 1.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4746,9 +4524,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4757,9 +4533,7 @@
        {
         "animEndTime": 1.5333329439163208,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 1.2000000476837158,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4810,9 +4584,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.7028560042381287,
@@ -4928,9 +4700,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4939,9 +4709,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4950,9 +4718,7 @@
        {
         "animEndTime": 1.100000023841858,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4961,9 +4727,7 @@
        {
         "animEndTime": 1.3666666746139526,
         "animPlayRate": 0.5,
-        "animReference": {
-         "refPath": "/Game/Anims/LeftHook.LeftHook"
-        },
+        "animReference": "/Game/Anims/LeftHook.LeftHook",
         "animStartTime": 1.100000023841858,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -4994,9 +4758,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.7420913577079773,
@@ -5084,9 +4846,7 @@
        {
         "animEndTime": 0.5,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5095,9 +4855,7 @@
        {
         "animEndTime": 0.949999988079071,
         "animPlayRate": 1.5,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5106,9 +4864,7 @@
        {
         "animEndTime": 1.2000000476837158,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 0.949999988079071,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5117,9 +4873,7 @@
        {
         "animEndTime": 1.5333329439163208,
         "animPlayRate": 0.800000011920929,
-        "animReference": {
-         "refPath": "/Game/Anims/Punching.Punching"
-        },
+        "animReference": "/Game/Anims/Punching.Punching",
         "animStartTime": 1.2000000476837158,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5150,9 +4904,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 0.7028560042381287,
@@ -5240,9 +4992,7 @@
        {
         "animEndTime": 1.600000023841858,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 0.5,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5251,9 +5001,7 @@
        {
         "animEndTime": 2,
         "animPlayRate": 3,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 1.600000023841858,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5262,9 +5010,7 @@
        {
         "animEndTime": 2.5999999046325684,
         "animPlayRate": 1,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 2,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5273,9 +5019,7 @@
        {
         "animEndTime": 3.366666555404663,
         "animPlayRate": 0.7523810267448425,
-        "animReference": {
-         "refPath": "/Game/Anims/CastForward.CastForward"
-        },
+        "animReference": "/Game/Anims/CastForward.CastForward",
         "animStartTime": 2.5999999046325684,
         "cachedPlayLength": 0,
         "loopingCount": 1,
@@ -5306,9 +5050,7 @@
        "r": 0.7686275243759155
       },
       "pitchMultiplier": 1,
-      "sound": {
-       "refPath": "/Game/Audio/Whoosh_Cue.Whoosh_Cue"
-      },
+      "sound": "/Game/Audio/Whoosh_Cue.Whoosh_Cue",
       "volumeMultiplier": 1
      },
      "start": 1.100000023841858,

@@ -9,9 +9,7 @@
       "entryDescription": "",
       "entryName": "SelfActor",
       "keyType": {
-       "baseClass": {
-        "refPath": "/Script/Engine.Actor"
-       },
+       "baseClass": "/Script/Engine.Actor",
        "defaultValue": "None",
        "subobject": "BlackboardKeyType_Object"
       }
@@ -22,9 +20,7 @@
       "entryDescription": "Target To Chase",
       "entryName": "TargetChar",
       "keyType": {
-       "baseClass": {
-        "refPath": "/Script/MyGame.MyCharacter"
-       },
+       "baseClass": "/Script/MyGame.MyCharacter",
        "defaultValue": "None",
        "subobject": "BlackboardKeyType_Object"
       }
@@ -131,18 +127,14 @@
     "BlackboardKeyType_Object_0": {
      "class": "/Script/AIModule.BlackboardKeyType_Object",
      "properties": {
-      "baseClass": {
-       "refPath": "/Script/Engine.Actor"
-      },
+      "baseClass": "/Script/Engine.Actor",
       "defaultValue": "None"
      }
     },
     "BlackboardKeyType_Object_1": {
      "class": "/Script/AIModule.BlackboardKeyType_Object",
      "properties": {
-      "baseClass": {
-       "refPath": "/Script/MyGame.MyCharacter"
-      },
+      "baseClass": "/Script/MyGame.MyCharacter",
       "defaultValue": "None"
      }
     },
@@ -171,9 +163,7 @@
       "bAutoSortTests": true,
       "bCanRunAsync": false,
       "envQueryResultNormalizationOption": "Default",
-      "generateAround": {
-       "refPath": "/Game/Blueprints/AI/EQC_BehindPlayer.EQC_BehindPlayer_C"
-      },
+      "generateAround": "/Game/Blueprints/AI/EQC_BehindPlayer.EQC_BehindPlayer_C",
       "gridSize": {
        "dataBinding": "None",
        "dataField": "None",
@@ -224,9 +214,7 @@
       },
       "clampMaxType": "None",
       "clampMinType": "None",
-      "distanceTo": {
-       "refPath": "/Game/Blueprints/AI/EQC_PlayerContext.EQC_PlayerContext_C"
-      },
+      "distanceTo": "/Game/Blueprints/AI/EQC_PlayerContext.EQC_PlayerContext_C",
       "filterType": "Range",
       "floatValueMax": {
        "dataBinding": "None",
@@ -278,9 +266,7 @@
       },
       "clampMaxType": "None",
       "clampMinType": "None",
-      "context": {
-       "refPath": "/Game/Blueprints/AI/EQC_PlayerContext.EQC_PlayerContext_C"
-      },
+      "context": "/Game/Blueprints/AI/EQC_PlayerContext.EQC_PlayerContext_C",
       "contextHeightOffset": {
        "dataBinding": "None",
        "dataField": "None",
@@ -369,9 +355,7 @@
       "bAutoSortTests": true,
       "bCanRunAsync": false,
       "envQueryResultNormalizationOption": "Default",
-      "generateAround": {
-       "refPath": "/Game/Blueprints/AI/EQC_TestContext.EQC_TestContext_C"
-      },
+      "generateAround": "/Game/Blueprints/AI/EQC_TestContext.EQC_TestContext_C",
       "gridSize": {
        "dataBinding": "None",
        "dataField": "None",
@@ -422,9 +406,7 @@
       },
       "clampMaxType": "None",
       "clampMinType": "None",
-      "distanceTo": {
-       "refPath": "/Game/Blueprints/AI/EQC_TestContext.EQC_TestContext_C"
-      },
+      "distanceTo": "/Game/Blueprints/AI/EQC_TestContext.EQC_TestContext_C",
       "filterType": "Range",
       "floatValueMax": {
        "dataBinding": "None",
@@ -476,9 +458,7 @@
       },
       "clampMaxType": "None",
       "clampMinType": "None",
-      "context": {
-       "refPath": "/Game/Blueprints/AI/EQC_TestContext.EQC_TestContext_C"
-      },
+      "context": "/Game/Blueprints/AI/EQC_TestContext.EQC_TestContext_C",
       "contextHeightOffset": {
        "dataBinding": "None",
        "dataField": "None",
@@ -660,9 +640,7 @@
               "nodeName": "FinishWithResult",
               "result": {
                "defaultValue": 3,
-               "enumType": {
-                "refPath": "/Script/AIModule.EBTNodeResult"
-               },
+               "enumType": "/Script/AIModule.EBTNodeResult",
                "key": "None",
                "nativeEnumTypeName": "EBTNodeResult"
               }
@@ -677,17 +655,13 @@
            "children": [
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StopAttack_C_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StopAttack_C_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_FinishWithResult_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_FinishWithResult_0",
              "decoratorOps": [],
              "decorators": []
             }
@@ -907,9 +881,7 @@
                 "selectedKeyName": "None"
                },
                "queryConfig": [],
-               "queryTemplate": {
-                "refPath": "/Game/Blueprints/AI/EQS_FindAttackSpot.EQS_FindAttackSpot"
-               },
+               "queryTemplate": "/Game/Blueprints/AI/EQS_FindAttackSpot.EQS_FindAttackSpot",
                "runMode": "RandomBest25Pct"
               },
               "nodeName": "Run EQS Query"
@@ -1016,9 +988,7 @@
                "selectedKeyName": "LocationToMove"
               },
               "filterClass": {
-               "baseClass": {
-                "refPath": "/Script/NavigationSystem.NavigationQueryFilter"
-               },
+               "baseClass": "/Script/NavigationSystem.NavigationQueryFilter",
                "defaultValue": "None",
                "key": "None"
               },
@@ -1058,61 +1028,45 @@
            "children": [
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_ClearTagTarget_C_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_ClearTagTarget_C_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StopAttack_C_1"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StopAttack_C_1",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_RunEQSQuery_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_RunEQSQuery_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StartWalking_C_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StartWalking_C_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_FocusPlayer_C_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_FocusPlayer_C_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_MoveTo_1"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_MoveTo_1",
              "decoratorOps": [],
              "decorators": [
-              {
-               "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_3"
-              }
+              "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_3"
              ]
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_Wait_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_Wait_0",
              "decoratorOps": [],
              "decorators": []
             }
@@ -1316,9 +1270,7 @@
                      "selectedKeyName": "TargetChar"
                     },
                     "filterClass": {
-                     "baseClass": {
-                      "refPath": "/Script/NavigationSystem.NavigationQueryFilter"
-                     },
+                     "baseClass": "/Script/NavigationSystem.NavigationQueryFilter",
                      "defaultValue": "None",
                      "key": "None"
                     },
@@ -1338,9 +1290,7 @@
                    "name": "Run Behavior",
                    "settings": {
                     "bIgnoreRestartSelf": false,
-                    "behaviorAsset": {
-                     "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop"
-                    },
+                    "behaviorAsset": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop",
                     "nodeName": "Run Behavior"
                    }
                   }
@@ -1353,21 +1303,15 @@
                  "children": [
                   {
                    "childComposite": "None",
-                   "childTask": {
-                    "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_MoveTo_3"
-                   },
+                   "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_MoveTo_3",
                    "decoratorOps": [],
                    "decorators": [
-                    {
-                     "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_0"
-                    }
+                    "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_0"
                    ]
                   },
                   {
                    "childComposite": "None",
-                   "childTask": {
-                    "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_RunBehavior_2"
-                   },
+                   "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_RunBehavior_2",
                    "decoratorOps": [],
                    "decorators": []
                   }
@@ -1440,9 +1384,7 @@
                    "name": "Run Behavior",
                    "settings": {
                     "bIgnoreRestartSelf": false,
-                    "behaviorAsset": {
-                     "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop"
-                    },
+                    "behaviorAsset": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop",
                     "nodeName": "Run Behavior"
                    }
                   }
@@ -1455,9 +1397,7 @@
                  "children": [
                   {
                    "childComposite": "None",
-                   "childTask": {
-                    "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_RunBehavior_1"
-                   },
+                   "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_RunBehavior_1",
                    "decoratorOps": [],
                    "decorators": []
                   }
@@ -1474,39 +1414,23 @@
               "bApplyDecoratorScope": false,
               "children": [
                {
-                "childComposite": {
-                 "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_SimpleParallel_1"
-                },
+                "childComposite": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_SimpleParallel_1",
                 "childTask": "None",
                 "decoratorOps": [],
                 "decorators": [
-                 {
-                  "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_3"
-                 },
-                 {
-                  "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_2"
-                 },
-                 {
-                  "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_4"
-                 }
+                 "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_3",
+                 "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_2",
+                 "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_4"
                 ]
                },
                {
-                "childComposite": {
-                 "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_4"
-                },
+                "childComposite": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_4",
                 "childTask": "None",
                 "decoratorOps": [],
                 "decorators": [
-                 {
-                  "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_6"
-                 },
-                 {
-                  "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_7"
-                 },
-                 {
-                  "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_5"
-                 }
+                 "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_6",
+                 "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_7",
+                 "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasMoveControl_C_5"
                 ]
                }
               ],
@@ -1523,38 +1447,28 @@
            "children": [
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_TagTarget_C_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_TagTarget_C_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_ResetFocus_C_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_ResetFocus_C_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
              "childComposite": "None",
-             "childTask": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StopWalking_C_0"
-             },
+             "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_StopWalking_C_0",
              "decoratorOps": [],
              "decorators": []
             },
             {
-             "childComposite": {
-              "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Selector_0"
-             },
+             "childComposite": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Selector_0",
              "childTask": "None",
              "decoratorOps": [],
              "decorators": [
-              {
-               "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_2"
-              }
+              "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_2"
              ]
             }
            ],
@@ -1570,33 +1484,23 @@
         "bApplyDecoratorScope": false,
         "children": [
          {
-          "childComposite": {
-           "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_0"
-          },
+          "childComposite": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_0",
           "childTask": "None",
           "decoratorOps": [],
           "decorators": [
-           {
-            "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_Blackboard_0"
-           }
+           "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_Blackboard_0"
           ]
          },
          {
           "childComposite": "None",
-          "childTask": {
-           "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_ResetObjKey_C_0"
-          },
+          "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_ResetObjKey_C_0",
           "decoratorOps": [],
           "decorators": [
-           {
-            "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsAlive_C_3"
-           }
+           "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsAlive_C_3"
           ]
          },
          {
-          "childComposite": {
-           "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_2"
-          },
+          "childComposite": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_2",
           "childTask": "None",
           "decoratorOps": [
            {
@@ -1629,27 +1533,15 @@
            }
           ],
           "decorators": [
-           {
-            "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_1"
-           },
-           {
-            "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_1"
-           },
-           {
-            "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsBehindEnemy_C_1"
-           },
-           {
-            "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_CanTagTarget_C_0"
-           },
-           {
-            "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_6"
-           }
+           "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_HasControl_C_1",
+           "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_1",
+           "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsBehindEnemy_C_1",
+           "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_CanTagTarget_C_0",
+           "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTDecorator_IsInRange_C_6"
           ]
          },
          {
-          "childComposite": {
-           "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_3"
-          },
+          "childComposite": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Sequence_3",
           "childTask": "None",
           "decoratorOps": [],
           "decorators": []
@@ -1688,25 +1580,19 @@
      "children": [
       {
        "childComposite": "None",
-       "childTask": {
-        "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_SetRange_C_0"
-       },
+       "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_SetRange_C_0",
        "decoratorOps": [],
        "decorators": []
       },
       {
-       "childComposite": {
-        "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Selector_4"
-       },
+       "childComposite": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTComposite_Selector_4",
        "childTask": "None",
        "decoratorOps": [],
        "decorators": []
       },
       {
        "childComposite": "None",
-       "childTask": {
-        "refPath": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_Wait_3"
-       },
+       "childTask": "/Game/Blueprints/AI/BT_AIBase.BT_AIBase:BTTask_Wait_3",
        "decoratorOps": [],
        "decorators": []
       }
@@ -1779,9 +1665,7 @@
         "children": [
          {
           "childComposite": "None",
-          "childTask": {
-           "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTTask_StopAttack_C_1"
-          },
+          "childTask": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTTask_StopAttack_C_1",
           "decoratorOps": [],
           "decorators": []
          }
@@ -1885,17 +1769,13 @@
         "children": [
          {
           "childComposite": "None",
-          "childTask": {
-           "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTTask_Attack_C_1"
-          },
+          "childTask": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTTask_Attack_C_1",
           "decoratorOps": [],
           "decorators": []
          },
          {
           "childComposite": "None",
-          "childTask": {
-           "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTTask_Wait_0"
-          },
+          "childTask": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTTask_Wait_0",
           "decoratorOps": [],
           "decorators": []
          }
@@ -1912,30 +1792,20 @@
      "bApplyDecoratorScope": false,
      "children": [
       {
-       "childComposite": {
-        "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTComposite_Sequence_7"
-       },
+       "childComposite": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTComposite_Sequence_7",
        "childTask": "None",
        "decoratorOps": [],
        "decorators": [
-        {
-         "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTDecorator_IsInRange_C_4"
-        }
+        "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTDecorator_IsInRange_C_4"
        ]
       },
       {
-       "childComposite": {
-        "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTComposite_Sequence_6"
-       },
+       "childComposite": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTComposite_Sequence_6",
        "childTask": "None",
        "decoratorOps": [],
        "decorators": [
-        {
-         "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTDecorator_IsInRange_C_3"
-        },
-        {
-         "refPath": "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTDecorator_IsAlive_C_0"
-        }
+        "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTDecorator_IsInRange_C_3",
+        "/Game/Blueprints/AI/BT_AttackOrStop.BT_AttackOrStop:BTDecorator_IsAlive_C_0"
        ]
       }
      ],

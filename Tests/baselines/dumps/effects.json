@@ -356,9 +356,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Attack",
       "attributeName": "Attack",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -715,9 +713,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -971,9 +967,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:AttackSpeed",
       "attributeName": "AttackSpeed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -1330,9 +1324,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -1586,9 +1578,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:AttackSpeed",
       "attributeName": "AttackSpeed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -2390,9 +2380,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [
       {
        "aggregatorType": "CapturedAttributeBacked",
@@ -2401,9 +2389,7 @@
         "attributeToCapture": {
          "attribute": "/Script/MyGame.MyAttributeSet:Health",
          "attributeName": "Health",
-         "attributeOwner": {
-          "refPath": "/Script/MyGame.MyAttributeSet"
-         }
+         "attributeOwner": "/Script/MyGame.MyAttributeSet"
         },
         "bSnapshot": false
        },
@@ -3221,9 +3207,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Defense",
       "attributeName": "Defense",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -3619,9 +3603,7 @@
      "subobject": "AssetTagsGameplayEffectComponent"
     },
     {
-     "buffUIAsset": {
-      "refPath": "/Game/Abilities/BuffUI/DA_BuffUI_Fire.DA_BuffUI_Fire"
-     },
+     "buffUIAsset": "/Game/Abilities/BuffUI/DA_BuffUI_Fire.DA_BuffUI_Fire",
      "editorFriendlyName": "My Gameplay Effect UIData",
      "subobject": "MyGameplayEffectUIData"
     }
@@ -3845,9 +3827,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:IncomingDamage",
       "attributeName": "IncomingDamage",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -4204,9 +4184,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Game/Abilities/BP_BaseExec.BP_BaseExec_C"
-     },
+     "calculationClass": "/Game/Abilities/BP_BaseExec.BP_BaseExec_C",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -5796,9 +5774,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Mana",
       "attributeName": "Mana",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -6343,9 +6319,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Mana",
       "attributeName": "Mana",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -6702,9 +6676,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -6901,9 +6873,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:RotSpeed",
       "attributeName": "RotSpeed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -7260,9 +7230,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -7504,9 +7472,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:RotSpeed",
       "attributeName": "RotSpeed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -8096,9 +8062,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Speed",
       "attributeName": "Speed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -8455,9 +8419,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -8699,9 +8661,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Speed",
       "attributeName": "Speed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -9058,9 +9018,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -9257,9 +9215,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Speed",
       "attributeName": "Speed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -9616,9 +9572,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -9860,9 +9814,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Speed",
       "attributeName": "Speed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -10219,9 +10171,7 @@
    "editorStatusText": "All Ok",
    "executions": [
     {
-     "calculationClass": {
-      "refPath": "/Script/MyGame.DamageExec"
-     },
+     "calculationClass": "/Script/MyGame.DamageExec",
      "calculationModifiers": [],
      "conditionalGameplayEffects": [],
      "passedInTags": {
@@ -10494,9 +10444,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Speed",
       "attributeName": "Speed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -10996,9 +10944,7 @@
      "subobject": "TargetTagsGameplayEffectComponent"
     },
     {
-     "buffUIAsset": {
-      "refPath": "/Game/Abilities/BuffUI/DA_BuffUI_StunImmune.DA_BuffUI_StunImmune"
-     },
+     "buffUIAsset": "/Game/Abilities/BuffUI/DA_BuffUI_StunImmune.DA_BuffUI_StunImmune",
      "editorFriendlyName": "My Gameplay Effect UIData",
      "subobject": "MyGameplayEffectUIData"
     }
@@ -11712,9 +11658,7 @@
      "attribute": {
       "attribute": "/Script/MyGame.MyAttributeSet:Speed",
       "attributeName": "Speed",
-      "attributeOwner": {
-       "refPath": "/Script/MyGame.MyAttributeSet"
-      }
+      "attributeOwner": "/Script/MyGame.MyAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
