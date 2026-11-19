@@ -12,6 +12,9 @@ the run's back afterwards.
 - Their distances (the dummy pushed and risen, the player moved and risen) within 5% of 1/60's, or 2 units, as the 1/30
   spike measured (2026-11-16). One measured exception: the double-tap dash moves the player 5.1% less at 1/30 (325.7 to
   309.2, the same before Step 8), its flicks sampled on coarser frames; it is allowed 6%.
+- The uneven step repeats: its pattern restarts from its seed as each scenario starts (run_timeline's step_seed), so a
+  second pass of every scenario on it gives exactly the same records. Before the restart its phase depended on how
+  long the calls took, and the double-tap dash's distance moved run to run (UnrealAgentTools issue #21).
 """
 import json
 
@@ -64,15 +67,30 @@ def suite(ctx):
             results[speed] = A.run_scenarios(MOVES)
     finally:
         mygame.set_speed(ctx.speed)
+    repeats = {}
     for name, step in STEPS:
         ctx.ue.call_tool(PLAY, "PushFixedStep", step)
+        A.STEP_SEED[0] = step["seed"] if "longFrameEvery" in step else None
         try:
             ctx.reset()
             outcomes[name] = all_scenarios()
+            if A.STEP_SEED[0] is not None:
+                ctx.reset()
+                repeats[name] = all_scenarios()
         finally:
+            A.STEP_SEED[0] = None
             ctx.ue.call_tool(PLAY, "PopFixedStep", {})
-    (ctx.out / "framerate.json").write_text(json.dumps({**{str(k): v for k, v in results.items()}, **outcomes}, indent=1))
+    (ctx.out / "framerate.json").write_text(json.dumps({**{str(k): v for k, v in results.items()}, **outcomes,
+                                                        **{f"{k} again": v for k, v in repeats.items()}}, indent=1))
     problems = []
+    for name, again in repeats.items():
+        first = {x["scenario"]: x for x in outcomes[name]["scenarios"]}
+        for x in again["scenarios"]:
+            keys = [k for k in x if x[k] != first[x["scenario"]].get(k)]
+            if keys:
+                line = f"{name} again: {x['scenario']} differs in {', '.join(keys)}"
+                print(f"  {line}")
+                problems.append(line)
     for name in MOVES:
         slow, fast = results[SPEEDS[0]].get(name), results[SPEEDS[1]].get(name)
         print(f"  {name:24} 1x {slow:>6}   3x {fast:>6}" + ("" if slow == fast else "   <- differs"))
@@ -88,5 +106,5 @@ def suite(ctx):
         for line in far:
             print(f"  {line}")
         problems += far
-    checks = len(MOVES) + 2 * len(reference["scenarios"]) * (len(STEPS) - 1)
+    checks = len(MOVES) + 2 * len(reference["scenarios"]) * (len(STEPS) - 1) + len(reference["scenarios"]) * len(repeats)
     return {"ok": not problems, "checks": checks, "problems": problems, "files": {"framerate.json": None}}

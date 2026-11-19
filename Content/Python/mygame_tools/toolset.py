@@ -39,13 +39,21 @@ def _tl_start(world):
     sp = _tl["spec"]
     player = _player()
     dummy = _char(sp["dummy"]) if sp.get("dummy") else None
-    # the clock counts from the start of the tick just ended, as when the timeline started before it
-    t0 = unreal.GameplayStatics.get_time_seconds(world) - unreal.GameplayStatics.get_world_delta_seconds(world)
+    # the clock counts from the start of the tick just ended, as when the timeline started before it; under a restarted
+    # uneven step from its end, where the pattern starts (that tick's own length came from the pattern's earlier phase)
+    t0 = unreal.GameplayStatics.get_time_seconds(world)
+    if sp.get("step_seed") is None:
+        t0 -= unreal.GameplayStatics.get_world_delta_seconds(world)
     _tl.update(spec=sp, t0=t0, phase="run", result=None,
                pending=sorted([list(i) for i in sp["inputs"]], key=lambda i: i[0]),
                rec={"timeline": [], "abilities": set(), "player_tags": set(), "dummy_tags": set(),
                     "player_z": player.get_actor_location().z,
                     "dummy_z": dummy.get_actor_location().z if dummy else 0.0})
+    if sp.get("step_seed") is not None:
+        # the uneven step in force starts its pattern again here, so the timeline's k-th frame lasts the same every run
+        restarted = unreal.AgentPlayToolset.restart_fixed_step_pattern(int(sp["step_seed"]))
+        if "error" in restarted:
+            raise RuntimeError(restarted)
     if sp.get("seed") is not None:
         MyGameTools.seed_random(int(sp["seed"]))
         _tl["rec"]["seeded"] = True
@@ -826,7 +834,9 @@ class MyGameTools(unreal.ToolsetDefinition):
                 player time dilation, montage position], "watch": [actor paths] recorded every frame unrounded
                 ([t, x, y, z, yaw, montage:section, health]), "seed": seed_random's seed, set as the
                 timeline starts and again at the start of every tick from the seed and the tick's number
-                (SeedEveryTickForTest), and the current state of the run's shared stream, which loot draws from, "record": {role: actor path} for the strict recorder
+                (SeedEveryTickForTest), and the current state of the run's shared stream, which loot draws from,
+                "step_seed": the uneven fixed step in force (PushFixedStep with longFrameEvery) restarts its pattern
+                from this seed as the timeline starts, so its frames repeat run to run, "record": {role: actor path} for the strict recorder
                 (MyGameEditor's UCombatRecorder: every frame and event of those characters and what they spawn, from
                 now until the settle ends; its JSON comes back as "record"), "query": [roles] whose frames also list the
                 abilities they could start (the cancel matrix), "settle": max game seconds to wait

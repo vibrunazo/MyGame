@@ -77,7 +77,8 @@ def run_scenario(name, inputs, duration, player, dummy, away_from_dummy=False):
         place(dummy, START_ROOM_SPOT[0])
     start_dummy = tool("character_state", actor_path=dummy["path"])
     start_player = tool("pie_player_state")
-    tool("run_timeline", spec=json.dumps({"dummy": dummy["path"], "duration": duration, "inputs": inputs, "trace": TRACE[0]}))
+    tool("run_timeline", spec=json.dumps({"dummy": dummy["path"], "duration": duration, "inputs": inputs, "trace": TRACE[0],
+                                          "step_seed": STEP_SEED[0]}))
     r = wait_until(lambda: (t := tool("timeline_result"))["done"] and t, timeout=120, every=0.05, what=f"the {name} timeline")
     rec = r["result"]
     end_dummy, end_player = rec["end_dummy"], rec["end_player"]
@@ -148,6 +149,7 @@ def scenarios():
 
 DUMMY = [None]
 TRACE = [False]  # per-frame traces in the results (for timing investigations)
+STEP_SEED = [None]  # under an uneven fixed step: its seed, its pattern restarted as each scenario starts (framerate)
 PLAYER_PATH = [None]
 
 
