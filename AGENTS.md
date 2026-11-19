@@ -108,7 +108,8 @@ Rules:
 - The user's open editor is fine to work in while they watch; the tools never close it. With it open, `build` compiles
   inside it with Live Coding, and `test`, `run`, `start` and `package` then wait for a full build (they say so). If a
   command names another editor or a game you didn't start, ask the user to close it.
-- If the workflow lacks something or could be better, file it: `unreal-agent feedback add "<what, and where>"`. A small
+- If the workflow lacks something or could be better, file it: `unreal-agent feedback add "<what, and where>"` (a
+  GitHub issue of the tools; `--type bug` for a bug, `--plugin <name>` for a plugin repo the game pins). A small
   Python addition any game could use may be made in UnrealAgentTools right away: `unreal-agent guide tools` says how.
   A plugin change, a new command, or a change to the client, launcher or runner is filed instead. It reaches this game
   in a release, with `unreal-agent update`. Never build a private version in this game.
