@@ -35,13 +35,20 @@ TILE = (1400.0, 2000.0)  # a tile's size (the glossary); room_bounds gives each 
 
 
 def spot_places():
-    """(label, x, y, z) for the player: inside every room of the floor."""
-    out = []
+    """(label, x, y, z) for the player: inside every room of the floor, standing on its floor (a pit is left out, so
+    the player never falls out of the world)."""
+    out, pits = [], []
     for room in tool("room_bounds"):
         cx, cy = room["cell"][0] * TILE[0], room["cell"][1] * TILE[1]
-        z = room["floor_z"][0] + 100.0
         for dx, dy in OFFSETS:
-            out.append((f"{room['map']} {dx:+.0f},{dy:+.0f}", cx + dx, cy + dy, z))
+            label = f"{room['map']} {dx:+.0f},{dy:+.0f}"
+            floor = tool("floor_height", x=cx + dx, y=cy + dy, from_z=room["floor_z"][1] + 300.0)
+            if not floor.get("hit") or floor["z"] < room["floor_z"][0] - 50.0:
+                pits.append(label)
+                continue
+            out.append((label, cx + dx, cy + dy, floor["z"] + 100.0))
+    if pits:
+        print(f"  no floor at {pits}")
     return out
 
 
@@ -74,6 +81,7 @@ def suite(ctx):
 
     # the spot search, by a frozen enemy standing inside the grid in the start room, then far from the player
     def fresh_enemy():
+        mygame.wait_until(lambda: tool("run_state")["player"], timeout=30.0, what="the player")
         ar.freeze_enemies()
         for a, v in (("MaxHealth", 100000.0), ("Health", 100000.0), ("Defense", 1000.0)):
             tool("set_player_attribute", attribute=a, value=v)
