@@ -10,6 +10,7 @@
  "AssAbility.OnMontageCancelled": [],
  "AssAbility.OnMontageCompleted": [],
  "AssAbility.OnMontageInterrupted": [],
+ "AssAbility.OnSelfEffectEvent": [],
  "AssAbility.OnTimedStepEnd": [],
  "AssHitBox.HitboxTouched": [],
  "AssHitBox.OnOwnerDestroyed": [],

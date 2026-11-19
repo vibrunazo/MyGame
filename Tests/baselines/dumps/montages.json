@@ -49,39 +49,21 @@
    "length": 2.2083165645599365,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.6667666269277106,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 2
@@ -678,39 +660,21 @@
    "length": 1.146649956703186,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 0.7365327311490546,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 2
@@ -914,39 +878,21 @@
    "length": 0.9226166605949402,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 0.8501000238393317,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.5
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 2
@@ -1177,39 +1123,21 @@
    "length": 1.058316707611084,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.0000999999974738,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.5
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 2
@@ -1470,39 +1398,21 @@
    "length": 2.058316707611084,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.465407831761695,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 2
@@ -1781,39 +1691,21 @@
      "track": 1
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.9497991634343634,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 5
@@ -2041,65 +1933,41 @@
      "track": 0
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.954252004623413,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "Ass.Data.CamShake"
-          },
-          "magnitude": 100
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.shake.1"
+      }
      },
      "start": 1.5499999523162842,
      "track": 4
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.954252004623413,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "Ass.Data.CamShake"
-          },
-          "magnitude": 80
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.shake.2"
+      }
      },
      "start": 1.7240204811096191,
      "track": 3
@@ -2162,44 +2030,6 @@
    "curves": {},
    "length": 2.3333165645599365,
    "notifies": [
-    {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
-     "end": 1.6667666269277106,
-     "name": "ANS_ApplyEffect",
-     "settings": {
-      "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
-      "notifyColor": {
-       "a": 1,
-       "b": 1,
-       "g": 0.7843137979507446,
-       "r": 0.7843137979507446
-      },
-      "notifyStateBehaviorFlags": 0
-     },
-     "start": 9.999999747378752e-05,
-     "track": 2
-    },
     {
      "class": "/Script/AssCombat.AssSlashNotifyState",
      "end": 0.75,
@@ -2474,103 +2304,61 @@
      "track": 1
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.9492531848882209,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 4
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.873185969889164,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_ImmuneToProjectile.GE_ImmuneToProjectile_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.immune.proj"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.immune"
+      }
      },
      "start": 0.07110200077295303,
      "track": 5
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.8731858730316162,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Script/AssCombat.AssNoPawnBlockEffect"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "Ass.Data.NoPawnBlock"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.ghost"
+      }
      },
      "start": 0.07110202312469482,
      "track": 6
@@ -2887,39 +2675,21 @@
    "length": 1.537500023841858,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.0000999999974738,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 2
@@ -3139,58 +2909,21 @@
    "length": 2.0833165645599365,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.5000999999974738,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       },
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_RotSpeedMultiply.GE_RotSpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.rotspeed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.rotspeed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 2
@@ -3866,39 +3599,21 @@
      "track": 1
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.9497991634343634,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": 2
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 9.999999747378752e-05,
      "track": 5
@@ -4126,65 +3841,41 @@
      "track": 0
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.954252004623413,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "Ass.Data.CamShake"
-          },
-          "magnitude": 100
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.shake.1"
+      }
      },
      "start": 1.5499999523162842,
      "track": 4
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.954252004623413,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_CamShake.GE_CamShake_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "Ass.Data.CamShake"
-          },
-          "magnitude": 80
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.shake.2"
+      }
      },
      "start": 1.7240204811096191,
      "track": 3
@@ -4372,39 +4063,21 @@
      "track": 1
     },
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 0.5978119969367981,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Script/AssCombat.AssKnockbackEffect"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "Ass.Data.Knockback"
-          },
-          "magnitude": 1400
-         }
-        ]
-       },
-       {
-        "effectClass": {
-         "refPath": "/Script/AssCombat.AssNoPawnBlockEffect"
-        },
-        "magnitudes": []
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.lunge"
+      }
      },
      "start": 0.34563732147216797,
      "track": 5
@@ -4490,39 +4163,21 @@
    "length": 1.6333166360855103,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.41038693657174,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.5
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": -9.999999747378752e-05,
      "track": 1
@@ -4712,39 +4367,21 @@
    "length": 1.4666500091552734,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.161987118422985,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.10000000149011612
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 0.10866110771894455,
      "track": 1
@@ -4934,39 +4571,21 @@
    "length": 1.6333166360855103,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.41038693657174,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.5
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": -9.999999747378752e-05,
      "track": 1
@@ -5156,39 +4775,21 @@
    "length": 1.4666500091552734,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
+     "class": "/Script/AssCombat.AssWindowNotifyState",
      "end": 1.161987118422985,
-     "name": "ANS_ApplyEffect",
+     "name": "AssWindowNotifyState",
      "settings": {
       "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.10000000149011612
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
       "notifyColor": {
        "a": 1,
        "b": 1,
        "g": 0.7843137979507446,
        "r": 0.7843137979507446
       },
-      "notifyStateBehaviorFlags": 0
+      "notifyStateBehaviorFlags": 0,
+      "window": {
+       "tagName": "window.slow"
+      }
      },
      "start": 0.10866110771894455,
      "track": 1
@@ -5378,44 +4979,6 @@
    "length": 1.6333166360855103,
    "notifies": [
     {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
-     "end": 1.41038693657174,
-     "name": "ANS_ApplyEffect",
-     "settings": {
-      "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.5
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
-      "notifyColor": {
-       "a": 1,
-       "b": 1,
-       "g": 0.7843137979507446,
-       "r": 0.7843137979507446
-      },
-      "notifyStateBehaviorFlags": 0
-     },
-     "start": -9.999999747378752e-05,
-     "track": 1
-    },
-    {
      "class": "/Script/Engine.AnimNotify_PlaySound",
      "end": 0.7420913577079773,
      "name": "PlaySound",
@@ -5571,44 +5134,6 @@
    "curves": {},
    "length": 1.4666500091552734,
    "notifies": [
-    {
-     "class": "/Script/AssCombat.AssApplyEffectNotifyState",
-     "end": 1.161987118422985,
-     "name": "ANS_ApplyEffect",
-     "settings": {
-      "bShouldFireInEditor": true,
-      "effectsToApply": [
-       {
-        "effectClass": {
-         "refPath": "/Game/Abilities/GE_SpeedMultiply.GE_SpeedMultiply_C"
-        },
-        "magnitudes": [
-         {
-          "gameplayTag": {
-           "tagName": "data.speed"
-          },
-          "magnitude": 0.10000000149011612
-         },
-         {
-          "gameplayTag": {
-           "tagName": "data.speed.duration"
-          },
-          "magnitude": -1
-         }
-        ]
-       }
-      ],
-      "notifyColor": {
-       "a": 1,
-       "b": 1,
-       "g": 0.7843137979507446,
-       "r": 0.7843137979507446
-      },
-      "notifyStateBehaviorFlags": 0
-     },
-     "start": 0.10866110771894455,
-     "track": 1
-    },
     {
      "class": "/Script/Engine.AnimNotify_PlaySound",
      "end": 0.7028560042381287,

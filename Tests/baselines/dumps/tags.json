@@ -7,7 +7,8 @@
    "Ass.Data",
    "Ass.Notify",
    "Ass.State",
-   "Ass.Status"
+   "Ass.Status",
+   "Ass.Window"
   ],
   "code": [],
   "owner": null,
@@ -96,10 +97,8 @@
    "/Game/Abilities/AT_Abilities_Upper",
    "/Game/Abilities/AT_Abilities_Voadora",
    "/Game/Abilities/GE_CamShake",
-   "/Game/Anims/SmashPlayer_Montage",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossPunches",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
-   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
    "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
    "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
@@ -135,7 +134,7 @@
  },
  "Ass.Data.Knockback": {
   "assets": [
-   "/Game/Blueprints/Chars/EKicker/KickerKick_Montage"
+   "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick"
   ],
   "children": [],
   "code": [],
@@ -195,7 +194,7 @@
  },
  "Ass.Data.NoPawnBlock": {
   "assets": [
-   "/Game/Anims/Tat_Montage"
+   "/Game/Abilities/AT_Abilities_Tat"
   ],
   "children": [],
   "code": [],
@@ -444,6 +443,26 @@
   "step": null
  },
  "Ass.Status.Unpushable": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Window": {
+  "assets": [],
+  "children": [
+   "Ass.Window.End"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Window.End": {
   "assets": [],
   "children": [],
   "code": [],
@@ -1250,8 +1269,8 @@
  },
  "data.immune.proj": {
   "assets": [
-   "/Game/Abilities/GE_ImmuneToProjectile",
-   "/Game/Anims/Tat_Montage"
+   "/Game/Abilities/AT_Abilities_Tat",
+   "/Game/Abilities/GE_ImmuneToProjectile"
   ],
   "children": [],
   "code": [],
@@ -1295,9 +1314,9 @@
  },
  "data.rotspeed": {
   "assets": [
+   "/Game/Abilities/AT_Abilities_Kkk",
    "/Game/Abilities/AT_Abilities_PunchRun",
-   "/Game/Abilities/GE_RotSpeedMultiply",
-   "/Game/Anims/kkk_Montage"
+   "/Game/Abilities/GE_RotSpeedMultiply"
   ],
   "children": [
    "data.rotspeed.duration"
@@ -1310,10 +1329,10 @@
  },
  "data.rotspeed.duration": {
   "assets": [
+   "/Game/Abilities/AT_Abilities_Kkk",
    "/Game/Abilities/AT_Abilities_PunchRun",
    "/Game/Abilities/GE_RotLock",
-   "/Game/Abilities/GE_RotSpeedMultiply",
-   "/Game/Anims/kkk_Montage"
+   "/Game/Abilities/GE_RotSpeedMultiply"
   ],
   "children": [],
   "code": [],
@@ -1324,31 +1343,26 @@
  },
  "data.speed": {
   "assets": [
+   "/Game/Abilities/AT_Abilities_AirPunch",
+   "/Game/Abilities/AT_Abilities_BasicPunches",
+   "/Game/Abilities/AT_Abilities_Kick",
+   "/Game/Abilities/AT_Abilities_Kkk",
+   "/Game/Abilities/AT_Abilities_PunchRun",
+   "/Game/Abilities/AT_Abilities_Smash",
+   "/Game/Abilities/AT_Abilities_Tat",
+   "/Game/Abilities/AT_Abilities_Upper",
    "/Game/Abilities/AT_Abilities_Voadora",
    "/Game/Abilities/GE_AttackSpeedAdd",
    "/Game/Abilities/GE_AttackSpeedAddNoStack",
    "/Game/Abilities/GE_SpeedAdd",
    "/Game/Abilities/GE_SpeedMultiply",
    "/Game/Abilities/GE_SpeedMultiplyNoStack",
-   "/Game/Anims/AirPunch_Montage",
-   "/Game/Anims/Kick1_Montage",
-   "/Game/Anims/PunchL_Montage",
-   "/Game/Anims/PunchR_Montage",
-   "/Game/Anims/PunchRunR_Montage",
-   "/Game/Anims/SmashPlayer_Montage",
-   "/Game/Anims/Smash_Montage",
-   "/Game/Anims/Tat_Montage",
-   "/Game/Anims/Upper2_Montage",
-   "/Game/Anims/kkk_Montage",
    "/Game/Blueprints/Chars/BP_Char",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
-   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
-   "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee3/PunchL_MontageEnemy2",
-   "/Game/Blueprints/Chars/EMelee3/PunchR_MontageEnemy2",
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+   "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
    "/Game/Blueprints/Items/DA_ItemSpeed",
    "/Game/Blueprints/Items/DA_ItemTurtle"
   ],
@@ -1363,30 +1377,25 @@
  },
  "data.speed.duration": {
   "assets": [
+   "/Game/Abilities/AT_Abilities_AirPunch",
+   "/Game/Abilities/AT_Abilities_BasicPunches",
+   "/Game/Abilities/AT_Abilities_Kick",
+   "/Game/Abilities/AT_Abilities_Kkk",
+   "/Game/Abilities/AT_Abilities_PunchRun",
+   "/Game/Abilities/AT_Abilities_Smash",
+   "/Game/Abilities/AT_Abilities_Tat",
+   "/Game/Abilities/AT_Abilities_Upper",
    "/Game/Abilities/AT_Abilities_Voadora",
    "/Game/Abilities/GE_SpeedAdd",
    "/Game/Abilities/GE_SpeedLock",
    "/Game/Abilities/GE_SpeedMultiply",
    "/Game/Abilities/GE_SpeedMultiplyNoStack",
-   "/Game/Anims/AirPunch_Montage",
-   "/Game/Anims/Kick1_Montage",
-   "/Game/Anims/PunchL_Montage",
-   "/Game/Anims/PunchR_Montage",
-   "/Game/Anims/PunchRunR_Montage",
-   "/Game/Anims/SmashPlayer_Montage",
-   "/Game/Anims/Smash_Montage",
-   "/Game/Anims/Tat_Montage",
-   "/Game/Anims/Upper2_Montage",
-   "/Game/Anims/kkk_Montage",
    "/Game/Blueprints/Chars/BP_Char",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff",
-   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
-   "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1",
-   "/Game/Blueprints/Chars/EMelee3/PunchL_MontageEnemy2",
-   "/Game/Blueprints/Chars/EMelee3/PunchR_MontageEnemy2",
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+   "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2",
    "/Game/Blueprints/Items/DA_ItemSpeed",
    "/Game/Blueprints/Items/DA_ItemTurtle"
   ],
@@ -1718,6 +1727,133 @@
   "children": [],
   "code": [],
   "owner": "MyGame (3.11)",
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window": {
+  "assets": [],
+  "children": [
+   "window.ghost",
+   "window.immune",
+   "window.lunge",
+   "window.shake",
+   "window.slow"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window.ghost": {
+  "assets": [
+   "/Game/Abilities/AT_Abilities_Tat",
+   "/Game/Anims/Tat_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window.immune": {
+  "assets": [
+   "/Game/Abilities/AT_Abilities_Tat",
+   "/Game/Anims/Tat_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window.lunge": {
+  "assets": [
+   "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick",
+   "/Game/Blueprints/Chars/EKicker/KickerKick_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window.shake": {
+  "assets": [],
+  "children": [
+   "window.shake.1",
+   "window.shake.2"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window.shake.1": {
+  "assets": [
+   "/Game/Abilities/AT_Abilities_Smash",
+   "/Game/Anims/SmashPlayer_Montage",
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window.shake.2": {
+  "assets": [
+   "/Game/Abilities/AT_Abilities_Smash",
+   "/Game/Anims/SmashPlayer_Montage",
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "DefaultGameplayTags.ini",
+  "step": null
+ },
+ "window.slow": {
+  "assets": [
+   "/Game/Abilities/AT_Abilities_AirPunch",
+   "/Game/Abilities/AT_Abilities_BasicPunches",
+   "/Game/Abilities/AT_Abilities_Kick",
+   "/Game/Abilities/AT_Abilities_Kkk",
+   "/Game/Abilities/AT_Abilities_PunchRun",
+   "/Game/Abilities/AT_Abilities_Smash",
+   "/Game/Abilities/AT_Abilities_Tat",
+   "/Game/Abilities/AT_Abilities_Upper",
+   "/Game/Anims/AirPunch_Montage",
+   "/Game/Anims/Kick1_Montage",
+   "/Game/Anims/PunchL_Montage",
+   "/Game/Anims/PunchR_Montage",
+   "/Game/Anims/PunchRunR_Montage",
+   "/Game/Anims/SmashPlayer_Montage",
+   "/Game/Anims/Tat_Montage",
+   "/Game/Anims/Upper2_Montage",
+   "/Game/Anims/kkk_Montage",
+   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1",
+   "/Game/Blueprints/Chars/Boss1/SmashBoss_Montage",
+   "/Game/Blueprints/Chars/EMelee1/AT_EMelee1_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee1/PunchL_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee1/PunchR_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/AT_EMelee2_DamageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/PunchL_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee2/PunchR_MontageEnemy1",
+   "/Game/Blueprints/Chars/EMelee3/AT_EMelee3_DamageEnemy2"
+  ],
+  "children": [],
+  "code": [],
+  "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
   "step": null
