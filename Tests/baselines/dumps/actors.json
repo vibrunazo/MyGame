@@ -42,7 +42,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
-   "bUsePattern": false,
+   "bUsePattern": true,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -106,7 +106,7 @@
     },
     "subobject": "CrowdFollowingComponent"
    },
-   "pattern": "None",
+   "pattern": "/Game/Blueprints/AI/Patterns/PA_Melee.PA_Melee",
    "patternDriver": {
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
@@ -6725,7 +6725,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
-   "bUsePattern": false,
+   "bUsePattern": true,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -6820,7 +6820,7 @@
     },
     "subobject": "CrowdFollowingComponent"
    },
-   "pattern": "None",
+   "pattern": "/Game/Blueprints/AI/Patterns/PA_Boss.PA_Boss",
    "patternDriver": {
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
@@ -9342,7 +9342,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
-   "bUsePattern": false,
+   "bUsePattern": true,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -9406,7 +9406,7 @@
     },
     "subobject": "CrowdFollowingComponent"
    },
-   "pattern": "None",
+   "pattern": "/Game/Blueprints/AI/Patterns/PA_Kicker.PA_Kicker",
    "patternDriver": {
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
@@ -18848,7 +18848,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
-   "bUsePattern": false,
+   "bUsePattern": true,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -18912,7 +18912,7 @@
     },
     "subobject": "CrowdFollowingComponent"
    },
-   "pattern": "None",
+   "pattern": "/Game/Blueprints/AI/Patterns/PA_Wizard.PA_Wizard",
    "patternDriver": {
     "assetUserData": [],
     "assetUserDataEditorOnly": [],
