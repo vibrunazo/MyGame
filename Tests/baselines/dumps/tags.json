@@ -1571,7 +1571,8 @@
  },
  "status.buffedrange": {
   "assets": [
-   "/Game/Abilities/GE_SpeedMultiplyNoStack"
+   "/Game/Abilities/GE_SpeedMultiplyNoStack",
+   "/Game/Blueprints/AI/Patterns/PA_Boss"
   ],
   "children": [],
   "code": [

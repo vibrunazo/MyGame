@@ -6995,17 +6995,17 @@
     },
     {
      "level": 1,
-     "slotKey": -1,
+     "slotKey": 30,
      "template": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1.AT_Boss1_BossSummon1"
     },
     {
      "level": 1,
-     "slotKey": -1,
+     "slotKey": 31,
      "template": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff.AT_Boss1_BossSelfDebuff"
     },
     {
      "level": 1,
-     "slotKey": -1,
+     "slotKey": 32,
      "template": "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSmash1.AT_Boss1_BossSmash1"
     }
    ],
