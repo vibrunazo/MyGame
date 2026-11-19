@@ -60,7 +60,9 @@ void AMyAIController::SetPatternTarget(AActor* Target)
 
 void AMyAIController::StepPattern()
 {
-	if (UsesPattern() && PatternDriver && !bPatternFrozen) PatternDriver->TickPattern();
+	if (!UsesPattern() || !PatternDriver || bPatternFrozen) return;
+	EnsurePatternStarted();
+	PatternDriver->TickPattern();
 }
 
 void AMyAIController::BeginPlay()
@@ -95,12 +97,22 @@ void AMyAIController::OnPossess(APawn* InPawn)
 		BuffedRangeHandle = PawnAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_BuffedRange, EGameplayTagEventType::NewOrRemoved)
 			.AddUObject(this, &AMyAIController::OnBuffedRangeChanged);
 	}
-	// On a pattern: it starts now, with no target (the boss's marks settle before it sees anyone), stepped in spawn order
+	// On a pattern: registered now, stepped in spawn order; it starts once the pawn has its abilities (its first step, a
+	// health mark or a wake, whichever comes first), with no target (the boss's marks settle before it sees anyone)
 	if (UsesPattern() && PatternDriver)
 	{
 		PatternSalt = AMyPatternStepper::Register(this);
-		PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
 	}
+}
+
+void AMyAIController::EnsurePatternStarted()
+{
+	if (!UsesPattern() || !PatternDriver || PatternDriver->IsRunning()) return;
+	const APawn* Me = GetPawn();
+	// The pawn's grants come in its BeginPlay, after possession: the pattern reads which slots are filled when it starts
+	if (!Me || !Me->HasActorBegunPlay()) return;
+	PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
+	PatternWokeFrame = GFrameCounter;
 }
 
 void AMyAIController::SetPatternRunning(bool bRunning)
@@ -114,7 +126,7 @@ void AMyAIController::SetPatternRunning(bool bRunning)
 		StopMovement();
 		return;
 	}
-	if (!PatternDriver->IsRunning()) PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
+	EnsurePatternStarted();
 	bPatternFrozen = false;
 	PatternWokeFrame = GFrameCounter;
 }
@@ -180,6 +192,7 @@ void AMyAIController::OnPawnGameplayEvent(FGameplayTag Event, const FGameplayEve
 	// On a pattern, a health mark settles its phases inside the hit that crossed it (their entries are the moves)
 	if (UsesPattern() && PatternDriver)
 	{
+		EnsurePatternStarted();
 		PatternDriver->SettlePattern();
 		return;
 	}

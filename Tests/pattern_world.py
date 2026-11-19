@@ -13,7 +13,8 @@ The `world` suite of `unreal-agent test` (`suite(ctx)`):
   the AI suite's token scenarios (the tie and the stunned holder) and the decision matrix's rows of the base enemy (the
   token free, its own, another's). Every answer must agree, but where a holder was removed without dying (each
   scenario's cleanup destroys its enemies): the list keeps such a holder until garbage collection and the arbiter lets
-  it go at once, the difference the arbiter is for (Plan.md Step 7 item 2). Those answers are counted apart.
+  it go at once, the difference the arbiter is for (Plan.md Step 7 item 2). Those answers are counted apart. Once
+  every enemy runs its pattern, no tree asks the list: that comparison says so and is skipped, until the list goes.
 """
 import json
 
@@ -134,7 +135,8 @@ def suite(ctx):
           f"{sum(len(t['removed_holder']) for t in tokens.values())} answers apart because the scenario's cleanup removed "
           f"the holder without a death (the list keeps it, the arbiter lets it go: Plan.md Step 7 item 2)")
     if questions == 0:
-        problems.append("token: the list was never asked, so the arbiter was never compared")
+        # every enemy runs its pattern (Ass Step 7 item 4): no tree asks the aggro list, which leaves with item 5
+        print("  token: no tree asks the aggro list now (the enemies run their patterns): nothing to compare, skipped")
 
     (ctx.out / "world.json").write_text(json.dumps({"spots": spots, "tokens": tokens}, indent=1))
     return {"ok": not problems, "checks": len(spots) + len(tokens), "problems": problems, "files": {"world.json": None}}

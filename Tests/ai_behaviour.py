@@ -123,9 +123,8 @@ def matrix_scenarios():
 
 
 def main_task(snapshot):
-    """The main tree's (BT_AIBase's) task in a snapshot of the active tasks, or None."""
-    found = re.findall(r"BT_AIBase::([^\]]+\])", snapshot)
-    return found[-1] if found else None
+    """The main tree's (BT_AIBase's) task in a snapshot of the active tasks, or None (strict's rule, shared)."""
+    return strict.main_task(snapshot)
 
 
 def matrix_entry(record, role="enemy"):

@@ -477,6 +477,16 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
         controller = char.get_controller()
+        if controller and isinstance(controller, unreal.MyAIController) and controller.uses_pattern():
+            # an enemy on a pattern (Ass Step 7): its target is its driver's, as the tree's was TargetChar
+            if clear:
+                controller.set_pattern_target(None)
+                char.set_target_enemy(None)
+            if set_player:
+                controller.set_pattern_target(_player())
+                char.set_target_enemy(_player())
+            target = controller.get_pattern_target()
+            return json.dumps({"target": target.get_name() if target else None})
         bb = controller.get_editor_property("blackboard") if controller else None
         if not bb:
             raise RuntimeError(f"{actor_path} has no blackboard")
@@ -1185,7 +1195,9 @@ class MyGameTools(unreal.ToolsetDefinition):
         # an enemy whose controller class use_patterns put on a pattern (Ass Step 7)
         controller = char.get_controller()
         pattern = _patterns.get(controller.get_class().get_path_name()) if controller else None
-        if pattern:
+        # one whose Blueprint already runs that pattern keeps the path the game takes (registered at possession)
+        current = controller.get_editor_property("pattern") if pattern and controller.uses_pattern() else None
+        if pattern and not (current and current.get_path_name().split(".")[0] == pattern.split(".")[0]):
             controller.use_pattern_now(unreal.load_asset(pattern))
         if frozen:
             MyGameTools.set_ai_enabled(char.get_path_name(), False)

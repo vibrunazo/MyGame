@@ -233,6 +233,29 @@ def boss():
     return b
 
 
+# Each AI controller Blueprint and the pattern it runs (Ass Step 7 item 4: the switch on for every enemy)
+CONTROLLERS = {
+    "/Game/Blueprints/AI/BP_AIController": "PA_Melee",
+    "/Game/Blueprints/Chars/EKicker/BP_AIContKicker": "PA_Kicker",
+    "/Game/Blueprints/Chars/EWizard/BP_AIContWizard": "PA_Wizard",
+    "/Game/Blueprints/Chars/Boss1/BP_AIContBoss": "PA_Boss",
+}
+
+
+def switch_on(on=True):
+    """Puts every enemy on its pattern (Use pattern and Pattern on each controller Blueprint's defaults; the tree no
+    longer starts), or back on the tree. Saves the Blueprints."""
+    out = {}
+    for path, name in CONTROLLERS.items():
+        asset_name = path.rsplit("/", 1)[1]
+        cdo = unreal.get_default_object(unreal.load_class(None, f"{path}.{asset_name}_C"))
+        cdo.set_editor_property("bUsePattern", on)
+        cdo.set_editor_property("pattern", unreal.load_asset(f"{FOLDER}/{name}") if on else None)
+        unreal.EditorAssetLibrary.save_asset(path, only_if_is_dirty=False)
+        out[path] = cdo.uses_pattern()
+    return out
+
+
 def give_boss_slots():
     """BP_Boss1's three moves on slots of their own (BOSS_MOVE_SLOTS, past the input keys), so a pattern can start them:
     its controller tried them by template, and they had none (-1). Saves BP_Boss1."""

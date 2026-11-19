@@ -27,6 +27,7 @@ before it, the UE4 reference (REFERENCE, kept outside git) as 1.1 allows (TOLERA
 distance, everything else exact).
 """
 import json
+import re
 from pathlib import Path
 
 import mygame
@@ -289,6 +290,30 @@ def coverage(records):
            [f"never played: {m}" for m in sorted(montages) if m not in played and refs.get(m)]
 
 
+def main_task(snapshot):
+    """The main tree's (BT_AIBase's) task in a snapshot of the active tasks, or None: what an AI's "bt" event says it
+    is doing, as the decision matrix reads it."""
+    found = re.findall(r"BT_AIBase::([^\]]+\])", snapshot)
+    return found[-1] if found else None
+
+
+def folded_bt(events):
+    """The events with each AI-driven role's tree snapshots ("bt") read as the decision matrix reads them: the main
+    tree's task it moves to, repeats and None folded (Ass Plan.md Step 7, agreed 2026-11-19). A tree records its whole
+    active tasks ("None (BT_AIBase::Move To[34])"), a pattern the tree task its command stands for; everything else in
+    a record is compared exactly as before."""
+    out, now = [], {}
+    for e in events:
+        if e[2] != "bt":
+            out.append(e)
+            continue
+        task = main_task(e[4])
+        if task and task != now.get(e[3]):
+            out.append(e[:4] + [task])
+        now[e[3]] = task or now.get(e[3])
+    return out
+
+
 def by_role(events):
     """The events with each frame's grouped by role, each role's in its own order. Inside one frame, the order between
     two characters can be a tie the engine breaks by its own history (two effects applied in one frame expire in one
@@ -346,7 +371,7 @@ def first_difference(a, b, tolerant=False, worst=None):
     worst = {} if worst is None else worst
     if a.get("roles") != b.get("roles"):
         return f"roles {a.get('roles')} -> {b.get('roles')}"
-    ea, eb = by_role(a["events"]), by_role(b["events"])
+    ea, eb = by_role(folded_bt(a["events"])), by_role(folded_bt(b["events"]))
     for i, (x, y) in enumerate(zip(ea, eb)):
         if not _same(x, y, worst, tolerant):
             return f"event {i}: {x} -> {y}"

@@ -76,7 +76,9 @@ public:
 	UFUNCTION(BlueprintPure, Category = "My AI Controller|Pattern")
 	bool UsesPattern() const { return bUsePattern && Pattern != nullptr; }
 	/** The pattern's target (the tree's TargetChar), or none. */
+	UFUNCTION(BlueprintPure, Category = "My AI Controller|Pattern")
 	class ACharacter* GetPatternTarget() const;
+	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
 	void SetPatternTarget(AActor* Target);
 	/** One step of the pattern, from the world's stepper. */
 	void StepPattern();
@@ -122,6 +124,8 @@ private:
 	FGameplayTagContainer RespondedEvents;
 	FDelegateHandle PawnEventHandle;
 	FDelegateHandle BuffedRangeHandle;
+	/** Starts the pattern once the pawn has begun play (its grants are given then), if it hasn't started. */
+	void EnsurePatternStarted();
 	/** The pattern's salt, given by the stepper at possession. */
 	int32 PatternSalt = 0;
 	/** Frozen by the tests (SetPatternRunning), and when it last woke. */
