@@ -1220,6 +1220,45 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def compare_spot_search(actor_path: str, query_path: str, spot: str) -> str:
+        """Ass Step 7's world check: the plugin's spot search against the engine's spot query, for an enemy with the PIE
+        player as its target (MyGameEditorLibrary.CompareSpotSearchForTest).
+
+        Args:
+            actor_path: Full path of the enemy that queries.
+            query_path: The spot query's asset path.
+            spot: JSON {"behind", "half_extent", "spacing", "distance_weight", "sight_score", "ratio"}: Move To Spot's fields.
+
+        Returns:
+            JSON {"engine", "plugin", "engine_points", "plugin_points", "only_engine", "only_plugin"}.
+        """
+        enemy, query, s = _char(actor_path), unreal.load_asset(query_path), json.loads(spot)
+        if not enemy or not query:
+            raise RuntimeError("enemy or query not found")
+        out = unreal.MyGameEditorLibrary.compare_spot_search_for_test(
+            enemy, _player(), query, s["behind"], s["half_extent"], s["spacing"], s["distance_weight"], s["sight_score"], s["ratio"])
+        if not out:
+            raise RuntimeError("the spot search couldn't run")
+        return out
+
+    @toolset_registry.tool_call
+    @staticmethod
+    def token_shadow(on: bool) -> str:
+        """Ass Step 7's world check: a token arbiter beside the PIE player's aggro list, asked every question the list
+        answers (MyGameEditorLibrary.Start/StopTokenShadowForTest).
+
+        Args:
+            on: True starts it; False stops it and returns what it found.
+
+        Returns:
+            JSON {"started": bool}, or when stopping {"questions", "additions", "mismatches"}.
+        """
+        if on:
+            return json.dumps({"started": unreal.MyGameEditorLibrary.start_token_shadow_for_test(_player())})
+        return unreal.MyGameEditorLibrary.stop_token_shadow_for_test()
+
+    @toolset_registry.tool_call
+    @staticmethod
     def learn_ability(template_path: str, input: str) -> str:
         """Teaches the PIE player one ability on a button slot, as an item would (LearnAbility: what shares the slot and
         is also an air move, or also a ground move, is replaced).

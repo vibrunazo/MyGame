@@ -63,6 +63,12 @@ run = "Tests/cancel.py:suite"        # Step 0c's cancel matrix: what each charac
 timeout = 1800
 
 [[suite]]
+name = "world"
+kind = "pie"
+run = "Tests/pattern_world.py:suite"  # Ass Step 7's world checks: the spot search against EQS, the token arbiter against the aggro list
+timeout = 1200
+
+[[suite]]
 name = "ai"
 kind = "pie"
 run = "Tests/ai_behaviour.py:suite"  # Step 0c item 4: the AI's behaviour on the current tree (boss scenarios first)

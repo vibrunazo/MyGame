@@ -951,11 +951,18 @@ bool AMyCharacter::GetStrikeSound(EAssSoundKind Kind, USoundBase*& OutSound)
 	}
 }
 
+#if WITH_EDITOR
+TFunction<void(AMyCharacter* Owner, AActor* Asker, bool bAdd, bool bAnswer)> AMyCharacter::AggroListProbe;
+#endif
+
 void AMyCharacter::AddToAggroList(AActor* NewActor)
 {
 	if (NewActor)
 	{
 		AggroList.Add(NewActor);
+#if WITH_EDITOR
+		if (AggroListProbe) AggroListProbe(this, NewActor, true, true);
+#endif
 	}
 }
 
@@ -975,6 +982,15 @@ void AMyCharacter::ClearAggroList()
 }
 
 bool AMyCharacter::IsInAggroList(AActor* NewActor)
+{
+	const bool bAnswer = AnswerAggroList(NewActor);
+#if WITH_EDITOR
+	if (AggroListProbe) AggroListProbe(this, NewActor, false, bAnswer);
+#endif
+	return bAnswer;
+}
+
+bool AMyCharacter::AnswerAggroList(AActor* NewActor)
 {
 	if (AggroList.Num() == 0) return true;
 	for (auto&& Enemy : AggroList)

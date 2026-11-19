@@ -163,6 +163,13 @@ public:
 	void ClearAggroList();
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsInAggroList(AActor* NewActor);
+#if WITH_EDITOR
+	/**
+	 * Test only (Ass Step 7's world check, the token arbiter against this list): called with every question the list
+	 * answers (bAdd false: IsInAggroList, with its answer) and every addition (bAdd true). Leaves with the list.
+	 */
+	static MYGAME_API TFunction<void(AMyCharacter* Owner, AActor* Asker, bool bAdd, bool bAnswer)> AggroListProbe;
+#endif
 
 	void ApplyAllItemEffects();
 	void ApplyOneItemEffect(class UItemDataAsset* NewItem);
@@ -288,6 +295,8 @@ private:
 	AActor* TargetEnemy = nullptr;
 	UPROPERTY()
 	TArray<AActor*> AggroList = TArray<AActor*>();
+	/** IsInAggroList's answer (empties a list whose entry died). */
+	bool AnswerAggroList(AActor* NewActor);
 
 	// float LastInputAngle = 0.0f;
 
