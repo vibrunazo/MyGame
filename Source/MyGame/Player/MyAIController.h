@@ -56,6 +56,33 @@ public:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "My AI Controller")
 	TArray<FAIEventResponse> EventResponses;
 
+	/**
+	 * Ass Step 7: the enemy runs Pattern on the plugin's driver instead of the behavior tree, stepped in spawn order by
+	 * the world's AMyPatternStepper. Its health marks then settle the pattern's phases instead of Event responses.
+	 */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "My AI Controller|Pattern")
+	bool bUsePattern = false;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "My AI Controller|Pattern", meta = (EditCondition = "bUsePattern"))
+	TObjectPtr<class UMyPatternAsset> Pattern;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "My AI Controller|Pattern")
+	TObjectPtr<class UMyPatternDriver> PatternDriver;
+
+	// The pattern's moves, set as the tree moved: a chase that presses on, never pinned, partial paths walked
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "My AI Controller|Pattern")
+	TObjectPtr<class UAssMoverComponent> PatternMover;
+
+	bool UsesPattern() const { return bUsePattern && Pattern != nullptr; }
+	/** The pattern's target (the tree's TargetChar), or none. */
+	class ACharacter* GetPatternTarget() const;
+	void SetPatternTarget(AActor* Target);
+	/** One step of the pattern, from the world's stepper. */
+	void StepPattern();
+
+	// The tree doesn't start for an enemy on a pattern (the controllers' Blueprints start it on BeginPlay)
+	bool RunBehaviorTree(class UBehaviorTree* BTAsset) override;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;

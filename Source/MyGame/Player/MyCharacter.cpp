@@ -1069,11 +1069,21 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 	{
 		AAIController* AiCont = Cast<AAIController>(GetController());
 		if (!ensure(AiCont != nullptr)) return;
-		UBlackboardComponent* MyBB = AiCont->GetBlackboardComponent();
-		if (!ensure(MyBB != nullptr)) return;
-		auto OldTarget = MyBB->GetValueAsObject(FName(TEXT("TargetChar")));
-		if (OldTarget) return;
-		MyBB->SetValueAsObject(FName(TEXT("TargetChar")), NewTarget);
+		// An enemy on a pattern (Ass Step 7) holds its target in its driver, as the tree holds it in TargetChar
+		AMyAIController* Patterned = Cast<AMyAIController>(AiCont);
+		if (Patterned && Patterned->UsesPattern())
+		{
+			if (Patterned->GetPatternTarget()) return;
+			Patterned->SetPatternTarget(NewTarget);
+		}
+		else
+		{
+			UBlackboardComponent* MyBB = AiCont->GetBlackboardComponent();
+			if (!ensure(MyBB != nullptr)) return;
+			auto OldTarget = MyBB->GetValueAsObject(FName(TEXT("TargetChar")));
+			if (OldTarget) return;
+			MyBB->SetValueAsObject(FName(TEXT("TargetChar")), NewTarget);
+		}
 		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
 		SetTargetEnemy(NewTarget);
 	}

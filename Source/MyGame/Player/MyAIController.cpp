@@ -3,6 +3,10 @@
 
 #include "MyAIController.h"
 #include "MyCharacter.h"
+#include "MyPatternAsset.h"
+#include "MyPatternDriver.h"
+#include "MyPatternStepper.h"
+#include "AssMoverComponent.h"
 #include "../MyGameplayTags.h"
 #include "AssAbilitySystemComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
@@ -29,6 +33,33 @@ AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer)
 	Perception->ConfigureSense(*SightConfig);
 	Perception->SetDominantSense(SightConfig->GetSenseImplementation());
 	SetPerceptionComponent(*Perception);
+
+	PatternDriver = CreateDefaultSubobject<UMyPatternDriver>(TEXT("PatternDriver"));
+	PatternMover = CreateDefaultSubobject<UAssMoverComponent>(TEXT("PatternMover"));
+	PatternMover->bChaseArrives = false;
+	PatternMover->bFailWhenPinned = false;
+	PatternMover->bAcceptPartialPaths = true;
+}
+
+bool AMyAIController::RunBehaviorTree(UBehaviorTree* BTAsset)
+{
+	if (UsesPattern()) return false;
+	return Super::RunBehaviorTree(BTAsset);
+}
+
+ACharacter* AMyAIController::GetPatternTarget() const
+{
+	return PatternDriver ? PatternDriver->GetPatternTarget() : nullptr;
+}
+
+void AMyAIController::SetPatternTarget(AActor* Target)
+{
+	if (PatternDriver) PatternDriver->SetTarget(Cast<ACharacter>(Target));
+}
+
+void AMyAIController::StepPattern()
+{
+	if (UsesPattern() && PatternDriver) PatternDriver->TickPattern();
 }
 
 void AMyAIController::BeginPlay()
@@ -63,6 +94,12 @@ void AMyAIController::OnPossess(APawn* InPawn)
 		BuffedRangeHandle = PawnAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_BuffedRange, EGameplayTagEventType::NewOrRemoved)
 			.AddUObject(this, &AMyAIController::OnBuffedRangeChanged);
 	}
+	// On a pattern: it starts now, with no target (the boss's marks settle before it sees anyone), stepped in spawn order
+	if (UsesPattern() && PatternDriver)
+	{
+		const int32 Salt = AMyPatternStepper::Register(this);
+		PatternDriver->StartPattern(Pattern->Definition, Salt);
+	}
 }
 
 void AMyAIController::OnBuffedRangeChanged(const FGameplayTag Tag, int32 Count)
@@ -78,6 +115,7 @@ void AMyAIController::SetAttackRangeEverywhere(float Range)
 
 void AMyAIController::OnUnPossess()
 {
+	if (PatternDriver) PatternDriver->StopPattern();
 	if (PawnAbilitySystem.IsValid() && PawnEventHandle.IsValid())
 	{
 		PawnAbilitySystem->RemoveGameplayEventTagContainerDelegate(RespondedEvents, PawnEventHandle);
@@ -94,6 +132,12 @@ void AMyAIController::OnUnPossess()
 
 void AMyAIController::OnPawnGameplayEvent(FGameplayTag Event, const FGameplayEventData* Payload)
 {
+	// On a pattern, a health mark settles its phases inside the hit that crossed it (their entries are the moves)
+	if (UsesPattern() && PatternDriver)
+	{
+		PatternDriver->SettlePattern();
+		return;
+	}
 	UAssAbilitySystemComponent* ASC = Cast<UAssAbilitySystemComponent>(PawnAbilitySystem.Get());
 	const AMyCharacter* Me = GetPawn<AMyCharacter>();
 	if (!ASC || !Me) return;
