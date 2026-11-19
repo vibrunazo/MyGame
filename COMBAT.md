@@ -58,8 +58,9 @@ called its own code before (the start of `BeginPlay`, after its ability system k
    - the character's tick: held ability slots retry (`ActivateAbilityByInput`), so an ability starts here;
    - movement with the actor's delta and its root motion sources;
    - the skeletal mesh and anim instance: the montage advances and its notifies fire. A window's start event
-     spawns the `AAssHitBox`, which samples at once up to the montage's position. `UAssApplyEffectNotifyState` applies its
-     effects here.
+     spawns the `AAssHitBox`, which samples at once up to the montage's position. An Ass Window marker's begin and end
+     (`UAssWindowNotifyState`) send their events here, and the ability applies and removes the template's window self
+     effects in them.
    - after the pose: `OnBoneTransformsFinalized` calls `UAssCombatComponent::OnPoseFinalized`, and every open window samples
      up to the montage's new position. A hit applies its effects one by one, in the ability's order: damage and what
      it sets off (death, the health bar, the health marks' events, the boss's response), then stun, knockback and
