@@ -113,7 +113,7 @@ run = "Tests/menu.py:packaged_suite"   # the menu suite's trips in the cooked ga
 name = "AbilityStrategySystem"
 repo = "../Ass"
 remote = "https://github.com/vibrunazo/Ass.git"
-version = "0.6"
+version = "0.7"
 
 [[suite]]
 name = "ai-seed"
