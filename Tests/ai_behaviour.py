@@ -272,8 +272,10 @@ def suite(ctx):
 
 
 # Ass Step 7: the enemy types on patterns so far, by their controller class (every base enemy runs BP_AIController)
-PATTERNS = {"/Game/Blueprints/AI/BP_AIController.BP_AIController_C": "/Game/Blueprints/AI/Patterns/PA_Melee"}
-PATTERN_KINDS = ("enemy1", "enemy2", "enemy3")
+PATTERNS = {"/Game/Blueprints/AI/BP_AIController.BP_AIController_C": "/Game/Blueprints/AI/Patterns/PA_Melee",
+            "/Game/Blueprints/Chars/EKicker/BP_AIContKicker.BP_AIContKicker_C": "/Game/Blueprints/AI/Patterns/PA_Kicker",
+            "/Game/Blueprints/Chars/EWizard/BP_AIContWizard.BP_AIContWizard_C": "/Game/Blueprints/AI/Patterns/PA_Wizard"}
+PATTERN_KINDS = ("enemy1", "enemy2", "enemy3", "kicker", "wizard")
 
 
 def pattern_suite(ctx):

@@ -204,9 +204,12 @@ def pattern_suite(ctx):
         reference = json.loads(REFERENCE.read_text())
         per_run = {}
 
+        # the group's cells once every type in it is on its pattern
+        kinds = set(ab.PATTERN_KINDS) | ({"group"} if all(k in ab.PATTERN_KINDS for k in GROUP) else set())
+
         def run_seeds(seeds, cells=None):
             for cell, seed, sc, roles, kind in runs(seeds):
-                if kind in ab.PATTERN_KINDS and (cells is None or cell in cells):
+                if kind in kinds and (cells is None or cell in cells):
                     per_run.setdefault(cell, {})[seed] = measure(strict.run(sc, base), roles, kind, sc["duration"])
 
         run_seeds(range(1, 11))
