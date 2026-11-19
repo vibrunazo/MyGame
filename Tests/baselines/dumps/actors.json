@@ -42,6 +42,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
+   "bUsePattern": false,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -104,6 +105,56 @@
      "tickInterval": 0
     },
     "subobject": "CrowdFollowingComponent"
+   },
+   "pattern": "None",
+   "patternDriver": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "MyPatternDriver"
+   },
+   "patternMover": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAcceptPartialPaths": true,
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bChaseArrives": false,
+    "bEditableWhenInherited": true,
+    "bFailWhenPinned": false,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "AssMoverComponent"
    },
    "perceptionComponent": {
     "assetUserData": [],
@@ -6674,6 +6725,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
+   "bUsePattern": false,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -6767,6 +6819,56 @@
      "tickInterval": 0
     },
     "subobject": "CrowdFollowingComponent"
+   },
+   "pattern": "None",
+   "patternDriver": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "MyPatternDriver"
+   },
+   "patternMover": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAcceptPartialPaths": true,
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bChaseArrives": false,
+    "bEditableWhenInherited": true,
+    "bFailWhenPinned": false,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "AssMoverComponent"
    },
    "perceptionComponent": {
     "assetUserData": [],
@@ -9240,6 +9342,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
+   "bUsePattern": false,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -9302,6 +9405,56 @@
      "tickInterval": 0
     },
     "subobject": "CrowdFollowingComponent"
+   },
+   "pattern": "None",
+   "patternDriver": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "MyPatternDriver"
+   },
+   "patternMover": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAcceptPartialPaths": true,
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bChaseArrives": false,
+    "bEditableWhenInherited": true,
+    "bFailWhenPinned": false,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "AssMoverComponent"
    },
    "perceptionComponent": {
     "assetUserData": [],
@@ -18695,6 +18848,7 @@
    "bSkipRootComponentUpdate": false,
    "bStartAILogicOnPossess": false,
    "bStopAILogicOnUnposses": true,
+   "bUsePattern": false,
    "bWantsPlayerState": false,
    "blackboard": "None",
    "brainComponent": "None",
@@ -18757,6 +18911,56 @@
      "tickInterval": 0
     },
     "subobject": "CrowdFollowingComponent"
+   },
+   "pattern": "None",
+   "patternDriver": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bEditableWhenInherited": true,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "MyPatternDriver"
+   },
+   "patternMover": {
+    "assetUserData": [],
+    "assetUserDataEditorOnly": [],
+    "bAcceptPartialPaths": true,
+    "bAutoActivate": false,
+    "bCanEverAffectNavigation": false,
+    "bChaseArrives": false,
+    "bEditableWhenInherited": true,
+    "bFailWhenPinned": false,
+    "bIsEditorOnly": false,
+    "bReplicateUsingRegisteredSubObjectList": false,
+    "bReplicates": false,
+    "componentTags": [],
+    "onComponentActivated": "()",
+    "onComponentDeactivated": "()",
+    "primaryComponentTick": {
+     "bAllowTickOnDedicatedServer": true,
+     "bCanEverTick": false,
+     "bStartWithTickEnabled": true,
+     "bTickEvenWhenPaused": false,
+     "endTickGroup": "TG_PrePhysics",
+     "tickGroup": "TG_DuringPhysics",
+     "tickInterval": 0
+    },
+    "subobject": "AssMoverComponent"
    },
    "perceptionComponent": {
     "assetUserData": [],
