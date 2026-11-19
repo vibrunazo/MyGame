@@ -24,12 +24,16 @@ SPOT = dict(SpotBehind=300.0, SpotHalfExtent=500.0, SpotSpacing=100.0, SpotDista
             SpotScoreRatio=0.75)
 LONG = 1.0e4  # a move's time limit: the tree's moves have none
 FRAME = 1.0 / 60.0
+PASSIVE = 1  # the Passive tactic's index (melee asserts it)
 START = FRAME  # the tree's first frame (SetRange): the branches' first tasks (TagTarget asks for the token) come after
-LEAD = 3.0 * FRAME  # a branch's tasks before its move (TagTarget or ClearTagTarget, ResetFocus or StopAttack, ...)
+LEAD = 3.0 * FRAME  # the attack branch's tasks before its move (TagTarget, ResetFocus, NoWalk)
+LEAD_PASSIVE = 2.0 * FRAME  # the passive branch's tasks before its query (ClearTagTarget, StopAttack)
+ROOT = 0.5 + 2.0 * FRAME  # the root's Wait 0.5, then the next pass's SetRange and the frame its branch starts in
 HOLD_AFTER = 4.0 * FRAME  # the attack task after the attack branch's first tasks and its move
 
 # The tree tasks the AI suite's matrix compares (Q6), by what a command does
-EQS_THEN_SPOT = "Run EQS Query[17]>Move To[21]"
+QUERY = "Run EQS Query[17]"
+SPOT_MOVE = "Move To[21]"
 CHASE = "Move To[34]"
 
 # Controller ranges (the controllers' defaults: attack, chase, aggressive), by pattern
@@ -91,17 +95,27 @@ class _Builder:
     def definition(self):
         """FAssAIDefinition as text."""
         return _text(dict(Phases=self.phases, Tactics=self.tactics, ComboSequences=self.combos, Commands=self.commands,
-                          Seed=0, bCentreDistances=True))
+                          Seed=0, bCentreDistances=True, bCapZeroTimeFollowUpsOnly=True))
 
 
 def melee(attack, chase, aggressive):
     """The base enemies' tree (BT_AIBase with BP_AIController's ranges)."""
     b = _Builder()
-    walk = b.command("MoveToSpot", EQS_THEN_SPOT, Duration=LONG, Speed=0.5, bFocusTarget=True, **SPOT)
+    walk = b.command("MoveToSpot", SPOT_MOVE, Duration=LONG, Speed=0.5, bFocusTarget=True, **SPOT)
+    # the query, then the Walk and FocusPlayer tasks: three frames before the move
+    query = b.command("Wait", QUERY, Duration=3.0 * FRAME, bFocusTarget=True)
     wait_spot = b.command("Wait", Duration=1.0, bFocusTarget=True)
-    root_passive = b.command("Wait", Duration=0.5, bFocusTarget=True)
-    root_attack = b.command("Wait", Duration=0.5, bFocusTarget=False)
-    lead_passive = b.command("Wait", Duration=LEAD, bFocusTarget=True)
+    root_passive = b.command("Wait", Duration=ROOT, bFocusTarget=True)
+    root_attack = b.command("Wait", Duration=ROOT, bFocusTarget=False)
+    # after an attack pass the key stays down through the root's wait (no condition breaks it) and the next pass's first
+    # tasks (only the passive branch's decorators abort them), until the move starts and Approach lets go beside it
+    root_held = b.command("Wait", Duration=ROOT, bFocusTarget=False, Shield="FromAll")
+    lead_held = b.command("Wait", Duration=LEAD, bFocusTarget=False, Shield="WithExceptions")
+    # BT_AttackOrStop's Wait 1.5 after its Attack task: the parallel waits out the running one (a beat from when the
+    # attack range was entered, Attack's entry) once its move has ended; it ends as the target leaves the range (its
+    # decorators abort it), and the root's wait follows with the key still down
+    attack_beat = b.command("Wait", Duration=1.5, bWaitToBeat=True, bEndsWhenConditionsFail=True, bFocusTarget=False)
+    lead_passive = b.command("Wait", Duration=LEAD_PASSIVE, bFocusTarget=True)
     press = b.command("Chase", CHASE, Duration=LONG, Speed=1.0, bFocusTarget=False)
     lead = b.command("Wait", Duration=LEAD, bFocusTarget=False)
     stand = b.command("Wait", Duration=0.1, bFocusTarget=False)
@@ -110,10 +124,17 @@ def melee(attack, chase, aggressive):
     # Each pass of a branch: the tree's tasks before its move, a frame each, then the move
     root = b.combo("Root wait", [root_passive], bShielded=True)
     root_after_chase = b.combo("Root wait after a chase", [root_attack], bShielded=True)
-    spot = b.combo("To a spot", [lead_passive, walk, wait_spot], FollowUps=[root])
+    # the attack wait is in the aggressive branch, which only the passive branch's decorators abort (the tactic Passive,
+    # index 1); the root's wait after it, outside the selector, nothing aborts
+    beat_after_chase = b.combo("Attack beat after a chase", [attack_beat], bShielded=True, ShieldExceptions=[PASSIVE],
+                               Conditions=[_trigger(MaxRange=attack)], FollowUps=[])
+    spot = b.combo("To a spot", [lead_passive, query, walk, wait_spot], FollowUps=[root])
     # the chase ends when the path following says it reached the player (the tree's Move To succeeding), then the root's wait
-    chase_on = b.combo("Chase", [lead, press], Conditions=[_trigger(MinRange=chase)], FollowUps=[root_after_chase])
+    chase_on = b.combo("Chase", [lead, press], Conditions=[_trigger(MinRange=chase)], FollowUps=[beat_after_chase, root_after_chase])
     hold_on = b.combo("Close", [stand], Conditions=[_trigger(MaxRange=chase)])
+    next_pass = b.combo("Next pass, key still down", [root_held, lead_held, press], ShieldExceptions=[PASSIVE],
+                        FollowUps=[beat_after_chase, root_after_chase])
+    b.combos[beat_after_chase]["FollowUps"] = [next_pass]
     entry = b.combo("Start", [start], bReactionsMayCut=False)
 
     # Every condition waits out the tree's first frame (SetRange): until then the pawn is in Start
@@ -126,9 +147,9 @@ def melee(attack, chase, aggressive):
                        bAsksTokenWhenPaused=True)
     # Inside the attack range, coming from Start or Passive: the attack branch's pass chases first, and its attack
     # task (the hold) comes a frame after its move, as Attack takes over (BT_AttackOrStop runs beside the move)
-    engage = b.tactic("Engage", [chase_on, hold_on], Conditions=[_trigger(MaxRange=attack, **after)], FromTactics=[0, 1],
+    engage = b.tactic("Engage", [chase_on, hold_on, next_pass], Conditions=[_trigger(MaxRange=attack, **after)], FromTactics=[0, 1],
                       bTakesToken=True, bTakesOverAtOnce=True, bKeepsComboOnTakeOver=True, bPauseRestarts=True)
-    attack_t = b.tactic("Attack", [chase_on, hold_on],
+    attack_t = b.tactic("Attack", [chase_on, hold_on, next_pass],
                         Conditions=[_trigger(MaxRange=attack, MinSecondsInTactic=HOLD_AFTER, **after)],
                         bHoldSlot=True, HoldSlot=0, bTakesToken=True, bTakesOverAtOnce=True, bKeepsComboOnTakeOver=True,
                         bPauseRestarts=True)
@@ -136,7 +157,7 @@ def melee(attack, chase, aggressive):
     # with the token free or its own
     behind = _trigger(MinRange=aggressive, MaxRange=TOO_FAR, MinAngleRelativeToTargetFacing=60.0,
                       MaxAngleRelativeToTargetFacing=180.0, bEitherSide=True, Token="HeldOrFree", **after)
-    approach = b.tactic("Approach", [chase_on, hold_on],
+    approach = b.tactic("Approach", [chase_on, hold_on, next_pass],
                         Conditions=[_trigger(MinRange=attack, MaxRange=aggressive, **after), _trigger(MinRange=TOO_FAR, **after),
                                     behind],
                         bTakesToken=True, bTakesOverAtOnce=True, bKeepsComboOnTakeOver=True, bPauseRestarts=True)
