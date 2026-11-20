@@ -18,12 +18,6 @@
  "MyCharacter.ActivateTemplateForTest": [],
  "MyCharacter.AddDurationToHealthBar": [],
  "MyCharacter.AddItemToInventory": [],
- "MyCharacter.AddToAggroList": [
-  "/Game/Blueprints/AI/BTTask_TagTarget :: EventGraph"
- ],
- "MyCharacter.ClearAggroList": [
-  "/Game/Blueprints/AI/BTTask_ClearTagTarget :: EventGraph"
- ],
  "MyCharacter.Dash": [],
  "MyCharacter.FindAndRemoveOverlappingAbilities": [],
  "MyCharacter.GetAbilityKeyDown": [],
@@ -33,24 +27,11 @@
   "/Game/UI/WBP_PauseMenu :: EventGraph"
  ],
  "MyCharacter.GetTagsForTest": [],
- "MyCharacter.GetTargetEnemy": [
-  "/Game/Blueprints/AI/EQC_BehindPlayer :: ProvideSingleLocation",
-  "/Game/Blueprints/AI/EQC_PlayerContext :: ProvideSingleActor"
- ],
- "MyCharacter.HasControl": [
-  "/Game/Blueprints/AI/BTDecorator_HasControl :: PerformConditionCheckAI"
- ],
- "MyCharacter.HasMoveControl": [
-  "/Game/Blueprints/AI/BTDecorator_HasMoveControl :: PerformConditionCheckAI"
- ],
+ "MyCharacter.GetTargetEnemy": [],
+ "MyCharacter.HasControl": [],
+ "MyCharacter.HasMoveControl": [],
  "MyCharacter.IsAlive": [
-  "/Game/Blueprints/AI/BTDecorator_IsAlive :: PerformConditionCheckAI",
   "/Game/Blueprints/Chars/BP_CheatManager :: EventGraph"
- ],
- "MyCharacter.IsInAggroList": [
-  "/Game/Blueprints/AI/BTDecorator_CanTagTarget :: PerformConditionCheckAI",
-  "/Game/Blueprints/AI/BTTask_ClearTagTarget :: EventGraph",
-  "/Game/Blueprints/AI/BTTask_TagTarget :: EventGraph"
  ],
  "MyCharacter.IsInCombat": [],
  "MyCharacter.IsProjectileImmune": [],
@@ -63,17 +44,13 @@
   "/Game/Blueprints/Chars/BP_CheatManager :: EventGraph"
  ],
  "MyCharacter.OnPawnSeen": [],
- "MyCharacter.RemoveFromAggroList": [],
  "MyCharacter.ResetBodyColor": [
   "/Game/FX/GC_StunImmune :: OnRemove"
  ],
  "MyCharacter.ResetGlow": [
   "/Game/FX/GC_StunImmune :: OnRemove"
  ],
- "MyCharacter.SetAbilityKeyDown": [
-  "/Game/Blueprints/AI/BTTask_Attack :: EventGraph",
-  "/Game/Blueprints/AI/BTTask_StopAttack :: EventGraph"
- ],
+ "MyCharacter.SetAbilityKeyDown": [],
  "MyCharacter.SetAggroTarget": [],
  "MyCharacter.SetAttributeBaseForTest": [],
  "MyCharacter.SetBodyColor": [
@@ -85,9 +62,6 @@
  "MyCharacter.SetIsInCombat": [],
  "MyCharacter.SetRunning": [],
  "MyCharacter.SetTargetEnemy": [],
- "MyCharacter.SetWalking": [
-  "/Game/Blueprints/AI/BTTask_StartWalking :: EventGraph",
-  "/Game/Blueprints/AI/BTTask_StopWalking :: EventGraph"
- ],
+ "MyCharacter.SetWalking": [],
  "MyCharacter.UpdateHealthBar": []
 }

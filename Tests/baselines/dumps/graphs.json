@@ -124,159 +124,11 @@
  },
  "/Game/Blueprints/AI/BP_AIController": {
   "graphs": {
-   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
    "UserConstructionScript": "(fn ConstructionScript ())\n"
   },
   "kind": "Blueprint",
   "parent": "/Script/MyGame.MyAIController"
- },
- "/Game/Blueprints/AI/BTDecorator_CanTagTarget": {
-  "graphs": {
-   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))\n        (:then\n          (bind _returnvalue (Abilities|IsInAggroList _asmy_character ControlledPawn))\n          (return _returnvalue))\n        (:CastFailed\n          (return false))))\n    (:\"Is Not Valid\")))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTDecorator_HasControl": {
-  "graphs": {
-   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _asenemy_char_base (Utilities|Casting|CastToEnemyCharBase ControlledPawn)\n    (:then\n      (bind _returnvalue (Abilities|HasControl _asenemy_char_base))\n      (return _returnvalue))\n    (:CastFailed\n      (return false))))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTDecorator_HasMoveControl": {
-  "graphs": {
-   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _asenemy_char_base (Utilities|Casting|CastToEnemyCharBase ControlledPawn)\n    (:then\n      (bind _returnvalue (Abilities|HasMoveControl _asenemy_char_base))\n      (return _returnvalue))\n    (:CastFailed\n      (return false))))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTDecorator_IsAlive": {
-  "graphs": {
-   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTestKey)))\n    (:then\n      (bind _returnvalue (Abilities|IsAlive _asmy_character))\n      (return _returnvalue))\n    (:CastFailed\n      (return false))))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTDecorator_IsBehindEnemy": {
-  "graphs": {
-   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _targetkey (Variables|Default|GetTargetKey))\n  (bind _returnvalue (AI|BehaviorTree|GetBlackboardValueAsActor _targetkey))\n  (bind _returnvalue_yaw (Transformation|GetActorRotation _returnvalue))\n  (bind _returnvalue_1 (Transformation|GetActorLocation _returnvalue))\n  (bind _returnvalue_2 (Transformation|GetActorLocation ControlledPawn))\n  (bind _returnvalue_yaw_1 (Math|Rotator|FindLookAtRotation _returnvalue_2 _returnvalue_1))\n  (bind _returnvalue_3 (- _returnvalue_yaw_1 _returnvalue_yaw))\n  (bind _returnvalue_4 (+ _returnvalue_3 180.000000))\n  (bind _returnvalue_5 (Math|Float|%(Float) _returnvalue_4 360.000000))\n  (bind _returnvalue_6 (- _returnvalue_5 180.000000))\n  (bind _returnvalue_7 (Math|Float|Absolute(Float) _returnvalue_6))\n  (bind _returnvalue_8 (< _returnvalue_7 120.000000))\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (AI|BehaviorTree|SetBlackboardValueAsBool (Variables|Default|GetIsBehindKey) _returnvalue_8)\n      (return _returnvalue_8))\n    (:\"Is Not Valid\"\n      (return false))))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTDecorator_IsInRange": {
-  "graphs": {
-   "PerformConditionCheckAI": "(fn PerformConditionCheckAI (OwnerController ControlledPawn)\n  (bind _sourcekey (Variables|Default|GetSourceKey))\n  (bind _returnvalue (AI|BehaviorTree|GetBlackboardValueAsActor _sourcekey))\n  (Utilities|IsValid _returnvalue\n    (:\"Is Valid\"\n      (return (<= (Math|Vector|Distance2D(Vector) (Transformation|GetActorLocation _returnvalue) (Transformation|GetActorLocation (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))) (AI|BehaviorTree|GetBlackboardValueAsFloat (Variables|Default|GetRangeKey)))))\n    (:\"Is Not Valid\"\n      (return false))))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTDecorator_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_Attack": {
-  "graphs": {
-   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (bind _asaicontroller (Utilities|Casting|CastToAIController OwnerActor))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Pawn|GetControlledPawn _asaicontroller)))\n  (Abilities|SetAbilityKeyDown _asmy_character 0 true)\n  (AI|BehaviorTree|FinishExecute true))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_ClearTagTarget": {
-  "graphs": {
-   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))\n    (:then\n      (bind _returnvalue (Abilities|IsInAggroList _asmy_character ControlledPawn))\n      (if _returnvalue\n        (Abilities|ClearAggroList _asmy_character)\n        (AI|BehaviorTree|FinishExecute true)\n        (else\n          (AI|BehaviorTree|FinishExecute false))))\n    (:CastFailed)))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_FindLocationToRun": {
-  "graphs": {
-   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (bind _randomlocation (AI|Navigation|GetRandomLocationinNavigableRadius (Math|Vector|vector-vector (Transformation|GetActorLocation (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetActorKey))) (Math|Vector|vector*vector (Transformation|GetActorForwardVector (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetActorKey))) 400.0)) 600.0))\n  (AI|BehaviorTree|SetBlackboardValueAsVector (Variables|Default|GetLocationKey) _randomlocation)\n  (AI|BehaviorTree|FinishExecute true))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_FocusPlayer": {
-  "graphs": {
-   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (AI|SetFocus OwnerController (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetActorKey)))\n  (bind _ascharacter (Utilities|Casting|CastToCharacter ControlledPawn))\n  (|SetbUseControllerRotationYaw true _ascharacter)\n  (AI|BehaviorTree|FinishExecute true))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_ResetFocus": {
-  "graphs": {
-   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (AI|ClearFocus OwnerController)\n  (bind _ascharacter (Utilities|Casting|CastToCharacter ControlledPawn))\n  (|SetbUseControllerRotationYaw false _ascharacter)\n  (AI|BehaviorTree|FinishExecute true))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_ResetObjKey": {
-  "graphs": {
-   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (AI|BehaviorTree|SetBlackboardValueAsObject (Variables|Default|GetAttackRangeKey))\n  (AI|BehaviorTree|FinishExecute true))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_SetRange": {
-  "graphs": {
-   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (bind _asmy_aicontroller (Utilities|Casting|CastToMyAIController OwnerActor)\n    (:then\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetAttackRangeKey) (Class|MyAIController|GetAttackRange _asmy_aicontroller))\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetChaseRangeKey) (Class|MyAIController|GetChaseRange _asmy_aicontroller))\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetAggresiveRangeKey) (Class|MyAIController|GetAggressiveRange _asmy_aicontroller))\n      (AI|BehaviorTree|SetBlackboardValueAsFloat (Variables|Default|GetTooFarRange) 900.000000)\n      (AI|BehaviorTree|FinishExecute true))\n    (:CastFailed)))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_StartWalking": {
-  "graphs": {
-   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (bind _asmy_character (Utilities|Casting|CastToMyCharacter ControlledPawn)\n        (:then\n          (Abilities|SetWalking _asmy_character true)\n          (AI|BehaviorTree|FinishExecute true))\n        (:CastFailed\n          (AI|BehaviorTree|FinishExecute false))))\n    (:\"Is Not Valid\")))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_StopAttack": {
-  "graphs": {
-   "EventGraph": "(event EventReceiveExecute (OwnerActor)\n  (bind _asaicontroller (Utilities|Casting|CastToAIController OwnerActor))\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (Pawn|GetControlledPawn _asaicontroller)))\n  (Abilities|SetAbilityKeyDown _asmy_character)\n  (AI|BehaviorTree|FinishExecute true))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_StopWalking": {
-  "graphs": {
-   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (Utilities|IsValid ControlledPawn\n    (:\"Is Valid\"\n      (bind _asmy_character (Utilities|Casting|CastToMyCharacter ControlledPawn)\n        (:then\n          (Abilities|SetWalking _asmy_character)\n          (AI|BehaviorTree|FinishExecute true))\n        (:CastFailed\n          (AI|BehaviorTree|FinishExecute false))))\n    (:\"Is Not Valid\")))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/BTTask_TagTarget": {
-  "graphs": {
-   "EventGraph": "(event AI|EventReceiveExecuteAI (OwnerController ControlledPawn)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter (AI|BehaviorTree|GetBlackboardValueAsActor (Variables|Default|GetTargetKey)))\n    (:then\n      (bind _returnvalue (Abilities|IsInAggroList _asmy_character ControlledPawn))\n      (if _returnvalue\n        (Abilities|AddToAggroList _asmy_character ControlledPawn)\n        (AI|BehaviorTree|FinishExecute true)\n        (else\n          (AI|BehaviorTree|FinishExecute true))))\n    (:CastFailed)))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.BTTask_BlueprintBase"
- },
- "/Game/Blueprints/AI/EQC_BehindPlayer": {
-  "graphs": {
-   "ProvideSingleLocation": "(fn ProvideSingleLocation (QuerierObject QuerierActor)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter QuerierActor))\n  (return (Math|Vector|vector-vector (Transformation|GetActorLocation (Abilities|GetTargetEnemy _asmy_character)) (Math|Vector|vector*float (Transformation|GetActorForwardVector (Abilities|GetTargetEnemy _asmy_character)) 300.000000))))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.EnvQueryContext_BlueprintBase"
- },
- "/Game/Blueprints/AI/EQC_PlayerContext": {
-  "graphs": {
-   "ProvideSingleActor": "(fn ProvideSingleActor (QuerierObject QuerierActor)\n  (bind _asmy_character (Utilities|Casting|CastToMyCharacter QuerierActor))\n  (return (Abilities|GetTargetEnemy _asmy_character)))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.EnvQueryContext_BlueprintBase"
- },
- "/Game/Blueprints/AI/EQC_TestContext": {
-  "graphs": {
-   "ProvideSingleActor": "(fn ProvideSingleActor (QuerierObject QuerierActor)\n  (bind _outactors (Actor|GetAllActorsOfClass \"/Script/MyGame.MyCharacter\"))\n  (return (Utilities|Array|Get(acopy) _outactors)))\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.EnvQueryContext_BlueprintBase"
- },
- "/Game/Blueprints/AI/EQS_TestingPawn": {
-  "graphs": {
-   "EventGraph": "(event EventBeginPlay)\n\n(event Collision|EventActorBeginOverlap (OtherActor))\n\n(event EventTick (DeltaSeconds))\n",
-   "UserConstructionScript": "(fn ConstructionScript ())\n"
-  },
-  "kind": "Blueprint",
-  "parent": "/Script/AIModule.EQSTestingPawn"
  },
  "/Game/Blueprints/BP_DefaultPawn": {
   "graphs": {
@@ -367,7 +219,7 @@
  },
  "/Game/Blueprints/Chars/Boss1/BP_AIContBoss": {
   "graphs": {
-   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
    "UserConstructionScript": "(fn ConstructionScript ())\n"
   },
   "kind": "Blueprint",
@@ -383,7 +235,7 @@
  },
  "/Game/Blueprints/Chars/EKicker/BP_AIContKicker": {
   "graphs": {
-   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
    "UserConstructionScript": "(fn ConstructionScript ())\n"
   },
   "kind": "Blueprint",
@@ -428,7 +280,7 @@
  },
  "/Game/Blueprints/Chars/EWizard/BP_AIContWizard": {
   "graphs": {
-   "EventGraph": "(event EventBeginPlay\n  (AI|RunBehaviorTree \"/Game/Blueprints/AI/BT_AIBase.BT_AIBase\"))\n\n(event EventTick (DeltaSeconds))\n",
+   "EventGraph": "(event EventBeginPlay)\n\n(event EventTick (DeltaSeconds))\n",
    "UserConstructionScript": "(fn ConstructionScript ())\n"
   },
   "kind": "Blueprint",
