@@ -1144,6 +1144,22 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def reset_pattern_places(seed: int) -> str:
+        """The pattern stepper as in a new world of a run with this seed: the per-tile places start again and the salts
+        mix the seed, so the enemies spawned next get a fresh room's salts, a seeded scenario repeats and another seed
+        draws differently (Ass Step 7). Editor only (ResetPatternPlacesForTest).
+
+        Args:
+            seed: The run's seed the salts mix.
+
+        Returns:
+            JSON {"seed"}.
+        """
+        unreal.MyBlueprintFunctionLibrary.reset_pattern_places_for_test(_pie_world(), int(seed))
+        return json.dumps({"seed": int(seed)})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def seed_random(seed: int) -> str:
         """Seeds the engine's global random (FMath::Rand, FRand and SRand) on the game thread and the AI system's stream
         (EQS random picks), so the AI's draws (stock tree nodes, EQS, Blueprint random nodes) repeat, and lifts the AI's

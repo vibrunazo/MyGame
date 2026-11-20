@@ -100,6 +100,10 @@ public:
 	// A Seed below 0 stops it
 	UFUNCTION(BlueprintCallable, Category = "Testing", meta = (WorldContext = "WorldContext"))
 	static void SeedEveryTickForTest(UObject* WorldContext, int32 Seed);
+	// PIE test hook: the pattern stepper as in a new world of a run with RunSeed (AMyPatternStepper::ResetPlaces): the
+	// enemies a scenario spawns next get a fresh room's salts, so a seed repeats and another seed draws differently
+	UFUNCTION(BlueprintCallable, Category = "Testing", meta = (WorldContext = "WorldContext"))
+	static void ResetPatternPlacesForTest(UObject* WorldContext, int32 RunSeed);
 #endif
 
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)

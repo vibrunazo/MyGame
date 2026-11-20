@@ -25,22 +25,21 @@ void AMyPatternStepper::Tick(float DeltaSeconds)
 	}
 }
 
+AMyPatternStepper* AMyPatternStepper::FindOrMake(UWorld* World)
+{
+	if (!World) return nullptr;
+	if (TActorIterator<AMyPatternStepper> It(World); It) return *It;
+	FActorSpawnParameters Params;
+	Params.ObjectFlags |= RF_Transient;
+	AMyPatternStepper* Stepper = World->SpawnActor<AMyPatternStepper>(Params);
+	const UMyGameInstance* Instance = Cast<UMyGameInstance>(World->GetGameInstance());
+	if (Stepper && Instance) Stepper->RunSeed = Instance->RandomSeed;
+	return Stepper;
+}
+
 int32 AMyPatternStepper::Register(AMyAIController* Controller)
 {
-	UWorld* World = Controller ? Controller->GetWorld() : nullptr;
-	if (!World) return 0;
-	AMyPatternStepper* Stepper = nullptr;
-	for (TActorIterator<AMyPatternStepper> It(World); It; ++It)
-	{
-		Stepper = *It;
-		break;
-	}
-	if (!Stepper)
-	{
-		FActorSpawnParameters Params;
-		Params.ObjectFlags |= RF_Transient;
-		Stepper = World->SpawnActor<AMyPatternStepper>(Params);
-	}
+	AMyPatternStepper* Stepper = FindOrMake(Controller ? Controller->GetWorld() : nullptr);
 	if (!Stepper) return 0;
 	Stepper->Controllers.AddUnique(Controller);
 	Controller->AddTickPrerequisiteActor(Stepper);
@@ -54,7 +53,14 @@ int32 AMyPatternStepper::Register(AMyAIController* Controller)
 		Tile = FIntPoint(Coord.X, Coord.Y);
 	}
 	const int32 Place = Stepper->InTile.FindOrAdd(Tile)++;
-	const UMyGameInstance* Instance = Cast<UMyGameInstance>(World->GetGameInstance());
-	const int32 RunSeed = Instance ? Instance->RandomSeed : 0;
-	return static_cast<int32>(HashCombine(HashCombine(GetTypeHash(RunSeed), GetTypeHash(Tile)), GetTypeHash(Place)));
+	return static_cast<int32>(HashCombine(HashCombine(GetTypeHash(Stepper->RunSeed), GetTypeHash(Tile)), GetTypeHash(Place)));
+}
+
+void AMyPatternStepper::ResetPlaces(UWorld* World, int32 RunSeed)
+{
+	if (AMyPatternStepper* Stepper = FindOrMake(World))
+	{
+		Stepper->InTile.Reset();
+		Stepper->RunSeed = RunSeed;
+	}
 }

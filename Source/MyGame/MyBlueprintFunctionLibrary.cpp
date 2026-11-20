@@ -8,6 +8,7 @@
 #include "MyGameInstance.h"
 #include "Engine/Texture2D.h"
 #include "Player/MyCharacter.h"
+#include "Player/MyPatternStepper.h"
 #include "AbilitySystemComponent.h"
 #include "Props/ItemDataAsset.h"
 
@@ -81,6 +82,11 @@ void UMyBlueprintFunctionLibrary::SeedEveryTickForTest(UObject* WorldContext, in
 		if (Ticking != GTickSeed.World.Get()) return;
 		SeedRandomForTest((int32)HashCombine(GetTypeHash(GTickSeed.Seed), GetTypeHash(++GTickSeed.Tick)));
 	});
+}
+
+void UMyBlueprintFunctionLibrary::ResetPatternPlacesForTest(UObject* WorldContext, int32 RunSeed)
+{
+	AMyPatternStepper::ResetPlaces(GEngine ? GEngine->GetWorldFromContextObject(WorldContext, EGetWorldErrorMode::LogAndReturnNull) : nullptr, RunSeed);
 }
 
 int32 UMyBlueprintFunctionLibrary::ResetHitStunCountForTest(AActor* Combatant)

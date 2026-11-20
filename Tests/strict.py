@@ -242,6 +242,8 @@ def run(sc, base, query=None):
         tool("remove_effect", actor_path=ar.PLAYER_PATH[0], effect_class_path=effect)
     before = {cls: set(tool("actors_of_class", class_path=cls)) for cls in CLEANUP}
     paths, spots = {"player": ar.PLAYER_PATH[0]}, {}
+    # the enemies' pattern salts as a fresh room's of a run with the scenario's seed: a seed repeats, another differs
+    tool("reset_pattern_places", seed=sc.get("seed", SEED))
     for role, kind, x, y, yaw, attributes in sc["enemies"]:
         path = tool("spawn_enemy", class_path=CHARS[kind], x=x, y=y, z=ar.stand_z(), yaw=yaw)["path"]
         for a, v in {"MaxHealth": 1000.0, "Health": 1000.0, **attributes}.items():

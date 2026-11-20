@@ -28,8 +28,20 @@ public:
 	 */
 	static int32 Register(AMyAIController* Controller);
 
+	/**
+	 * As a new world started by a run with RunSeed (a run or a floor opens its map): the places start again in every
+	 * tile and the salts mix RunSeed. For tests, which spawn many enemies in one world: a seeded scenario started from
+	 * here salts its enemies as a fresh room of that run would, so it repeats, and another seed draws differently.
+	 */
+	static void ResetPlaces(UWorld* World, int32 RunSeed);
+
 private:
+	/** The world's stepper, made on first use with the run's seed from the game instance. */
+	static AMyPatternStepper* FindOrMake(UWorld* World);
+
 	TArray<TWeakObjectPtr<AMyAIController>> Controllers;
 	/** How many enemies registered in each tile, for their places. */
 	TMap<FIntPoint, int32> InTile;
+	/** The run's seed, read from the game instance when the stepper is made (or given by ResetPlaces). */
+	int32 RunSeed = 0;
 };

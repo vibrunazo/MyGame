@@ -39,6 +39,8 @@ def one_run(ctx, seed, gap, stick):
     tool("set_player_facing", yaw=0.0)
     for a, v in (("MaxHealth", 1000), ("Health", 1000), ("Defense", 1.0)):
         tool("set_player_attribute", attribute=a, value=v)
+    if seed is not None:
+        tool("reset_pattern_places", seed=seed)  # its pattern's salt from the seed, as in a fresh room of that run
     path = tool("spawn_enemy", class_path=ENEMY, x=x, y=y, z=ar.stand_z(), yaw=180.0, seed=seed if seed is not None else -1)["path"]
     mygame.wait_game(0.5)
     others = sorted([c["class"], [round(v, 1) for v in tool("character_state", actor_path=c["path"])["location"]]]
