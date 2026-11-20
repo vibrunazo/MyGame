@@ -53,6 +53,9 @@ THE TOLERANCE RULE (Step 7 against this reference)
   In Step 7: the port runs every cell on seeds 1-10 (its pattern draws differently, so the seeds don't pair its runs
   with the tree's); a cell that fails is run on 20 more seeds (11-30) and fails only if it is still outside the rule
   with all its runs against all the reference's.
+  The full suite on the patterns (Step 7, agreed 2026-11-19) runs the A/A too: a cell outside it runs seeds 21-40, and
+  passes if seeds 1-20 and 21-40 are within the rule. One rare mode (enemy3 circling: 18 attacks a minute, a 6 s gap,
+  in 2 of the tree's 20 reference runs) falls in one half of 20 by chance.
   Reference videos: one run per type and behaviour (seed 1), kept beside the reference for the user to compare by eye
   with the port's.
 
@@ -252,7 +255,20 @@ def suite(ctx):
     (ctx.out / "ai_runs.json").write_text(json.dumps(per_run, sort_keys=True))
     for cell, s in sorted(stats.items()):
         print(f"  {cell}: " + ", ".join(f"{m} {v[0]:.2f}±{v[1]:.2f}" for m, v in sorted(s.items())))
-    problems = [f"A/A {p}" for p in within(halves[0], halves[1])]
+    aa = within(halves[0], halves[1])
+    failing = {".".join(p.split(".")[:2]) for p in aa if ":" in p}
+    if failing:
+        # the rule's own procedure (Ass Step 7, 2026-11-19): a cell outside it runs 20 more seeds (21-40), and its A/A
+        # is then seeds 1-20 against 21-40 (a rare mode, which the tree has too, can fall in one half of 20)
+        print(f"  A/A outside the rule in {sorted(failing)}: seeds 21-40 there")
+        for cell, seed, sc, roles, kind in runs(range(21, 41)):
+            if cell in failing:
+                per_run[cell][seed] = measure(strict.run(sc, base), roles, kind, sc["duration"])
+        wide = [{cell: cell_stats([per_run[cell][s] for s in part]) for cell in failing}
+                for part in (range(1, 21), range(21, 41))]
+        aa = [p for p in aa if ".".join(p.split(".")[:2]) not in failing] + within(wide[0], wide[1])
+        (ctx.out / "ai_runs.json").write_text(json.dumps(per_run, sort_keys=True))
+    problems = [f"A/A {p}" for p in aa]
     if REFERENCE.exists():
         problems += within(json.loads(REFERENCE.read_text()), stats)
     for p in problems:
