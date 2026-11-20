@@ -97,6 +97,13 @@ tier = "manual"
 timeout = 7200
 
 [[suite]]
+name = "pattern-exact"
+kind = "pie"
+run = "Tests/pattern_exact.py:suite"  # Ass Step 7 item 6: the seeded pattern AI's record per measures cell, by the rule in its header
+tier = "manual"
+timeout = 3600
+
+[[suite]]
 name = "strict-breaks"
 kind = "pie"
 run = "Tests/strict_breaks.py:suite"  # Step 0c: each deliberate break changes its strict recording
