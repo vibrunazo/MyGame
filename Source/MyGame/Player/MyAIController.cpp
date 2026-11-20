@@ -132,27 +132,6 @@ void AMyAIController::SetPatternRunning(bool bRunning)
 	PatternWokeFrame = GFrameCounter;
 }
 
-void AMyAIController::UsePatternNow(UMyPatternAsset* Asset)
-{
-	if (!Asset)
-	{
-		if (PatternDriver) PatternDriver->StopPattern();
-		bUsePattern = false;
-		Pattern = nullptr;
-		return;
-	}
-	// Its target carries over
-	ACharacter* Target = GetPatternTarget();
-	StopMovement();
-	bUsePattern = true;
-	Pattern = Asset;
-	PatternSalt = AMyPatternStepper::Register(this);
-	PatternDriver->StartPattern(Pattern->Definition, PatternSalt);
-	bPatternFrozen = false;
-	PatternWokeFrame = GFrameCounter;
-	if (Target) SetPatternTarget(Target);
-}
-
 bool AMyAIController::IsPatternRunning() const
 {
 	return PatternDriver && PatternDriver->IsRunning() && !bPatternFrozen;

@@ -17,8 +17,6 @@ _ATTRIBUTES = ("Health", "MaxHealth", "Mana", "MaxMana", "Attack", "Defense", "S
 
 # set_game_speed: the time dilation tests want, re-applied whenever the game resets it to 1 (after a floor loads)
 _speed = {"value": 1.0, "handle": None}
-# use_patterns: AI controller class path -> pattern asset path, for the enemies spawn_enemy spawns (Ass Step 7)
-_patterns = {}
 
 
 def _speed_tick(delta_seconds):
@@ -1185,13 +1183,6 @@ class MyGameTools(unreal.ToolsetDefinition):
                                                                    unreal.Rotator(roll=0.0, pitch=0.0, yaw=yaw), True)
         if not char:
             raise RuntimeError(f"couldn't spawn {class_path} at ({x}, {y}, {z})")
-        # an enemy whose controller class use_patterns put on a pattern (Ass Step 7)
-        controller = char.get_controller()
-        pattern = _patterns.get(controller.get_class().get_path_name()) if controller else None
-        # one whose Blueprint already runs that pattern keeps the path the game takes (registered at possession)
-        current = controller.get_editor_property("pattern") if pattern and controller.uses_pattern() else None
-        if pattern and not (current and current.get_path_name().split(".")[0] == pattern.split(".")[0]):
-            controller.use_pattern_now(unreal.load_asset(pattern))
         if frozen:
             MyGameTools.set_ai_enabled(char.get_path_name(), False)
         return json.dumps({"path": char.get_path_name()})
@@ -1236,29 +1227,6 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char or not enemy:
             raise RuntimeError("actor not found")
         return json.dumps({"added": unreal.MyGameEditorLibrary.request_token_for_test(char, enemy)})
-
-    @toolset_registry.tool_call
-    @staticmethod
-    def use_patterns(patterns: str) -> str:
-        """Test setup (Ass Step 7): enemies spawn_enemy spawns from now on whose AI controller is of one of these
-        classes go on that pattern (AMyAIController::UsePatternNow), or keep their own. A Blueprint class's defaults
-        edited in memory don't reach new instances (only its precomputed changed properties are copied), so the switch
-        is made on each enemy as it spawns.
-
-        Args:
-            patterns: JSON {controller class path: pattern asset path, or "" for the tree}.
-
-        Returns:
-            JSON {controller class path: pattern asset path}, every class on a pattern now.
-        """
-        for cls_path, pattern in json.loads(patterns).items():
-            if not pattern:
-                _patterns.pop(cls_path, None)
-            elif not unreal.load_asset(pattern):
-                raise RuntimeError(f"no pattern at {pattern}")
-            else:
-                _patterns[cls_path] = pattern
-        return json.dumps(_patterns)
 
     @toolset_registry.tool_call
     @staticmethod

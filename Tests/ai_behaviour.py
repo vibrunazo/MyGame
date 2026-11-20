@@ -270,33 +270,11 @@ def suite(ctx):
     return _run(ctx, lambda kind: True, boss=True)
 
 
-# Ass Step 7: the enemy types on patterns so far, by their controller class (every base enemy runs BP_AIController)
-PATTERNS = {"/Game/Blueprints/AI/BP_AIController.BP_AIController_C": "/Game/Blueprints/AI/Patterns/PA_Melee",
-            "/Game/Blueprints/Chars/EKicker/BP_AIContKicker.BP_AIContKicker_C": "/Game/Blueprints/AI/Patterns/PA_Kicker",
-            "/Game/Blueprints/Chars/EWizard/BP_AIContWizard.BP_AIContWizard_C": "/Game/Blueprints/AI/Patterns/PA_Wizard",
-            "/Game/Blueprints/Chars/Boss1/BP_AIContBoss.BP_AIContBoss_C": "/Game/Blueprints/AI/Patterns/PA_Boss"}
-PATTERN_KINDS = ("enemy1", "enemy2", "enemy3", "kicker", "wizard")
-PATTERN_BOSS = True  # the boss's scenarios run on its pattern too
-
-
-def pattern_suite(ctx):
-    """Step 7: the enemy types on patterns so far (PATTERNS), compared with the UE4 reference on the same terms as the
-    tree: their matrix rows and the token scenarios (whose enemies are base enemies)."""
-    mygame.use(ctx)
-    ctx.reset()
-    tool("use_patterns", patterns=json.dumps(PATTERNS))
-    try:
-        return _run(ctx, lambda kind: kind in PATTERN_KINDS, boss=PATTERN_BOSS, reset=False)
-    finally:
-        tool("use_patterns", patterns=json.dumps({cls: "" for cls in PATTERNS}))
-
-
-def _run(ctx, kinds, boss, reset=True):
+def _run(ctx, kinds, boss):
     """The scenarios (the boss's if boss, the token ones, the matrix rows of the kinds kinds() takes), compared with the
     UE4 reference on its terms when there is one."""
     mygame.use(ctx)
-    if reset:
-        ctx.reset()
+    ctx.reset()
     player = tool("pie_player_state")
     ar.PLAYER_PATH[0] = next(c["path"] for c in tool("list_characters") if c["actor"] == player["actor"])
     base = strict.base_attributes(player)

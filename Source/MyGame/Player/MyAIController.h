@@ -95,13 +95,6 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
 	bool IsPatternRunning() const;
 
-	/**
-	 * For tests: puts this enemy on Asset's pattern now, restarted and registered again with the stepper, keeping its
-	 * target (none: its pattern stops, and it has no AI).
-	 */
-	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
-	void UsePatternNow(class UMyPatternAsset* Asset);
-
 protected:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* InPawn) override;
