@@ -11,6 +11,8 @@
 #include "AssAbilitySystemComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
 #include "BrainComponent.h"
+#include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 
 #include "Navigation/CrowdFollowingComponent.h"
 #include "Perception/AIPerceptionComponent.h"
@@ -97,6 +99,14 @@ void AMyAIController::OnPossess(APawn* InPawn)
 		BuffedRangeHandle = PawnAbilitySystem->RegisterGameplayTagEvent(MyGameplayTags::Status_BuffedRange, EGameplayTagEventType::NewOrRemoved)
 			.AddUObject(this, &AMyAIController::OnBuffedRangeChanged);
 	}
+	// The pawn's movement ticks after this controller's path following (a move's request), as the engine already puts it
+	// after the controller (AddPawnTickDependency), so a move's first and last frames turn the pawn the same way every
+	// time; left unordered, which ticked first fell to the world's tick history, and a turn could land a frame apart from
+	// one world to the next
+	if (ACharacter* AsCharacter = Cast<ACharacter>(InPawn); AsCharacter && GetPathFollowingComponent())
+	{
+		AsCharacter->GetCharacterMovement()->PrimaryComponentTick.AddPrerequisite(GetPathFollowingComponent(), GetPathFollowingComponent()->PrimaryComponentTick);
+	}
 	// On a pattern: registered now, stepped in spawn order; it starts once the pawn has its abilities (its first step, a
 	// health mark or a wake, whichever comes first), with no target (the boss's marks settle before it sees anyone)
 	if (UsesPattern() && PatternDriver)
@@ -173,6 +183,10 @@ void AMyAIController::SetAttackRangeEverywhere(float Range)
 void AMyAIController::OnUnPossess()
 {
 	if (PatternDriver) PatternDriver->StopPattern();
+	if (ACharacter* AsCharacter = GetPawn<ACharacter>(); AsCharacter && GetPathFollowingComponent())
+	{
+		AsCharacter->GetCharacterMovement()->PrimaryComponentTick.RemovePrerequisite(GetPathFollowingComponent(), GetPathFollowingComponent()->PrimaryComponentTick);
+	}
 	if (PawnAbilitySystem.IsValid() && PawnEventHandle.IsValid())
 	{
 		PawnAbilitySystem->RemoveGameplayEventTagContainerDelegate(RespondedEvents, PawnEventHandle);
