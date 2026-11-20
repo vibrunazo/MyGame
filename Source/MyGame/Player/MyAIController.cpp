@@ -9,8 +9,6 @@
 #include "AssMoverComponent.h"
 #include "../MyGameplayTags.h"
 #include "AssAbilitySystemComponent.h"
-#include "BehaviorTree/BlackboardComponent.h"
-#include "BrainComponent.h"
 #include "GameFramework/Character.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -42,12 +40,6 @@ AMyAIController::AMyAIController(const FObjectInitializer& ObjectInitializer)
 	PatternMover->bChaseArrives = false;
 	PatternMover->bFailWhenPinned = false;
 	PatternMover->bAcceptPartialPaths = true;
-}
-
-bool AMyAIController::RunBehaviorTree(UBehaviorTree* BTAsset)
-{
-	if (UsesPattern()) return false;
-	return Super::RunBehaviorTree(BTAsset);
 }
 
 ACharacter* AMyAIController::GetPatternTarget() const
@@ -130,8 +122,7 @@ void AMyAIController::SetPatternRunning(bool bRunning)
 	if (!UsesPattern() || !PatternDriver) return;
 	if (!bRunning)
 	{
-		// Frozen as the tree's brain is stopped: it steps no more and stops moving, but keeps its state, and its health
-		// marks still settle (the tree's event responses were the controller's, not the brain's)
+		// Frozen: it steps no more and stops moving, but keeps its state, and its health marks still settle
 		bPatternFrozen = true;
 		StopMovement();
 		return;
@@ -150,10 +141,8 @@ void AMyAIController::UsePatternNow(UMyPatternAsset* Asset)
 		Pattern = nullptr;
 		return;
 	}
-	// The tree's target carries over
-	UBlackboardComponent* BB = GetBlackboardComponent();
-	AActor* Target = BB ? Cast<AActor>(BB->GetValueAsObject(TEXT("TargetChar"))) : nullptr;
-	if (UBrainComponent* Brain = GetBrainComponent()) Brain->StopLogic(TEXT("pattern"));
+	// Its target carries over
+	ACharacter* Target = GetPatternTarget();
 	StopMovement();
 	bUsePattern = true;
 	Pattern = Asset;
@@ -171,13 +160,7 @@ bool AMyAIController::IsPatternRunning() const
 
 void AMyAIController::OnBuffedRangeChanged(const FGameplayTag Tag, int32 Count)
 {
-	SetAttackRangeEverywhere(Count > 0 ? BuffedAttackRange : UnbuffedAttackRange);
-}
-
-void AMyAIController::SetAttackRangeEverywhere(float Range)
-{
-	AttackRange = Range;
-	if (UBlackboardComponent* BB = GetBlackboardComponent()) BB->SetValueAsFloat(AttackRangeKey, Range);
+	AttackRange = Count > 0 ? BuffedAttackRange : UnbuffedAttackRange;
 }
 
 void AMyAIController::OnUnPossess()

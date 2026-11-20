@@ -40,7 +40,6 @@
 #include "TimerManager.h"
 //#include "Kismet/GameplayStatics.h"
 #include "AIController.h"
-#include "BehaviorTree/BlackboardComponent.h"
 #include "Components/ArrowComponent.h"
 #include "Engine/StaticMeshActor.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -972,60 +971,6 @@ bool AMyCharacter::GetStrikeSound(EAssSoundKind Kind, USoundBase*& OutSound)
 	}
 }
 
-#if WITH_EDITOR
-TFunction<void(AMyCharacter* Owner, AActor* Asker, bool bAdd, bool bAnswer)> AMyCharacter::AggroListProbe;
-#endif
-
-void AMyCharacter::AddToAggroList(AActor* NewActor)
-{
-	if (NewActor)
-	{
-		AggroList.Add(NewActor);
-#if WITH_EDITOR
-		if (AggroListProbe) AggroListProbe(this, NewActor, true, true);
-#endif
-	}
-}
-
-void AMyCharacter::RemoveFromAggroList(AActor* NewActor)
-{
-	if (!NewActor)
-	{
-		ClearAggroList();
-		return;
-	}
-	AggroList.Remove(NewActor);
-}
-
-void AMyCharacter::ClearAggroList()
-{
-	AggroList.Empty();
-}
-
-bool AMyCharacter::IsInAggroList(AActor* NewActor)
-{
-	const bool bAnswer = AnswerAggroList(NewActor);
-#if WITH_EDITOR
-	if (AggroListProbe) AggroListProbe(this, NewActor, false, bAnswer);
-#endif
-	return bAnswer;
-}
-
-bool AMyCharacter::AnswerAggroList(AActor* NewActor)
-{
-	if (AggroList.Num() == 0) return true;
-	for (auto&& Enemy : AggroList)
-	{
-		if (!Cast<AMyCharacter>(Enemy) || !Cast<AMyCharacter>(Enemy)->IsAlive())
-		{
-			AggroList.Empty();
-			return true;
-		}
-		if (Enemy == NewActor) return true;
-	}
-	return false;
-}
-
 /// <summary>
 /// Applies all effects from all items in the inventory. Used at begin play to update the just created char with all the items.
 /// </summary>
@@ -1088,23 +1033,11 @@ void AMyCharacter::SetAggroTarget(APawn* NewTarget)
 	if (!NewChar || !NewChar->IsAlive() || !IsAlive()) return;
 	if (NewTarget->IsPlayerControlled())
 	{
-		AAIController* AiCont = Cast<AAIController>(GetController());
+		// Its AI's pattern holds its target (Ass Step 7): the first one it is given stays
+		AMyAIController* AiCont = Cast<AMyAIController>(GetController());
 		if (!ensure(AiCont != nullptr)) return;
-		// An enemy on a pattern (Ass Step 7) holds its target in its driver, as the tree holds it in TargetChar
-		AMyAIController* Patterned = Cast<AMyAIController>(AiCont);
-		if (Patterned && Patterned->UsesPattern())
-		{
-			if (Patterned->GetPatternTarget()) return;
-			Patterned->SetPatternTarget(NewTarget);
-		}
-		else
-		{
-			UBlackboardComponent* MyBB = AiCont->GetBlackboardComponent();
-			if (!ensure(MyBB != nullptr)) return;
-			auto OldTarget = MyBB->GetValueAsObject(FName(TEXT("TargetChar")));
-			if (OldTarget) return;
-			MyBB->SetValueAsObject(FName(TEXT("TargetChar")), NewTarget);
-		}
+		if (AiCont->GetPatternTarget()) return;
+		AiCont->SetPatternTarget(NewTarget);
 		// UE_LOG(LogTemp, Warning, TEXT("Seen %s"), *SeenPawn->GetName());
 		SetTargetEnemy(NewTarget);
 	}

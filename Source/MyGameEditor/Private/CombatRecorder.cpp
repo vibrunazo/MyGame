@@ -17,7 +17,6 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "GameFramework/Controller.h"
 #include "AIController.h"
-#include "BehaviorTree/BehaviorTreeComponent.h"
 #include "AssTokenArbiterComponent.h"
 #include "Player/MyAIController.h"
 #include "Player/MyPatternAsset.h"
@@ -379,13 +378,12 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 		}
 		if (Char && Char->GetCharacterMovement()) Mode = Char->GetCharacterMovement()->MovementMode;
 		const AAIController* AI = Char ? Cast<AAIController>(Char->GetController()) : nullptr;
-		const UBehaviorTreeComponent* Tree = AI ? Cast<UBehaviorTreeComponent>(AI->GetBrainComponent()) : nullptr;
-		FString Tasks = Tree && Tree->IsRunning() ? Tree->DescribeActiveTasks() : FString();
-		// An enemy on a pattern (Ass Step 7, Q6): the tree task its running command stands for, named as the tree's
+		// An enemy's pattern (Ass Step 7, Q6): the tree task its running command stands for, named as the tree's were, so
+		// the records compare with the tree's (the matrix's reference, outside git, and the baselines)
+		FString Tasks;
 		const AMyAIController* Patterned = Cast<AMyAIController>(AI);
 		if (Patterned && Patterned->UsesPattern() && Patterned->PatternDriver)
 		{
-			Tasks.Reset();
 			const UMyPatternDriver* Driver = Patterned->PatternDriver;
 			if (Patterned->IsPatternRunning() && !Driver->GetPatternTarget())
 			{
@@ -405,32 +403,17 @@ void UCombatRecorder::OnPostActorTick(UWorld* InWorld, ELevelTick TickType, floa
 			Event(TEXT("bt"), Role.Name, {Str(Tasks)});
 			Role.LastTasks = Tasks;
 		}
-		// the attack token: the character's aggro list (a property MyGame keeps on the character)
-		if (const FArrayProperty* List = CastField<FArrayProperty>(Actor->GetClass()->FindPropertyByName(TEXT("AggroList"))))
+		// the attack token: the holders, among the recorded characters, of the character's token arbiter (Ass Step 7)
+		if (UAssTokenArbiterComponent* Arbiter = Actor->FindComponentByClass<UAssTokenArbiterComponent>())
 		{
-			FScriptArrayHelper Items(List, List->ContainerPtrToValuePtr<void>(Actor));
-			const FObjectPropertyBase* Inner = CastField<FObjectPropertyBase>(List->Inner);
 			TArray<TSharedPtr<FJsonValue>> Holders;
 			FString Key;
-			for (int32 i = 0; Inner && i < Items.Num(); ++i)
+			for (const FRole& Other : Roles)
 			{
-				const FString Holder = RoleOf(Inner->GetObjectPropertyValue(Items.GetRawPtr(i)));
-				Holders.Add(Str(Holder));
-				Key += Holder + TEXT("|");
-			}
-			// With the list empty, the token arbiter's holders among the recorded characters (enemies on patterns, Ass Step 7)
-			if (Items.Num() == 0)
-			{
-				if (UAssTokenArbiterComponent* Arbiter = Actor->FindComponentByClass<UAssTokenArbiterComponent>())
+				if (Other.Actor.IsValid() && Other.Actor.Get() != Actor && Arbiter->Holds(Other.Actor.Get()))
 				{
-					for (const FRole& Other : Roles)
-					{
-						if (Other.Actor.IsValid() && Other.Actor.Get() != Actor && Arbiter->Holds(Other.Actor.Get()))
-						{
-							Holders.Add(Str(Other.Name));
-							Key += Other.Name + TEXT("|");
-						}
-					}
+					Holders.Add(Str(Other.Name));
+					Key += Other.Name + TEXT("|");
 				}
 			}
 			if (Key != Role.LastToken)

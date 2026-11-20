@@ -109,10 +109,10 @@ def matrix_scenarios():
                         enemies = [enemy("enemy", kind)]
                         setup = [target_player("enemy")]
                         if token == "mine":
-                            setup.append(["aggro_add", {"actor_path": "@player", "target_path": "@enemy"}])
+                            setup.append(["give_token", {"actor_path": "@player", "target_path": "@enemy"}])
                         if token == "other":
                             enemies.append(enemy("other", "enemy1", x=X + 300, y=Y + 400))
-                            setup.append(["aggro_add", {"actor_path": "@player", "target_path": "@other"}])
+                            setup.append(["give_token", {"actor_path": "@player", "target_path": "@other"}])
                         inputs = []
                         if control == "stunned":
                             inputs.append(at(0.0, "apply_effect", actor_path="@enemy", effect_class_path=HITSTUN,
@@ -164,7 +164,7 @@ def holder_scenarios():
     enemies = [enemy("a", "enemy1", x=CLOSE + 70, y=Y - 60, yaw=180.0), enemy("b", "enemy1", x=CLOSE + 70, y=Y + 60, yaw=180.0)]
     stun = at(0.5, "apply_effect", actor_path="@a", effect_class_path=HITSTUN, set_by_caller=json.dumps({"Ass.Data.HitStun": 1.5}))
     yield scenario("token_stunned_holder", [at(0.0, "wake_ai", actor_paths=json.dumps(["@a", "@b"])), stun], 3.5, enemies=enemies, player_yaw=180.0,
-                   player={"Defense": 1000.0}, wait=0.5, setup=[["aggro_add", {"actor_path": "@player", "target_path": "@a"}]])
+                   player={"Defense": 1000.0}, wait=0.5, setup=[["give_token", {"actor_path": "@player", "target_path": "@a"}]])
 
 
 def holders(record):

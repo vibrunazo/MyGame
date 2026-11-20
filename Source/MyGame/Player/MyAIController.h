@@ -40,13 +40,11 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "My AI Controller")
 	float AggressiveRange = 300.f;
 	// AttackRange while the pawn has status.buffedrange, and once it goes (the boss's self debuff; Ass Step4.md
-	// section 4), copied into the blackboard key AttackRangeKey too
+	// section 4)
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "My AI Controller")
 	float BuffedAttackRange = 900.f;
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "My AI Controller")
 	float UnbuffedAttackRange = 220.f;
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "My AI Controller")
-	FName AttackRangeKey = TEXT("AttackRange");
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "My AI Controller")
 	TObjectPtr<class UAISenseConfig_Sight> SightConfig;
@@ -98,15 +96,11 @@ public:
 	bool IsPatternRunning() const;
 
 	/**
-	 * Puts this enemy on Asset's pattern now (none: back on the tree), as Use pattern would have at possession: the tree
-	 * stops, the pattern registers with the stepper and starts, keeping the tree's target. For tests, before the switch
-	 * is on for every enemy.
+	 * For tests: puts this enemy on Asset's pattern now, restarted and registered again with the stepper, keeping its
+	 * target (none: its pattern stops, and it has no AI).
 	 */
 	UFUNCTION(BlueprintCallable, Category = "My AI Controller|Pattern")
 	void UsePatternNow(class UMyPatternAsset* Asset);
-
-	// The tree doesn't start for an enemy on a pattern (the controllers' Blueprints start it on BeginPlay)
-	bool RunBehaviorTree(class UBehaviorTree* BTAsset) override;
 
 protected:
 	virtual void BeginPlay() override;
@@ -118,7 +112,6 @@ private:
 	void OnTargetPerceived(AActor* Actor, FAIStimulus Stimulus);
 	void OnPawnGameplayEvent(FGameplayTag Event, const struct FGameplayEventData* Payload);
 	void OnBuffedRangeChanged(const FGameplayTag Tag, int32 Count);
-	void SetAttackRangeEverywhere(float Range);
 
 	TWeakObjectPtr<class UAbilitySystemComponent> PawnAbilitySystem;
 	FGameplayTagContainer RespondedEvents;

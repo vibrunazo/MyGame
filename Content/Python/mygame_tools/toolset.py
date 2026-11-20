@@ -408,11 +408,12 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def set_ai_enabled(actor_path: str, enabled: bool, show_player: bool = True) -> str:
-        """Stops or restarts a character's AI logic (behavior tree), e.g. to use an enemy as a still test dummy.
+        """Freezes or wakes a character's AI (its pattern, AMyAIController::SetPatternRunning), e.g. to use an enemy as a
+        still test dummy.
 
         Args:
             actor_path: Full path of a PIE character.
-            enabled: False stops its behavior tree and senses; True restarts them.
+            enabled: False freezes its pattern and senses; True wakes them.
             show_player: When enabling, also hand it the player as its target right away (skip seeing).
 
         Returns:
@@ -422,28 +423,15 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
         controller = char.get_controller()
-        if controller and isinstance(controller, unreal.MyAIController) and controller.uses_pattern():
-            # an enemy on a pattern (Ass Step 7): its pattern stops, or starts again from scratch, as the tree would
-            _set_senses(char, controller, enabled)
-            controller.set_pattern_running(enabled)
-            if enabled and show_player:
-                with contextlib.suppress(Exception):
-                    char.on_pawn_seen(_player())
-            return json.dumps({"actor": char.get_name(), "ai_running": controller.is_pattern_running()})
-        brain = controller.get_editor_property("brain_component") if controller else None
-        if not brain:
-            raise RuntimeError(f"{actor_path} has no AI brain")
-        # senses too: seeing the player aggroes the whole room, which restarts frozen trees
+        if not (controller and isinstance(controller, unreal.MyAIController) and controller.uses_pattern()):
+            raise RuntimeError(f"{actor_path} runs no pattern")
+        # senses too: seeing the player aggroes the whole room, which wakes frozen enemies
         _set_senses(char, controller, enabled)
-        if enabled:
-            brain.restart_logic()
-            if show_player:  # with senses off while frozen it may never have seen the player
-                with contextlib.suppress(Exception):
-                    char.on_pawn_seen(_player())
-        else:
-            brain.stop_logic("test dummy")
-            controller.stop_movement()  # a move the tree already started keeps going otherwise
-        return json.dumps({"actor": char.get_name(), "ai_running": brain.is_running()})
+        controller.set_pattern_running(enabled)
+        if enabled and show_player:  # with senses off while frozen it may never have seen the player
+            with contextlib.suppress(Exception):
+                char.on_pawn_seen(_player())
+        return json.dumps({"actor": char.get_name(), "ai_running": controller.is_pattern_running()})
 
     @toolset_registry.tool_call
     @staticmethod
@@ -463,12 +451,12 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def ai_target(actor_path: str, clear: bool = False, set_player: bool = False) -> str:
-        """An AI character's blackboard target (TargetChar): who it is after. Optionally forgets it first.
+        """An AI character's target (its pattern's): who it is after. Optionally forgets it first.
 
         Args:
             actor_path: Full path of a PIE AI character.
             clear: Clear the target (and the character's TargetEnemy) instead of reading it.
-            set_player: Make the PIE player its target (blackboard and TargetEnemy) without waking its AI.
+            set_player: Make the PIE player its target (the pattern's and TargetEnemy) without waking its AI.
 
         Returns:
             JSON {"target": actor name or null}.
@@ -477,26 +465,15 @@ class MyGameTools(unreal.ToolsetDefinition):
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
         controller = char.get_controller()
-        if controller and isinstance(controller, unreal.MyAIController) and controller.uses_pattern():
-            # an enemy on a pattern (Ass Step 7): its target is its driver's, as the tree's was TargetChar
-            if clear:
-                controller.set_pattern_target(None)
-                char.set_target_enemy(None)
-            if set_player:
-                controller.set_pattern_target(_player())
-                char.set_target_enemy(_player())
-            target = controller.get_pattern_target()
-            return json.dumps({"target": target.get_name() if target else None})
-        bb = controller.get_editor_property("blackboard") if controller else None
-        if not bb:
-            raise RuntimeError(f"{actor_path} has no blackboard")
+        if not (controller and isinstance(controller, unreal.MyAIController) and controller.uses_pattern()):
+            raise RuntimeError(f"{actor_path} runs no pattern")
         if clear:
-            bb.clear_value("TargetChar")
+            controller.set_pattern_target(None)
             char.set_target_enemy(None)
         if set_player:
-            bb.set_value_as_object("TargetChar", _player())
+            controller.set_pattern_target(_player())
             char.set_target_enemy(_player())
-        target = bb.get_value_as_object("TargetChar")
+        target = controller.get_pattern_target()
         return json.dumps({"target": target.get_name() if target else None})
 
     @toolset_registry.tool_call
@@ -1245,29 +1222,26 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def aggro_add(actor_path: str, target_path: str) -> str:
-        """Test setup: puts an enemy on a character's aggro list (it holds that character's attack token).
+    def give_token(actor_path: str, target_path: str) -> str:
+        """Test setup: an enemy takes a character's attack token (its token arbiter, MyGameEditorLibrary.RequestTokenForTest).
 
         Args:
             actor_path: Full path of the character whose token it is (the player).
             target_path: Full path of the enemy.
 
         Returns:
-            JSON {"added": true}.
+            JSON {"added": whether the arbiter granted it}.
         """
         char, enemy = unreal.find_object(None, actor_path), unreal.find_object(None, target_path)
         if not char or not enemy:
             raise RuntimeError("actor not found")
-        char.add_to_aggro_list(enemy)
-        # and the token arbiter enemies on patterns read (Ass Step 7), when the character has one
-        unreal.MyGameEditorLibrary.request_token_for_test(char, enemy)
-        return json.dumps({"added": True})
+        return json.dumps({"added": unreal.MyGameEditorLibrary.request_token_for_test(char, enemy)})
 
     @toolset_registry.tool_call
     @staticmethod
     def use_patterns(patterns: str) -> str:
         """Test setup (Ass Step 7): enemies spawn_enemy spawns from now on whose AI controller is of one of these
-        classes go on its pattern (AMyAIController::UsePatternNow), or stay on the tree. A Blueprint class's defaults
+        classes go on that pattern (AMyAIController::UsePatternNow), or keep their own. A Blueprint class's defaults
         edited in memory don't reach new instances (only its precomputed changed properties are copied), so the switch
         is made on each enemy as it spawns.
 
@@ -1285,45 +1259,6 @@ class MyGameTools(unreal.ToolsetDefinition):
             else:
                 _patterns[cls_path] = pattern
         return json.dumps(_patterns)
-
-    @toolset_registry.tool_call
-    @staticmethod
-    def compare_spot_search(actor_path: str, query_path: str, spot: str) -> str:
-        """Ass Step 7's world check: the plugin's spot search against the engine's spot query, for an enemy with the PIE
-        player as its target (MyGameEditorLibrary.CompareSpotSearchForTest).
-
-        Args:
-            actor_path: Full path of the enemy that queries.
-            query_path: The spot query's asset path.
-            spot: JSON {"behind", "half_extent", "spacing", "distance_weight", "sight_score", "ratio"}: Move To Spot's fields.
-
-        Returns:
-            JSON {"engine", "plugin", "engine_points", "plugin_points", "only_engine", "only_plugin"}.
-        """
-        enemy, query, s = _char(actor_path), unreal.load_asset(query_path), json.loads(spot)
-        if not enemy or not query:
-            raise RuntimeError("enemy or query not found")
-        out = unreal.MyGameEditorLibrary.compare_spot_search_for_test(
-            enemy, _player(), query, s["behind"], s["half_extent"], s["spacing"], s["distance_weight"], s["sight_score"], s["ratio"])
-        if not out:
-            raise RuntimeError("the spot search couldn't run")
-        return out
-
-    @toolset_registry.tool_call
-    @staticmethod
-    def token_shadow(on: bool) -> str:
-        """Ass Step 7's world check: a token arbiter beside the PIE player's aggro list, asked every question the list
-        answers (MyGameEditorLibrary.Start/StopTokenShadowForTest).
-
-        Args:
-            on: True starts it; False stops it and returns what it found.
-
-        Returns:
-            JSON {"started": bool}, or when stopping {"questions", "additions", "mismatches"}.
-        """
-        if on:
-            return json.dumps({"started": unreal.MyGameEditorLibrary.start_token_shadow_for_test(_player())})
-        return unreal.MyGameEditorLibrary.stop_token_shadow_for_test()
 
     @toolset_registry.tool_call
     @staticmethod
@@ -1390,23 +1325,20 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
-    def clear_aggro_list(actor_path: str) -> str:
-        """Test setup: empties a character's aggro list (the enemies holding its attack token). An enemy a test removes
-        without a death would stay in it, alive by its health, until garbage collection clears the entry.
+    def clear_tokens(actor_path: str) -> str:
+        """Test setup: no enemy holds a character's attack token (its arbiter: every character lets go, as a stopped
+        pattern does; MyGameEditorLibrary.ClearTokensForTest).
 
         Args:
             actor_path: Full path of a PIE character (the player).
 
         Returns:
-            JSON {"cleared": true}.
+            JSON {"cleared": whether it has an arbiter}.
         """
         char = unreal.find_object(None, actor_path)
         if not char:
             raise RuntimeError(f"no actor at {actor_path}")
-        char.clear_aggro_list()
-        # and the token arbiter enemies on patterns read (Ass Step 7), when the character has one
-        unreal.MyGameEditorLibrary.clear_tokens_for_test(char)
-        return json.dumps({"cleared": True})
+        return json.dumps({"cleared": unreal.MyGameEditorLibrary.clear_tokens_for_test(char)})
 
     @toolset_registry.tool_call
     @staticmethod
