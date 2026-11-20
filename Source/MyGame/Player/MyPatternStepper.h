@@ -35,6 +35,14 @@ public:
 	 */
 	static void ResetPlaces(UWorld* World, int32 RunSeed);
 
+	/**
+	 * A pattern's target moves before the stepper ticks (its ticks in the stepper's group or earlier, its movement's and its
+	 * combat component's among them, are the stepper's prerequisites), so every pattern decides, and its controller aims,
+	 * from where the target is this frame. Left unordered, which ticked first fell to
+	 * the world's tick history: an enemy facing a moving player could turn a frame apart from one world to the next.
+	 */
+	static void FollowTarget(UWorld* World, const class ACharacter* Target);
+
 private:
 	/** The world's stepper, made on first use with the run's seed from the game instance. */
 	static AMyPatternStepper* FindOrMake(UWorld* World);

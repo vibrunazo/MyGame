@@ -49,7 +49,9 @@ ACharacter* AMyAIController::GetPatternTarget() const
 
 void AMyAIController::SetPatternTarget(AActor* Target)
 {
-	if (PatternDriver) PatternDriver->SetTarget(Cast<ACharacter>(Target));
+	ACharacter* AsCharacter = Cast<ACharacter>(Target);
+	if (PatternDriver) PatternDriver->SetTarget(AsCharacter);
+	AMyPatternStepper::FollowTarget(GetWorld(), AsCharacter);
 }
 
 void AMyAIController::StepPattern()
@@ -99,6 +101,9 @@ void AMyAIController::OnPossess(APawn* InPawn)
 	{
 		AsCharacter->GetCharacterMovement()->PrimaryComponentTick.AddPrerequisite(GetPathFollowingComponent(), GetPathFollowingComponent()->PrimaryComponentTick);
 	}
+	// and this controller ticks after its path following, whose move focus it turns the pawn to (left unordered, a world
+	// could aim at last frame's focus)
+	if (GetPathFollowingComponent()) AddTickPrerequisiteComponent(GetPathFollowingComponent());
 	// On a pattern: registered now, stepped in spawn order; it starts once the pawn has its abilities (its first step, a
 	// health mark or a wake, whichever comes first), with no target (the boss's marks settle before it sees anyone)
 	if (UsesPattern() && PatternDriver)
