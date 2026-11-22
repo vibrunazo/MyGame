@@ -60,6 +60,6 @@
 	],
 	"AdditionalPluginDirectories": [
 		"../UnrealAgentTools/versions/0.26/Plugins",
-		"../Ass/versions/0.14/Plugins"
+		"../Ass/versions/0.15/Plugins"
 	]
 }
