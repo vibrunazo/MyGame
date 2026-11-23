@@ -84,6 +84,13 @@ tier = "manual"
 timeout = 3600
 
 [[suite]]
+name = "hits-to-kill"
+kind = "pie"
+run = "Tests/hits_to_kill.py:suite"   # Ass Step 11's gate table: hits to kill per player move per enemy, recorded before the move
+tier = "manual"
+timeout = 3600
+
+[[suite]]
 name = "strict-breaks"
 kind = "pie"
 run = "Tests/strict_breaks.py:suite"  # Step 0c: each deliberate break changes its strict recording

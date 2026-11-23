@@ -1,0 +1,326 @@
+{
+ "enemy1": {
+  "max_health": 100,
+  "defense": 1.0,
+  "moves": {
+   "punch_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 7
+   },
+   "kick_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 7
+   },
+   "jump_kick": {
+    "damage": 15.0,
+    "hits_to_kill": 7
+   },
+   "jump_punch": {
+    "damage": 15.0,
+    "hits_to_kill": 7
+   },
+   "super_punch_smash": {
+    "damage": 30.0,
+    "hits_to_kill": 4
+   },
+   "super_punch_runpunch": {
+    "damage": 20.0,
+    "hits_to_kill": 5
+   },
+   "super_punch_uppercut": {
+    "damage": 15.0,
+    "hits_to_kill": 7
+   },
+   "super_kick_kkk": {
+    "damage": 10.0,
+    "hits_to_kill": 10
+   },
+   "cast_fireball": {
+    "damage": 20.0,
+    "hits_to_kill": 5
+   },
+   "punch_after_learning": {
+    "damage": 15.0,
+    "hits_to_kill": 7
+   },
+   "punch_vs_defense2": {
+    "damage": 7.5,
+    "hits_to_kill": 14
+   },
+   "fire_hands_punch": {
+    "damage": 60.0,
+    "hits_to_kill": 2
+   }
+  }
+ },
+ "enemy2": {
+  "max_health": 120,
+  "defense": 1.0,
+  "moves": {
+   "punch_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 8
+   },
+   "kick_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 8
+   },
+   "jump_kick": {
+    "damage": 15.0,
+    "hits_to_kill": 8
+   },
+   "jump_punch": {
+    "damage": 15.0,
+    "hits_to_kill": 8
+   },
+   "super_punch_smash": {
+    "damage": 30.0,
+    "hits_to_kill": 4
+   },
+   "super_punch_runpunch": {
+    "damage": 20.0,
+    "hits_to_kill": 6
+   },
+   "super_punch_uppercut": {
+    "damage": 15.0,
+    "hits_to_kill": 8
+   },
+   "super_kick_kkk": {
+    "damage": 10.0,
+    "hits_to_kill": 12
+   },
+   "cast_fireball": {
+    "damage": 20.0,
+    "hits_to_kill": 6
+   },
+   "punch_after_learning": {
+    "damage": 15.0,
+    "hits_to_kill": 8
+   },
+   "punch_vs_defense2": {
+    "damage": 7.5,
+    "hits_to_kill": 16
+   },
+   "fire_hands_punch": {
+    "damage": 60.0,
+    "hits_to_kill": 2
+   }
+  }
+ },
+ "enemy3": {
+  "max_health": 70,
+  "defense": 1.0,
+  "moves": {
+   "punch_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 5
+   },
+   "kick_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 5
+   },
+   "jump_kick": {
+    "damage": 15.0,
+    "hits_to_kill": 5
+   },
+   "jump_punch": {
+    "damage": 15.0,
+    "hits_to_kill": 5
+   },
+   "super_punch_smash": {
+    "damage": 30.0,
+    "hits_to_kill": 3
+   },
+   "super_punch_runpunch": {
+    "damage": 20.0,
+    "hits_to_kill": 4
+   },
+   "super_punch_uppercut": {
+    "damage": 15.0,
+    "hits_to_kill": 5
+   },
+   "super_kick_kkk": {
+    "damage": 10.0,
+    "hits_to_kill": 7
+   },
+   "cast_fireball": {
+    "damage": 20.0,
+    "hits_to_kill": 4
+   },
+   "punch_after_learning": {
+    "damage": 15.0,
+    "hits_to_kill": 5
+   },
+   "punch_vs_defense2": {
+    "damage": 7.5,
+    "hits_to_kill": 10
+   },
+   "fire_hands_punch": {
+    "damage": 60.0,
+    "hits_to_kill": 2
+   }
+  }
+ },
+ "kicker": {
+  "max_health": 80,
+  "defense": 1.0,
+  "moves": {
+   "punch_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 6
+   },
+   "kick_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 6
+   },
+   "jump_kick": {
+    "damage": 15.0,
+    "hits_to_kill": 6
+   },
+   "jump_punch": {
+    "damage": 15.0,
+    "hits_to_kill": 6
+   },
+   "super_punch_smash": {
+    "damage": 30.0,
+    "hits_to_kill": 3
+   },
+   "super_punch_runpunch": {
+    "damage": 20.0,
+    "hits_to_kill": 4
+   },
+   "super_punch_uppercut": {
+    "damage": 15.0,
+    "hits_to_kill": 6
+   },
+   "super_kick_kkk": {
+    "damage": 10.0,
+    "hits_to_kill": 8
+   },
+   "cast_fireball": {
+    "damage": 20.0,
+    "hits_to_kill": 4
+   },
+   "punch_after_learning": {
+    "damage": 15.0,
+    "hits_to_kill": 6
+   },
+   "punch_vs_defense2": {
+    "damage": 7.5,
+    "hits_to_kill": 11
+   },
+   "fire_hands_punch": {
+    "damage": 60.0,
+    "hits_to_kill": 2
+   }
+  }
+ },
+ "wizard": {
+  "max_health": 60,
+  "defense": 1.0,
+  "moves": {
+   "punch_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 4
+   },
+   "kick_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 4
+   },
+   "jump_kick": {
+    "damage": 15.0,
+    "hits_to_kill": 4
+   },
+   "jump_punch": {
+    "damage": 15.0,
+    "hits_to_kill": 4
+   },
+   "super_punch_smash": {
+    "damage": 30.0,
+    "hits_to_kill": 2
+   },
+   "super_punch_runpunch": {
+    "damage": 20.0,
+    "hits_to_kill": 3
+   },
+   "super_punch_uppercut": {
+    "damage": 15.0,
+    "hits_to_kill": 4
+   },
+   "super_kick_kkk": {
+    "damage": 10.0,
+    "hits_to_kill": 6
+   },
+   "cast_fireball": {
+    "damage": 20.0,
+    "hits_to_kill": 3
+   },
+   "punch_after_learning": {
+    "damage": 15.0,
+    "hits_to_kill": 4
+   },
+   "punch_vs_defense2": {
+    "damage": 7.5,
+    "hits_to_kill": 8
+   },
+   "fire_hands_punch": {
+    "damage": 60.0,
+    "hits_to_kill": 1
+   }
+  }
+ },
+ "boss": {
+  "max_health": 400,
+  "defense": 1.0,
+  "moves": {
+   "punch_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 27
+   },
+   "kick_tap": {
+    "damage": 15.0,
+    "hits_to_kill": 27
+   },
+   "jump_kick": {
+    "damage": 15.0,
+    "hits_to_kill": 27
+   },
+   "jump_punch": {
+    "damage": 15.0,
+    "hits_to_kill": 27
+   },
+   "super_punch_smash": {
+    "damage": 30.0,
+    "hits_to_kill": 14
+   },
+   "super_punch_runpunch": {
+    "damage": 20.0,
+    "hits_to_kill": 20
+   },
+   "super_punch_uppercut": {
+    "damage": 15.0,
+    "hits_to_kill": 27
+   },
+   "super_kick_kkk": {
+    "damage": 10.0,
+    "hits_to_kill": 40
+   },
+   "cast_fireball": {
+    "damage": 20.0,
+    "hits_to_kill": 20
+   },
+   "punch_after_learning": {
+    "damage": 15.0,
+    "hits_to_kill": 27
+   },
+   "punch_vs_defense2": {
+    "damage": 7.5,
+    "hits_to_kill": 54
+   },
+   "fire_hands_punch": {
+    "damage": 60.0,
+    "hits_to_kill": 7
+   }
+  }
+ }
+}
