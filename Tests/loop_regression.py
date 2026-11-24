@@ -16,6 +16,8 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
                 when the room's own enemies die and open when the summons die too
   hud_icons_all every HUD button's icon, the learned book's move included, the same on floor 2 as on floor 1
   carried_works the book's move, carried to floor 2, starts from its button there
+  boss_chase_resumes  the boss's chase, its move stopped from outside its mover, moves again within a second
+                (AbilityStrategySystem 0.19; before it, the boss stood punching the air until hit)
 """
 import json
 
@@ -109,6 +111,41 @@ def summon_doored(state):
             "held_by_summons": held, "open_after_summons": opened}
 
 
+def boss_chase_resumes(level):
+    """The floor's boss chases the player across its room; its move is stopped from outside its mover (what an invalid
+    path or another system's StopMovement does); within a second it moves again and closes in. Before
+    AbilityStrategySystem 0.19 the chase's command went on running with its path following idle: the boss stood,
+    punching the air, until a hit cut it (seed 1401's boss in its last phase)."""
+    size = level["tile_size"]
+    boss = next(c for c in tool("list_characters") if c["class"] == "BP_Boss1_C")
+    path, (bx, by, bz) = boss["path"], boss["location"]
+    cx, cy = room_of([bx, by], size)[0] * size[0], room_of([bx, by], size)[1] * size[1]
+    for a, v in (("MaxHealth", 1000.0), ("Health", 1000.0), ("Defense", 1000.0)):
+        tool("set_player_attribute", attribute=a, value=v)
+    # the tile's corner farthest from the boss, inside its walls
+    px, py = max(((cx + sx * (size[0] / 2 - 250.0), cy + sy * (size[1] / 2 - 250.0)) for sx in (-1, 1) for sy in (-1, 1)),
+                 key=lambda p: (p[0] - bx) ** 2 + (p[1] - by) ** 2)
+    tool("teleport_player", x=px, y=py, z=floor_z(px, py) + 100.0)
+    tool("ai_target", actor_path=path, set_player=True)
+    dist = lambda: ((lambda b, p: ((b[0] - p[0]) ** 2 + (b[1] - p[1]) ** 2) ** 0.5)(
+        next(c for c in tool("list_characters") if c["path"] == path)["location"], player_pos()))
+    try:
+        chasing = wait_until(lambda: tool("ai_move", actor_path=path)["status"] == "Moving" or None, timeout=5.0)
+    except Exception:
+        chasing = None
+    wait_game(0.5)
+    before = dist()
+    stopped = tool("ai_move", actor_path=path, stop=True)["status"]
+    wait_game(1.0)
+    after = tool("ai_move", actor_path=path)
+    closer = before - dist()
+    # left to the floor clear's kill as before, from where it stood (its loot drops there, not by the flag)
+    tool("ai_target", actor_path=path, clear=True)
+    tool("set_ai_enabled", actor_path=path, enabled=False, show_player=False)
+    tool("teleport_actor", actor_path=path, x=bx, y=by, z=bz)
+    return {"chasing": bool(chasing), "stopped": stopped, "after": after, "closed_cm": round(closer), "start_cm": round(before)}
+
+
 def player_pos():
     return next(c["location"] for c in tool("list_characters") if c["team"] == 0)
 
@@ -131,6 +168,10 @@ def run_all():
     results["summon"] = summon
     check("summon_doored", summon["room"] and summon["summoned"] > 0 and summon["locked_on_entry"] and summon["held_by_summons"]
           and summon["open_after_summons"], summon)
+    chase = boss_chase_resumes(floor1)
+    results["chase"] = chase
+    check("boss_chase_resumes", chase["chasing"] and chase["stopped"] == "Idle" and chase["after"]["status"] == "Moving"
+          and chase["closed_cm"] > 100, chase)
     start = tool("run_state")
     results["start"] = start
     starting_moves = start["abilities"]

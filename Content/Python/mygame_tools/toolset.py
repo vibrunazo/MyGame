@@ -483,6 +483,30 @@ class MyGameTools(unreal.ToolsetDefinition):
 
     @toolset_registry.tool_call
     @staticmethod
+    def ai_move(actor_path: str, stop: bool = False) -> str:
+        """An AI character's path following: its status, and optionally a stop from outside its pattern's mover (as an
+        abort the mover didn't ask for: the case that left a chase standing before AbilityStrategySystem 0.19).
+
+        Args:
+            actor_path: Full path of a PIE AI character.
+            stop: Stop its path following first (AIController.StopMovement).
+
+        Returns:
+            JSON {"status": "Idle" | "Waiting" | "Paused" | "Moving", "speed": its velocity's length}.
+        """
+        char = unreal.find_object(None, actor_path)
+        if not char:
+            raise RuntimeError(f"no actor at {actor_path}")
+        controller = char.get_controller()
+        if not isinstance(controller, unreal.AIController):
+            raise RuntimeError(f"{actor_path} has no AI controller")
+        if stop:
+            controller.stop_movement()
+        status = str(controller.get_move_status()).split(".")[-1].split(":")[0].rstrip(">").strip().capitalize()
+        return json.dumps({"status": status, "speed": round(char.get_velocity().length(), 1)})
+
+    @toolset_registry.tool_call
+    @staticmethod
     def character_state(actor_path: str) -> str:
         """Location, current montage, health and mana of any PIE character (owned tags: GASToolsets GetActiveTags).
 
