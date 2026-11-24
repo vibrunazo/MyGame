@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ReportDeath.h"
 #include "../Abilities/MyAttributeSet.h"
+#include "../Abilities/MyCombatAttributes.h"
 #include "../MyBlueprintFunctionLibrary.h"
 #include "../Abilities/IGetHit.h"
 #include "AssCombatant.h"
@@ -141,7 +142,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	bool IsAlive() override;
 	uint8 GetTeam() override;
-	UMyAttributeSet* GetAttributes() override;
+	UMyCombatAttributes* GetAttributes() override;
 	FTransform GetProjectileSpawn() override;
 	UFUNCTION(BlueprintCallable, Category = Abilities)
 	void AddItemToInventory(class UItemDataAsset* NewItem) override;
@@ -199,11 +200,19 @@ public:
 	float InitialHealth = -1.f; 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float MaxHealth = 100.0f;
+	// Physical Damage (Ass Step 11), the attack power a hit's magnitude is multiplied by
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float Attack = 1.0f;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	float Defense = 1.0f;
+	// Max Poise (Ass Step 11): stuns that land before 2 s of stun immunity (the rules asset), 0 for no count
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
+	float MaxPoise = 0.0f;
+	// the walk speed at BeginPlay: Move Speed's base value
 	float BaseSpeed = 350.0f;
+	/** Move Speed as a multiple of the walk speed at BeginPlay (the HUD's speed stat). */
+	UFUNCTION(BlueprintPure, Category = Abilities)
+	float GetSpeedMultiplier() const;
 	TArray<bool> IsAbilityKeyDown = { false, false, false, false, false, false, false, false};
 	// UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Abilities)
 	// TSubclassOf<class UUserWidget> HealthBarWidget;
@@ -313,6 +322,10 @@ protected:
 	void TouchStopped(ETouchIndex::Type FingerIndex, FVector Location);
 
 	//UPROPERTY()
+	// The plugin's attributes (Ass Step 11), with MyGame's starting values and its damage and death hooks
+	UPROPERTY(Category=Attributes, VisibleAnywhere, BlueprintReadOnly)
+	UMyCombatAttributes* Attributes;
+	// MyGame's own: Rot Speed
 	UPROPERTY(Category=Attributes, VisibleAnywhere, BlueprintReadOnly)
 	UMyAttributeSet* AttributeSetBase;
 

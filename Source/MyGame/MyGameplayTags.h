@@ -29,6 +29,8 @@ namespace MyGameplayTags
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_2);
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Input_Release_3);
 
-	// The damage's set-by-caller magnitude
+	// The damage's set-by-caller magnitude (the Heart's healing since Ass Step 11)
 	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);
+	// A speed change's set-by-caller amount: a share of the walk speed (UMySpeedAddMagnitude)
+	MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Speed);
 }

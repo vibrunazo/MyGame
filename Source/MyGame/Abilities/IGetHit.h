@@ -16,8 +16,8 @@ class UGetHit : public UInterface
 };
 
 /**
- * MyGame's side of a character: damage and death (its attribute set calls these until Step 11), its attributes and its
- * loot. What combat asks of a character is IAssCombatant (Ass Plan.md 4.1).
+ * MyGame's side of a character: damage and death (its attribute set, UMyCombatAttributes, calls these), its attributes
+ * and its loot. What combat asks of a character is IAssCombatant (Ass Plan.md 4.1).
  */
 class MYGAME_API IGetHit
 {
@@ -27,6 +27,6 @@ public:
 	virtual void OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectSpec Effect) = 0;
 	virtual void OnDie() = 0;
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const = 0;
-	virtual class UMyAttributeSet* GetAttributes() = 0;
+	virtual class UMyCombatAttributes* GetAttributes() = 0;
 	virtual void AddItemToInventory(class UItemDataAsset* NewItem) = 0;
 };

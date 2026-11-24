@@ -367,15 +367,75 @@ def _same(x, y, worst, tolerant):
     return d <= TOLERANCE_CM[name]
 
 
+# Ass Step 11: MyGame's attributes and hit damage moved into the plugin's set and default policy (agreed with the Ass
+# session 2026-11-23). A record from before the move compares in the plugin's names: GE_Damage is the plugin's hit
+# damage effect, Attack is Physical Damage, and Speed (a multiplier of the walk speed) is Move Speed (the walk speed
+# itself), so an old Speed x is a new Move Speed x times that role's walk speed, equal within float32 rounding (the
+# multiplier and the speed round differently: 0.19999998 x 300 against 60). Poise is new state with no counterpart
+# before the move, so its events are left out.
+STEP11_CLASSES = {"/Game/Abilities/GE_Damage": "/Script/AssAttributes.AssHitDamageEffect",
+                  "/Game/Abilities/GE_Damage.GE_Damage_C": "/Script/AssAttributes.AssHitDamageEffect"}
+STEP11_HIT_DAMAGE = "/Script/AssAttributes.AssHitDamageEffect"
+STEP11_STUN_IMMUNE = "/Game/Abilities/GE_StunImmune"
+STEP11_ATTRIBUTES = {"Attack": "PhysicalDamage"}
+STEP11_NEW_STATE = {"Poise", "MaxPoise"}
+
+
+def step11_names(events):
+    """A record's events in the plugin's names, its Poise events left out (Speed stays; same_speed pairs it)."""
+    out = []
+    for e in events:
+        kind = e[2] if len(e) > 2 else None
+        if kind == "attribute" and e[4] in STEP11_NEW_STATE:
+            continue
+        if kind == "attribute" and len(e) == 7 and e[5] == e[6]:
+            # a change to the same value: MyGame's old set re-set Mana and Health to their clamp after every execute
+            # (a cast's cost gave Mana 100 -> 90, then 90 -> 90); the plugin's set clamps without it. Nothing changed
+            continue
+        if kind == "effect" and e[4] == STEP11_STUN_IMMUNE and len(e) > 8:
+            # MyGame's old stun count applied it at level 0, the plugin's poise break at 1; nothing in it scales by level
+            e = e[:8] + ["any"] + e[9:]
+        if kind == "attribute" and e[4] in STEP11_ATTRIBUTES:
+            e = e[:4] + [STEP11_ATTRIBUTES[e[4]]] + e[5:]
+        elif kind in ("effect", "removed", "periodic") and e[4] in STEP11_CLASSES:
+            e = e[:4] + [STEP11_CLASSES[e[4]]] + e[5:]
+        if kind == "effect" and e[4] == STEP11_HIT_DAMAGE and len(e) > 11:
+            # its set-by-caller amount: before the move data.damage, the magnitude before Attack / Defense (negative);
+            # after it Ass.Data.Damage, the damage after them. The damage itself is compared in the IncomingDamage
+            # attribute events beside it, both sides
+            e = e[:11] + ["the damage: see IncomingDamage"] + e[12:]
+        elif kind == "probe" and len(e) > 6 and e[4] == "attempt" and e[6] in STEP11_CLASSES:
+            e = e[:6] + [STEP11_CLASSES[e[6]]] + e[7:]
+        out.append(e)
+    return out
+
+
+def same_speed(x, y, bases):
+    """An old Speed event against a new Move Speed one: equal as Move Speed = Speed x the role's walk speed, its base
+    taken from the role's first pair where Speed was 1."""
+    if not (len(x) == len(y) == 7 and x[2] == y[2] == "attribute" and x[4] == "Speed" and y[4] == "MoveSpeed"
+            and x[:2] == y[:2] and x[3] == y[3]):
+        return False
+    if x[3] not in bases:
+        base = y[5] if x[5] == 1 else y[6] if x[6] == 1 else None
+        if base is None:
+            return False
+        bases[x[3]] = base
+    base = bases[x[3]]
+    return all(abs(new - old * base) <= 1e-6 * max(1.0, abs(new)) * 8 for old, new in ((x[5], y[5]), (x[6], y[6])))
+
+
 def first_difference(a, b, tolerant=False, worst=None):
-    """Where two records of one scenario part: the first frame row or event that differs (events compared by_role).
+    """Where two records of one scenario part: the first frame row or event that differs (events compared by_role, in
+    the plugin's names: step11_names, same_speed).
     tolerant: positions within TOLERANCE_CM count as equal, and worst (a dict) gathers the largest distances."""
     worst = {} if worst is None else worst
     if a.get("roles") != b.get("roles"):
         return f"roles {a.get('roles')} -> {b.get('roles')}"
-    ea, eb = by_role(folded_bt(a["events"])), by_role(folded_bt(b["events"]))
+    ea, eb = by_role(folded_bt(step11_names(a["events"]))), by_role(folded_bt(step11_names(b["events"])))
+    bases = {}
     for i, (x, y) in enumerate(zip(ea, eb)):
-        if not _same(x, y, worst, tolerant):
+        if not (_same(x, y, worst, tolerant) or same_speed(x, y, bases)):
             return f"event {i}: {x} -> {y}"
     if len(ea) != len(eb):
         return f"{len(ea)} events -> {len(eb)}"
@@ -390,10 +450,10 @@ def first_difference(a, b, tolerant=False, worst=None):
 
 
 def base_attributes(player):
-    """The player's attributes at each scenario's start: the abilities suite's, and the run's own Attack and speeds."""
+    """The player's attributes at each scenario's start: the abilities suite's, and the run's own Physical Damage and speeds."""
     attributes = player["attributes"]
     return {"MaxHealth": 1000.0, "Health": 1000.0, "Defense": 1000.0, "MaxMana": 100.0, "Mana": 100.0,
-            **{a: attributes[a] for a in ("Attack", "AttackSpeed", "Speed")}}
+            **{a: attributes[a] for a in ("PhysicalDamage", "AttackSpeed", "MoveSpeed")}}
 
 
 def record_all():

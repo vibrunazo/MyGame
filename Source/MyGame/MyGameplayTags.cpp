@@ -20,4 +20,5 @@ namespace MyGameplayTags
 	UE_DEFINE_GAMEPLAY_TAG(Input_Release_3, "input.release.3");
 
 	UE_DEFINE_GAMEPLAY_TAG(Data_Damage, "data.damage");
+	UE_DEFINE_GAMEPLAY_TAG(Data_Speed, "data.speed");
 }

@@ -13,7 +13,9 @@ import unreal
 import toolset_registry
 from toolset_registry.registration import Registration
 
-_ATTRIBUTES = ("Health", "MaxHealth", "Mana", "MaxMana", "Attack", "Defense", "Speed", "AttackSpeed", "RotSpeed")
+# the plugin's set's attributes MyGame uses (Ass Step 11); Rot Speed is in MyGame's own set
+_ATTRIBUTES = ("Health", "MaxHealth", "Mana", "MaxMana", "PhysicalDamage", "Defense", "MoveSpeed", "AttackSpeed", "Poise",
+               "MaxPoise")
 
 # set_game_speed: the time dilation tests want, re-applied whenever the game resets it to 1 (after a floor loads)
 _speed = {"value": 1.0, "handle": None}
@@ -225,9 +227,11 @@ def _tag(name):
 
 
 def _set_attribute(char, attribute, value):
-    """Sets a MyAttributeSet attribute's base value through the ability system (effects and damage see it)."""
+    """Sets an attribute's base value through the ability system (effects and damage see it): the plugin's set's
+    (Ass Step 11), or Rot Speed, MyGame's own."""
+    owner = "/Script/MyGame.MyAttributeSet" if attribute == "RotSpeed" else "/Script/AssAttributes.AssAttributeSet"
     attr = unreal.GameplayAttribute()
-    attr.import_text(f'(AttributeName="{attribute}",Attribute=/Script/MyGame.MyAttributeSet:{attribute},AttributeOwner=None)')
+    attr.import_text(f'(AttributeName="{attribute}",Attribute={owner}:{attribute},AttributeOwner=None)')
     char.set_attribute_base_for_test(attr, value)
 
 
@@ -268,11 +272,14 @@ class MyGameTools(unreal.ToolsetDefinition):
             state["movement_mode"] = str(movement.get_editor_property("movement_mode"))
             state["velocity"] = _vec(movement.get_editor_property("velocity"))
         asc = char.get_editor_property("ability_system")
-        attributes = char.get_editor_property("attribute_set_base") if asc else None
+        attributes = char.get_editor_property("attributes") if asc else None
         if attributes:
             state["attributes"] = {
                 name: attributes.get_editor_property(name.lower()).get_editor_property("current_value")
                 for name in _ATTRIBUTES}
+            own = char.get_editor_property("attribute_set_base")
+            if own:
+                state["attributes"]["RotSpeed"] = own.get_editor_property("rot_speed").get_editor_property("current_value")
         return json.dumps(state)
 
     @toolset_registry.tool_call
@@ -492,7 +499,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         anim = char.get_editor_property("mesh").get_anim_instance()
         montage = anim.get_current_active_montage() if anim else None
         state["montage"] = montage.get_name() if montage else None
-        attributes = char.get_editor_property("attribute_set_base")
+        attributes = char.get_editor_property("attributes")
         if attributes:
             state["health"] = attributes.get_editor_property("health").get_editor_property("current_value")
             state["mana"] = attributes.get_editor_property("mana").get_editor_property("current_value")
@@ -507,7 +514,7 @@ class MyGameTools(unreal.ToolsetDefinition):
 
         Args:
             actor_path: Full path of a PIE character.
-            attribute: Attribute name on MyAttributeSet (e.g. "Health").
+            attribute: Attribute name on the plugin's set (e.g. "Health"), or "RotSpeed".
             value: New value.
 
         Returns:
@@ -677,7 +684,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         if pawn and hasattr(pawn, "learn_abilities"):  # a MyCharacter, not the spectator pawn shown after the level ends
             state["abilities"] = sorted(f'{_template_name(a)}@{a.get_editor_property("slot_key")}'
                                         for a in pawn.get_editor_property("abilities") if _template_name(a))
-            attrs = pawn.get_editor_property("attribute_set_base")
+            attrs = pawn.get_editor_property("attributes")
             state["player"] = {n: attrs.get_editor_property(n.lower()).get_editor_property("current_value") for n in ("Health", "MaxHealth", "Mana")}
         pc = unreal.GameplayStatics.get_player_controller(world, 0)
         state["input_mode"] = pc.get_input_mode_for_test() if pc and hasattr(pc, "get_input_mode_for_test") else None
@@ -1061,7 +1068,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         for char in unreal.GameplayStatics.get_all_actors_of_class(world, cls):
             entry = {"actor": char.get_name(), "path": char.get_path_name(), "class": char.get_class().get_name(),
                      "location": _vec(char.get_actor_location()), "team": char.get_editor_property("team")}
-            attributes = char.get_editor_property("attribute_set_base")
+            attributes = char.get_editor_property("attributes")
             entry["pawn_collision"] = _pawn_response(char)
             if attributes:
                 entry["health"] = attributes.get_editor_property("health").get_editor_property("current_value")
@@ -1075,7 +1082,7 @@ class MyGameTools(unreal.ToolsetDefinition):
         """Test cheat: sets a player attribute's base value (e.g. "Health", "MaxHealth") through the ability system.
 
         Args:
-            attribute: Attribute name on MyAttributeSet.
+            attribute: Attribute name on the plugin's set, or "RotSpeed".
             value: New value.
 
         Returns:
@@ -1311,7 +1318,8 @@ class MyGameTools(unreal.ToolsetDefinition):
     @toolset_registry.tool_call
     @staticmethod
     def reset_stun_count(actor_path: str) -> str:
-        """Test setup: a character's landed stuns counted towards stun immunity go back to none (they never decay).
+        """Test setup: a character's landed stuns counted towards stun immunity go back to none (they never decay): the
+        combat component's count, and its Poise refilled to Max Poise (Ass Step 11).
 
         Args:
             actor_path: Full path of a PIE character.

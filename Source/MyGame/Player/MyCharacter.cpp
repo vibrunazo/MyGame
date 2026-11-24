@@ -1,6 +1,7 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "MyCharacter.h"
+#include "AssAttributeSettings.h"
 #include "../MyGameplayTags.h"
 #include "AssTags.h"
 #include "AssTestProbe.h"
@@ -110,6 +111,7 @@ AMyCharacter::AMyCharacter()
 
 	// Our ability system component.
 	AbilitySystem = CreateDefaultSubobject<UAssAbilitySystemComponent>(TEXT("AbilitySystem"));
+	Attributes = CreateDefaultSubobject<UMyCombatAttributes>(TEXT("Attributes"));
 	AttributeSetBase = CreateDefaultSubobject<UMyAttributeSet>(TEXT("AttributeSetBase"));
 	LootComponent = CreateDefaultSubobject<ULootComponent>(TEXT("Loot Component"));
 	Combat = CreateDefaultSubobject<UAssCombatComponent>(TEXT("Combat"));
@@ -240,13 +242,16 @@ void AMyCharacter::BeginPlay()
 		GiveGrant(Grant);
 	}
 	if (AMyPlayerController* MyCont = GetController<AMyPlayerController>()) MyCont->RefreshHUDAbilities(this);
-	if (!ensure(AttributeSetBase != nullptr)) return;
+	if (!ensure(Attributes != nullptr && AttributeSetBase != nullptr)) return;
 	if (!ensure(GetCharacterMovement() != nullptr)) return;
-	AttributeSetBase->SetMaxHealth(MaxHealth);
-	AttributeSetBase->SetAttack(Attack);
-	AttributeSetBase->SetDefense(Defense);
+	Attributes->SetMaxHealth(MaxHealth);
+	Attributes->SetPhysicalDamage(Attack);
+	Attributes->SetDefense(Defense);
+	Attributes->SetMaxPoise(MaxPoise);
 	BaseSpeed = GetCharacterMovement()->MaxWalkSpeed;
-	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetSpeedAttribute()).AddUObject(this, &AMyCharacter::OnSpeedChange);
+	// Move Speed is the walk speed itself (Ass Step 11): its base is the walk speed set on the character
+	Attributes->SetMoveSpeed(BaseSpeed);
+	AbilitySystem->GetGameplayAttributeValueChangeDelegate(Attributes->GetMoveSpeedAttribute()).AddUObject(this, &AMyCharacter::OnSpeedChange);
 	AbilitySystem->GetGameplayAttributeValueChangeDelegate(AttributeSetBase->GetRotSpeedAttribute()).AddUObject(this, &AMyCharacter::OnRotSpeedChange);
 	AbilitySystem->OnGameplayEffectAppliedDelegateToSelf.AddUObject(this, &AMyCharacter::OnEffectApplied);
 	// if (IsPlayerControlled()) 
@@ -254,20 +259,22 @@ void AMyCharacter::BeginPlay()
 	// 	Team = 1;
 	// }
 		// else Team = 0;
-	if (IsPlayerControlled() && GetMyGameInstance() && AttributeSetBase)
+	if (IsPlayerControlled() && GetMyGameInstance())
 	{
-		if (InitialHealth < 0.f) AttributeSetBase->SetHealth(GetMyGameInstance()->Health);
-		else AttributeSetBase->SetHealth(InitialHealth);
-		AttributeSetBase->SetMana(GetMyGameInstance()->Mana);
+		if (InitialHealth < 0.f) Attributes->SetHealth(GetMyGameInstance()->Health);
+		else Attributes->SetHealth(InitialHealth);
+		Attributes->SetMana(GetMyGameInstance()->Mana);
 		GetMyGameInstance()->SetCharRef(this);
 		Inventory = &GetMyGameInstance()->Inventory;
 		ApplyAllItemEffects();
 	}
 	else
 	{
-		if (InitialHealth < 0.f) AttributeSetBase->SetHealth(MaxHealth);
-		else AttributeSetBase->SetHealth(InitialHealth);
+		if (InitialHealth < 0.f) Attributes->SetHealth(MaxHealth);
+		else Attributes->SetHealth(InitialHealth);
 	}
+	// the starting values are set: the plugin fills Poise (no derived-stats or regeneration effects in MyGame's settings)
+	UAssAttributeLibrary::SetUpAttributes(AbilitySystem);
 	UpdateHealthBar();
 	SetIsInCombat(true);
 	Combat->RefreshPawnCollision();
@@ -370,9 +377,9 @@ void AMyCharacter::Jump()
 
 void AMyCharacter::FellOutOfWorld(const UDamageType& dmgType)
 {
-	if (IsAlive() && AttributeSetBase) 
+	if (IsAlive() && Attributes) 
 	{
-		AttributeSetBase->SetHealth(0.f);
+		Attributes->SetHealth(0.f);
 		OnDie();
 	}
 }
@@ -585,8 +592,7 @@ void AMyCharacter::ActivateAbilityByInput(uint8 Index)
 void AMyCharacter::UpdateHealthBar()
 {
 	if (!ensure(HealthBarComp != nullptr)) return;
-	// if (!ensure(AttributeSetBase != nullptr)) return;
-	if (!AttributeSetBase)
+	if (!Attributes)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("BeginPlay: AttributeSet NOT created on %s"), *GetName());
 		return;
@@ -595,11 +601,11 @@ void AMyCharacter::UpdateHealthBar()
 	UUserWidget* Widget = HealthBarComp->GetUserWidgetObject();
 	UMyHealthBar* HealthBar = Cast<UMyHealthBar>(Widget);
 	float OldHealth = 0.f;
-	float NewHealth = AttributeSetBase->GetHealth();
+	float NewHealth = Attributes->GetHealth();
 	if (HealthBar)
 	{
 		OldHealth = HealthBar->GetHealth();
-		HealthBar->SetMaxHealth(AttributeSetBase->GetMaxHealth());
+		HealthBar->SetMaxHealth(Attributes->GetMaxHealth());
 		HealthBar->SetHealth(NewHealth);
 	}
 	AMyPlayerController* MyCont = Cast<AMyPlayerController>(GetController());
@@ -608,8 +614,8 @@ void AMyCharacter::UpdateHealthBar()
 		OldHealth = MyCont->GetHUDHealth();
 		MyCont->UpdateHUD(this);
 	}
-	float OldHealthPct = OldHealth / AttributeSetBase->GetMaxHealth();
-	float NewHealthPct = NewHealth / AttributeSetBase->GetMaxHealth();
+	float OldHealthPct = OldHealth / Attributes->GetMaxHealth();
+	float NewHealthPct = NewHealth / Attributes->GetMaxHealth();
 	// TODO really? that's ridiculous, refactor this crap
 	if (NewHealthPct <= 0.75f && OldHealthPct > 0.75f)
 	{
@@ -652,7 +658,7 @@ void AMyCharacter::AddDurationToHealthBar(float Duration, const FGameplayEffectS
 
 void AMyCharacter::OnSpeedChange(const FOnAttributeChangeData& Data)
 {
-	GetCharacterMovement()->MaxWalkSpeed = BaseSpeed * AttributeSetBase->GetSpeed();
+	GetCharacterMovement()->MaxWalkSpeed = Attributes->GetMoveSpeed();
 	// UE_LOG(LogTemp, Warning, TEXT("My Speed changed to %f"), GetCharacterMovement()->MaxWalkSpeed);
 }
 
@@ -747,9 +753,9 @@ void AMyCharacter::OnDamaged(AActor* SourceActor, float Damage, FGameplayEffectS
 void AMyCharacter::OnDie()
 {
 	// UE_LOG(LogTemp, Warning, TEXT("I died"));
-	if (IsAlive() && AttributeSetBase)
+	if (IsAlive() && Attributes)
 	{
-		AttributeSetBase->SetHealth(0.f);
+		Attributes->SetHealth(0.f);
 	}
 	UWorld* World = GetWorld();
 	// FTimerManager TM = FTimerManager::FTimerManager;
@@ -843,8 +849,8 @@ void AMyCharacter::DropItems()
 
 bool AMyCharacter::IsAlive()
 {
-	if (!ensure(AttributeSetBase != nullptr)) return 0;
-	return AttributeSetBase->GetHealth() > 0;
+	if (!ensure(Attributes != nullptr)) return 0;
+	return Attributes->GetHealth() > 0;
 }
 
 UMyGameInstance* AMyCharacter::GetMyGameInstance()
@@ -993,9 +999,9 @@ void AMyCharacter::ApplyOneItemEffect(UItemDataAsset* NewItem)
 	if (LearnData) LearnAbilities(LearnData->AbilitiesToLearn);
 }
 
-UMyAttributeSet* AMyCharacter::GetAttributes()
+UMyCombatAttributes* AMyCharacter::GetAttributes()
 {
-	return AttributeSetBase;
+	return Attributes;
 }
 
 FTransform AMyCharacter::GetProjectileSpawn()
@@ -1217,4 +1223,9 @@ void AMyCharacter::SetGlow(float NewGlow)
 void AMyCharacter::ResetGlow()
 {
 	SetBodyMaterialsScalar(FName("GlowAlpha"), 0.f);
+}
+
+float AMyCharacter::GetSpeedMultiplier() const
+{
+	return Attributes && BaseSpeed > 0.f ? Attributes->GetMoveSpeed() / BaseSpeed : 1.f;
 }

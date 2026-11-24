@@ -91,11 +91,14 @@ def difference(a, b, group, worst=None):
     worst = {} if worst is None else worst
     if a.get("roles") != b.get("roles"):
         return f"roles {a.get('roles')} -> {b.get('roles')}"
-    ea, eb = strict.by_role(strict.folded_bt(a["events"])), strict.by_role(strict.folded_bt(b["events"]))
+    # in the plugin's names (strict.step11_names: the baseline is from before Ass Step 11's move)
+    ea = strict.by_role(strict.folded_bt(strict.step11_names(a["events"])))
+    eb = strict.by_role(strict.folded_bt(strict.step11_names(b["events"])))
+    bases = {}
     if len(ea) != len(eb):
         return f"{len(ea)} events -> {len(eb)}"
     for i, (x, y) in enumerate(zip(ea, eb)):
-        if not _event_same(x, y, group, worst):
+        if not (_event_same(x, y, group, worst) or strict.same_speed(x, y, bases)):
             return f"event {i}: {x} -> {y}"
     for role in sorted(set(a["frames"]) | set(b["frames"])):
         fa, fb = a["frames"].get(role, []), b["frames"].get(role, [])

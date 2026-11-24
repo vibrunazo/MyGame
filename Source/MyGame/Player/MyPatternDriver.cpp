@@ -2,7 +2,7 @@
 #include "MyCharacter.h"
 #include "AIController.h"
 #include "AbilitySystemComponent.h"
-#include "../Abilities/MyAttributeSet.h"
+#include "AssAttributeSet.h"
 
 namespace
 {
@@ -17,8 +17,8 @@ float UMyPatternDriver::GetHealthFraction(const ACharacter* Character) const
 	AMyCharacter* Char = Mine(Character);
 	const UAbilitySystemComponent* Abilities = Char ? Char->GetAbilitySystemComponent() : nullptr;
 	if (!Abilities) return 1.f;
-	const float Max = Abilities->GetNumericAttribute(UMyAttributeSet::GetMaxHealthAttribute());
-	return Max > 0.f ? Abilities->GetNumericAttribute(UMyAttributeSet::GetHealthAttribute()) / Max : 1.f;
+	const float Max = Abilities->GetNumericAttribute(UAssAttributeSet::GetMaxHealthAttribute());
+	return Max > 0.f ? Abilities->GetNumericAttribute(UAssAttributeSet::GetHealthAttribute()) / Max : 1.f;
 }
 
 bool UMyPatternDriver::CanAct(const ACharacter* Character) const

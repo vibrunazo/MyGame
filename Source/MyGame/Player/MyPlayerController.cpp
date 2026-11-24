@@ -202,7 +202,7 @@ void AMyPlayerController::ShowLevelIntro()
 
 void AMyPlayerController::UpdateHUD(AMyCharacter* Char)
 {
-    UMyAttributeSet* Attr = Char->GetAttributes();
+    UMyCombatAttributes* Attr = Char->GetAttributes();
     if (!Attr) return;
     if (!HUDWidgetRef) return;
     HUDWidgetRef->BPUpdateHUD(Char);

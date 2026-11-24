@@ -28,7 +28,6 @@
 #include "AssAbility.h"
 #include "AssAbilityTemplate.h"
 #include "Player/MyProjectile.h"
-#include "Abilities/MyAttributeSet.h"
 #include "AssTestProbe.h"
 
 UCombatRecorder* UCombatRecorder::Current = nullptr;
@@ -128,11 +127,16 @@ void UCombatRecorder::AddRole(const FString& Name, AActor* Actor)
 	Role.Activated = ASC->AbilityActivatedCallbacks.AddUObject(this, &UCombatRecorder::OnActivated, Index);
 	Role.Ended = ASC->OnAbilityEnded.AddUObject(this, &UCombatRecorder::OnEnded, Index);
 	Role.Failed = ASC->AbilityFailedCallbacks.AddUObject(this, &UCombatRecorder::OnFailed, Index);
-	for (TFieldIterator<FProperty> It(UMyAttributeSet::StaticClass()); It; ++It)
+	// every attribute of every set the character has (the plugin's, Ass Step 11, and MyGame's own Rot Speed)
+	for (const UAttributeSet* Set : ASC->GetSpawnedAttributes())
 	{
-		if (!FGameplayAttribute::IsGameplayAttributeDataProperty(*It)) continue;
-		const FGameplayAttribute Attribute(*It);
-		Role.AttributeHandles.Emplace(Attribute, ASC->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &UCombatRecorder::OnAttribute, Index));
+		if (!Set) continue;
+		for (TFieldIterator<FProperty> It(Set->GetClass()); It; ++It)
+		{
+			if (!FGameplayAttribute::IsGameplayAttributeDataProperty(*It)) continue;
+			const FGameplayAttribute Attribute(*It);
+			Role.AttributeHandles.Emplace(Attribute, ASC->GetGameplayAttributeValueChangeDelegate(Attribute).AddUObject(this, &UCombatRecorder::OnAttribute, Index));
+		}
 	}
 }
 

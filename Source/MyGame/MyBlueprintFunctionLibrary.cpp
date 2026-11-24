@@ -3,6 +3,7 @@
 
 #include "MyBlueprintFunctionLibrary.h"
 #include "AbilitySystemGlobals.h"
+#include "AssAttributeSet.h"
 #include "AssCombatComponent.h"
 #include "AssCombatLibrary.h"
 #include "MyGameInstance.h"
@@ -91,6 +92,15 @@ void UMyBlueprintFunctionLibrary::ResetPatternPlacesForTest(UObject* WorldContex
 
 int32 UMyBlueprintFunctionLibrary::ResetHitStunCountForTest(AActor* Combatant)
 {
+	// the landed stuns counted towards stun immunity: the combat component's count, and since Ass Step 11 the Poise
+	// they take (refilled to Max Poise)
+	if (UAbilitySystemComponent* ASC = UAbilitySystemGlobals::GetAbilitySystemComponentFromActor(Combatant))
+	{
+		if (ASC->HasAttributeSetForAttribute(UAssAttributeSet::GetPoiseAttribute()))
+		{
+			ASC->SetNumericAttributeBase(UAssAttributeSet::GetPoiseAttribute(), ASC->GetNumericAttributeBase(UAssAttributeSet::GetMaxPoiseAttribute()));
+		}
+	}
 	UAssCombatComponent* Combat = UAssCombatComponent::Find(Combatant);
 	return Combat ? Combat->ResetHitStunCount() : 0;
 }

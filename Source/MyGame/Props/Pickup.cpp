@@ -8,7 +8,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "../Abilities/IGetHit.h"
-#include "../Abilities/MyAttributeSet.h"
+#include "../Abilities/MyCombatAttributes.h"
 #include "../Abilities/LootComponent.h"
 #include "../Player/MyCharacter.h"
 #include "../UI/WidgetActor.h"

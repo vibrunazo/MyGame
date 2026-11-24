@@ -10,7 +10,7 @@ public class MyGame : ModuleRules
 		// headers are included by path from the module root (e.g. "Abilities/..."), also by MyGameEditor
 		PublicIncludePaths.Add(ModuleDirectory);
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTasks", "GameplayTags", "AssCore", "AssCombat", "AssPattern", "AssDriver", "UMG", "Slate", "SlateCore", "AIModule", "Niagara", "NiagaraAnimNotifies", "PCG" });
+		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "GameplayAbilities", "GameplayTasks", "GameplayTags", "AssCore", "AssCombat", "AssAttributes", "AssPattern", "AssDriver", "UMG", "Slate", "SlateCore", "AIModule", "Niagara", "NiagaraAnimNotifies", "PCG" });
 		PrivateDependencyModuleNames.AddRange(new string[] { "EngineSettings" });
 	}
 }

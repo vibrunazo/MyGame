@@ -75,7 +75,7 @@ def read_reference():
     return json.loads(text)
 # the stun tag, and its name before Ass Plan.md Step 2 renamed it (the UE4 reference outside git holds that one)
 STUN_TAGS = ("Ass.Status.HitStun", "status.hitstun")
-FROZEN = {"Speed": 0.0}  # its tree still ticks; it can't walk
+FROZEN = {"MoveSpeed": 0.0}  # its pattern still steps; it can't walk
 
 
 def boss_scenarios():
@@ -89,7 +89,7 @@ def boss_scenarios():
                    player={"Defense": 1000.0}, setup=[target_player("boss")])
     yield scenario("boss_two_marks", wake + tap("Punch", 0.2), 4.0,
                    enemies=[enemy("boss", "boss", x=CLOSE + 95, yaw=0.0, MaxHealth=100.0, Health=52.0, Defense=1.0, **FROZEN)],
-                   player={"Defense": 1000.0, "Attack": 2.0})
+                   player={"Defense": 1000.0, "PhysicalDamage": 2.0})
 
 
 # each enemy type: its class and its controller's ranges (attack, aggressive; the dumps' actors.json)

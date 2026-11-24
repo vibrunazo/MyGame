@@ -8,14 +8,11 @@
 #include "MyAttributeSet.generated.h"
 
 // Uses macros from AttributeSet.h
-#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
-	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
+#define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) 	GAMEPLAYATTRIBUTE_VALUE_GETTER(PropertyName) 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
 /**
- * 
+ * MyGame's own attributes beside the plugin's set (UMyCombatAttributes, Ass Step 11): Rot Speed, a multiplier of a
+ * character's walk and run rotation rates.
  */
 UCLASS()
 class MYGAME_API UMyAttributeSet : public UAttributeSet
@@ -24,50 +21,8 @@ class MYGAME_API UMyAttributeSet : public UAttributeSet
 
 public:
 	UMyAttributeSet();
-	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData & Data) override;
-	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue) override;
-	virtual void PostAttributeChange(const FGameplayAttribute& Attribute, float OldValue, float NewValue) override;
-	virtual void PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data) override;
-
-	UPROPERTY(Category = "Attributes | Health", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData Health;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Health)
-
-	UPROPERTY(Category = "Attributes | MaxHealth", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData MaxHealth;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxHealth)
-
-	UPROPERTY(Category = "Attributes | Mana", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData Mana;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Mana)
-
-	UPROPERTY(Category = "Attributes | MaxMana", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData MaxMana;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, MaxMana)
-	
-	UPROPERTY(Category = "Attributes | Attack", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData Attack;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Attack)
-
-	UPROPERTY(Category = "Attributes | Defense", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData Defense;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Defense)
-
-	UPROPERTY(Category = "Attributes | Speed", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData Speed;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, Speed)
-
-	UPROPERTY(Category = "Attributes | AttackSpeed", EditAnywhere, BlueprintReadWrite)
-	FGameplayAttributeData AttackSpeed;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, AttackSpeed)
 
 	UPROPERTY(Category = "Attributes | RotSpeed", EditAnywhere, BlueprintReadWrite)
 	FGameplayAttributeData RotSpeed;
 	ATTRIBUTE_ACCESSORS(UMyAttributeSet, RotSpeed)
-
-	// Meta attribute: damage about to be taken (positive). Damage effects write it; PostGameplayEffectExecute turns it
-	// into lost Health and resets it, so it never holds a value between executions
-	UPROPERTY(Category = "Attributes | Meta", BlueprintReadOnly)
-	FGameplayAttributeData IncomingDamage;
-	ATTRIBUTE_ACCESSORS(UMyAttributeSet, IncomingDamage)
 };
