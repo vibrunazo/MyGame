@@ -12,7 +12,10 @@
    "Ass.Status",
    "Ass.Window"
   ],
-  "code": [],
+  "code": [
+   "Config/DefaultEngine.ini: ; Ass Step 11: MyGame's attributes moved into the plugin's set (UMyCombatAttributes), its damage into the default policy",
+   "Config/DefaultGame.ini: ; Ass Step 11: MyGame's rules as data (today's, and nothing else); no primaries and nothing regenerates"
+  ],
   "owner": null,
   "plugin_name": null,
   "source": "AssCore",
@@ -1399,7 +1402,9 @@
    "data.rotspeed",
    "data.speed"
   ],
-  "code": [],
+  "code": [
+   "Config/DefaultGame.ini: ; Ass Step 11: MyGame's rules as data (today's, and nothing else); no primaries and nothing regenerates"
+  ],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
@@ -1457,9 +1462,6 @@
   "children": [],
   "code": [
    "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Damage);",
-   "Source/MyGame/Abilities/DamageExec.cpp: // FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
-   "Source/MyGame/Abilities/DamageExec.cpp: FGameplayTag DamageTag = MyGameplayTags::Data_Damage;",
-   "Source/MyGame/Abilities/MyAbilityPolicy.cpp: if (Part.Spec.IsValid()) Part.Spec.Data->SetSetByCallerMagnitude(MyGameplayTags::Data_Damage, -Payload.Damage.Magnitude);",
    "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Damage, \"data.damage\");"
   ],
   "owner": null,
@@ -1592,7 +1594,11 @@
   "children": [
    "data.speed.duration"
   ],
-  "code": [],
+  "code": [
+   "Source/MyGame/MyGameplayTags.h: MYGAME_API UE_DECLARE_GAMEPLAY_TAG_EXTERN(Data_Speed);",
+   "Source/MyGame/Abilities/MySpeedAddMagnitude.cpp: return Spec.GetSetByCallerMagnitude(MyGameplayTags::Data_Speed, true, 0.f) * Base;",
+   "Source/MyGame/MyGameplayTags.cpp: UE_DEFINE_GAMEPLAY_TAG(Data_Speed, \"data.speed\");"
+  ],
   "owner": null,
   "plugin_name": null,
   "source": "DefaultGameplayTags.ini",
