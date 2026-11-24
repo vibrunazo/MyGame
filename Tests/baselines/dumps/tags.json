@@ -4,7 +4,9 @@
   "children": [
    "Ass.Anim",
    "Ass.Combo",
+   "Ass.Damage",
    "Ass.Data",
+   "Ass.Event",
    "Ass.Notify",
    "Ass.State",
    "Ass.Status",
@@ -66,18 +68,135 @@
   "source": "AssCore",
   "step": null
  },
+ "Ass.Damage": {
+  "assets": [],
+  "children": [
+   "Ass.Damage.Magic",
+   "Ass.Damage.School"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.Magic": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School": {
+  "assets": [],
+  "children": [
+   "Ass.Damage.School.Arcane",
+   "Ass.Damage.School.Fire",
+   "Ass.Damage.School.Frost",
+   "Ass.Damage.School.Holy",
+   "Ass.Damage.School.Lightning",
+   "Ass.Damage.School.Nature",
+   "Ass.Damage.School.Shadow"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School.Arcane": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School.Fire": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School.Frost": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School.Holy": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School.Lightning": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School.Nature": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Damage.School.Shadow": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
  "Ass.Data": {
   "assets": [],
   "children": [
+   "Ass.Data.AttackPower",
    "Ass.Data.CamShake",
    "Ass.Data.Cooldown",
+   "Ass.Data.Cost",
+   "Ass.Data.Damage",
+   "Ass.Data.Heal",
    "Ass.Data.HitStun",
    "Ass.Data.Knockback",
    "Ass.Data.Launch",
    "Ass.Data.NoControl",
    "Ass.Data.NoPawnBlock",
+   "Ass.Data.PoiseRegenDelay",
+   "Ass.Data.SchoolBonus",
+   "Ass.Data.Stagger",
    "Ass.Data.StunImmune"
   ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.AttackPower": {
+  "assets": [],
+  "children": [],
   "code": [],
   "owner": null,
   "plugin_name": null,
@@ -113,6 +232,33 @@
   "step": null
  },
  "Ass.Data.Cooldown": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.Cost": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.Damage": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.Heal": {
   "assets": [],
   "children": [],
   "code": [],
@@ -203,11 +349,58 @@
   "source": "AssCore",
   "step": null
  },
+ "Ass.Data.PoiseRegenDelay": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.SchoolBonus": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.Stagger": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
  "Ass.Data.StunImmune": {
   "assets": [
    "/Game/Abilities/GE_StunImmune",
    "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
   ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Event": {
+  "assets": [],
+  "children": [
+   "Ass.Event.Staggered"
+  ],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Event.Staggered": {
+  "assets": [],
   "children": [],
   "code": [],
   "owner": null,
@@ -338,11 +531,14 @@
   "assets": [],
   "children": [
    "Ass.Status.Airborne",
+   "Ass.Status.DamageImmune",
    "Ass.Status.HitStun",
    "Ass.Status.ImmuneProjectile",
    "Ass.Status.NoControl",
    "Ass.Status.NoMove",
    "Ass.Status.NoPawnBlock",
+   "Ass.Status.PoiseRegenDelay",
+   "Ass.Status.Staggered",
    "Ass.Status.StunImmune",
    "Ass.Status.Unpushable"
   ],
@@ -356,6 +552,15 @@
   "assets": [
    "/Game/Blueprints/Chars/EWizard/AT_EWizard_Cast1"
   ],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Status.DamageImmune": {
+  "assets": [],
   "children": [],
   "code": [],
   "owner": null,
@@ -423,6 +628,24 @@
   "step": null
  },
  "Ass.Status.NoPawnBlock": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Status.PoiseRegenDelay": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Status.Staggered": {
   "assets": [],
   "children": [],
   "code": [],

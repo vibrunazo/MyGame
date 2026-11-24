@@ -1057,6 +1057,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 2,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
@@ -3346,6 +3347,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 5,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
@@ -7766,6 +7768,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 5,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
@@ -10336,6 +10339,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 5,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
@@ -12636,6 +12640,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 5,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
@@ -14948,6 +14953,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 5,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
@@ -17260,6 +17266,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 5,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
@@ -19841,6 +19848,7 @@
      "tickGroup": "TG_PrePhysics",
      "tickInterval": 0
     },
+    "rollSeed": 0,
     "stunImmuneCooldown": 5,
     "stunImmuneEffect": "/Game/Abilities/GE_StunImmune.GE_StunImmune_C",
     "subobject": "AssCombatComponent"
