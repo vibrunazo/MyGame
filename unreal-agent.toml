@@ -134,3 +134,6 @@ name = "ai-seed"
 kind = "pie"
 run = "Tests/ai_seed.py:suite"
 tier = "manual"                    # Step 0c's seeding try: seeded AI runs repeat frame for frame
+# the engine's animation on one thread: with it parallel, a hit's confirm (the attacker's hit window, from its anim
+# work) lands before or after its pattern's next press by thread timing, so a seed's runs part by a frame (2026-11-24)
+args = ["-ExecCmds=a.ParallelAnimEvaluation 0,a.ParallelAnimUpdate 0,a.ParallelBlendPhysics 0"]

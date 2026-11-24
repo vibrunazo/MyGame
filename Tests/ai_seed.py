@@ -10,6 +10,11 @@ Found (2026-11-16): it repeats exactly once both of the AI's randoms are seeded:
 stock nodes, Blueprint random nodes) and the AI system's own stream, which EQS's RandomBest25Pct pick draws from
 (seed_random seeds both). The enemy must be spawned fresh: the level's enemies differ run to run on the same run seed
 (which type stands at each spawn point is drawn unseeded), so one borrowed from the level brings its own history.
+Found (2026-11-24): with the engine's animation in parallel (its default) a seed's runs still parted now and then, by
+one frame, on a hit's frame: the attacker's next combo punch started in the hit's frame or the next. Every position and
+draw matched up to it. The hit confirm comes from the attacker's anim work, which ran on worker threads, so it landed
+before or after the pattern's next press by thread timing. With parallel animation off (this suite's launch arguments
+in unreal-agent.toml) it repeated 4 runs of 4; before, about half failed.
 CANARY = True draws and reseeds once a frame and records both streams, to find the frame where two runs' draws part.
 """
 import json
