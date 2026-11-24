@@ -26,6 +26,7 @@
   "/Game/UI/WBP_GameOver :: EventGraph",
   "/Game/UI/WBP_PauseMenu :: EventGraph"
  ],
+ "MyCharacter.GetSpeedMultiplier": [],
  "MyCharacter.GetTagsForTest": [],
  "MyCharacter.GetTargetEnemy": [],
  "MyCharacter.HasControl": [],

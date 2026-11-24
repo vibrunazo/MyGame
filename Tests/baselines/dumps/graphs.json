@@ -4,11 +4,6 @@
   "kind": "Blueprint",
   "parent": "/Script/MyGame.BaseExec"
  },
- "/Game/Abilities/BP_DamageExec": {
-  "graphs": {},
-  "kind": "Blueprint",
-  "parent": "/Script/MyGame.DamageExec"
- },
  "/Game/Abilities/GE_Attack": {
   "graphs": {},
   "kind": "Blueprint",

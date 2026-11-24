@@ -354,9 +354,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Attack",
-      "attributeName": "Attack",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attribute": "/Script/AssAttributes.AssAttributeSet:PhysicalDamage",
+      "attributeName": "PhysicalDamage",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -711,16 +711,7 @@
    },
    "durationPolicy": "HasDuration",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [
     {
      "editorFriendlyName": "Asset Tags (on GE Attack Speed Add)",
@@ -965,9 +956,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:AttackSpeed",
+      "attribute": "/Script/AssAttributes.AssAttributeSet:AttackSpeed",
       "attributeName": "AttackSpeed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -1322,16 +1313,7 @@
    },
    "durationPolicy": "HasDuration",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [
     {
      "editorFriendlyName": "Asset Tags (on GE Attack Speed Add No Stack)",
@@ -1576,9 +1558,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:AttackSpeed",
+      "attribute": "/Script/AssAttributes.AssAttributeSet:AttackSpeed",
       "attributeName": "AttackSpeed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -2378,161 +2360,7 @@
    },
    "durationPolicy": "Instant",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [
-      {
-       "aggregatorType": "CapturedAttributeBacked",
-       "capturedAttribute": {
-        "attributeSource": "Target",
-        "attributeToCapture": {
-         "attribute": "/Script/MyGame.MyAttributeSet:Health",
-         "attributeName": "Health",
-         "attributeOwner": "/Script/MyGame.MyAttributeSet"
-        },
-        "bSnapshot": false
-       },
-       "evaluationChannelSettings": {
-        "channel": "Channel0"
-       },
-       "modifierMagnitude": {
-        "attributeBasedMagnitude": {
-         "attributeCalculationType": "AttributeMagnitude",
-         "attributeCurve": {
-          "curveTable": "None",
-          "rowName": "None"
-         },
-         "backingAttribute": {
-          "attributeSource": "Source",
-          "attributeToCapture": {
-           "attribute": "",
-           "attributeName": "",
-           "attributeOwner": "None"
-          },
-          "bSnapshot": false
-         },
-         "coefficient": {
-          "curve": {
-           "curveTable": "None",
-           "rowName": "None"
-          },
-          "registryType": "None",
-          "value": 1
-         },
-         "finalChannel": "Channel0",
-         "postMultiplyAdditiveValue": {
-          "curve": {
-           "curveTable": "None",
-           "rowName": "None"
-          },
-          "registryType": "None",
-          "value": 0
-         },
-         "preMultiplyAdditiveValue": {
-          "curve": {
-           "curveTable": "None",
-           "rowName": "None"
-          },
-          "registryType": "None",
-          "value": 0
-         },
-         "sourceTagFilter": {
-          "gameplayTags": []
-         },
-         "targetTagFilter": {
-          "gameplayTags": []
-         }
-        },
-        "customMagnitude": {
-         "calculationClassMagnitude": "None",
-         "coefficient": {
-          "curve": {
-           "curveTable": "None",
-           "rowName": "None"
-          },
-          "registryType": "None",
-          "value": 1
-         },
-         "finalLookupCurve": {
-          "curveTable": "None",
-          "rowName": "None"
-         },
-         "postMultiplyAdditiveValue": {
-          "curve": {
-           "curveTable": "None",
-           "rowName": "None"
-          },
-          "registryType": "None",
-          "value": 0
-         },
-         "preMultiplyAdditiveValue": {
-          "curve": {
-           "curveTable": "None",
-           "rowName": "None"
-          },
-          "registryType": "None",
-          "value": 0
-         }
-        },
-        "magnitudeCalculationType": "SetByCaller",
-        "scalableFloatMagnitude": {
-         "curve": {
-          "curveTable": "None",
-          "rowName": "None"
-         },
-         "registryType": "None",
-         "value": 0
-        },
-        "setByCallerMagnitude": {
-         "dataName": "None",
-         "dataTag": {
-          "tagName": "data.damage"
-         }
-        }
-       },
-       "modifierOp": "AddBase",
-       "sourceTags": {
-        "ignoreTags": {
-         "gameplayTags": []
-        },
-        "requireTags": {
-         "gameplayTags": []
-        },
-        "tagQuery": {
-         "autoDescription": "",
-         "queryTokenStream": [],
-         "tagDictionary": [],
-         "tokenStreamVersion": 0,
-         "userDescription": ""
-        }
-       },
-       "targetTags": {
-        "ignoreTags": {
-         "gameplayTags": []
-        },
-        "requireTags": {
-         "gameplayTags": []
-        },
-        "tagQuery": {
-         "autoDescription": "",
-         "queryTokenStream": [],
-         "tagDictionary": [],
-         "tokenStreamVersion": 0,
-         "userDescription": ""
-        }
-       },
-       "transientAggregatorIdentifier": {
-        "tagName": "None"
-       }
-      }
-     ],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [
     {
      "editorFriendlyName": "Asset Tags (on GE Damage)",
@@ -2749,7 +2577,144 @@
      }
     }
    },
-   "modifiers": [],
+   "modifiers": [
+    {
+     "attribute": {
+      "attribute": "/Script/AssAttributes.AssAttributeSet:Health",
+      "attributeName": "Health",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
+     },
+     "evaluationChannelSettings": {
+      "channel": "Channel0"
+     },
+     "modifierMagnitude": {
+      "attributeBasedMagnitude": {
+       "attributeCalculationType": "AttributeMagnitude",
+       "attributeCurve": {
+        "curveTable": "None",
+        "rowName": "None"
+       },
+       "backingAttribute": {
+        "attributeSource": "Source",
+        "attributeToCapture": {
+         "attribute": "",
+         "attributeName": "",
+         "attributeOwner": "None"
+        },
+        "bSnapshot": false
+       },
+       "coefficient": {
+        "curve": {
+         "curveTable": "None",
+         "rowName": "None"
+        },
+        "registryType": "None",
+        "value": 1
+       },
+       "finalChannel": "Channel0",
+       "postMultiplyAdditiveValue": {
+        "curve": {
+         "curveTable": "None",
+         "rowName": "None"
+        },
+        "registryType": "None",
+        "value": 0
+       },
+       "preMultiplyAdditiveValue": {
+        "curve": {
+         "curveTable": "None",
+         "rowName": "None"
+        },
+        "registryType": "None",
+        "value": 0
+       },
+       "sourceTagFilter": {
+        "gameplayTags": []
+       },
+       "targetTagFilter": {
+        "gameplayTags": []
+       }
+      },
+      "customMagnitude": {
+       "calculationClassMagnitude": "None",
+       "coefficient": {
+        "curve": {
+         "curveTable": "None",
+         "rowName": "None"
+        },
+        "registryType": "None",
+        "value": 1
+       },
+       "finalLookupCurve": {
+        "curveTable": "None",
+        "rowName": "None"
+       },
+       "postMultiplyAdditiveValue": {
+        "curve": {
+         "curveTable": "None",
+         "rowName": "None"
+        },
+        "registryType": "None",
+        "value": 0
+       },
+       "preMultiplyAdditiveValue": {
+        "curve": {
+         "curveTable": "None",
+         "rowName": "None"
+        },
+        "registryType": "None",
+        "value": 0
+       }
+      },
+      "magnitudeCalculationType": "SetByCaller",
+      "scalableFloatMagnitude": {
+       "curve": {
+        "curveTable": "None",
+        "rowName": "None"
+       },
+       "registryType": "None",
+       "value": 0
+      },
+      "setByCallerMagnitude": {
+       "dataName": "None",
+       "dataTag": {
+        "tagName": "data.damage"
+       }
+      }
+     },
+     "modifierOp": "AddBase",
+     "sourceTags": {
+      "ignoreTags": {
+       "gameplayTags": []
+      },
+      "requireTags": {
+       "gameplayTags": []
+      },
+      "tagQuery": {
+       "autoDescription": "",
+       "queryTokenStream": [],
+       "tagDictionary": [],
+       "tokenStreamVersion": 0,
+       "userDescription": ""
+      }
+     },
+     "targetTags": {
+      "ignoreTags": {
+       "gameplayTags": []
+      },
+      "requireTags": {
+       "gameplayTags": []
+      },
+      "tagQuery": {
+       "autoDescription": "",
+       "queryTokenStream": [],
+       "tagDictionary": [],
+       "tokenStreamVersion": 0,
+       "userDescription": ""
+      }
+     }
+    }
+   ],
    "ongoingTagRequirements": {
     "ignoreTags": {
      "gameplayTags": []
@@ -3205,9 +3170,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Defense",
+      "attribute": "/Script/AssAttributes.AssAttributeSet:Defense",
       "attributeName": "Defense",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -3825,9 +3790,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:IncomingDamage",
+      "attribute": "/Script/AssAttributes.AssAttributeSet:IncomingDamage",
       "attributeName": "IncomingDamage",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -5772,9 +5737,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Mana",
+      "attribute": "/Script/AssAttributes.AssAttributeSet:Mana",
       "attributeName": "Mana",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -6317,9 +6282,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Mana",
+      "attribute": "/Script/AssAttributes.AssAttributeSet:Mana",
       "attributeName": "Mana",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -6674,16 +6639,7 @@
    },
    "durationPolicy": "Infinite",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [],
    "gameplayCues": [],
    "grantedAbilities": [],
@@ -7228,16 +7184,7 @@
    },
    "durationPolicy": "HasDuration",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [
     {
      "editorFriendlyName": "Asset Tags (on GE Rot Speed Multiply)",
@@ -8060,28 +8007,28 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Speed",
-      "attributeName": "Speed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attribute": "/Script/AssAttributes.AssAttributeSet:MoveSpeed",
+      "attributeName": "MoveSpeed",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
      },
      "modifierMagnitude": {
       "attributeBasedMagnitude": {
-       "attributeCalculationType": "AttributeMagnitude",
+       "attributeCalculationType": "AttributeBaseValue",
        "attributeCurve": {
         "curveTable": "None",
         "rowName": "None"
        },
        "backingAttribute": {
-        "attributeSource": "Source",
+        "attributeSource": "Target",
         "attributeToCapture": {
-         "attribute": "",
-         "attributeName": "",
-         "attributeOwner": "None"
+         "attribute": "/Script/AssAttributes.AssAttributeSet:MoveSpeed",
+         "attributeName": "MoveSpeed",
+         "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
         },
-        "bSnapshot": false
+        "bSnapshot": true
        },
        "coefficient": {
         "curve": {
@@ -8089,7 +8036,7 @@
          "rowName": "None"
         },
         "registryType": "None",
-        "value": 1
+        "value": 0.6000000238418579
        },
        "finalChannel": "Channel0",
        "postMultiplyAdditiveValue": {
@@ -8146,14 +8093,14 @@
         "value": 0
        }
       },
-      "magnitudeCalculationType": "ScalableFloat",
+      "magnitudeCalculationType": "AttributeBased",
       "scalableFloatMagnitude": {
        "curve": {
         "curveTable": "None",
         "rowName": "None"
        },
        "registryType": "None",
-       "value": 0.6000000238418579
+       "value": 0
       },
       "setByCallerMagnitude": {
        "dataName": "None",
@@ -8417,16 +8364,7 @@
    },
    "durationPolicy": "HasDuration",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [
     {
      "editorFriendlyName": "Asset Tags (on GE Speed Add)",
@@ -8659,9 +8597,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Speed",
-      "attributeName": "Speed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attribute": "/Script/AssAttributes.AssAttributeSet:MoveSpeed",
+      "attributeName": "MoveSpeed",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -8715,7 +8653,7 @@
        }
       },
       "customMagnitude": {
-       "calculationClassMagnitude": "None",
+       "calculationClassMagnitude": "/Script/MyGame.MySpeedAddMagnitude",
        "coefficient": {
         "curve": {
          "curveTable": "None",
@@ -8745,7 +8683,7 @@
         "value": 0
        }
       },
-      "magnitudeCalculationType": "SetByCaller",
+      "magnitudeCalculationType": "CustomCalculationClass",
       "scalableFloatMagnitude": {
        "curve": {
         "curveTable": "None",
@@ -8757,7 +8695,7 @@
       "setByCallerMagnitude": {
        "dataName": "None",
        "dataTag": {
-        "tagName": "data.speed"
+        "tagName": "None"
        }
       }
      },
@@ -9016,16 +8954,7 @@
    },
    "durationPolicy": "Infinite",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [],
    "gameplayCues": [],
    "grantedAbilities": [],
@@ -9213,9 +9142,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Speed",
-      "attributeName": "Speed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attribute": "/Script/AssAttributes.AssAttributeSet:MoveSpeed",
+      "attributeName": "MoveSpeed",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -9570,16 +9499,7 @@
    },
    "durationPolicy": "HasDuration",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [
     {
      "editorFriendlyName": "Asset Tags (on GE Speed Multiply)",
@@ -9812,9 +9732,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Speed",
-      "attributeName": "Speed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attribute": "/Script/AssAttributes.AssAttributeSet:MoveSpeed",
+      "attributeName": "MoveSpeed",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -10169,16 +10089,7 @@
    },
    "durationPolicy": "HasDuration",
    "editorStatusText": "All Ok",
-   "executions": [
-    {
-     "calculationClass": "/Script/MyGame.DamageExec",
-     "calculationModifiers": [],
-     "conditionalGameplayEffects": [],
-     "passedInTags": {
-      "gameplayTags": []
-     }
-    }
-   ],
+   "executions": [],
    "gEComponents": [
     {
      "editorFriendlyName": "Asset Tags (on GE Speed Multiply No Stack)",
@@ -10442,9 +10353,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Speed",
-      "attributeName": "Speed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attribute": "/Script/AssAttributes.AssAttributeSet:MoveSpeed",
+      "attributeName": "MoveSpeed",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"
@@ -11656,9 +11567,9 @@
    "modifiers": [
     {
      "attribute": {
-      "attribute": "/Script/MyGame.MyAttributeSet:Speed",
-      "attributeName": "Speed",
-      "attributeOwner": "/Script/MyGame.MyAttributeSet"
+      "attribute": "/Script/AssAttributes.AssAttributeSet:MoveSpeed",
+      "attributeName": "MoveSpeed",
+      "attributeOwner": "/Script/AssAttributes.AssAttributeSet"
      },
      "evaluationChannelSettings": {
       "channel": "Channel0"

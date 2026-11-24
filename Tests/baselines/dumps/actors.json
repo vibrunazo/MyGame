@@ -335,29 +335,108 @@
    "aggroSound": "None",
    "attack": 1,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -367,15 +446,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorld",
    "autoPossessPlayer": "Disabled",
@@ -1044,7 +1159,7 @@
     "bReplicates": true,
     "componentTags": [],
     "hitBoxClass": "/Game/Blueprints/Chars/BP_HitBox.BP_HitBox_C",
-    "maxStuns": 3,
+    "maxStuns": 0,
     "noControlEffect": "/Script/AssCombat.AssNoControlEffect",
     "onComponentActivated": "()",
     "onComponentDeactivated": "()",
@@ -1419,6 +1534,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 100,
+   "maxPoise": 3,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
@@ -2624,29 +2740,108 @@
    "aggroSound": "None",
    "attack": 1,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -2656,15 +2851,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorldOrSpawned",
    "autoPossessPlayer": "Disabled",
@@ -3704,6 +3935,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 100,
+   "maxPoise": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
@@ -7045,29 +7277,108 @@
    "aggroSound": "/Game/HumanVocalizations/HumanMaleD/Cues/voice_male_d_battle_shout_01_Cue.voice_male_d_battle_shout_01_Cue",
    "attack": 1,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -7077,15 +7388,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorldOrSpawned",
    "autoPossessPlayer": "Disabled",
@@ -8125,6 +8472,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 400,
+   "maxPoise": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
@@ -9616,29 +9964,108 @@
    "aggroSound": "None",
    "attack": 1,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -9648,15 +10075,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorldOrSpawned",
    "autoPossessPlayer": "Disabled",
@@ -10701,6 +11164,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 80,
+   "maxPoise": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
@@ -11917,29 +12381,108 @@
    "aggroSound": "None",
    "attack": 1,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -11949,15 +12492,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorldOrSpawned",
    "autoPossessPlayer": "Disabled",
@@ -13014,6 +13593,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 100,
+   "maxPoise": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
@@ -14230,29 +14810,108 @@
    "aggroSound": "None",
    "attack": 0.6000000238418579,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -14262,15 +14921,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorldOrSpawned",
    "autoPossessPlayer": "Disabled",
@@ -15327,6 +16022,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 120,
+   "maxPoise": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
@@ -16543,29 +17239,108 @@
    "aggroSound": "None",
    "attack": 1.100000023841858,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -16575,15 +17350,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorldOrSpawned",
    "autoPossessPlayer": "Disabled",
@@ -17640,6 +18451,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 70,
+   "maxPoise": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",
@@ -19125,29 +19937,108 @@
    "aggroSound": "None",
    "attack": 1,
    "attributeSetBase": {
-    "attack": {
+    "rotSpeed": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "subobject": "MyAttributeSet"
+   },
+   "attributes": {
+    "agility": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "arcaneResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "armor": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "attackSpeed": {
      "baseValue": 1,
      "currentValue": 1
     },
+    "critChance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "defense": {
      "baseValue": 1,
      "currentValue": 1
+    },
+    "fireBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "fireResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "frostResistance": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "health": {
      "baseValue": 100,
      "currentValue": 100
     },
+    "healthRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "holyResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
     "incomingDamage": {
      "baseValue": 0,
      "currentValue": 0
     },
+    "intelligence": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "lightningResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicDamage": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "magicResistance": {
+     "baseValue": 1,
+     "currentValue": 1
+    },
     "mana": {
      "baseValue": 40,
      "currentValue": 40
+    },
+    "manaRegen": {
+     "baseValue": 0,
+     "currentValue": 0
     },
     "maxHealth": {
      "baseValue": 100,
@@ -19157,15 +20048,51 @@
      "baseValue": 100,
      "currentValue": 100
     },
-    "rotSpeed": {
+    "maxPoise": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "moveSpeed": {
+     "baseValue": 600,
+     "currentValue": 600
+    },
+    "natureBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "natureResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "physicalDamage": {
      "baseValue": 1,
      "currentValue": 1
     },
-    "speed": {
-     "baseValue": 1,
-     "currentValue": 1
+    "poise": {
+     "baseValue": 0,
+     "currentValue": 0
     },
-    "subobject": "MyAttributeSet"
+    "poiseRegen": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowBonus": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "shadowResistance": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "strength": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "stunArmor": {
+     "baseValue": 0,
+     "currentValue": 0
+    },
+    "subobject": "MyCombatAttributes"
    },
    "autoPossessAI": "PlacedInWorldOrSpawned",
    "autoPossessPlayer": "Disabled",
@@ -20210,6 +21137,7 @@
     "subobject": "LootComponent"
    },
    "maxHealth": 60,
+   "maxPoise": 0,
    "mesh": {
     "animBlueprintGeneratedClass": "None",
     "animClass": "/Game/Anims/ABP_CharAnim.ABP_CharAnim_C",

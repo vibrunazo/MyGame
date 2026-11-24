@@ -145,6 +145,7 @@
   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
  ],
  "/Game/Abilities/GE_StunImmune": [
+  "/Game/Abilities/DA_CombatRules",
   "/Game/Blueprints/Chars/BP_Char",
   "/Game/Blueprints/Chars/BP_EnemyBase",
   "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
