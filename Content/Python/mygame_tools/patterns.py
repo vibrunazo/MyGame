@@ -48,8 +48,10 @@ KINDS = {
     "PA_Kicker": (230.0, 220.0, 300.0),  # BP_AIContKicker
     "PA_Wizard": (550.0, 500.0, 550.0),  # BP_AIContWizard
 }
-# BP_AIContBoss: attack, chase, aggressive, and its attack range while buffed (status.buffedrange)
-BOSS_RANGES = (220.0, 10.0, 2000.0, 900.0)
+# BP_AIContBoss: attack, chase, aggressive, and its attack range while buffed (status.buffedrange). The controller's
+# buffed range was 900; enraged (the 14 s after each mark), the boss punches non-stop wherever the player is while it
+# slowly chases (the user's design, 2026-11-24): no limit
+BOSS_RANGES = (220.0, 10.0, 2000.0, 100000.0)
 BUFFED = "status.buffedrange"
 # its moves at each mark, in the order its EventResponses tried them, and the slots give_boss_slots puts them on
 BOSS_MOVES = ("AT_Boss1_BossSummon1", "AT_Boss1_BossSelfDebuff", "AT_Boss1_BossSmash1")
@@ -198,10 +200,12 @@ def melee(attack, chase, aggressive, buffed=None, b=None):
                         bPauseRestarts=True)
     # the aggressive branch outside the attack range: inside the aggressive range, beyond 900, or behind the player
     # with the token free or its own
+    # The boss enraged (buffed) is never in these two: within its attack range everywhere, it attacks as it chases
+    calm = _buff(False) if buffed is not None else {}
     behind = _trigger(MinRange=aggressive, MaxRange=TOO_FAR, MinAngleRelativeToTargetFacing=60.0,
-                      MaxAngleRelativeToTargetFacing=180.0, bEitherSide=True, Token="HeldOrFree", **after)
+                      MaxAngleRelativeToTargetFacing=180.0, bEitherSide=True, Token="HeldOrFree", **calm, **after)
     approach = b.tactic("Approach", aggressive_combos,
-                        Conditions=out_of_attack(MaxRange=aggressive, **after) + [_trigger(MinRange=TOO_FAR, **after), behind],
+                        Conditions=out_of_attack(MaxRange=aggressive, **after) + [_trigger(MinRange=TOO_FAR, **calm, **after), behind],
                         bTakesToken=True, bTakesOverAtOnce=True, bKeepsComboOnTakeOver=True, bPauseRestarts=True)
     # their order is the takeover's priority: Engage before Attack, so only Approach hands over to Attack at once
     b.tactics_in_order = [starting, passive, engage, attack_t, approach]

@@ -18,6 +18,8 @@ Checks (each prints PASS/FAIL, the JSON keeps the states seen):
   carried_works the book's move, carried to floor 2, starts from its button there
   boss_chase_resumes  the boss's chase, its move stopped from outside its mover, moves again within a second
                 (AbilityStrategySystem 0.19; before it, the boss stood punching the air until hit)
+  boss_enraged_punches  the boss enraged (its self effect after a mark) punches non-stop as it slowly chases, from
+                beyond 900 cm too (the user's design; before it, it only chased out there)
 """
 import json
 
@@ -26,6 +28,7 @@ from mygame import floor_z, objects, tool, wait_game, wait_loaded, wait_until
 
 BOSS = "/Game/Blueprints/Chars/Boss1/BP_Boss1.BP_Boss1_C"
 SUMMON = "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSummon1"
+SELF_BUFF = "/Game/Blueprints/Chars/Boss1/AT_Boss1_BossSelfDebuff"
 ALL_SLOTS = "0,1,2,3,10,11,12,20,21,22"  # EInput: the buttons and their Super and Ultra versions
 
 BOOK, ITEM = "/Game/Blueprints/Items/DA_LearnTat", "/Game/Blueprints/Items/DA_ItemFireHands"
@@ -139,11 +142,28 @@ def boss_chase_resumes(level):
     wait_game(1.0)
     after = tool("ai_move", actor_path=path)
     closer = before - dist()
+    # enraged (its self effect: status.buffedrange, the 14 s after a mark), it punches non-stop as it slowly chases,
+    # wherever the player is (the user's design, 2026-11-24; before it, nothing beyond 900 cm)
+    # the boss in one corner of its room, the player in the opposite one: about 17 m apart
+    corner = lambda sx, sy: (cx + sx * (size[0] / 2 - 250.0), cy + sy * (size[1] / 2 - 250.0))
+    (qx, qy), (px, py) = corner(-1, -1), corner(1, 1)
+    tool("teleport_actor", actor_path=path, x=qx, y=qy, z=floor_z(qx, qy) + 100.0)
+    tool("teleport_player", x=px, y=py, z=floor_z(px, py) + 100.0)
+    tool("activate_ability_template", actor_path=path, template_path=SELF_BUFF)
+    wait_game(1.0)
+    enraged, seen = [], []
+    for _ in range(8):
+        wait_game(0.5)
+        seen.append((round(dist()), tool("ai_move", actor_path=path)["speed"]))
+        if dist() > 900:
+            enraged.append((tool("character_state", actor_path=path)["montage"] or "", tool("ai_move", actor_path=path)["speed"]))
     # left to the floor clear's kill as before, from where it stood (its loot drops there, not by the flag)
     tool("ai_target", actor_path=path, clear=True)
     tool("set_ai_enabled", actor_path=path, enabled=False, show_player=False)
     tool("teleport_actor", actor_path=path, x=bx, y=by, z=bz)
-    return {"chasing": bool(chasing), "stopped": stopped, "after": after, "closed_cm": round(closer), "start_cm": round(before)}
+    return {"chasing": bool(chasing), "stopped": stopped, "after": after, "closed_cm": round(closer), "start_cm": round(before),
+            "enraged_far": len(enraged), "enraged_punching": sum("Punch" in m for m, _ in enraged),
+            "enraged_moving": sum(v > 0 for _, v in enraged), "enraged_seen": seen}
 
 
 def player_pos():
@@ -172,6 +192,8 @@ def run_all():
     results["chase"] = chase
     check("boss_chase_resumes", chase["chasing"] and chase["stopped"] == "Idle" and chase["after"]["status"] == "Moving"
           and chase["closed_cm"] > 100, chase)
+    check("boss_enraged_punches", chase["enraged_far"] >= 4 and chase["enraged_punching"] >= chase["enraged_far"] - 1
+          and chase["enraged_moving"] >= chase["enraged_far"] - 1, chase)
     start = tool("run_state")
     results["start"] = start
     starting_moves = start["abilities"]
