@@ -54,7 +54,8 @@
  "Ass.Combo": {
   "assets": [],
   "children": [
-   "Ass.Combo.CanCancel"
+   "Ass.Combo.CanCancel",
+   "Ass.Combo.Weak"
   ],
   "code": [],
   "owner": null,
@@ -63,6 +64,15 @@
   "step": null
  },
  "Ass.Combo.CanCancel": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Combo.Weak": {
   "assets": [],
   "children": [],
   "code": [],
@@ -182,8 +192,11 @@
    "Ass.Data.Damage",
    "Ass.Data.Heal",
    "Ass.Data.HitStun",
+   "Ass.Data.ImmuneProjectile",
    "Ass.Data.Knockback",
    "Ass.Data.Launch",
+   "Ass.Data.MoveSpeed",
+   "Ass.Data.MoveSpeedDuration",
    "Ass.Data.NoControl",
    "Ass.Data.NoPawnBlock",
    "Ass.Data.PoiseRegenDelay",
@@ -281,6 +294,15 @@
   "source": "AssCore",
   "step": null
  },
+ "Ass.Data.ImmuneProjectile": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
  "Ass.Data.Knockback": {
   "assets": [
    "/Game/Blueprints/Chars/EKicker/AT_EKicker_KickerKick"
@@ -324,6 +346,24 @@
   "step": null
  },
  "Ass.Data.Launch.Z": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.MoveSpeed": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Data.MoveSpeedDuration": {
   "assets": [],
   "children": [],
   "code": [],
@@ -540,6 +580,7 @@
    "Ass.Status.NoControl",
    "Ass.Status.NoMove",
    "Ass.Status.NoPawnBlock",
+   "Ass.Status.NoTurn",
    "Ass.Status.PoiseRegenDelay",
    "Ass.Status.Staggered",
    "Ass.Status.StunImmune",
@@ -639,6 +680,15 @@
   "source": "AssCore",
   "step": null
  },
+ "Ass.Status.NoTurn": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
  "Ass.Status.PoiseRegenDelay": {
   "assets": [],
   "children": [],
@@ -680,7 +730,10 @@
  "Ass.Window": {
   "assets": [],
   "children": [
-   "Ass.Window.End"
+   "Ass.Window.End",
+   "Ass.Window.Ghost",
+   "Ass.Window.Immune",
+   "Ass.Window.Slow"
   ],
   "code": [],
   "owner": null,
@@ -689,6 +742,33 @@
   "step": null
  },
  "Ass.Window.End": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Window.Ghost": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Window.Immune": {
+  "assets": [],
+  "children": [],
+  "code": [],
+  "owner": null,
+  "plugin_name": null,
+  "source": "AssCore",
+  "step": null
+ },
+ "Ass.Window.Slow": {
   "assets": [],
   "children": [],
   "code": [],
